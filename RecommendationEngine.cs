@@ -112,6 +112,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                               catalog.AllUnits
                                   .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "세라핌")
                                   .Any(unit => counts.GetValueOrDefault(unit.Id) > 0);
+        // 상위 기물 대깨 초기 빌드용: 목표 트리의 희귀함 중 가장 가까운 한기를 추가 노출한다
+        // (패스트 유니크 퀘스트 대응). 기존 추천은 밀리지 않고 보드가 한 칸 길어진다.
+        var rareShipTreeIds = RareShipTreeIds(goal);
+        var pinningFirstRareShip = rareShipTreeIds.Count > 0 && !counts.Any(pair =>
+            pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
         var candidates = catalog.AllUnits
             .Where(unit => !unit.Id.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
             .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
@@ -169,6 +174,27 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .ToList();
         }
 
+        // 추가만 한다: 목표 트리의 희귀함 중 가장 만들기에 가까운 한기를 전설 다음에 붙인다.
+        if (pinningFirstRareShip)
+        {
+            var rarePicked = rareShipTreeIds
+                .Where(id => counts.GetValueOrDefault(id) <= 0)
+                .Select(id => EvaluateCraft(catalog.Unit(id), counts, calculator))
+                .Where(item => MeetsOwnedPrerequisites(
+                    catalog.Unit(item.Route.GoalUnitId), counts))
+                .OrderBy(item => item.RecipeProgress.MissingLeaves
+                    .Sum(leaf => leaf.MissingCount))
+                .ThenByDescending(item => item.RecipeProgress.CompletionRatio)
+                .FirstOrDefault();
+            if (rarePicked is { } rarePick &&
+                !nearest.Any(item => string.Equals(item.Route.GoalUnitId, rarePick.Route.GoalUnitId,
+                    StringComparison.OrdinalIgnoreCase)))
+            {
+                nearest.Insert(Math.Min(nearest.Count, recipeLegendaryIds.Count),
+                    rarePick);
+            }
+        }
+
         // 어떤 유닛을 조합할지는 역할 로직이 고르고, 화면 순서는 신+ 채용률(또는
         // 수작업 우선도)이 높은 순으로 보여준다. 동점은 역할 파이프라인 순서 유지.
         // 초월의 하위 전설은 채용률보다 스토리 진행이 앞선다.
@@ -183,7 +209,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ToList();
 
         var visibleGoal = showGoal ? [goalSuggestion] : Enumerable.Empty<Recommendation>();
-        var results = visibleGoal.Concat(nearest).Take(Math.Max(1, take)).ToList();
+        // 첫 희귀함 고정분은 기존 추천을 밀어내지 않도록 상한을 한 칸 늘려 허용한다.
+        var results = visibleGoal.Concat(nearest)
+            .Take(Math.Max(1, take + (pinningFirstRareShip ? 1 : 0)))
+            .ToList();
 
         // 세라핌은 역할 지표(스턴·이감·방깎)가 없어 파이프라인이 집지 못한다.
         // 현재 목표 채용률이 충분한(10%+) 최고 세라핌 1기를, 역할 구성(스턴 페어 등)을
@@ -1483,6 +1512,31 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         if (BaseTier(goal.Tier) != "초월") return [];
         var legends = DirectRecipeIds(goal, "전설");
         return legends.Count > 0 ? legends : DirectRecipeIds(goal, "히든");
+    }
+
+    // 목표 조합 트리 안에 있는 희귀함 유닛들. 하위 희귀함의 재료 트리까지는
+    // 내려가지 않는다(그 하위는 캐스케이드 클릭으로 확인).
+    private HashSet<string> RareShipTreeIds(UnitDefinition goal)
+    {
+        var found = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        void Walk(UnitDefinition unit, HashSet<string> visiting)
+        {
+            if (!visiting.Add(unit.Id)) return;
+            foreach (var childId in unit.Recipe.Keys)
+            {
+                var child = catalog.Unit(childId);
+                if (IsResourcePseudo(child) || string.Equals(child.Id, goal.Id,
+                        StringComparison.OrdinalIgnoreCase)) continue;
+                if (BaseTier(child.Tier) == "희귀함")
+                {
+                    found.Add(child.Id);
+                    continue;
+                }
+                Walk(child, visiting);
+            }
+        }
+        Walk(goal, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+        return found;
     }
 
     private List<string> DirectRecipeIds(UnitDefinition root, string tier) =>

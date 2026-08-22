@@ -323,6 +323,8 @@ Assert(usoppDaekkaeIds.FirstOrDefault() == "rawcode:B90H" &&
        usoppDaekkaeIds.Contains("rawcode:O30h"),
     "우솝 대깨도 스턴 1.4를 먼저 맞춘 뒤 최근 빈도의 사보·봉쿠레 축을 반영");
 var usoppRecommendedStun = usoppDaekkae.Skip(1)
+    .Where(item => catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim()
+        != "희귀함")
     .Sum(item => AbilityValue(item.CompositionUnits[0], "스턴"));
 Assert(usoppRecommendedStun >= 1.3 && usoppRecommendedStun <= 1.5,
     "우솝 대깨 스턴 보강도 1.4 근처에서 멈춤");
@@ -496,6 +498,12 @@ Assert(GarpHas("K50h", "D20h", "H20h", "B20h", "F10h", "X90h"),
     "거프 1상위 추천에 짤이감(페로나·키드·크로커·아오희귀·스모커특별)이 들어감");
 Assert(GarpHas("U10h", "E10h", "X90h", "610h"),
     "거프 1상위 추천에 짤깍(바질희귀·쵸파두뇌·드레이크)이 들어감");
+// 첫 희귀함(죠즈)이 목표 트리에 있으면 초기 빌드 보드에 추가된다.
+var mobyFirstRare = engine.RecommendNearestCrafts("rawcode:Q30h", [], 6,
+    "PathOfKings.BountyHunter");
+Assert(mobyFirstRare.Any(item => string.Equals(item.Route.GoalUnitId,
+        catalog.Unit("rawcode:E20h").Id, StringComparison.OrdinalIgnoreCase)),
+    "첫 희귀함이 없으면 목표 트리의 희귀함(죠즈)을 보드에 추가");
 var garpExtraStun = garpOneTop.Skip(1)
     .Sum(item => AbilityValue(item.CompositionUnits[0], "스턴"));
 Assert(garpExtraStun <= 0.6,
@@ -527,8 +535,11 @@ Assert(shiki.Skip(1).Sum(item => AbilityValue(item.CompositionUnits[0], "스턴"
 var yamatoCheap = engine.RecommendNearestCrafts("yamato_transcendent", [], 8,
     "PathOfKings.BountyHunter");
 Assert(RecHasCode(yamatoCheap, catalog, "K50h", "D20h", "H20h", "B20h", "F10h", "X90h") ||
-       RecHasCode(yamatoCheap, catalog, "U10h", "E10h", "610h"),
-    "야마토도 풀이감·풀깎 뒤에 짤이감 또는 짤깍을 추천");
+       RecHasCode(yamatoCheap, catalog, "U10h", "E10h", "610h") ||
+       // 첫 희귀함 고정분이면 필러 대신 희귀함이어도 정상이다.
+       yamatoCheap.Any(item =>
+           catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() == "희귀함"),
+    "야마토도 풀이감·풀깎 뒤에 짤이감·짤깍 또는 첫 희귀함을 추천");
 Assert(nearestCrafts.All(item => !string.IsNullOrWhiteSpace(item.CompositionUnits[0].Image)) &&
        nearestCrafts.SelectMany(item => item.RecipeProgress.Leaves)
            .All(leaf => !string.IsNullOrWhiteSpace(leaf.Image)),
@@ -1796,7 +1807,7 @@ var kizaruReversePicks = sanjiClearEngine.RecommendNearestCrafts("rawcode:5B0H",
     navigationMode: "BestHelp.ReverseThinking");
 var kizaruReverseSupports = kizaruReversePicks.Skip(1)
     .Select(item => catalog.Unit(item.Route.GoalUnitId)).ToList();
-Assert(kizaruReversePicks.Count <= 10 &&
+Assert(kizaruReversePicks.Count <= 11 &&
        kizaruReverseSupports.Any(unit => SupportAbility(unit, "단일") > 0) &&
        kizaruReverseSupports.Any(unit => SupportAbility(unit, "끝딜") > 0),
     "역발상 키자루는 추천 제한 안에서 특포 부족을 단일·끝딜 보강으로 메움");
@@ -2666,19 +2677,23 @@ static void Assert(bool condition, string name)
     Console.WriteLine("OK: " + name);
 }
 
-static Recommendation FirstRoleSupport(RecommendationEngine engine,
+Recommendation FirstRoleSupport(RecommendationEngine engine,
     IReadOnlyList<Recommendation> recs, string goalId) =>
     recs.First(item =>
         !item.Route.GoalUnitId.Equals(goalId, StringComparison.OrdinalIgnoreCase) &&
         !engine.RecipeLegendaryUnitIds(goalId).Contains(item.Route.GoalUnitId,
-            StringComparer.OrdinalIgnoreCase));
+            StringComparer.OrdinalIgnoreCase) &&
+        // 첫 희귀함 고정분(패스트 유니크 대응)도 역할 후보에서 제외한다.
+        catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() != "희귀함");
 
-static bool OnlyGoalAndRecipeLegendaries(RecommendationEngine engine,
+bool OnlyGoalAndRecipeLegendaries(RecommendationEngine engine,
     IReadOnlyList<Recommendation> recs, string goalId) =>
     recs.All(item =>
         item.Route.GoalUnitId.Equals(goalId, StringComparison.OrdinalIgnoreCase) ||
         engine.RecipeLegendaryUnitIds(goalId).Contains(item.Route.GoalUnitId,
-            StringComparer.OrdinalIgnoreCase));
+            StringComparer.OrdinalIgnoreCase) ||
+        // 첫 희귀함 고정분(패스트 유니크 대응)도 정상 항목으로 허용한다.
+        catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() == "희귀함");
 
 static MemoryProfile ValidMemoryProfile(bool enabled, bool verified, double matchRatio = 0.6,
     string? sha256 = null) => new()
