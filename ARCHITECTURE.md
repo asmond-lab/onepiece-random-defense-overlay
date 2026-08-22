@@ -23,7 +23,7 @@ flowchart LR
 
 | 영역 | 구현 | 확장점 |
 |---|---|---|
-| 메모리 인식 | `WarcraftMemoryRecognitionService`, `WarcraftDecoder` | 검증된 워크 빌드 프로필 |
+| 메모리 인식 | `WarcraftMemoryRecognitionService` | 검증된 워크 빌드 프로필 |
 | 데이터 | `DataCatalog`, JSON | 검수 도구, 서명된 원격 데이터팩 |
 | 클리어 통계 | `ClearBuildStats`, `ClearSnapshotRefreshService` | 난이도별 정책, 목표별 심층 분해 |
 | 추천 | `RecommendationEngine` | 목표별 가중치, 재료 기회비용, 라운드 상태 |

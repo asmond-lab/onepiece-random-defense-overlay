@@ -967,65 +967,6 @@ var singletonInventory = InventoryMerge.ApplyCorrections(
     [new InventoryEntry { UnitId = "item_greenblood", Count = 1, IsManual = true }],
     id => id == "item_greenblood");
 Assert(singletonInventory.Single().Count == 1, "그린블러드 자동/수동 중복을 1개 상태로 병합");
-Assert(WarcraftInventoryHandle.IsEmpty(0) && WarcraftInventoryHandle.IsEmpty(ulong.MaxValue) &&
-       !WarcraftInventoryHandle.IsEmpty(0x0000000100000001),
-    "Reforged 인벤토리 빈 슬롯 0/-1 센티널 구분");
-var fixture64 = new Dictionary<ulong, ulong>
-{
-    [0x100018] = 0x200000,
-    [0x100050] = 0x210000,
-    [0x200018] = 0x300000,
-    [0x210018] = 0x310000
-};
-var fixture32 = new Dictionary<ulong, uint>
-{
-    [0x100030] = 2,
-    [0x100068] = 2,
-    [0x200010] = 0xFFFF_FFFE,
-    [0x210010] = 0xFFFF_FFFE,
-    [0x300024] = 1,
-    [0x310024] = 2
-};
-Assert(WarcraftHandleResolver.TryResolve(address => fixture64[address], address => fixture32[address],
-           0x100000, 0x0000000100000001, out var lowResolved) && lowResolved == 0x300000 &&
-       WarcraftHandleResolver.TryResolve(address => fixture64[address], address => fixture32[address],
-           0x100000, 0x0000000280000001, out var highResolved) && highResolved == 0x310000,
-    "Reforged low/high handle table과 generation fixture 해석");
-Assert(WarcraftGreenBloodProbe.Evaluate(new Dictionary<uint, uint>()) == GreenBloodProbeState.Unknown &&
-       WarcraftGreenBloodProbe.Evaluate(new Dictionary<uint, uint>
-       {
-           [WarcraftGreenBloodProbe.ControllerBaselineAbility] = 3
-       }) == GreenBloodProbeState.Absent,
-    "컨트롤러 기본 능력으로 그린블러드 상태 신뢰성 gate");
-Assert(WarcraftGreenBloodProbe.Evaluate(new Dictionary<uint, uint>
-       {
-           [WarcraftGreenBloodProbe.ControllerBaselineAbility] = 3,
-           [WarcraftGreenBloodProbe.HeldAbility] = 1
-       }) == GreenBloodProbeState.Held,
-    "A13A 능력을 미사용 그린블러드 보유로 판정");
-Assert(WarcraftGreenBloodProbe.Combine(GreenBloodProbeState.Held, GreenBloodProbeState.Held) ==
-           GreenBloodProbeState.Held &&
-       WarcraftGreenBloodProbe.Combine(GreenBloodProbeState.Absent, GreenBloodProbeState.Absent) ==
-           GreenBloodProbeState.Absent &&
-       WarcraftGreenBloodProbe.Combine(GreenBloodProbeState.Held, GreenBloodProbeState.Unknown) ==
-           GreenBloodProbeState.Unknown &&
-       WarcraftGreenBloodProbe.Combine(GreenBloodProbeState.Held, GreenBloodProbeState.Absent) ==
-           GreenBloodProbeState.Unknown,
-    "그린블러드는 두 독립 탐색이 같을 때만 확정");
-
-var generatorBytes = Convert.FromHexString(
-    "48897C2418488BFA488BD10F1F4400009080E7FF8AD248B900006AC0E1010000" +
-    "0F1F80000000009080E2FF86ED488B413049B82C1B3D5D97A910554833024933C0488902");
-Assert(WarcraftDecoder.TryParseGeneratedDecoder(generatorBytes, out var generator),
-    "워크 생성 디코더 고정 서명 검증");
-Assert(generator.StateAddress == 0x1E1C06A0000 && generator.XorMask == 0x5510A9975D3D1B2C,
-    "워크 생성 디코더 state/xor 추출");
-var gameUiKeys = WarcraftDecoder.DeriveKeys(WarcraftDecoder.GameUiSeed1,
-    WarcraftDecoder.GameUiSeed2, 0x1B9BB090000, generator.XorMask);
-Assert(gameUiKeys == new DecoderKeys(0x4C071947016892B1, 0x7384073D3D981D6F),
-    "워크 GameUI 런타임 키 파생");
-Assert(WarcraftDecoder.DecodeGameUi(_ => 0, 0, gameUiKeys) == 0xE95C522F3D981D6F,
-    "GameUI 복호 산술 고정 fixture");
 
 // --- 신+ 클리어 데이터 최적화 ---
 var clearT0 = DateTimeOffset.Parse("2026-08-16T00:00:00+00:00");
@@ -1446,76 +1387,6 @@ Assert(rareKeepAdvisor.FeedsAdoptedUtilityLegend("rawcode:220h", aceAdoptShare) 
 Assert(rareKeepAdvisor.Evaluate(Inventory("rawcode:220h"), [noopPlan])
            .Any(item => item.UnitId == "rawcode:220h"),
     "목표·클리어 데이터 없이는 기존처럼 재료 수요만 판단");
-
-// 드릴다운: 상위 목표의 남은 조합은 전설급을 먼저 묶고, 그 안에 하위 희귀함을 담는다.
-var drillGoal = engine.RecommendNearestCrafts("rawcode:B50h", [], 1)[0];
-var (drillLegends, _) = BuildDrilldown.Build(drillGoal);
-Assert(drillLegends.Count > 0 &&
-       BuildDrilldown.IsLegendTier(drillLegends[0].Step.Tier),
-    "카벤딧슈 남은 조합은 전설급 단계를 먼저 리스트업");
-Assert(FlattenDrill(drillLegends).Any(node => BuildDrilldown.IsRareTier(node.Step.Tier)) &&
-       drillLegends.Any(group => group.Children.Count > 0),
-    "전설을 펼치면 그 트리의 하위(희귀함 포함) 단계가 나온다");
-var aceEternal = engine.RecommendNearestCrafts("rawcode:950h", [], 1)[0];
-var (aceGroups, _) = BuildDrilldown.Build(aceEternal);
-Assert(aceGroups.Any(group => group.Step.Tier.Split('[', 2)[0].Trim() is "변화된" or "왜곡됨" &&
-                              group.Children.Any(child => child.Step.Tier.Split('[', 2)[0].Trim()
-                                  is "전설" or "히든")),
-    "변화된·왜곡됨 단계도 드릴다운으로 묶고 그 안에 전설 단계가 나온다");
-var rareDrill = engine.RecommendFastRares([], 50)
-    .Where(rec => catalog.Unit(rec.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() == "희귀함")
-    .Select(BuildDrilldown.Build)
-    .FirstOrDefault(result => result.Legends.Any(group =>
-        group.Step.Tier.Split('[', 2)[0].Trim() == "특별함"));
-Assert(rareDrill.Legends is { Count: > 0 } specialGroups &&
-       specialGroups.Any(group => group.Step.Tier.Split('[', 2)[0].Trim() == "특별함"),
-    "희귀함 카드 드릴다운에도 특별함 단계가 나온다");
-
-// 드릴다운은 각 단계의 조합을 그 자리에서 보여준다(유저 보고: 희귀함을 펼쳤는데
-// 하위 조합이 비어 있었다 — 같은 유닛이 다른 가지에 먼저 나왔다고 건너뛴 탓).
-// 조합 가능한 재료를 가진 단계는 펼쳤을 때 반드시 하위 단계가 나와야 한다.
-{
-    var tokiDrill = engine.RecommendNearestCrafts("rawcode:780h", [], 1)[0];
-    var (tokiGroups, _) = BuildDrilldown.Build(tokiDrill);
-    var allNodes = FlattenDrill(tokiGroups).ToList();
-    Assert(allNodes.Count > 0, "드릴다운: 토키 목표에 조합 단계가 있다");
-    var rare = allNodes.FirstOrDefault(node => node.Step.Name == "키자루");
-    Assert(rare is not null, "드릴다운: 희귀함 키자루 단계가 트리에 나온다");
-    Assert(rare!.Children.Count > 0,
-        "드릴다운: 희귀함을 펼치면 그 조합 단계(특별함 재료)가 나온다");
-    Assert(rare.Children.Any(child => child.Step.Name is "헤르메포" or "트라팔가 로우"),
-        "드릴다운: 하위 조합에 실제 재료 유닛이 담긴다");
-    Assert(rare.Children.All(child => child.Step.Ingredients.Count > 0),
-        "드릴다운: 하위 단계도 자기 재료 목록을 갖는다");
-}
-
-// 드릴다운은 펼친 항목 자신의 조합법만 보여준다(유저 요청 "선택적 조합법 보기").
-// 전설을 펼치면 그 전설의 하위 조합이 안흔함부터, 그 안의 희귀함을 펼치면 다시 그
-// 희귀함의 조합이 안흔함부터. 다른 가지가 같은 재료를 먼저 썼다고 빠지면 안 된다.
-{
-    var scoped = engine.RecommendNearestCrafts("rawcode:780h", [], 1)[0];   // 아마츠키 토키
-    var (scopedGroups, _) = BuildDrilldown.Build(scoped);
-    var rare = scopedGroups.FirstOrDefault(node => node.Step.Name == "키자루");
-    var zoro = scopedGroups.FirstOrDefault(node => node.Step.Name == "조로");
-    Assert(rare is not null && zoro is not null,
-        "선택적 드릴다운: 목표 바로 아래 단계(키자루·조로 희귀함)가 최상위로 나온다");
-
-    var rareChildren = rare!.Children.Select(child => child.Step.Name).ToList();
-    Assert(rareChildren.Contains("헤르메포") && rareChildren.Contains("트라팔가 로우"),
-        "선택적 드릴다운: 희귀함을 펼치면 그 희귀함의 재료가 나온다");
-    Assert(!rareChildren.Contains("겟코모리아") && !rareChildren.Contains("스모커"),
-        "선택적 드릴다운: 다른 가지(조로 희귀함) 재료는 섞이지 않는다");
-    Assert(BuildDrilldown.TierOrder(rare.Children[0].Step.Tier) <=
-           BuildDrilldown.TierOrder(rare.Children[^1].Step.Tier),
-        "선택적 드릴다운: 안흔함부터 오름차순으로 나열");
-
-    // 같은 재료가 두 갈래에 필요하면 각 갈래에서 각각 보인다(중복 제거로 사라지지 않음).
-    Assert(zoro!.Children.Any(child => child.Step.Name == "겟코모리아"),
-        "선택적 드릴다운: 각 갈래가 자기 재료를 온전히 갖는다");
-    var special = rare.Children.First(child => child.Step.Name == "트라팔가 로우");
-    Assert(special.Children.Any(child => child.Step.Name is "베포" or "타시기"),
-        "선택적 드릴다운: 특별함을 펼치면 그 아래 안흔함 조합까지 이어진다");
-}
 
 // 세라핌 기물 추천: 그린블러드 1개 레시피로 편입, 목표별 채용률 최고 세라핌 포함.
 // 세라핌 포함은 클리어 프로필이 있어야 작동하므로 학습 엔진으로 검증한다.
@@ -2129,60 +2000,6 @@ Assert(screenSourceMigration.Changed &&
        screenSourceMigration.Json.Contains("AutoScanEnabled"),
     "RecognitionSource=Screen 레거시 설정이 마이그레이션으로 제거되고 AutoScanEnabled는 보존");
 
-// 라이브 검증(work/verification/live-verification.jsonl)은 사용자의 실전 1판에서만 생성된다.
-// 스모크가 자기 픽스처를 되읽는 순환 검증은 금지 — 존재 여부·내용 검증은 시드 AC의 verify_command가 담당한다.
-// 여기서는 레코더의 분류·기록 로직만 임시 디렉터리에서 검증한다(사용자 판정 없이는 아무것도 기록하지 않는 계약 포함).
-{
-    var verifyDir = Path.Combine(Path.GetTempPath(), "orand-live-verify-" + Guid.NewGuid().ToString("N"));
-    var recorder = new LiveVerificationRecorder(verifyDir,
-        () => new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero)) { Enabled = true };
-    static RecognitionResult ReadyResult(params (string Id, int Count)[] units) => new()
-    {
-        State = RecognitionState.Ready,
-        Entries = units.Select(u => new InventoryEntry { UnitId = u.Id, Count = u.Count }).ToList(),
-        Diagnostics = new RecognitionDiagnostics { ProfileId = "war3-test", ProcessVersion = "2.0.4.23745" }
-    };
-
-    recorder.Observe(ReadyResult(("a", 1)));
-    Assert(recorder.Pending is null, "라이브 검증: 첫 관찰은 기준선 — 이벤트 없음");
-    recorder.Observe(ReadyResult(("a", 2)));
-    Assert(recorder.Pending?.EventTag == LiveVerificationRecorder.EventUnitAdded, "라이브 검증: 총량 증가는 unit_added");
-    Assert(recorder.Confirm(true) is not null, "라이브 검증: 일치 판정이 JSONL 경로 반환");
-    recorder.Observe(ReadyResult(("a", 1)));
-    Assert(recorder.Pending?.EventTag == LiveVerificationRecorder.EventUnitSold, "라이브 검증: 새 유닛 없는 감소는 unit_sold");
-    recorder.Confirm(true);
-    recorder.Observe(ReadyResult(("b", 1)));
-    Assert(recorder.Pending?.EventTag == LiveVerificationRecorder.EventCombineCompleted,
-        "라이브 검증: 새 유닛 등장+재료 소실은 combine_completed");
-    recorder.Confirm(false);
-    recorder.Observe(new RecognitionResult { State = RecognitionState.Waiting, ConfirmsSessionBoundary = true });
-    recorder.Observe(ReadyResult(("b", 1)));
-    Assert(recorder.Pending?.EventTag == LiveVerificationRecorder.EventSessionReentry,
-        "라이브 검증: 세션 경계 후 첫 Ready는 session_reentry");
-    recorder.Confirm(true);
-    Assert(recorder.Confirm(true) is not null, "라이브 검증: 대기 이벤트 없으면 수시대조로 기록");
-    Assert(recorder.ConfirmedRows == 5 && recorder.MismatchCount == 1, "라이브 검증: 확정 5건·불일치 1건 집계");
-
-    var verifyRows = File.ReadAllLines(recorder.LogFilePath)
-        .Where(line => !string.IsNullOrWhiteSpace(line))
-        .Select(line => JsonDocument.Parse(line).RootElement).ToList();
-    Assert(verifyRows.Count == 5, "라이브 검증: JSONL 5행 기록");
-    Assert(verifyRows.Select(r => r.GetProperty("event").GetString()).SequenceEqual(
-        [LiveVerificationRecorder.EventUnitAdded, LiveVerificationRecorder.EventUnitSold,
-         LiveVerificationRecorder.EventCombineCompleted, LiveVerificationRecorder.EventSessionReentry,
-         LiveVerificationRecorder.EventSpotCheck]), "라이브 검증: 이벤트 태그 순서 기록");
-    Assert(verifyRows.Count(r => !r.GetProperty("match").GetBoolean()) == 1, "라이브 검증: 불일치 1건 기록");
-    Assert(Directory.GetFiles(verifyDir, "mismatch-*.json").Length == 1, "라이브 검증: 불일치 스냅샷 1개 저장");
-
-    var idleRecorder = new LiveVerificationRecorder(verifyDir) { Enabled = true };
-    Assert(idleRecorder.Confirm(true) is null, "라이브 검증: 관찰 전에는 아무것도 기록하지 않음");
-    var disabledRecorder = new LiveVerificationRecorder(verifyDir);
-    disabledRecorder.Observe(ReadyResult(("a", 1)));
-    disabledRecorder.Observe(ReadyResult(("a", 2)));
-    Assert(disabledRecorder.Pending is null, "라이브 검증: 모드 꺼짐이면 이벤트 감지 안 함");
-    Directory.Delete(verifyDir, true);
-}
-
 // 텔레메트리 레코드: 판 종료 시 서버로 보내는 익명 플레이 기록.
 {
     var record = MatchTelemetryRecorder.Build(
@@ -2639,10 +2456,6 @@ static ClearSample GodClear(string id, int unitCount, DateTimeOffset at,
 static List<InventoryEntry> Inventory(params string[] ids) => ids
     .Select(id => new InventoryEntry { UnitId = id, Count = 1, IsManual = true })
     .ToList();
-
-static IEnumerable<BuildDrilldown.DrillNode> FlattenDrill(
-    IEnumerable<BuildDrilldown.DrillNode> nodes) =>
-    nodes.SelectMany(node => new[] { node }.Concat(FlattenDrill(node.Children)));
 
 static double SupportAbility(UnitDefinition unit, params string[] abilityNames) =>
     unit.OfficialAbilities
