@@ -63,6 +63,8 @@ public partial class MainWindow : Window
     private bool _overlayHiddenByUser;
     // 현재 패가 Ready·비어있지 않게 인식됐는지 — 오버레이 자동 표시의 단일 출처다.
     private bool _overlayHandAvailable;
+    // 연속 비표시 판정 횟수 — 히스테리시스 임계(OverlayVisibilityPolicy.HiddenStreakThreshold)와 비교.
+    private int _overlayHiddenStreak;
 
     public MainWindow()
     {
@@ -939,7 +941,7 @@ public partial class MainWindow : Window
                 ResetMatchSession();
                 _lastRound = 0;
             }
-            SetOverlayHandAvailability(OverlayVisibilityPolicy.ShouldShow(result));
+            ApplyOverlayVisibility(result);
             RecognitionStatus.Text = KoreanLabels.RemoveLatin(result.Status);
             RecognitionStatus.Foreground = result.State switch
             {
@@ -1270,13 +1272,33 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         }
     }
 
+    /// <summary>스캔 결과를 가시성 정책으로 해석해 오버레이를 전이한다. 상태가
+    /// 실제로 바뀔 때만 UI를 건드린다 — 신세계 라운드 진입 구간의 깜빡임 방지.</summary>
+    private void ApplyOverlayVisibility(RecognitionResult result)
+    {
+        var shownNow = _overlay.IsVisible || _overlay.Stats.IsVisible;
+        if (OverlayVisibilityPolicy.ShouldShow(result)) _overlayHiddenStreak = 0;
+        else _overlayHiddenStreak++;
+
+        switch (OverlayVisibilityPolicy.Decide(shownNow, result, _overlayHiddenStreak))
+        {
+            case OverlayVisibilityDecision.Show:
+                _overlayHandAvailable = true;
+                _overlayHiddenByUser = false;
+                ShowOverlayWindows();
+                break;
+            case OverlayVisibilityDecision.Hide:
+                _overlayHandAvailable = false;
+                HideOverlayWindows();
+                OverlayButton.Content = "패 인식 대기 중";
+                break;
+            // KeepShown/KeepHidden: 현재 상태 유지 — UI 문구도 건드리지 않는다.
+        }
+    }
+
     private void SetOverlayHandAvailability(bool available)
     {
-        if (_overlayHandAvailable == available)
-        {
-            if (!available) HideOverlayWindows();
-            return;
-        }
+        if (_overlayHandAvailable == available) return;
 
         _overlayHandAvailable = available;
         if (!available)
