@@ -1098,6 +1098,14 @@ Assert(planAdvice.Count >= 1 && planAdvice[0].UnitId == "rawcode:3A0h" && planAd
        !GreenBloodAdvisor.HasUnusedGreenBlood(catalog, Inventory("mihawk_hidden")) &&
        GreenBloodAdvisor.HasUnusedGreenBlood(catalog, Inventory("item_greenblood")),
     "호스트가 있으면 그린블러드는 세라핌이 최우선");
+Assert(greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null, "지옥").Count == 0 &&
+       greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null, "어려움").Count == 0 &&
+       greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null, "보통").Count == 0,
+    "지옥 이하 난이도에서는 그린블러드 추천을 하지 않음");
+Assert(greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null, "신").Count >= 1 &&
+       greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null, "악몽").Count >= 1 &&
+       greenBloodAdvisor.Evaluate(yamatoGoal, Inventory("mihawk_hidden"), [], null).Count >= 1,
+    "신·악몽·미확인 난이도는 그린블러드 추천을 유지");
 var greenBloodAdvice = greenBloodAdvisor.Evaluate(yamatoGoal,
     Inventory("item_greenblood", "mihawk_hidden", "rawcode:030h"), [], null);
 Assert(greenBloodAdvice.All(item => item.Seraphim) &&

@@ -723,9 +723,11 @@ public partial class MainWindow : Window
                       ?? GoroseiEffects.Parse(_settings.GoroseiMode);
         _settings.GoroseiMode = gorosei.ToString();
         // 니카 이감/노이감은 별도 토글 없이 현재 패의 스턴을 기준으로 자동 판정한다.
+        // 지옥 이하는 그린블러드가 제공되지 않으므로 세라핌 조합 후보도 함께 뺀다.
         var recommendations = _engine.RecommendNearestCrafts(goal.Id, recommendationInventory,
             navigationMode: navigation.Id, gorosei: gorosei, buildVariant: BuildVariants.AutoId,
-            suppressSeraphim: _greenBloodUsage.Used);
+            suppressSeraphim: _greenBloodUsage.Used ||
+                !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty));
         _telemetryLastTop = recommendations.Take(5).Select(x => x.Route.GoalUnitId).ToList();
         CaptureMatchTelemetry();
         GoalSelectLabel.Text = "목표 상위 유닛 · 학습된 유닛만" +
@@ -735,10 +737,11 @@ public partial class MainWindow : Window
         var inventoryStats = _statsCalculator.Calculate(recommendationInventory);
         var rareRerolls = _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
             goal, _clearStats.HasData ? _clearStats : null);
-        IReadOnlyList<GreenBloodAdvice> greenBloodAdvice = _greenBloodUsage.Used
+        IReadOnlyList<GreenBloodAdvice> greenBloodAdvice = _greenBloodUsage.Used ||
+            !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty)
             ? Array.Empty<GreenBloodAdvice>()
             : _greenBloodAdvisor.Evaluate(goal, recommendationInventory,
-                recommendations, _clearStats.HasData ? _clearStats : null);
+                recommendations, _clearStats.HasData ? _clearStats : null, _matchDifficulty);
 
         InventoryList.Items.Clear();
         foreach (var item in inventory)

@@ -21,12 +21,22 @@ public sealed class GreenBloodAdvisor(DataCatalog catalog)
     private const string KumaWarning = "쿠마는 그린블러드를 주면 스턴 0.5가 사라집니다";
     private const int MaximumAdvice = 3;
 
+    // 그린블러드는 신·악몽에서만 제공된다(지옥 이하는 미제공). 난이도 미확인은
+    // 탐지 지연일 수 있으므로 기존 동작을 유지한다(추천 표시).
+    public static bool IsGreenBloodDifficulty(string? difficulty) =>
+        string.IsNullOrEmpty(difficulty) ||
+        difficulty.Equals("unknown", StringComparison.Ordinal) ||
+        difficulty.Equals("신", StringComparison.Ordinal) ||
+        difficulty.Equals("악몽", StringComparison.Ordinal);
+
     public IReadOnlyList<GreenBloodAdvice> Evaluate(
         UnitDefinition goal,
         IEnumerable<InventoryEntry> inventory,
         IReadOnlyList<Recommendation> recommendations,
-        ClearBuildStats? clearStats)
+        ClearBuildStats? clearStats,
+        string? difficulty = null)
     {
+        if (!IsGreenBloodDifficulty(difficulty)) return Array.Empty<GreenBloodAdvice>();
         var owned = inventory
             .Where(entry => entry.Count > 0)
             .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
