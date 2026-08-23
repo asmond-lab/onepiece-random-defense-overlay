@@ -6,7 +6,7 @@ namespace OrandOverlay.Tests;
 public sealed class GoalProgressionTests
 {
     [Fact]
-    public void GarpGoalKeepsRecommendingMissingTargetRaresAfterFirstRare()
+    public void GarpGoalRecommendsOnlyNearestMissingTargetRareAfterFirstRare()
     {
         var catalog = new DataCatalog();
         catalog.Load();
@@ -20,6 +20,17 @@ public sealed class GoalProgressionTests
             [new InventoryEntry { UnitId = targetRares[0], Count = 1 }],
             navigationMode: "PathOfKings.BountyHunter",
             prioritizeTargetRare: true);
+        var inventory = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            [targetRares[0]] = 1
+        };
+        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        var expectedNearestRareId = targetRares
+            .Where(id => !id.Equals(targetRares[0], StringComparison.OrdinalIgnoreCase))
+            .Select(id => (Id: id, Progress: calculator.Calculate([id], inventory)))
+            .OrderBy(item => item.Progress.MissingLeaves.Sum(leaf => leaf.MissingCount))
+            .ThenByDescending(item => item.Progress.CompletionRatio)
+            .First().Id;
 
         var first = recommendations[0];
         var firstUnit = first.CompositionUnits[0];
@@ -29,6 +40,13 @@ public sealed class GoalProgressionTests
                 $"{item.Route.GoalUnitId}:{BaseTier(item.CompositionUnits[0].Tier)}")));
         Assert.Contains(firstUnit.UnitId, targetTree);
         Assert.NotEqual(targetRares[0], firstUnit.UnitId);
+        Assert.Equal(expectedNearestRareId, firstUnit.UnitId);
+        var rareCards = recommendations
+            .Where(item => BaseTier(catalog.Unit(item.Route.GoalUnitId).Tier) == "희귀함")
+            .ToList();
+        Assert.True(rareCards.Count == 1,
+            "희귀함 카드는 목표 연계 최단 한 장이어야 함: " +
+            string.Join(", ", rareCards.Select(item => item.Route.GoalUnitId)));
         Assert.Equal(goalId, first.ProgressionGoalUnitId);
         Assert.Equal("거프 불멸", first.ProgressionGoalName);
         Assert.Contains(first.RemainingCraftSteps, step => step.UnitId == firstUnit.UnitId);
@@ -40,6 +58,12 @@ public sealed class GoalProgressionTests
         var recascaded = engine.Recascade(recommendations,
             [new InventoryEntry { UnitId = targetRares[0], Count = 1 }],
             first.Route.Id);
+        var recascadedRareCards = recascaded
+            .Where(item => BaseTier(catalog.Unit(item.Route.GoalUnitId).Tier) == "희귀함")
+            .ToList();
+        Assert.True(recascadedRareCards.Count == 1,
+            "재계산 후에도 희귀함 카드는 한 장이어야 함: " +
+            string.Join(", ", recascadedRareCards.Select(item => item.Route.GoalUnitId)));
         Assert.Equal(goalId, recascaded[0].ProgressionGoalUnitId);
         Assert.Contains(recascaded[0].RemainingCraftSteps, step => step.UnitId == goalId);
     }

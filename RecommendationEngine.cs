@@ -127,6 +127,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var candidates = catalog.AllUnits
             .Where(unit => !unit.Id.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
             .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
+            .Where(unit => !prioritizeTargetRare || BaseTier(unit.Tier) != "희귀함")
             .Where(unit => !seraphimBlocked || unit.Tier.Split('[', 2)[0].Trim() != "세라핌")
             .Where(unit => MeetsOwnedPrerequisites(unit, counts))
             .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
