@@ -18,6 +18,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     // 같이 쓰인 클리어만 재집계한 조건부 프로필일 수 있다.
     private GoalClearProfile? _activeClearProfile;
     private LiveStats _liveStats = new();
+    // 조합 트리·조합식 등급 조회 전담 빌더(동작 보존 추출).
+    private readonly RecipeTreeBuilder _recipes = new(catalog, combineHotkeys);
 
     /// <summary>자체 수집 통계의 게이트 통과 가중을 화면 순서 점수에 반영하도록 연결한다.</summary>
     public void SetLiveStats(LiveStats liveStats) => _liveStats = liveStats;
@@ -114,7 +116,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                   .Any(unit => counts.GetValueOrDefault(unit.Id) > 0);
         // 상위 기물 대깨 초기 빌드용: 목표 트리의 희귀함 중 가장 가까운 한기를 추가 노출한다
         // (패스트 유니크 퀘스트 대응). 기존 추천은 밀리지 않고 보드가 한 칸 길어진다.
-        var rareShipTreeIds = RareShipTreeIds(goal);
+        var rareShipTreeIds = _recipes.RareShipTreeIds(goal);
         var pinningFirstRareShip = rareShipTreeIds.Count > 0 && !counts.Any(pair =>
             pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
         var candidates = catalog.AllUnits
@@ -159,7 +161,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             : OrderByCraftDistance(candidates).Take(maximumSupports).Select(x => x.Recommendation).ToList();
 
         // 초월은 하위 전설을 먼저 짜야 스토리를 민다. 역할 패키지보다 후보 보드 앞에 둔다.
-        var recipeLegendaryIds = RecipeLegendaryIds(goal);
+        var recipeLegendaryIds = _recipes.RecipeLegendaryIds(goal);
         if (recipeLegendaryIds.Count > 0)
         {
             var missingLegendaries = recipeLegendaryIds
@@ -1498,74 +1500,18 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     private static string BaseTier(string tier) => tier.Split('[', 2)[0].Trim();
 
     public IReadOnlyList<string> RecipeLegendaryUnitIds(string goalUnitId) =>
-        RecipeLegendaryIds(catalog.Unit(goalUnitId));
+        _recipes.RecipeLegendaryUnitIds(goalUnitId);
 
     public IReadOnlyList<string> RecipeSpecialUnitIds(string unitId) =>
-        RecipeTierIds(catalog.Unit(unitId), "특별함");
+        _recipes.RecipeSpecialUnitIds(unitId);
 
     /// <summary>
     /// 초월 조합식의 전설급 직접 재료. 전설이 없으면 히든을 쓴다.
     /// 스토리 진행을 위해 후보 보드에서 역할 패키지보다 앞에 둔다.
     /// </summary>
-    private List<string> RecipeLegendaryIds(UnitDefinition goal)
-    {
-        if (BaseTier(goal.Tier) != "초월") return [];
-        var legends = DirectRecipeIds(goal, "전설");
-        return legends.Count > 0 ? legends : DirectRecipeIds(goal, "히든");
-    }
-
-    // 목표 조합 트리 안에 있는 희귀함 유닛들. 하위 희귀함의 재료 트리까지는
+        // 목표 조합 트리 안에 있는 희귀함 유닛들. 하위 희귀함의 재료 트리까지는
     // 내려가지 않는다(그 하위는 캐스케이드 클릭으로 확인).
-    private HashSet<string> RareShipTreeIds(UnitDefinition goal)
-    {
-        var found = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        void Walk(UnitDefinition unit, HashSet<string> visiting)
-        {
-            if (!visiting.Add(unit.Id)) return;
-            foreach (var childId in unit.Recipe.Keys)
-            {
-                var child = catalog.Unit(childId);
-                if (IsResourcePseudo(child) || string.Equals(child.Id, goal.Id,
-                        StringComparison.OrdinalIgnoreCase)) continue;
-                if (BaseTier(child.Tier) == "희귀함")
-                {
-                    found.Add(child.Id);
-                    continue;
-                }
-                Walk(child, visiting);
-            }
-        }
-        Walk(goal, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
-        return found;
-    }
-
-    private List<string> DirectRecipeIds(UnitDefinition root, string tier) =>
-        root.Recipe.Keys
-            .Select(catalog.Unit)
-            .Where(unit => BaseTier(unit.Tier) == tier)
-            .Select(unit => unit.Id)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-    private List<string> RecipeTierIds(UnitDefinition root, string tier)
-    {
-        var ids = new List<string>();
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        void Visit(string unitId)
-        {
-            if (!seen.Add(unitId)) return;
-            var unit = catalog.Unit(unitId);
-            if (BaseTier(unit.Tier) == tier)
-                ids.Add(unit.Id);
-            foreach (var childId in unit.Recipe.Keys)
-                Visit(childId);
-        }
-        foreach (var childId in root.Recipe.Keys)
-            Visit(childId);
-        return ids;
-    }
-
-    // 아이템(흑도 슈스이 방깎 6 등)과 세라핌도 보드에 있으면 완성 전력으로 합산한다.
+                // 아이템(흑도 슈스이 방깎 6 등)과 세라핌도 보드에 있으면 완성 전력으로 합산한다.
     // 짤이감·짤깍(페로나 희귀, 바질 희귀 등)은 보드에 있으면 이감/깎 합산에 넣는다.
     private static bool CountsAsCompletedSupport(string tier) =>
         BaseTier(tier) is "전설" or "히든" or "변화된" or "왜곡됨" or "함선" or "해적선" or
@@ -1644,11 +1590,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var availability = inventory
             .Where(pair => pair.Value > 0)
             .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
-        var recipeTree = BuildRecipeTree(unit.Id, 1, availability,
+        var recipeTree = _recipes.BuildRecipeTree(unit.Id, 1, availability,
             new HashSet<string>(StringComparer.OrdinalIgnoreCase));
         // BuildRecipeTree가 소비하고 남긴 잔여 패 — 아래 순위 완료율 계산의 입력이 된다.
         remainingAfterBuild = availability;
-        var remainingSteps = BuildRemainingCraftSteps(recipeTree, inventory, calculator);
+        var remainingSteps = _recipes.BuildRemainingCraftSteps(recipeTree, inventory, calculator);
         var missingSpecials = CollectMissingSpecials(unit, inventory);
         var nextAction = missingSpecials.Count > 0
             ? "먼저 필요: " + string.Join(" · ", missingSpecials) +
@@ -1696,144 +1642,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         };
     }
 
-    private RecipeTreeNode BuildRecipeTree(string unitId, int requiredCount,
-        IDictionary<string, int> availability, HashSet<string> visiting)
-    {
-        var unit = catalog.Unit(unitId);
-        var available = Math.Max(0, availability.TryGetValue(unit.Id, out var count) ? count : 0);
-        var owned = Math.Min(requiredCount, available);
-        availability[unit.Id] = available - owned;
-        var remaining = requiredCount - owned;
-        var children = new List<RecipeTreeNode>();
-        if (remaining > 0 && visiting.Add(unitId))
-        {
-            foreach (var (childId, childCount) in unit.Recipe
-                         .Where(pair => pair.Value > 0)
-                         .Where(pair => !IsResourcePseudo(catalog.Unit(pair.Key))))
-            {
-                var total = childCount > int.MaxValue / Math.Max(1, remaining)
-                    ? int.MaxValue
-                    : childCount * remaining;
-                children.Add(BuildRecipeTree(childId, total, availability, visiting));
-            }
-            visiting.Remove(unitId);
-        }
-
-        return new RecipeTreeNode
-        {
-            UnitId = unit.Id,
-            Name = unit.Name,
-            Tier = unit.Tier,
-            Image = unit.Image,
-            RequiredCount = requiredCount,
-            OwnedCount = owned,
-            Children = children
-        };
-    }
-
-    private List<RecipeCraftStep> BuildRemainingCraftSteps(RecipeTreeNode root,
-        IReadOnlyDictionary<string, int> inventory, RecipeCompletionCalculator calculator)
-    {
-        var totals = new Dictionary<string, (RecipeTreeNode Node, long Required, long Owned)>(
-            StringComparer.OrdinalIgnoreCase);
-        var ingredientTotals = new Dictionary<string,
-            Dictionary<string, (RecipeTreeNode Node, long Required, int SelectionOrder)>>(StringComparer.OrdinalIgnoreCase);
-        // 목표 자신의 최종 조합도 하나의 단계다 — 재료가 다 모였을 때 "어떤 유닛을
-        // 선택해 무슨 키를 누르는지"까지 카드에서 보이게 루트부터 방문한다(유저 요청).
-        Visit(root);
-
-        return totals.Values
-            .Select(value => new RecipeCraftStep
-            {
-                UnitId = value.Node.UnitId,
-                Name = value.Node.Name,
-                Tier = value.Node.Tier,
-                Image = value.Node.Image,
-                RequiredCount = (int)Math.Min(int.MaxValue, value.Required),
-                OwnedCount = (int)Math.Min(int.MaxValue, value.Owned),
-                CombineKey = combineHotkeys
-                    ?.FindByResult(catalog.Unit(value.Node.UnitId).Rawcodes)?.Key,
-                CombineCommands = catalog.Unit(value.Node.UnitId).CombineCommands,
-                // 남은 수량 기준 재료 완성률 — 드릴다운에서 하위 단계 %로 보여준다.
-                CompletionRatio = calculator.Calculate(
-                    Enumerable.Repeat(value.Node.UnitId,
-                        (int)Math.Clamp(value.Required - value.Owned, 1, 50)),
-                    inventory).CompletionRatio,
-                Ingredients = ingredientTotals.GetValueOrDefault(value.Node.UnitId)?.Values
-                    .Select(ingredient => new RecipeCraftIngredient
-                    {
-                        UnitId = ingredient.Node.UnitId,
-                        Name = ingredient.Node.Name,
-                        Tier = ingredient.Node.Tier,
-                        RequiredCount = (int)Math.Min(int.MaxValue, ingredient.Required),
-                        SelectionOrder = ingredient.SelectionOrder
-                    })
-                    .OrderBy(ingredient => ingredient.SelectionOrder)
-                    .ToList() ?? []
-            })
-            .Where(step => step.MissingCount > 0)
-            .OrderBy(step => CraftTierOrder(step.Tier))
-            .ThenBy(step => step.Name, StringComparer.CurrentCulture)
-            .ToList();
-
-        void Visit(RecipeTreeNode node)
-        {
-            var tierOrder = CraftTierOrder(node.Tier);
-            // 안흔함도 실제로 흔함 패를 선택해 조합하는 단계다. 최하위 재료 목록으로만
-            // 남기지 말고 티모지지처럼 안흔함부터 모든 조합 단계를 보여준다.
-            if (node.Children.Count > 0 && tierOrder >= 1 && node.OwnedCount < node.RequiredCount)
-            {
-                if (totals.TryGetValue(node.UnitId, out var current))
-                    totals[node.UnitId] = (current.Node,
-                        Math.Min(int.MaxValue, current.Required + node.RequiredCount),
-                        Math.Min(int.MaxValue, current.Owned + node.OwnedCount));
-                else
-                    totals[node.UnitId] = (node, node.RequiredCount, node.OwnedCount);
-
-                if (!ingredientTotals.TryGetValue(node.UnitId, out var ingredients))
-                {
-                    ingredients = new Dictionary<string, (RecipeTreeNode Node, long Required, int SelectionOrder)>(
-                        StringComparer.OrdinalIgnoreCase);
-                    ingredientTotals[node.UnitId] = ingredients;
-                }
-                for (var selectionOrder = 0; selectionOrder < node.Children.Count; selectionOrder++)
-                {
-                    var ingredient = node.Children[selectionOrder];
-                    if (ingredients.TryGetValue(ingredient.UnitId, out var currentIngredient))
-                        ingredients[ingredient.UnitId] = (currentIngredient.Node,
-                            Math.Min(int.MaxValue, currentIngredient.Required + ingredient.RequiredCount),
-                            Math.Min(currentIngredient.SelectionOrder, selectionOrder));
-                    else
-                        ingredients[ingredient.UnitId] = (ingredient, ingredient.RequiredCount, selectionOrder);
-                }
-            }
-            foreach (var child in node.Children) Visit(child);
-        }
-    }
-
-    private static int CraftTierOrder(string tier)
-    {
-        var baseTier = tier.Split('[', 2)[0].Trim();
-        return baseTier switch
-        {
-            "흔함" => 0,
-            "안흔함" => 1,
-            "특별함" => 2,
-            "희귀함" => 3,
-            "신비함" => 4,
-            "전설" => 5,
-            "히든" => 6,
-            "변화된" => 7,
-            "왜곡됨" => 8,
-            "초월" => 9,
-            "불멸" => 10,
-            "영원" => 11,
-            "제한됨" => 12,
-            _ => 4
-        };
-    }
-
-    private static bool IsRecommendedCraftTier(string tier, bool allowsMultipleTopUnits)
+                private static bool IsRecommendedCraftTier(string tier, bool allowsMultipleTopUnits)
     {
         var baseTier = tier.Split('[', 2)[0].Trim();
         // 세라핌은 그린블러드로 제작하는 지원 유닛 — 어떤 세라핌을 만드는지가
