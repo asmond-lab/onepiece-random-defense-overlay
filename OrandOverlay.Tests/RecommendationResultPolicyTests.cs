@@ -24,4 +24,15 @@ public sealed class RecommendationResultPolicyTests
         Assert.Equal(new[] { "goal", "support" },
             RecommendationResultPolicy.Limit(new[] { "goal", "support", "extra" }, 2));
     }
+
+    [Fact]
+    public void EmptyInventory_PreservesGoalAndPinnedFirstRare()
+    {
+        var recommendations = new[] { "goal", "support", "first-rare", "filler" };
+
+        var visible = RecommendationResultPolicy.ForEmptyInventory(
+            recommendations, inventoryCount: 0, item => item == "first-rare");
+
+        Assert.Equal(new[] { "goal", "first-rare" }, visible);
+    }
 }

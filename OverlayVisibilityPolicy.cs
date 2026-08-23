@@ -44,3 +44,17 @@ public static class OverlayVisibilityPolicy
             : shownNow ? OverlayVisibilityDecision.KeepShown : OverlayVisibilityDecision.KeepHidden;
     }
 }
+
+public readonly record struct OverlayVisibilityState(bool HandAvailable, bool HiddenByUser)
+{
+    public bool ShouldShow => HandAvailable && !HiddenByUser;
+
+    public OverlayVisibilityState WithHandAvailability(bool available) =>
+        this with { HandAvailable = available };
+
+    public OverlayVisibilityState HideByUser() =>
+        this with { HiddenByUser = true };
+
+    public OverlayVisibilityState ShowByUser() =>
+        this with { HiddenByUser = false };
+}

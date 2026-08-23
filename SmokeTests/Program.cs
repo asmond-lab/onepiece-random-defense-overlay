@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text.Json;
 using OrandOverlay;
 
@@ -504,6 +504,13 @@ var mobyFirstRare = engine.RecommendNearestCrafts("rawcode:Q30h", [], 6,
 Assert(mobyFirstRare.Any(item => string.Equals(item.Route.GoalUnitId,
         catalog.Unit("rawcode:E20h").Id, StringComparison.OrdinalIgnoreCase)),
     "첫 희귀함이 없으면 목표 트리의 희귀함(죠즈)을 보드에 추가");
+var mobyVisibleWithEmptyInventory = RecommendationResultPolicy.ForEmptyInventory(
+    mobyFirstRare, inventoryCount: 0,
+    item => catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() == "희귀함");
+Assert(mobyVisibleWithEmptyInventory.Count == 2 &&
+       mobyVisibleWithEmptyInventory.Any(item => string.Equals(item.Route.GoalUnitId,
+           catalog.Unit("rawcode:E20h").Id, StringComparison.OrdinalIgnoreCase)),
+    "대깨 상위를 직접 골라도 빈 패 보드에 목표와 첫 희귀함을 함께 표시");
 var garpExtraStun = garpOneTop.Skip(1)
     .Sum(item => AbilityValue(item.CompositionUnits[0], "스턴"));
 Assert(garpExtraStun <= 0.6,
@@ -1973,11 +1980,17 @@ Assert(UpdateService.ParseRedirectLocation(
 Assert(UpdateService.ParseRedirectLocation(null, new Version(0, 2, 0)) is null,
     "리다이렉트 응답이 없으면 무시");
 
-// 해상도별 UI 자동 배율: 2K(논리 1440) 기준 1.0, 더 큰 화면만 비례 확대.
+// 해상도별 UI 자동 배율: 2K(논리 1440) 기준 1.0, 화면 점유율을 유지하도록 비례 조정.
 Assert(Math.Abs(UiScale.FromScreen(1440, 1.0) - 1.0) < 0.001,
     "2K 100%는 배율 1.0 (기준 크기 유지)");
-Assert(Math.Abs(UiScale.FromScreen(1080, 1.0) - 1.0) < 0.001,
-    "FHD는 줄이지 않고 1.0 유지");
+Assert(Math.Abs(UiScale.FromScreen(1080, 1.0) - 0.75) < 0.001,
+    "FHD 100%는 배율 0.75로 2K와 같은 화면 점유율 유지");
+Assert(Math.Abs(UiScale.FromScreen(1080, 1.25) - 0.6) < 0.001,
+    "FHD 125%도 물리 화면 점유율 유지");
+Assert(Math.Abs(UiScale.FromScreen(3440, 1440, 1.0, 1.0) - 1.0) < 0.001,
+    "울트라와이드 3440x1440은 세로 기준으로 2K 크기 유지");
+Assert(Math.Abs(UiScale.FromScreen(1280, 1024, 1.0, 1.0) - 0.5) < 0.001,
+    "5:4 1280x1024는 가로 기준으로 과도한 점유를 방지");
 Assert(Math.Abs(UiScale.FromScreen(2160, 1.0) - 1.5) < 0.001,
     "4K 100%는 배율 1.5");
 Assert(Math.Abs(UiScale.FromScreen(2160, 1.5) - 1.0) < 0.001,

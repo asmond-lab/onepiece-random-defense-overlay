@@ -7,6 +7,16 @@ namespace OrandOverlay;
 
 public static class UnitImageFactory
 {
+    private static readonly IReadOnlyDictionary<string, string> CurrentMapImageAliases =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["K30h"] = "800h",
+            ["X20h"] = "U40h"
+        };
+
+    private static readonly IReadOnlySet<string> CurrentMapImagesWithoutSafeAsset =
+        new HashSet<string>(["FB0h", "I60h", "Z60h"], StringComparer.Ordinal);
+
     /// <summary>
     /// 유닛 아이콘. 번들된 PNG(Data\images\rawcode_*.png)만 사용하고
     /// (webp 코덱·오프라인 문제 없음), 없으면 이니셜 타일. 원격 요청은 하지 않는다.
@@ -14,12 +24,7 @@ public static class UnitImageFactory
     public static FrameworkElement Create(string imageUrl, string unitName, double size,
         string? unitId = null)
     {
-        if (unitId is { Length: > 0 })
-        {
-            var bundled = Path.Combine(AppContext.BaseDirectory, "Data", "images",
-                unitId.Replace(':', '_') + ".png");
-            if (File.Exists(bundled)) imageUrl = bundled;
-        }
+        imageUrl = ResolveBundledImage(imageUrl, unitId);
         var fallback = new Border
         {
             Width = size,
@@ -68,6 +73,35 @@ public static class UnitImageFactory
             // Network or codec failures leave the deterministic Korean fallback tile visible.
         }
         return container;
+    }
+
+    public static string ResolveBundledImage(string fallback, string? unitId,
+        IEnumerable<string>? rawcodes = null)
+    {
+        var directRawcode = unitId?.StartsWith("rawcode:", StringComparison.Ordinal) == true
+            ? unitId["rawcode:".Length..]
+            : null;
+        if (directRawcode is not null &&
+            CurrentMapImagesWithoutSafeAsset.Contains(directRawcode))
+            return "";
+        var directKeys = directRawcode switch
+        {
+            null when !string.IsNullOrWhiteSpace(unitId) => new[] { unitId! },
+            null => Array.Empty<string>(),
+            _ => new[] { "rawcode:" +
+                CurrentMapImageAliases.GetValueOrDefault(directRawcode, directRawcode) }
+        };
+        var keys = directKeys.Concat((rawcodes ?? [])
+            .Where(rawcode => !CurrentMapImagesWithoutSafeAsset.Contains(rawcode))
+            .Select(rawcode => "rawcode:" +
+                CurrentMapImageAliases.GetValueOrDefault(rawcode, rawcode)));
+        foreach (var key in keys)
+        {
+            var candidate = Path.Combine(AppContext.BaseDirectory, "Data", "images",
+                key.Replace(':', '_') + ".png");
+            if (File.Exists(candidate)) return candidate;
+        }
+        return fallback;
     }
 
     private static string FirstKoreanCharacter(string value)

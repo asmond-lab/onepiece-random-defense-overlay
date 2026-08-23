@@ -59,9 +59,8 @@ public partial class MainWindow : Window
     private int _scanGeneration;
     private string? _lastScanSignature;
     private int _lastRound;
-    private bool _overlayHiddenByUser;
-    // 현재 패가 Ready·비어있지 않게 인식됐는지 — 오버레이 자동 표시의 단일 출처다.
-    private bool _overlayHandAvailable;
+    // 현재 패 인식과 사용자 숨김 선택을 함께 보존하는 오버레이 표시 상태.
+    private OverlayVisibilityState _overlayVisibility;
     // 연속 비표시 판정 횟수 — 히스테리시스 임계(OverlayVisibilityPolicy.HiddenStreakThreshold)와 비교.
     private int _overlayHiddenStreak;
 
@@ -123,7 +122,7 @@ public partial class MainWindow : Window
         _overlay.Stats.PositionCommitted += StatsOverlay_OnPositionCommitted;
         _overlay.HiddenByUser += () =>
         {
-            _overlayHiddenByUser = true;
+            _overlayVisibility = _overlayVisibility.HideByUser();
             HideOverlayWindows();
             OverlayButton.Content = "오버레이 보이기";
         };
@@ -718,9 +717,10 @@ public partial class MainWindow : Window
             rarePhase ? Visibility.Collapsed : Visibility.Visible;
         IReadOnlyList<Recommendation> visibleRecommendations = rarePhase
             ? _engine.RecommendFastRares(recommendationInventory)
-            : recommendationInventory.Count == 0 && recommendations.Count > 1
-                ? [recommendations[0]]
-                : recommendations;
+            : RecommendationResultPolicy.ForEmptyInventory(
+                recommendations, recommendationInventory.Count,
+                recommendation => _catalog.Unit(recommendation.Route.GoalUnitId)
+                    .Tier.Split('[', 2)[0].Trim() == "희귀함");
         var navHint = rarePhase || _lastRound >= NavigationAdvisor.DecisionRound
             ? ""
             : NavigationAdvisor.FormatHint(
@@ -957,7 +957,8 @@ public partial class MainWindow : Window
         _boardPlan = [];
         _boardBanner = null;
         _lastScanSignature = null;
-        _overlayHiddenByUser = false;
+        _overlayVisibility = default;
+        _overlayHiddenStreak = 0;
         SetOverlayHandAvailability(false);
     }
 
@@ -1107,7 +1108,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void EnableOverlayMove_OnClick(object sender, RoutedEventArgs e)
     {
-        if (!_overlayHandAvailable)
+        if (!_overlayVisibility.HandAvailable)
         {
             FooterStatus.Text = "패가 인식되면 오버레이 위치를 옮길 수 있습니다.";
             return;
@@ -1204,7 +1205,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void ToggleOverlayVisibility()
     {
-        if (!_overlayHandAvailable)
+        if (!_overlayVisibility.HandAvailable)
         {
             HideOverlayWindows();
             OverlayButton.Content = "패 인식 대기 중";
@@ -1214,13 +1215,13 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
         if (_overlay.IsVisible || _overlay.Stats.IsVisible)
         {
-            _overlayHiddenByUser = true;
+            _overlayVisibility = _overlayVisibility.HideByUser();
             HideOverlayWindows();
             OverlayButton.Content = "오버레이 보이기";
         }
         else
         {
-            _overlayHiddenByUser = false;
+            _overlayVisibility = _overlayVisibility.ShowByUser();
             ShowOverlayWindows();
         }
     }
@@ -1236,12 +1237,11 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         switch (OverlayVisibilityPolicy.Decide(shownNow, result, _overlayHiddenStreak))
         {
             case OverlayVisibilityDecision.Show:
-                _overlayHandAvailable = true;
-                _overlayHiddenByUser = false;
+                _overlayVisibility = _overlayVisibility.WithHandAvailability(true);
                 ShowOverlayWindows();
                 break;
             case OverlayVisibilityDecision.Hide:
-                _overlayHandAvailable = false;
+                _overlayVisibility = _overlayVisibility.WithHandAvailability(false);
                 HideOverlayWindows();
                 OverlayButton.Content = "패 인식 대기 중";
                 break;
@@ -1251,9 +1251,13 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void SetOverlayHandAvailability(bool available)
     {
-        if (_overlayHandAvailable == available) return;
+        if (_overlayVisibility.HandAvailable == available)
+        {
+            if (!available) HideOverlayWindows();
+            return;
+        }
 
-        _overlayHandAvailable = available;
+        _overlayVisibility = _overlayVisibility.WithHandAvailability(available);
         if (!available)
         {
             HideOverlayWindows();
@@ -1261,14 +1265,12 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
             return;
         }
 
-        // 새 Ready 패는 사용자가 숨긴 상태여도 다시 표시 세션을 연다.
-        _overlayHiddenByUser = false;
         ShowOverlayWindows();
     }
 
     private void ShowOverlayWindows()
     {
-        if (!_overlayHandAvailable || _overlayHiddenByUser) return;
+        if (!_overlayVisibility.ShouldShow) return;
         if (!_overlay.IsVisible) _overlay.Show();
         if (!_overlay.Stats.IsVisible) _overlay.Stats.Show();
         _overlay.Dispatcher.BeginInvoke(new Action(ApplyDefaultOverlayLayout),
