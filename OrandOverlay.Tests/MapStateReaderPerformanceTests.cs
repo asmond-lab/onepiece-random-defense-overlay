@@ -6,6 +6,20 @@ namespace OrandOverlay.Tests;
 public sealed class MapStateReaderPerformanceTests
 {
     [Fact]
+    public void WarcraftRecognitionCadenceDoesNotRunFasterThanOncePerSecond()
+    {
+        Assert.True(MainWindow.RecognitionInterval >= TimeSpan.FromSeconds(1),
+            $"현재 인식 주기: {MainWindow.RecognitionInterval.TotalMilliseconds}ms");
+    }
+
+    [Fact]
+    public void WarcraftRecognizerLimitsBackgroundMapScanToFourMegabytes()
+    {
+        Assert.InRange(WarcraftMemoryRecognitionService.MapStateBackgroundBudgetBytes,
+            1, 4 * 1024 * 1024);
+    }
+
+    [Fact]
     public void IncrementalScanHonorsPerStepByteBudget()
     {
         const int budget = 1024 * 1024;
@@ -27,6 +41,21 @@ public sealed class MapStateReaderPerformanceTests
 
         Assert.Equal(new MapStateSample(0, 0, "unknown"), scanner.Current);
         Assert.Equal(0, scanner.LastBytesRead);
+    }
+
+    [Fact]
+    public void IncrementalScanRemembersSignalWindowsAndResetClearsThem()
+    {
+        var scanner = new IncrementalMapStateScanner(1024 * 1024);
+        var sample = new MapStateSample(65, 1, "신");
+
+        scanner.Observe(0x10000, 0x4000, sample);
+        Assert.Equal(sample, scanner.Current);
+        scanner.Observe(0x10000, 0x4000, sample);
+
+        Assert.Equal(1, scanner.HotWindowCount);
+        scanner.Reset();
+        Assert.Equal(0, scanner.HotWindowCount);
     }
 
     [Fact]

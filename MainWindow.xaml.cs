@@ -13,6 +13,7 @@ namespace OrandOverlay;
 
 public partial class MainWindow : Window
 {
+    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromSeconds(1);
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
@@ -134,7 +135,7 @@ public partial class MainWindow : Window
             System.Windows.Threading.DispatcherPriority.Loaded);
         _overlay.SetClickThrough(_settings.ClickThroughOverlay);
         OverlayButton.Content = "패 인식 대기 중";
-        _timer.Interval = TimeSpan.FromSeconds(0.8);
+        _timer.Interval = RecognitionInterval;
         _timer.Tick += async (_, _) => await ScanAsync();
         Closed += (_, _) =>
         {
