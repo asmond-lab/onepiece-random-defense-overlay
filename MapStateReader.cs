@@ -45,44 +45,37 @@ public static class MapStateReader
     ];
     private static readonly string[] DifficultyRank = ["악몽", "신", "지옥", "어려움", "보통", "쉬움"];
     private const int MaximumRound = 200;
-    // 전체 프로세스 힙을 훑는 작업이라 게임 프레임과 CPU를 두고 경쟁하지 않도록 낮게 제한한다.
-    private const int MaximumScanParallelism = 2;
+    private const int ScanChunkBytes = 4 * 1024 * 1024;
+    private const int ScanOverlapBytes = 0x2000;
 
     internal static MapStateSample? TryRead(ReadOnlyProcessMemory memory, CancellationToken token)
     {
         var bestRound = 0;
         var settlements = 0;
         var difficulty = "unknown";
-        var gate = new object();
         try
         {
-            Parallel.ForEach(memory.ReadableRegions(),
-                new ParallelOptions
+            // 수 GB private 메모리를 16MB 배열로 계속 할당·병렬 스캔하면 게임과
+            // 메모리 대역폭 및 GC를 경쟁한다. 한 버퍼만 재사용해 순차로 읽는다.
+            var buffer = GC.AllocateUninitializedArray<byte>(ScanChunkBytes);
+            foreach (var region in memory.ReadableRegions())
+            {
+                ulong position = 0;
+                while (position < region.Size)
                 {
-                    MaxDegreeOfParallelism = Math.Min(MaximumScanParallelism, Environment.ProcessorCount),
-                    CancellationToken = token
-                },
-                () => new MapStateSample(0, 0, "unknown"),
-                (region, _, local) =>
-                {
-                    foreach (var (_, buffer) in memory.ReadChunks([region]))
+                    token.ThrowIfCancellationRequested();
+                    var length = (int)Math.Min((ulong)buffer.Length, region.Size - position);
+                    var read = memory.ReadInto(region.BaseAddress + position, buffer, length);
+                    if (read > 0)
                     {
-                        var sample = ScanBuffer(buffer);
-                        local = new MapStateSample(Math.Max(local.MaxRound, sample.MaxRound),
-                            local.SettlementCopies + sample.SettlementCopies,
-                            CombineDifficulty(local.Difficulty, sample.Difficulty));
+                        var sample = ScanBuffer(buffer, read);
+                        bestRound = Math.Max(bestRound, sample.MaxRound);
+                        settlements += sample.SettlementCopies;
+                        difficulty = CombineDifficulty(difficulty, sample.Difficulty);
                     }
-                    return local;
-                },
-                local =>
-                {
-                    lock (gate)
-                    {
-                        bestRound = Math.Max(bestRound, local.MaxRound);
-                        settlements += local.SettlementCopies;
-                        difficulty = CombineDifficulty(difficulty, local.Difficulty);
-                    }
-                });
+                    position += (ulong)Math.Max(length - ScanOverlapBytes, 0x1000);
+                }
+            }
         }
         catch (OperationCanceledException) { return null; }
         return new MapStateSample(bestRound, settlements, difficulty);
@@ -90,26 +83,31 @@ public static class MapStateReader
 
     /// <summary>버퍼 하나를 훑는다. 테스트에서 직접 부른다.</summary>
     public static MapStateSample ScanBuffer(byte[] buffer)
+        => ScanBuffer(buffer, buffer.Length);
+
+    private static MapStateSample ScanBuffer(byte[] buffer, int length)
     {
-        var round = Math.Max(ScanRound(buffer, RoundMarkerA), ScanRound(buffer, RoundMarkerB));
-        return new MapStateSample(round, CountSettlements(buffer), ScanDifficulty(buffer));
+        var round = Math.Max(ScanRound(buffer, length, RoundMarkerA),
+            ScanRound(buffer, length, RoundMarkerB));
+        return new MapStateSample(round, CountSettlements(buffer, length),
+            ScanDifficulty(buffer, length));
     }
 
-    private static string ScanDifficulty(byte[] buffer)
+    private static string ScanDifficulty(byte[] buffer, int length)
     {
-        var fromBoard = MatchDifficultyAfter(buffer, DifficultyBoardMarker);
-        var fromLine = MatchDifficultyAfter(buffer, DifficultyLineMarker);
+        var fromBoard = MatchDifficultyAfter(buffer, length, DifficultyBoardMarker);
+        var fromLine = MatchDifficultyAfter(buffer, length, DifficultyLineMarker);
         return CombineDifficulty(fromBoard, fromLine);
     }
 
-    private static string MatchDifficultyAfter(byte[] buffer, byte[] marker)
+    private static string MatchDifficultyAfter(byte[] buffer, int length, byte[] marker)
     {
         var found = "unknown";
-        foreach (var end in MarkerEnds(buffer, marker))
+        foreach (var end in MarkerEnds(buffer, length, marker))
         {
             foreach (var (token, name) in DifficultyTokens)
             {
-                if (end + token.Length > buffer.Length) continue;
+                if (end + token.Length > length) continue;
                 var matched = true;
                 for (var offset = 0; offset < token.Length; offset++)
                     if (buffer[end + offset] != token[offset]) { matched = false; break; }
@@ -131,26 +129,26 @@ public static class MapStateReader
         return leftRank <= rightRank ? left : right;
     }
 
-    private static int ScanRound(byte[] buffer, byte[] marker)
+    private static int ScanRound(byte[] buffer, int length, byte[] marker)
     {
         var best = 0;
-        foreach (var digits in MarkerEnds(buffer, marker))
+        foreach (var digits in MarkerEnds(buffer, length, marker))
         {
-            var (value, read) = ReadDigits(buffer, digits, 3);
+            var (value, read) = ReadDigits(buffer, length, digits, 3);
             if (read > 0 && value <= MaximumRound) best = Math.Max(best, value);
         }
         return best;
     }
 
-    private static int CountSettlements(byte[] buffer)
+    private static int CountSettlements(byte[] buffer, int length)
     {
         var count = 0;
-        foreach (var digits in MarkerEnds(buffer, SettlementMarker))
+        foreach (var digits in MarkerEnds(buffer, length, SettlementMarker))
         {
-            var (_, read) = ReadDigits(buffer, digits, 6);
+            var (_, read) = ReadDigits(buffer, length, digits, 6);
             if (read == 0) continue;
             var suffix = digits + read;
-            if (suffix + SettlementSuffix.Length > buffer.Length) continue;
+            if (suffix + SettlementSuffix.Length > length) continue;
             var matched = true;
             for (var offset = 0; offset < SettlementSuffix.Length; offset++)
                 if (buffer[suffix + offset] != SettlementSuffix[offset]) { matched = false; break; }
@@ -160,9 +158,9 @@ public static class MapStateReader
     }
 
     /// <summary>버퍼에서 마커가 끝나는 위치들을 차례로 돌려준다.</summary>
-    private static IEnumerable<int> MarkerEnds(byte[] buffer, byte[] marker)
+    private static IEnumerable<int> MarkerEnds(byte[] buffer, int length, byte[] marker)
     {
-        var limit = buffer.Length - marker.Length - 1;
+        var limit = length - marker.Length - 1;
         for (var index = 0; index <= limit; index++)
         {
             if (buffer[index] != marker[0]) continue;
@@ -175,11 +173,11 @@ public static class MapStateReader
         }
     }
 
-    private static (int Value, int Read) ReadDigits(byte[] buffer, int start, int maxDigits)
+    private static (int Value, int Read) ReadDigits(byte[] buffer, int length, int start, int maxDigits)
     {
         var value = 0;
         var read = 0;
-        while (start + read < buffer.Length && buffer[start + read] is >= (byte)'0' and <= (byte)'9'
+        while (start + read < length && buffer[start + read] is >= (byte)'0' and <= (byte)'9'
                && read < maxDigits)
         {
             value = value * 10 + (buffer[start + read] - '0');

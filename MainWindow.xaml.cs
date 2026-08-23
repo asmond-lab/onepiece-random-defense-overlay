@@ -685,7 +685,8 @@ public partial class MainWindow : Window
         var recommendations = _engine.RecommendNearestCrafts(goal.Id, recommendationInventory,
             navigationMode: navigation.Id, gorosei: gorosei, buildVariant: BuildVariants.AutoId,
             suppressSeraphim: _greenBloodUsage.Used ||
-                !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty));
+                !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty),
+            prioritizeTargetRare: true);
         _telemetrySession.ObserveTopRecommendations(
             recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();

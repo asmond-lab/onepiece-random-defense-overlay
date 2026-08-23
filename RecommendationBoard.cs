@@ -256,7 +256,9 @@ internal static class RecommendationBoard
         var stack = new StackPanel();
         stack.Children.Add(new TextBlock
         {
-            Text = "조합 흐름",
+            Text = selected.ProgressionGoalName is { Length: > 0 } target
+                ? $"{selected.CompositionUnits[0].Name}부터 {target}까지 조합 흐름"
+                : "조합 흐름",
             Foreground = OverlayTheme.MutedBrush,
             FontSize = 10,
             FontWeight = FontWeights.SemiBold,

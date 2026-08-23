@@ -27,7 +27,20 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     public WarcraftMemoryRecognitionService(DataCatalog catalog) => _unitMap = new RawcodeUnitMap(catalog);
 
     public Task<RecognitionResult> RecognizeAsync(AppSettings settings, CancellationToken cancellationToken) =>
-        Task.Run(() => Recognize(cancellationToken), cancellationToken);
+        Task.Run(() =>
+        {
+            var thread = Thread.CurrentThread;
+            var previousPriority = thread.Priority;
+            try
+            {
+                thread.Priority = ThreadPriority.BelowNormal;
+                return Recognize(cancellationToken);
+            }
+            finally
+            {
+                thread.Priority = previousPriority;
+            }
+        }, cancellationToken);
 
     private RecognitionResult Recognize(CancellationToken token)
     {
@@ -573,6 +586,15 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
                 position += (ulong)Math.Max(length - overlap, 0x1000);
             }
         }
+    }
+
+    public int ReadInto(ulong address, byte[] buffer, int count)
+    {
+        if (count < 0 || count > buffer.Length)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        var succeeded = ReadProcessMemory(_handle, (nint)address, buffer, count, out var read);
+        var actual = Math.Clamp(read.ToInt64(), 0, count);
+        return succeeded || actual > 0 ? (int)actual : 0;
     }
 
     public IEnumerable<MemoryRegion> ReadablePrivateRegions()

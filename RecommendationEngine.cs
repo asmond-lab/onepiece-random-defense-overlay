@@ -65,7 +65,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         string navigationMode = "PathOfKings.BountyHunter",
         GoroseiMode gorosei = GoroseiMode.None,
         string buildVariant = BuildVariants.AutoId,
-        bool suppressSeraphim = false)
+        bool suppressSeraphim = false,
+        bool prioritizeTargetRare = false)
     {
         var counts = inventory
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
@@ -116,8 +117,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // 상위 기물 대깨 초기 빌드용: 목표 트리의 희귀함 중 가장 가까운 한기를 추가 노출한다
         // (패스트 유니크 퀘스트 대응). 기존 추천은 밀리지 않고 보드가 한 칸 길어진다.
         var rareShipTreeIds = _recipes.RareShipTreeIds(goal);
-        var pinningFirstRareShip = rareShipTreeIds.Count > 0 && !counts.Any(pair =>
-            pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
+        var missingTargetRareIds = rareShipTreeIds
+            .Where(id => counts.GetValueOrDefault(id) <= 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var pinningTargetRare = prioritizeTargetRare && missingTargetRareIds.Count > 0;
+        var pinningFirstRareShip = !prioritizeTargetRare && rareShipTreeIds.Count > 0 &&
+                                   !counts.Any(pair =>
+                                       pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
         var candidates = catalog.AllUnits
             .Where(unit => !unit.Id.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
             .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
@@ -175,19 +181,20 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .ToList();
         }
 
-        // 추가만 한다: 목표 트리의 희귀함 중 가장 만들기에 가까운 한기를 전설 다음에 붙인다.
-        if (pinningFirstRareShip)
+        // UI에서 상위를 직접 골랐으면 현재 패에서 가장 가까운 미보유 희귀함을 첫 행동으로 둔다.
+        // 기존 엔진 호출은 종전처럼 전설 뒤에 한 칸만 추가한다.
+        Recommendation? rarePick = null;
+        if (pinningFirstRareShip || pinningTargetRare)
         {
-            var rarePicked = rareShipTreeIds
-                .Where(id => counts.GetValueOrDefault(id) <= 0)
+            rarePick = (pinningTargetRare ? missingTargetRareIds : rareShipTreeIds)
                 .Select(id => EvaluateCraft(catalog.Unit(id), counts, calculator))
-                .Where(item => MeetsOwnedPrerequisites(
+                .Where(item => pinningTargetRare || MeetsOwnedPrerequisites(
                     catalog.Unit(item.Route.GoalUnitId), counts))
                 .OrderBy(item => item.RecipeProgress.MissingLeaves
                     .Sum(leaf => leaf.MissingCount))
                 .ThenByDescending(item => item.RecipeProgress.CompletionRatio)
                 .FirstOrDefault();
-            if (rarePicked is { } rarePick &&
+            if (!pinningTargetRare && rarePick is not null &&
                 !nearest.Any(item => string.Equals(item.Route.GoalUnitId, rarePick.Route.GoalUnitId,
                     StringComparison.OrdinalIgnoreCase)))
             {
@@ -211,8 +218,20 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
         var visibleGoal = showGoal ? [goalSuggestion] : Enumerable.Empty<Recommendation>();
         // 첫 희귀함 고정분은 기존 추천을 밀어내지 않도록 상한을 한 칸 늘려 허용한다.
-        var results = visibleGoal.Concat(nearest)
-            .Take(Math.Max(1, take + (pinningFirstRareShip ? 1 : 0)))
+        if (pinningTargetRare && rarePick is not null)
+        {
+            rarePick.RemainingCraftSteps.Clear();
+            rarePick.RemainingCraftSteps.AddRange(goalSuggestion.RemainingCraftSteps);
+            nearest = nearest
+                .Where(item => !item.Route.GoalUnitId.Equals(
+                    rarePick.Route.GoalUnitId, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        var ordered = pinningTargetRare && rarePick is not null
+            ? new[] { rarePick }.Concat(visibleGoal).Concat(nearest)
+            : visibleGoal.Concat(nearest);
+        var results = ordered
+            .Take(Math.Max(1, take + (pinningFirstRareShip || pinningTargetRare ? 1 : 0)))
             .ToList();
 
         // 세라핌은 역할 지표(스턴·이감·방깎)가 없어 파이프라인이 집지 못한다.
@@ -254,8 +273,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // 패로 아래 순위의 완료율·남은 조합을 다시 계산해, 같은 카드가 여러 순위에
         // 이중 집계되지 않게 한다(1번 완료 시 2번 %가 부풀어 보이던 문제).
         // 세라핌은 초기 제한 뒤에 삽입될 수 있으므로 최종 목록에서도 take 계약을 지킨다.
+        var protectedUnitIds = pinningTargetRare && rarePick is not null
+            ? recipeLegendaryIds.Append(rarePick.Route.GoalUnitId).ToList()
+            : recipeLegendaryIds;
         results = LimitRecommendationsPreservingStrategy(
-            results, take, goal, counts, strategy, showGoal, recipeLegendaryIds);
+            results, take, goal, counts, strategy, showGoal, protectedUnitIds);
 
         IReadOnlyDictionary<string, int> cascadeInventory = counts;
         for (var i = 0; i < results.Count; i++)
@@ -265,6 +287,19 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             cascadeInventory = remainingAfterBuild;
             if (recipeLegendaryIds.Contains(results[i].Route.GoalUnitId))
                 results[i].ClusterParentUnitId = goal.Id;
+        }
+        if (pinningTargetRare && rarePick is not null &&
+            results.FirstOrDefault(item => item.Route.GoalUnitId.Equals(
+                rarePick.Route.GoalUnitId, StringComparison.OrdinalIgnoreCase)) is { } progression)
+        {
+            progression.RemainingCraftSteps.Clear();
+            progression.RemainingCraftSteps.AddRange(goalSuggestion.RemainingCraftSteps);
+            progression.ProgressionGoalUnitId = goal.Id;
+            var goalTier = BaseTier(goal.Tier);
+            progression.ProgressionGoalName = goal.Name.Contains(
+                goalTier, StringComparison.CurrentCulture)
+                ? goal.Name
+                : $"{goal.Name} {goalTier}";
         }
 
         foreach (var recommendation in results)
@@ -307,6 +342,15 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             remaining = leftover;
             crafted.ClusterParentUnitId = rec.ClusterParentUnitId;
             crafted.ClearEvidence = rec.ClearEvidence;
+            if (rec.ProgressionGoalUnitId is { Length: > 0 } progressionGoalId)
+            {
+                var progression = EvaluateCraft(catalog.Unit(progressionGoalId), counts, calculator);
+                crafted.RemainingCraftSteps.Clear();
+                crafted.RemainingCraftSteps.AddRange(progression.RemainingCraftSteps);
+                crafted.ProgressionGoalUnitId = progressionGoalId;
+                crafted.ProgressionGoalName = rec.ProgressionGoalName ??
+                                              catalog.Unit(progressionGoalId).Name;
+            }
             rebuilt[rec.Route.Id] = crafted;
         }
         return recs.Select(item => rebuilt[item.Route.Id]).ToList();
@@ -1338,6 +1382,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
     public IReadOnlyList<string> RecipeLegendaryUnitIds(string goalUnitId) =>
         _recipes.RecipeLegendaryUnitIds(goalUnitId);
+
+    public IReadOnlyList<string> RecipeRareUnitIds(string goalUnitId) =>
+        _recipes.RareShipTreeIds(catalog.Unit(goalUnitId)).ToList();
 
     public IReadOnlyList<string> RecipeSpecialUnitIds(string unitId) =>
         _recipes.RecipeSpecialUnitIds(unitId);
