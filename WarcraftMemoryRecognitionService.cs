@@ -12,12 +12,13 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private readonly RawcodeUnitMap _unitMap;
     private readonly MemoryProfileRepository _profiles = new();
     private readonly object _cacheGate = new();
+    private readonly IncrementalMapStateScanner _mapStateScanner =
+        new(8 * 1024 * 1024);
     private LocatorCache? _locatorCache;
 
-    /// <summary>맵 상태 읽기는 힙 전체 훑기라 비싸다 — 이 간격으로만 갱신한다.
-    /// 60라운드부터는 정산 순간을 놓치지 않게 간격을 줄인다.</summary>
-    private static readonly TimeSpan MapStateInterval = TimeSpan.FromSeconds(45);
-    private static readonly TimeSpan MapStateEndgameInterval = TimeSpan.FromSeconds(15);
+    /// <summary>전체 힙 스캔 대신 매 인식 틱에 작은 조각만 읽는다.</summary>
+    private static readonly TimeSpan MapStateSliceInterval = TimeSpan.FromMilliseconds(500);
+    private const int MapStateEndgameBudget = 16 * 1024 * 1024;
     private DateTimeOffset _lastMapStateAt = DateTimeOffset.MinValue;
     private MapStateSample? _lastMapState;
     private static readonly TimeSpan WaitingLocatorRescanInterval = TimeSpan.FromSeconds(5);
@@ -258,6 +259,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         lock (_cacheGate) _locatorCache = null;
         _lastMapState = null;
         _lastMapStateAt = DateTimeOffset.MinValue;
+        _mapStateScanner.Reset();
         _sessionBoundaryCachesCleared = true;
         _nextWaitingLocatorRescanAt = allowPeriodicRescan
             ? now + WaitingLocatorRescanInterval
@@ -424,24 +426,19 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         return selected;
     }
 
-    /// <summary>정해진 간격마다만 맵 상태를 새로 읽고, 사이에는 마지막 값을 돌려준다.</summary>
+    /// <summary>매 틱 고정 예산만큼 맵 상태 메모리를 순환하고 누적값을 돌려준다.</summary>
     private MapStateSample? ReadMapStateThrottled(ReadOnlyProcessMemory memory, CancellationToken token)
     {
         var now = DateTimeOffset.UtcNow;
-        var interval = _lastMapState is { MaxRound: >= 60 } ? MapStateEndgameInterval : MapStateInterval;
-        if (_lastMapState is not null && now - _lastMapStateAt < interval) return _lastMapState;
+        if (_lastMapState is not null && now - _lastMapStateAt < MapStateSliceInterval)
+            return _lastMapState;
         _lastMapStateAt = now;
         try
         {
-            var next = MapStateReader.TryRead(memory, token);
-            if (next is { } sample)
-            {
-                if (sample.Difficulty is "" or "unknown" &&
-                    _lastMapState is { Difficulty: { Length: > 0 } known } &&
-                    known != "unknown")
-                    sample = sample with { Difficulty = known };
-                _lastMapState = sample;
-            }
+            int? budget = _lastMapState is { MaxRound: >= 60 }
+                ? MapStateEndgameBudget
+                : null;
+            _lastMapState = _mapStateScanner.ScanStep(memory, token, budget);
         }
         catch (Exception) when (!token.IsCancellationRequested)
         {

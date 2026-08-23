@@ -85,7 +85,7 @@ public static class MapStateReader
     public static MapStateSample ScanBuffer(byte[] buffer)
         => ScanBuffer(buffer, buffer.Length);
 
-    private static MapStateSample ScanBuffer(byte[] buffer, int length)
+    internal static MapStateSample ScanBuffer(byte[] buffer, int length)
     {
         var round = Math.Max(ScanRound(buffer, length, RoundMarkerA),
             ScanRound(buffer, length, RoundMarkerB));
@@ -118,7 +118,7 @@ public static class MapStateReader
         return found;
     }
 
-    private static string CombineDifficulty(string left, string right)
+    internal static string CombineDifficulty(string left, string right)
     {
         if (left is "" or "unknown") return string.IsNullOrEmpty(right) ? "unknown" : right;
         if (right is "" or "unknown" || left == right) return left;
@@ -157,20 +157,19 @@ public static class MapStateReader
         return count;
     }
 
-    /// <summary>버퍼에서 마커가 끝나는 위치들을 차례로 돌려준다.</summary>
-    private static IEnumerable<int> MarkerEnds(byte[] buffer, int length, byte[] marker)
+    /// <summary>SIMD 기반 span 검색으로 마커 끝 위치를 찾는다.</summary>
+    private static List<int> MarkerEnds(byte[] buffer, int length, byte[] marker)
     {
-        var limit = length - marker.Length - 1;
-        for (var index = 0; index <= limit; index++)
+        var result = new List<int>();
+        var searchStart = 0;
+        while (searchStart <= length - marker.Length)
         {
-            if (buffer[index] != marker[0]) continue;
-            var matched = true;
-            for (var offset = 1; offset < marker.Length; offset++)
-                if (buffer[index + offset] != marker[offset]) { matched = false; break; }
-            if (!matched) continue;
-            yield return index + marker.Length;
-            index += marker.Length - 1;
+            var relative = buffer.AsSpan(searchStart, length - searchStart).IndexOf(marker);
+            if (relative < 0) break;
+            searchStart += relative + marker.Length;
+            result.Add(searchStart);
         }
+        return result;
     }
 
     private static (int Value, int Read) ReadDigits(byte[] buffer, int length, int start, int maxDigits)

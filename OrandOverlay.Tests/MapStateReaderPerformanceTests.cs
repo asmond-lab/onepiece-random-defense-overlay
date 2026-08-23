@@ -6,6 +6,30 @@ namespace OrandOverlay.Tests;
 public sealed class MapStateReaderPerformanceTests
 {
     [Fact]
+    public void IncrementalScanHonorsPerStepByteBudget()
+    {
+        const int budget = 1024 * 1024;
+        var scanner = new IncrementalMapStateScanner(budget);
+        using var memory = ReadOnlyProcessMemory.Open(Environment.ProcessId);
+
+        _ = scanner.ScanStep(memory, CancellationToken.None);
+
+        Assert.InRange(scanner.LastBytesRead, 1, budget);
+    }
+
+    [Fact]
+    public void IncrementalScanResetClearsPreviousMatchState()
+    {
+        var scanner = new IncrementalMapStateScanner(1024 * 1024);
+        scanner.Merge(new MapStateSample(65, 2, "신"));
+
+        scanner.Reset();
+
+        Assert.Equal(new MapStateSample(0, 0, "unknown"), scanner.Current);
+        Assert.Equal(0, scanner.LastBytesRead);
+    }
+
+    [Fact]
     public void FullPrivateMemoryScanReusesBoundedBuffer()
     {
         var before = GC.GetAllocatedBytesForCurrentThread();
