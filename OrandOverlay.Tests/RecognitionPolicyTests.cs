@@ -6,7 +6,7 @@ namespace OrandOverlay.Tests;
 public sealed class RecognitionPolicyTests
 {
     [Fact]
-    public void ShouldResetMatch_RequiresConfirmedWaitingBoundary()
+    public void ShouldResetMatch_WaitsForTwoConfirmedBoundaryScans()
     {
         var confirmed = new RecognitionResult
         {
@@ -18,8 +18,9 @@ public sealed class RecognitionPolicyTests
             State = RecognitionState.Waiting,
             ConfirmsSessionBoundary = false
         };
-        Assert.True(RecognitionPolicy.ShouldResetMatch(confirmed));
-        Assert.False(RecognitionPolicy.ShouldResetMatch(unconfirmed));
+        Assert.False(RecognitionPolicy.ShouldResetMatch(confirmed, confirmedWaitingScans: 1));
+        Assert.True(RecognitionPolicy.ShouldResetMatch(confirmed, confirmedWaitingScans: 2));
+        Assert.False(RecognitionPolicy.ShouldResetMatch(unconfirmed, confirmedWaitingScans: 2));
     }
 
     [Theory]

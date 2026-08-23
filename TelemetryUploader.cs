@@ -43,12 +43,20 @@ public sealed class TelemetryUploader
 
     public async Task EnqueueAndFlushAsync(TelemetryRecord record)
     {
+        Enqueue(record);
+        await FlushPendingAsync();
+    }
+
+    /// <summary>
+    /// 프로세스가 바로 종료돼도 레코드가 남도록 네트워크 작업 전에 로컬 큐를 동기 기록한다.
+    /// </summary>
+    public void Enqueue(TelemetryRecord record)
+    {
         try
         {
             var path = Path.Combine(_queueDirectory, record.RecordId + ".json");
-            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(record));
+            File.WriteAllText(path, JsonSerializer.Serialize(record));
             TrimQueue();
-            await FlushPendingAsync();
         }
         catch { /* fail-silent */ }
     }

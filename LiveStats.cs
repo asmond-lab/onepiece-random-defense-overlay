@@ -10,6 +10,8 @@ public sealed class LiveStats
     public int LabeledRecords { get; init; }
     private readonly Dictionary<string, LiveGoalStats> _goals = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, double> _weights = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, Dictionary<string, double>> _goalWeights =
+        new(StringComparer.OrdinalIgnoreCase);
 
     public static LiveStats Load(string path)
     {
@@ -32,6 +34,14 @@ public sealed class LiveStats
             if (root.TryGetProperty("weights", out var weights))
                 foreach (var entry in weights.EnumerateObject())
                     stats._weights[entry.Name] = Math.Clamp(entry.Value.GetDouble(), -0.1, 0.1);
+            if (root.TryGetProperty("goalWeights", out var goalWeights))
+                foreach (var goal in goalWeights.EnumerateObject())
+                {
+                    var parsed = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var entry in goal.Value.EnumerateObject())
+                        parsed[entry.Name] = Math.Clamp(entry.Value.GetDouble(), -0.1, 0.1);
+                    stats._goalWeights[goal.Name] = parsed;
+                }
             return stats;
         }
         catch { return new LiveStats(); }
@@ -41,6 +51,13 @@ public sealed class LiveStats
 
     /// <summary>게이트를 통과한 유닛 가중(±0.1). 미등재면 0 — 아무 영향 없음.</summary>
     public double WeightFor(string unitId) => _weights.GetValueOrDefault(unitId);
+
+    /// <summary>목표별 증거가 충분하면 그 값을, 아직 부족하면 전역 가중치를 쓴다.</summary>
+    public double WeightFor(string goalId, string unitId) =>
+        _goalWeights.TryGetValue(goalId, out var weights) &&
+        weights.TryGetValue(unitId, out var weight)
+            ? weight
+            : WeightFor(unitId);
 
     /// <summary>채용률 점수에 가중을 곱해 반영한다. 상한은 파싱 단계에서 이미 캡됐다.</summary>
     public static int ApplyWeight(int score, double weight) =>

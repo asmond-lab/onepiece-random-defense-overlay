@@ -75,11 +75,14 @@ public sealed class MatchOutcomeDetector(int requiredZeroScans = 2)
 
     /// <summary>스캔 1회 관측. localUnits는 내 소유 유닛 수, foreignUnits는 풀의 나머지 유닛 수.</summary>
     public void Observe(int localUnits, int foreignUnits) =>
-        Observe(localUnits, foreignUnits, DateTimeOffset.UtcNow);
+        Observe(localUnits, foreignUnits, DateTimeOffset.UtcNow, confirmedSessionBoundary: false);
 
     public void Observe(int localUnits, int foreignUnits, DateTimeOffset at)
+        => Observe(localUnits, foreignUnits, at, confirmedSessionBoundary: false);
+
+    public void Observe(int localUnits, int foreignUnits, DateTimeOffset at,
+        bool confirmedSessionBoundary)
     {
-        _ = foreignUnits;
         if (_defeated) return;
         _lastObservedAt = at;
         _peakLocalUnits = Math.Max(_peakLocalUnits, localUnits);
@@ -94,6 +97,12 @@ public sealed class MatchOutcomeDetector(int requiredZeroScans = 2)
             _consecutiveZeroScans = 0;
             return;
         }
+
+        // 프로세스 종료·자발적 나가기는 로컬·타 소유가 동시에 0이라 패배와 구분할
+        // 수 없다. 단, 직전 경계 스캔에서 타 소유가 남아 전멸 증거를 이미 봤다면
+        // 다음 스캔에서 풀이 정리되어 0이 되어도 연속 증거로 인정한다.
+        if (confirmedSessionBoundary && foreignUnits == 0 && _consecutiveZeroScans == 0)
+            return;
 
         if (++_consecutiveZeroScans >= requiredZeroScans) _defeated = true;
     }

@@ -59,6 +59,7 @@ public partial class MainWindow : Window
     private int _scanGeneration;
     private string? _lastScanSignature;
     private int _lastRound;
+    private int _confirmedWaitingScans;
     // 현재 패 인식과 사용자 숨김 선택을 함께 보존하는 오버레이 표시 상태.
     private OverlayVisibilityState _overlayVisibility;
     // 연속 비표시 판정 횟수 — 히스테리시스 임계(OverlayVisibilityPolicy.HiddenStreakThreshold)와 비교.
@@ -874,9 +875,14 @@ public partial class MainWindow : Window
                 _automaticStale = _automatic.Count > 0;
                 _automaticDisconnected = !RecognitionPolicy.MayUseLastGoodForRecommendations(result.State);
             }
+            _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
+                                     result.ConfirmsSessionBoundary
+                ? _confirmedWaitingScans + 1
+                : 0;
             if (result.ShouldReplaceInventory || result.State == RecognitionState.Waiting)
             {
-                _outcome.Observe(result.Diagnostics.ObservedObjects, result.Diagnostics.ForeignObjects);
+                _outcome.Observe(result.Diagnostics.ObservedObjects, result.Diagnostics.ForeignObjects,
+                    DateTimeOffset.UtcNow, result.ConfirmsSessionBoundary);
                 if (result.Diagnostics.MapState is { } mapState)
                 {
                     _outcome.ObserveRound(mapState.MaxRound);
@@ -892,8 +898,7 @@ public partial class MainWindow : Window
             }
             if (_outcome.Outcome is "fail" or "clear")
                 SendMatchTelemetry();
-            if (RecognitionPolicy.ShouldResetMatch(result))
-            if (RecognitionPolicy.ShouldResetMatch(result))
+            if (RecognitionPolicy.ShouldResetMatch(result, _confirmedWaitingScans))
             {
                 ResetMatchSession();
                 _lastRound = 0;
@@ -957,6 +962,7 @@ public partial class MainWindow : Window
         _boardPlan = [];
         _boardBanner = null;
         _lastScanSignature = null;
+        _confirmedWaitingScans = 0;
         _overlayVisibility = default;
         _overlayHiddenStreak = 0;
         SetOverlayHandAvailability(false);

@@ -1198,7 +1198,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .DefaultIfEmpty()
                 .Max() * 100, MidpointRounding.AwayFromZero);
         if (clearScore is not null)
-            return LiveStats.ApplyWeight(clearScore.Value, _liveStats.WeightFor(candidate.Id));
+            return LiveStats.ApplyWeight(clearScore.Value,
+                _liveStats.WeightFor(goal.Id, candidate.Id));
 
         var priorities = RecommendationCommunityPriorities.ForGoal(goal);
         if (priorities is null) return 0;

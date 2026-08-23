@@ -686,10 +686,11 @@ Assert(catalog.Unit("rawcode:V50h").Tier == "왜곡됨" &&
        catalog.Unit("rawcode:840h").Tier == "왜곡됨",
     "43747 기준 에이스·퀸·코알라·페로나의 폐기된 구등급을 왜곡됨으로 교정");
 var distortedAce = catalog.Unit("rawcode:V50h");
-Assert(distortedAce.Recipe.Count == 2 &&
+Assert(distortedAce.Recipe.Count == 3 &&
        distortedAce.Recipe.GetValueOrDefault("rawcode:O20h") == 1 &&
-       distortedAce.Recipe.GetValueOrDefault("rawcode:LUMBER") == 10,
-    "에이스 왜곡됨 레시피는 현재 TMO 권위(에이스 전설 1 + 목재 10)를 따른다");
+       distortedAce.Recipe.GetValueOrDefault("rawcode:Z10h") == 1 &&
+       distortedAce.Recipe.GetValueOrDefault("rawcode:210h") == 1,
+    "에이스 왜곡됨 레시피는 2.314 맵 조합식(에이스 전설·루피 흔함·버기 흔함)을 따른다");
 Assert(catalog.Unit("mobydick").Tier == "해적선" &&
        catalog.Unit("rawcode:U30h").Tier == "해적선",
     "43747 해적선 장식 문자는 제거하고 앱의 정식 등급명으로 유지");
@@ -904,14 +905,21 @@ Assert(RecognitionPolicy.ShouldResetMatch(new RecognitionResult
        {
            State = RecognitionState.Waiting,
            ConfirmsSessionBoundary = true
-       }) &&
-       !RecognitionPolicy.ShouldResetMatch(new RecognitionResult { State = RecognitionState.Waiting }) &&
+       }, confirmedWaitingScans: 2) &&
+       !RecognitionPolicy.ShouldResetMatch(new RecognitionResult
+       {
+           State = RecognitionState.Waiting,
+           ConfirmsSessionBoundary = true
+       }, confirmedWaitingScans: 1) &&
+       !RecognitionPolicy.ShouldResetMatch(
+           new RecognitionResult { State = RecognitionState.Waiting },
+           confirmedWaitingScans: 2) &&
        !RecognitionPolicy.ShouldResetMatch(new RecognitionResult
        {
            State = RecognitionState.TransientReadError,
            ConfirmsSessionBoundary = true
-       }),
-    "한 판이 끝나 로비·패 0장이면 다음 판 희귀함 자동시작을 다시 연다");
+       }, confirmedWaitingScans: 2),
+    "확인된 경계를 2회 본 뒤 다음 판 희귀함 자동시작을 다시 연다");
 Assert(new RecognitionResult
        {
            State = RecognitionState.Waiting,
