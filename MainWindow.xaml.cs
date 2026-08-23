@@ -36,9 +36,8 @@ public partial class MainWindow : Window
     private CompletedTopUnitTracker _completedTopUnits = null!;
     private readonly TelemetryUploader _telemetry = new();
     private readonly MatchOutcomeDetector _outcome = new();
-    private readonly MatchTelemetryBuffer _telemetryBuffer = new();
-    private DateTimeOffset _telemetrySessionStart;
-    private List<string> _telemetryLastTop = [];
+    // 텔레메트리 세션 상태(버퍼·시작 시각·상위 추천)는 전용 세션이 소유한다.
+    private readonly MatchTelemetrySession _telemetrySession = new(new TelemetryUploader());
     private string _matchDifficulty = "unknown";
     private string _lastWarcraftVersion = "";
     private IInventoryRecognizer _recognizer = null!;
@@ -687,7 +686,8 @@ public partial class MainWindow : Window
             navigationMode: navigation.Id, gorosei: gorosei, buildVariant: BuildVariants.AutoId,
             suppressSeraphim: _greenBloodUsage.Used ||
                 !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty));
-        _telemetryLastTop = recommendations.Take(5).Select(x => x.Route.GoalUnitId).ToList();
+        _telemetrySession.ObserveTopRecommendations(
+            recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();
         GoalSelectLabel.Text = "목표 상위 유닛 · 학습된 유닛만" +
             (_liveStats.TryGetGoal(goal.Id, out var liveGoal)
@@ -850,7 +850,7 @@ public partial class MainWindow : Window
             {
                 if (!_liveSessionActive)
                 {
-                    _telemetrySessionStart = DateTimeOffset.UtcNow;
+                    _telemetrySession.MarkSessionStart();
                     _matchDifficulty = "unknown";
                 }
                 _completedTopUnits.Observe(result.Entries);
@@ -944,10 +944,8 @@ public partial class MainWindow : Window
         _automatic.Clear();
         _automaticStale = false;
         _automaticDisconnected = true;
-        _telemetryBuffer.Reset();
         _outcome.Reset();
-        _telemetrySessionStart = default;
-        _telemetryLastTop = [];
+        _telemetrySession.Reset();
         _matchDifficulty = "unknown";
         _liveSessionActive = false;
         _autoStartApplied = false;
@@ -1081,7 +1079,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         try
         {
             if (!_liveSessionActive) return;
-            var record = _telemetryBuffer.TryEmit(
+            _telemetrySession.Send(
                 _settings.TelemetryAnonId, UpdateService.CurrentVersion.ToString(3),
                 "2.314", string.IsNullOrEmpty(_lastWarcraftVersion) ? "unknown" : _lastWarcraftVersion,
                 string.IsNullOrWhiteSpace(_settings.GoalUnitId) ? "unknown" : _settings.GoalUnitId,
@@ -1089,9 +1087,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
                 string.IsNullOrWhiteSpace(_settings.GoroseiMode) ? "None" : _settings.GoroseiMode,
                 "auto",
                 string.IsNullOrWhiteSpace(_matchDifficulty) ? "unknown" : _matchDifficulty,
-                DateTimeOffset.UtcNow, _outcome.Outcome, _outcome.OutcomeSource);
-            if (record is null) return;
-            _ = _telemetry.EnqueueAndFlushAsync(record);
+                _outcome.Outcome, _outcome.OutcomeSource);
         }
         catch { /* fail-silent */ }
     }
@@ -1103,8 +1099,8 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         {
             if (!_liveSessionActive) return;
             var hand = _automatic.Values.Where(x => x.Count > 0).ToList();
-            _telemetryBuffer.Capture(hand, _completedTopUnits.CompletedUnitIds, _telemetryLastTop,
-                _telemetrySessionStart, hand.Sum(x => x.Count));
+            _telemetrySession.Capture(hand, _completedTopUnits.CompletedUnitIds,
+                hand.Sum(x => x.Count));
         }
         catch { /* fail-silent */ }
     }
