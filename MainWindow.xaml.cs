@@ -20,8 +20,8 @@ public partial class MainWindow : Window
     // 릴리스 확인은 API가 아니라 리다이렉트 태그 조사라 호출 제한 부담이 없다 — 2분이면
     // 새 릴리스가 몇 분 안에 전 유저에게 퍼진다.
     private readonly DispatcherTimer _updateTimer = new() { Interval = TimeSpan.FromMinutes(2) };
-    private bool _updateBusy;
-    private string? _updateNoticeTag;
+    // 자동 업데이트 정책·중복 억제는 AppUpdateCoordinator가 소유한다.
+    private AppUpdateCoordinator? _updateCoordinator;
     private RecommendationEngine _engine = null!;
     private InventoryStatsCalculator _statsCalculator = null!;
     private RareRerollAdvisor _rareRerollAdvisor = null!;
@@ -157,60 +157,25 @@ public partial class MainWindow : Window
             _ = ScanAsync();
         }
         _ = RefreshClearDataAsync();
-        _ = AutoUpdateAsync();
+        _updateCoordinator = new AppUpdateCoordinator(_settings,
+            () => _liveSessionActive,
+            message => Dispatcher.InvokeAsync(new Action(() => FooterStatus.Text = message)).Task,
+            InstallUpdateAsync);
+        _ = _updateCoordinator.RunStartupAsync();
         // 초기 버전이라 실행 중에도 주기적으로 새 릴리스를 확인해 바로 반영한다.
-        _updateTimer.Tick += async (_, _) => await CheckForUpdateAsync();
+        _updateTimer.Tick += async (_, _) => await _updateCoordinator.CheckForUpdateAsync();
         _updateTimer.Start();
     }
 
-    private async Task AutoUpdateAsync()
-    {
-        // 이전 업데이트가 중간에 실패해 남은 임시 파일을 정리한다.
-        try
-        {
-            if (Environment.ProcessPath is { Length: > 0 } processPath &&
-                File.Exists(processPath + ".new"))
-                File.Delete(processPath + ".new");
-        }
-        catch
-        {
-            // 잔여 파일 정리 실패는 업데이트 확인을 막지 않는다.
-        }
-        await CheckForUpdateAsync();
-    }
-
-    // 새 릴리스가 있으면 확인 없이 내려받아 교체하고 자동 재시작한다(유저 지시).
+        // 새 릴리스가 있으면 확인 없이 내려받아 교체하고 자동 재시작한다(유저 지시).
     // 다만 교체는 재시작을 동반하므로 판 도중에는 미룬다(유저 지시) — 다음 확인
     // 주기에 다시 시도한다. 개발 PC(ORAND_DEV)는 검증을 위해 즉시 교체한다.
     // 같은 태그를 이미 시도했다면(버전 미상승 등) 반복하지 않는다.
-    private async Task CheckForUpdateAsync()
-    {
-        if (_updateBusy) return;
-        if (UpdateService.IsTestBuild) return;
-        if (!UpdatePolicy.ShouldInstallNow(_liveSessionActive, UpdatePolicy.IsDeveloperMachine)) return;
-        var service = new UpdateService();
-        var update = await service.CheckAsync();
-        if (update is null) return;
-        if (update.Tag.Equals(_settings.LastAttemptedUpdateTag, StringComparison.OrdinalIgnoreCase))
-        {
-            await NotifyUpdateOnceAsync(update.Tag,
-                $"{update.Tag} 자동 업데이트가 이전에 완료되지 않았습니다 — 릴리스 페이지에서 수동으로 받아주세요.");
-            return;
-        }
-        if (!UpdateService.CanSelfInstall)
-        {
-            await NotifyUpdateOnceAsync(update.Tag,
-                $"새 버전 {update.Tag} 공개 — 단일 exe 배포가 아니어서 자동 교체를 건너뜁니다.");
-            return;
-        }
-        await InstallUpdateAsync(service, update);
-    }
-
-    // 수동 확인(footer 버튼): 자동 확인과 달리 결과를 항상 footer에 알려주고,
+        // 수동 확인(footer 버튼): 자동 확인과 달리 결과를 항상 footer에 알려주고,
     // 이전에 실패로 기록된 태그도 다시 시도한다.
     private async void CheckUpdateNow_OnClick(object sender, RoutedEventArgs e)
     {
-        if (_updateBusy) return;
+        if (_updateCoordinator is { IsBusy: true }) return;
         if (UpdateService.IsTestBuild)
         {
             FooterStatus.Text = "테스트 빌드라 GitHub 배포본으로 덮지 않습니다.";
@@ -239,17 +204,9 @@ public partial class MainWindow : Window
     }
 
     // 주기 확인이 같은 안내를 footer에 반복해서 쓰지 않게 태그당 1회만 알린다.
-    private async Task NotifyUpdateOnceAsync(string tag, string message)
+        private async Task InstallUpdateAsync(UpdateService service, UpdateInfo update)
     {
-        if (tag.Equals(_updateNoticeTag, StringComparison.OrdinalIgnoreCase)) return;
-        _updateNoticeTag = tag;
-        await Dispatcher.InvokeAsync(() => FooterStatus.Text = message);
-    }
-
-    private async Task InstallUpdateAsync(UpdateService service, UpdateInfo update)
-    {
-        if (_updateBusy) return;
-        _updateBusy = true;
+        if (_updateCoordinator is null || !_updateCoordinator.BeginInstall()) return;
         // 진행바 창 — 업데이트가 돌고 있음을 눈에 보이게(유저 요청).
         Window? progressWindow = null;
         ProgressBar? progressBar = null;
@@ -304,7 +261,7 @@ public partial class MainWindow : Window
             // 내려받기·교체 시작 자체가 실패한 경우라 재시도해도 안전하다.
             _settings.LastAttemptedUpdateTag = previousAttemptTag;
             SettingsStore.Save(_settings);
-            _updateBusy = false;
+            _updateCoordinator?.EndInstall();
             await Dispatcher.InvokeAsync(() =>
             {
                 progressWindow?.Close();
