@@ -77,17 +77,27 @@ internal sealed class GrowthUnitPointerTracker
 
 internal static class GrowthUnitOwnershipPolicy
 {
+    private static readonly uint GuardPoint = RawcodeCodec.TryParse("D10h", out var rawcode)
+        ? rawcode
+        : 0;
+
     /// <summary>
     /// RawcodeCounts에는 로컬 소유와 포인터로 로컬 귀속을 증명한 성장형만 들어 있다.
-    /// 중립 성장형은 판 전체에서 한 기뿐이어도 다른 플레이어 것일 수 있으므로
-    /// 수량 추정에 절대 합치지 않는다.
+    /// 판 전체에 중립 성장형이 정확히 한 기면 솔로 시작 지급분으로 보완한다.
+    /// 맵에 원래 배치된 가드 포인트와 멀티의 여러 성장형은 귀속하지 않는다.
     /// </summary>
     public static IReadOnlyDictionary<uint, int> InventoryCounts(
         IReadOnlyDictionary<uint, int> attributedCounts,
-        IReadOnlyDictionary<uint, int> neutralGrowthCounts)
+        IReadOnlyDictionary<uint, int> neutralGrowthCounts,
+        bool hasAttributedGrowth = false)
     {
-        _ = neutralGrowthCounts;
-        return new Dictionary<uint, int>(attributedCounts);
+        var result = new Dictionary<uint, int>(attributedCounts);
+        if (hasAttributedGrowth) return result;
+        if (neutralGrowthCounts.Values.Sum() != 1) return result;
+        var neutral = neutralGrowthCounts.Single();
+        if (neutral.Key == GuardPoint) return result;
+        result[neutral.Key] = result.GetValueOrDefault(neutral.Key) + 1;
+        return result;
     }
 }
 

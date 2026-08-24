@@ -150,8 +150,12 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             // 중립 성장형은 한 기뿐이어도 다른 플레이어 것일 수 있다. 로컬 소유로
             // 직접 봤거나 같은 CUnit 포인터로 소유권 이전을 증명한 카드만 포함한다.
             var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
-                snapshot.RawcodeCounts, snapshot.NeutralGrowthCounts);
+                snapshot.RawcodeCounts, snapshot.NeutralGrowthCounts,
+                snapshot.RetainedGrowthObjects > 0 ||
+                snapshot.LocallyObservedGrowth.Count > 0);
             var growthTotal = snapshot.NeutralGrowthCounts.Values.Sum();
+            var adoptedNeutralGrowth = counts.Values.Sum() >
+                                       snapshot.RawcodeCounts.Values.Sum();
             var mapped = _unitMap.Map(counts);
             var diagnostics = new RecognitionDiagnostics
             {
@@ -162,7 +166,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 ProfileRevision = profile.ProfileRevision,
                 ProfileSource = loaded.Source,
                 ResolvedListAddress = $"0x{listAddress:X}",
-                ObservedObjects = snapshot.OwnedObjects,
+                ObservedObjects = snapshot.OwnedObjects + (adoptedNeutralGrowth ? 1 : 0),
                 ForeignObjects = snapshot.ForeignObjects,
                 MapState = ReadMapStateThrottled(memory, token),
                 MappedObjects = mapped.KnownCount + mapped.CatalogNamedCount,
@@ -175,7 +179,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                          (snapshot.RetainedGrowthObjects > 0
                              ? $" · 소유권 이동 성장형 {snapshot.RetainedGrowthObjects}기 유지"
                              : "") +
-                         (growthTotal > 0
+                         (adoptedNeutralGrowth
+                             ? " · 시작 지급 성장형 1기 포함"
+                             : growthTotal > 0
                              ? $" · 중립 성장형 {growthTotal}기(로컬 관측 없음으로 제외)"
                              : "") +
                          (profile.LocatorKind == MemoryLocatorKind.StructuralScan

@@ -15,6 +15,9 @@ public sealed class GrowthUnitPointerTrackerTests
     private static readonly uint GuardPoint = RawcodeCodec.TryParse("D10h", out var guard)
         ? guard
         : throw new InvalidOperationException("D10h rawcode 변환 실패");
+    private static readonly uint Buggy = RawcodeCodec.TryParse("510h", out var buggy)
+        ? buggy
+        : throw new InvalidOperationException("510h rawcode 변환 실패");
 
     [Fact]
     public void LocallySeenJinbeRemainsAttributedAfterOwnerTransfer()
@@ -50,14 +53,51 @@ public sealed class GrowthUnitPointerTrackerTests
     }
 
     [Fact]
+    public void SingleUntrackedNeutralJinbeIsAttributedAsSoloGrowthUnit()
+    {
+        var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
+            new Dictionary<uint, int>(),
+            new Dictionary<uint, int> { [Jinbe] = 1 });
+
+        Assert.Equal(1, counts[Jinbe]);
+    }
+
+    [Fact]
+    public void MultipleUntrackedNeutralGrowthUnitsAreNotAttributed()
+    {
+        var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
+            new Dictionary<uint, int>(),
+            new Dictionary<uint, int>
+            {
+                [Jinbe] = 1,
+                [GuardPoint] = 1
+            });
+
+        Assert.Empty(counts);
+    }
+
+    [Fact]
     public void TrackedJinbeRemainsWhileNeutralGuardPointIsExcluded()
     {
         var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
             new Dictionary<uint, int> { [Jinbe] = 1 },
-            new Dictionary<uint, int> { [GuardPoint] = 1 });
+            new Dictionary<uint, int> { [GuardPoint] = 1 },
+            hasAttributedGrowth: true);
 
         Assert.Equal(1, counts[Jinbe]);
         Assert.DoesNotContain(GuardPoint, counts.Keys);
+    }
+
+    [Fact]
+    public void TrackedLocalGrowthDoesNotAdoptSingleForeignNeutralGrowth()
+    {
+        var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
+            new Dictionary<uint, int> { [Jinbe] = 1 },
+            new Dictionary<uint, int> { [Buggy] = 1 },
+            hasAttributedGrowth: true);
+
+        Assert.Equal(1, counts[Jinbe]);
+        Assert.DoesNotContain(Buggy, counts.Keys);
     }
 
     [Theory]
