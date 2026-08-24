@@ -52,20 +52,29 @@ public sealed class OverlayVisibilityPolicyTests
     }
 
     [Fact]
-    public void TransientStreak_AtThreshold_Hides()
+    public void TransientStreak_AtThreshold_KeepsVisible()
     {
         var decision = OverlayVisibilityPolicy.Decide(true,
             Result(RecognitionState.TransientReadError),
             hiddenStreakCount: OverlayVisibilityPolicy.HiddenStreakThreshold);
-        Assert.Equal(OverlayVisibilityDecision.Hide, decision);
+        Assert.Equal(OverlayVisibilityDecision.KeepShown, decision);
     }
 
     [Fact]
-    public void SessionBoundaryWaiting_HidesImmediately_EvenOnFirstTick()
+    public void SessionBoundaryWaiting_FirstTickKeepsVisible()
     {
         var decision = OverlayVisibilityPolicy.Decide(true,
             Result(RecognitionState.Waiting, sessionBoundary: true, count: 0),
             hiddenStreakCount: 1);
+        Assert.Equal(OverlayVisibilityDecision.KeepShown, decision);
+    }
+
+    [Fact]
+    public void SessionBoundaryWaiting_SecondTickHides()
+    {
+        var decision = OverlayVisibilityPolicy.Decide(true,
+            Result(RecognitionState.Waiting, sessionBoundary: true, count: 0),
+            hiddenStreakCount: 2);
         Assert.Equal(OverlayVisibilityDecision.Hide, decision);
     }
 

@@ -536,6 +536,19 @@ public static class RecognitionPolicy
         result.ShouldClearAutomaticInventory &&
         result.ConfirmsSessionBoundary &&
         confirmedWaitingScans >= 2;
+
+    public static bool ShouldClearAutomaticInventory(RecognitionResult result,
+        int confirmedWaitingScans) =>
+        result.ShouldClearAutomaticInventory &&
+        result.ConfirmsSessionBoundary &&
+        confirmedWaitingScans >= 2;
+
+    public static bool ShouldUseLastGood(RecognitionResult result,
+        int confirmedWaitingScans) =>
+        MayUseLastGoodForRecommendations(result.State) ||
+        result.ShouldClearAutomaticInventory &&
+        result.ConfirmsSessionBoundary &&
+        confirmedWaitingScans < 2;
 }
 
 public static class InventoryMerge

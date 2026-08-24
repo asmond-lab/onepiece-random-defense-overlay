@@ -173,6 +173,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(unit => MeetsOwnedPrerequisites(unit, counts))
             .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
                            IsCheapFillerFor(goal, unit))
+            .Where(unit => !IsTopTier(unit.Tier) ||
+                           GoalStrategyCalculator.IsCompatibleTopDamageType(goal, unit))
             .Where(unit => !avoidTraitHungryTops ||
                            !unit.Rawcodes.Any(TraitHungryTopRawcodes.Contains))
             .Where(unit => !AvoidTraitPointCraftWithoutEconomy(navigation, unit, counts))

@@ -180,6 +180,16 @@ internal static class GoalStrategyCalculator
              ability.Name.Equals("바제스", StringComparison.Ordinal) &&
              !ability.DisplayValue.Equals("불가", StringComparison.OrdinalIgnoreCase)));
 
+    internal static bool IsCompatibleTopDamageType(UnitDefinition goal,
+        UnitDefinition candidate)
+    {
+        if (IsMagicDamageTier(goal.Tier))
+            return IsMagicDamageTier(candidate.Tier);
+        if (IsPhysicalDamageGoal(goal))
+            return IsPhysicalDamageGoal(candidate);
+        return true;
+    }
+
     /// <summary>신+ 오로성(판별 전역 변수)에 맞춰 역할 목표를 보정한다.</summary>
     internal static GoalStrategyProfile? ApplyGorosei(GoalStrategyProfile? strategy,
         GoroseiMode gorosei)

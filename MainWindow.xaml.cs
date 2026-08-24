@@ -861,6 +861,10 @@ public partial class MainWindow : Window
             LogUnknownRawcodes(result);
             if (!string.IsNullOrWhiteSpace(result.Diagnostics.ProcessVersion))
                 _lastWarcraftVersion = result.Diagnostics.ProcessVersion;
+            _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
+                                     result.ConfirmsSessionBoundary
+                ? _confirmedWaitingScans + 1
+                : 0;
             if (result.ShouldReplaceInventory)
             {
                 if (!_liveSessionActive)
@@ -878,7 +882,8 @@ public partial class MainWindow : Window
                 _liveSessionActive = true;
                 CaptureMatchTelemetry();
             }
-            else if (result.ShouldClearAutomaticInventory)
+            else if (RecognitionPolicy.ShouldClearAutomaticInventory(
+                         result, _confirmedWaitingScans))
             {
                 _automatic.Clear();
                 _automaticStale = false;
@@ -887,12 +892,9 @@ public partial class MainWindow : Window
             else
             {
                 _automaticStale = _automatic.Count > 0;
-                _automaticDisconnected = !RecognitionPolicy.MayUseLastGoodForRecommendations(result.State);
+                _automaticDisconnected = !RecognitionPolicy.ShouldUseLastGood(
+                    result, _confirmedWaitingScans);
             }
-            _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
-                                     result.ConfirmsSessionBoundary
-                ? _confirmedWaitingScans + 1
-                : 0;
             if (result.ShouldReplaceInventory || result.State == RecognitionState.Waiting)
             {
                 _outcome.Observe(result.Diagnostics.ObservedObjects, result.Diagnostics.ForeignObjects,
@@ -1253,8 +1255,10 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     private void ApplyOverlayVisibility(RecognitionResult result)
     {
         var shownNow = _overlay.IsVisible || _overlay.Stats.IsVisible;
-        if (OverlayVisibilityPolicy.ShouldShow(result)) _overlayHiddenStreak = 0;
-        else _overlayHiddenStreak++;
+        if (OverlayVisibilityPolicy.ShouldCountTowardHide(result))
+            _overlayHiddenStreak++;
+        else
+            _overlayHiddenStreak = 0;
 
         switch (OverlayVisibilityPolicy.Decide(shownNow, result, _overlayHiddenStreak))
         {

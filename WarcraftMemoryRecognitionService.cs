@@ -51,6 +51,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
     private RecognitionResult Recognize(CancellationToken token)
     {
+        var localPlayerConfirmed = false;
         try
         {
             token.ThrowIfCancellationRequested();
@@ -126,6 +127,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 return Failure(RecognitionState.Waiting, "대전 대기 중 · 기존 패 유지",
                     "게임에 입장하면 인식을 시작합니다.", baseDiagnostics);
             }
+            localPlayerConfirmed = profile.HasLocalPlayerAnchor && measuredSlot is not null;
             var localSlot = measuredSlot ?? profile.LocalPlayerSlot;
             var locatorAddress = GetLocatorAddress(memory, process, processStarted, module, profile, loaded.Generation, token);
             var listAddress = FollowPointerPath(memory, locatorAddress, profile.PointerOffsets);
@@ -240,9 +242,16 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         catch (OperationCanceledException) { throw; }
         catch (PoolNotReadyException exception)
         {
-            // 맵 로딩·대전 준비 단계에는 유닛이 아직 없다. 오류가 아니라 대기 상태로 알린다.
+            // 로컬 플레이어가 확인된 대전 중에는 풀 벡터가 조합·라운드 전환 순간
+            // 재구성될 수 있다. 이 한 틱을 Waiting으로 보내면 정상 패를 지우므로
+            // transient로 유지하고 다음 틱에 locator를 다시 찾는다.
+            var state = PoolNotReadyState(localPlayerConfirmed);
             ResetSessionCaches(allowPeriodicRescan: true);
-            return Failure(RecognitionState.Waiting, "대전 준비 중 · 기존 패 유지", exception.Message);
+            return Failure(state,
+                state == RecognitionState.Waiting
+                    ? "대전 준비 중 · 기존 패 유지"
+                    : "유닛 풀 재탐색 중 · 기존 패 유지",
+                exception.Message);
         }
         catch (Exception exception) when (exception is Win32Exception or InvalidDataException or InvalidOperationException
                                           or OverflowException or IOException or UnauthorizedAccessException
@@ -521,6 +530,11 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 Detail = detail
             }
     };
+
+    internal static RecognitionState PoolNotReadyState(bool localPlayerConfirmed) =>
+        localPlayerConfirmed
+            ? RecognitionState.TransientReadError
+            : RecognitionState.Waiting;
 
     private static RecognitionDiagnostics WithProfile(RecognitionDiagnostics source, MemoryProfile profile) => new()
     {

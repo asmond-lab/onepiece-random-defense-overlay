@@ -6,6 +6,32 @@ namespace OrandOverlay.Tests;
 public sealed class RecognitionPolicyTests
 {
     [Fact]
+    public void PoolRebuildDuringConfirmedMatchKeepsPreviousInventory()
+    {
+        var state = WarcraftMemoryRecognitionService.PoolNotReadyState(
+            localPlayerConfirmed: true);
+        var result = new RecognitionResult { State = state };
+
+        Assert.Equal(RecognitionState.TransientReadError, state);
+        Assert.False(result.ShouldClearAutomaticInventory);
+    }
+
+    [Fact]
+    public void FirstConfirmedWaitingScanKeepsLastGoodInventory()
+    {
+        var waiting = new RecognitionResult
+        {
+            State = RecognitionState.Waiting,
+            ConfirmsSessionBoundary = true
+        };
+
+        Assert.False(RecognitionPolicy.ShouldClearAutomaticInventory(waiting, 1));
+        Assert.True(RecognitionPolicy.ShouldUseLastGood(waiting, 1));
+        Assert.True(RecognitionPolicy.ShouldClearAutomaticInventory(waiting, 2));
+        Assert.False(RecognitionPolicy.ShouldUseLastGood(waiting, 2));
+    }
+
+    [Fact]
     public void ShouldResetMatch_WaitsForTwoConfirmedBoundaryScans()
     {
         var confirmed = new RecognitionResult

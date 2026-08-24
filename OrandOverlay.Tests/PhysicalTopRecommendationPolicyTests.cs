@@ -151,6 +151,26 @@ public sealed class PhysicalTopRecommendationPolicyTests
             $"완성 임박 방깎 경로가 먼 료쿠규보다 먼저여야 합니다: {order}");
     }
 
+    [Fact]
+    public void DoflamingoMultiTopNavigationDoesNotRecommendMagicTop()
+    {
+        var catalog = Catalog();
+        var doflamingo = catalog.Unit("rawcode:E90H");
+        Assert.Contains("[물딜]", doflamingo.Tier, StringComparison.Ordinal);
+
+        var recommendations = Engine(catalog).RecommendNearestCrafts(
+            "rawcode:E90H", [Entry("rawcode:E90H")], take: 12,
+            navigationMode: "Gambler.ContinuousBetting");
+
+        Assert.DoesNotContain(recommendations, recommendation =>
+        {
+            var unit = catalog.Unit(recommendation.Route.GoalUnitId);
+            var tier = unit.Tier.Split('[', 2)[0].Trim();
+            return unit.Tier.Contains("[마딜]", StringComparison.Ordinal) &&
+                   tier is "초월" or "불멸" or "영원" or "제한됨" or "신비함" or "해적왕";
+        });
+    }
+
     [Theory]
     [InlineData("yamato_transcendent")]
     [InlineData("rawcode:B90H")]
