@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
+    private readonly LatestBackgroundWorkCoordinator _recommendationWork = new();
     private readonly DispatcherTimer _timer = new();
     // 릴리스 확인은 API가 아니라 리다이렉트 태그 조사라 호출 제한 부담이 없다 — 2분이면
     // 새 릴리스가 몇 분 안에 전 유저에게 퍼진다.
@@ -690,13 +691,14 @@ public partial class MainWindow : Window
         var nextEngine = new RecommendationEngine(
             _catalog, _clearStats.HasData ? _clearStats : null, _combineHotkeys);
         nextEngine.SetLiveStats(_liveStats);
-        var recommendations = await Task.Run(() =>
+        var recommendations = await _recommendationWork.RunAsync(() =>
             nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
                 navigationMode: navigation.Id, gorosei: gorosei,
                 buildVariant: BuildVariants.AutoId,
                 suppressSeraphim: suppressSeraphim,
                 prioritizeTargetRare: prioritizeTargetRare,
                 suppressFirstRareShip: !firstRareQuestWindow));
+        if (recommendations is null) return;
         if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
         _engine = nextEngine;
         _telemetrySession.ObserveTopRecommendations(

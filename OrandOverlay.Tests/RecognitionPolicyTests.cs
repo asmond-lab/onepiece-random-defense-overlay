@@ -32,6 +32,16 @@ public sealed class RecognitionPolicyTests
     }
 
     [Fact]
+    public void SnapshotChangeKeepsVerifiedLocatorForNextTick()
+    {
+        var changed = new WarcraftMemoryRecognitionService.SnapshotChangedException();
+
+        Assert.False(WarcraftMemoryRecognitionService.ShouldInvalidateLocator(changed));
+        Assert.True(WarcraftMemoryRecognitionService.ShouldInvalidateLocator(
+            new InvalidDataException()));
+    }
+
+    [Fact]
     public void ShouldResetMatch_WaitsForTwoConfirmedBoundaryScans()
     {
         var confirmed = new RecognitionResult

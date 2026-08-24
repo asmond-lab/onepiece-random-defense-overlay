@@ -253,11 +253,21 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                     : "유닛 풀 재탐색 중 · 기존 패 유지",
                 exception.Message);
         }
+        catch (SnapshotChangedException)
+        {
+            // 유닛 생성 중 count/entries가 두 번 연속 바뀌어도 검증된 풀 구조체
+            // 주소는 그대로다. locator를 버리면 다음 틱에 7초 전체 힙 스캔이
+            // 재실행되어 Warcraft가 끊긴다.
+            return Failure(RecognitionState.TransientReadError,
+                "유닛 목록 갱신 중 · 기존 패 유지",
+                "다음 인식 틱에 같은 유닛 풀을 다시 읽습니다.");
+        }
         catch (Exception exception) when (exception is Win32Exception or InvalidDataException or InvalidOperationException
                                           or OverflowException or IOException or UnauthorizedAccessException
                                           or ArgumentException or System.Security.Cryptography.CryptographicException)
         {
-            lock (_cacheGate) _locatorCache = null;
+            if (ShouldInvalidateLocator(exception))
+                lock (_cacheGate) _locatorCache = null;
             return Failure(RecognitionState.TransientReadError, "워크 메모리 읽기 실패 · 기존 패 유지", exception.Message);
         }
     }
@@ -536,6 +546,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             ? RecognitionState.TransientReadError
             : RecognitionState.Waiting;
 
+    internal static bool ShouldInvalidateLocator(Exception exception) =>
+        exception is not SnapshotChangedException;
+
     private static RecognitionDiagnostics WithProfile(RecognitionDiagnostics source, MemoryProfile profile) => new()
     {
         Source = source.Source,
@@ -553,7 +566,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects,
         Dictionary<ulong, uint> LocallyObservedGrowth, HashSet<ulong> SeenTrackedGrowthPointers,
         int RetainedGrowthObjects);
-    private sealed class SnapshotChangedException : InvalidOperationException;
+    internal sealed class SnapshotChangedException : InvalidOperationException;
 }
 
 internal static class AddressMath
