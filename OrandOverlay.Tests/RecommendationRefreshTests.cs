@@ -6,6 +6,15 @@ namespace OrandOverlay.Tests;
 public sealed class RecommendationRefreshTests
 {
     [Fact]
+    public void DefaultRecommendationSettleDelayStaysResponsive()
+    {
+        Assert.True(
+            LatestBackgroundWorkCoordinator.DefaultSettleDelay <=
+            TimeSpan.FromMilliseconds(250),
+            $"현재 추천 안정 대기: {LatestBackgroundWorkCoordinator.DefaultSettleDelay.TotalMilliseconds}ms");
+    }
+
+    [Fact]
     public void FlowStepUsesOnlyRemainingCount()
     {
         var step = new RecipeCraftStep

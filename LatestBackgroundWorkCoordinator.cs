@@ -2,12 +2,14 @@ namespace OrandOverlay;
 
 internal sealed class LatestBackgroundWorkCoordinator
 {
+    internal static TimeSpan DefaultSettleDelay => TimeSpan.FromMilliseconds(200);
+
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly Func<CancellationToken, Task> _settle;
     private CancellationTokenSource? _latest;
 
     public LatestBackgroundWorkCoordinator()
-        : this(cancellation => Task.Delay(TimeSpan.FromMilliseconds(1500), cancellation))
+        : this(cancellation => Task.Delay(DefaultSettleDelay, cancellation))
     {
     }
 
