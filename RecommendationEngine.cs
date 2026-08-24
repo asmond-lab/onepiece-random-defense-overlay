@@ -98,6 +98,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         _topScope = navigation.AllowsMultipleTopUnits ? TopScope.MultiTop
             : navigation.CanCraftTopUnits ? TopScope.SoloTop
             : TopScope.Any;
+        var recipeLegendaryIds = _recipes.RecipeLegendaryIds(goal);
+        IReadOnlyList<string> pinnedRecipeLegendaryIds =
+            goalOwned ? [] : recipeLegendaryIds;
 
         // 취향 조건부 학습: 이미 짠 지원급 유닛을 앵커로, 그 유닛과 같이 쓰인
         // 클리어만 골라 채용률을 재계산한다(마딜에서 검증 후 전 상위로 확대 —
@@ -193,6 +196,24 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
             .ToList();
 
+        var missingLegendaryIds = pinnedRecipeLegendaryIds
+            .Where(id => counts.GetValueOrDefault(id) <= 0)
+            .ToList();
+        // UI에서 상위를 직접 골랐으면 현재 패에서 가장 가까운 미보유 희귀함을
+        // 첫 행동으로 둔다. 이 고정 슬롯도 총 보드 한도 안에서 미리 예약한다.
+        Recommendation? rarePick = null;
+        if (pinningFirstRareShip || pinningTargetRare)
+        {
+            rarePick = (pinningTargetRare ? missingTargetRareIds : rareShipTreeIds)
+                .Select(id => EvaluateInitialCandidate(catalog.Unit(id)))
+                .Where(item => pinningTargetRare || MeetsOwnedPrerequisites(
+                    catalog.Unit(item.Route.GoalUnitId), counts))
+                .OrderBy(item => item.RecipeProgress.MissingLeaves
+                    .Sum(leaf => leaf.MissingCount))
+                .ThenByDescending(item => item.RecipeProgress.CompletionRatio)
+                .FirstOrDefault();
+        }
+
         var effectiveTake = take;
         var maximumSupports = Math.Max(0, effectiveTake - (showGoal ? 1 : 0));
         List<Recommendation> nearest;
@@ -216,16 +237,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         }
         else
         {
-            nearest = OrderByCraftDistance(candidates).Take(maximumSupports)
-                .Select(candidate => candidate.Recommendation).ToList();
+            nearest = OrderCompatibleByCraftDistance(
+                goal, counts, candidates, maximumSupports);
         }
 
         // 초월은 하위 전설을 먼저 짜야 스토리를 민다. 역할 패키지보다 후보 보드 앞에 둔다.
-        var recipeLegendaryIds = _recipes.RecipeLegendaryIds(goal);
-        if (!goalOwned && recipeLegendaryIds.Count > 0)
+        if (missingLegendaryIds.Count > 0)
         {
-            var missingLegendaries = recipeLegendaryIds
-                .Where(id => counts.GetValueOrDefault(id) <= 0)
+            var missingLegendaries = missingLegendaryIds
                 .Select(id => EvaluateInitialCandidate(catalog.Unit(id)))
                 .ToList();
             var pinned = new HashSet<string>(missingLegendaries.Select(item => item.Route.GoalUnitId),
@@ -233,24 +252,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             nearest = missingLegendaries
                 .Concat(nearest.Where(item => !pinned.Contains(item.Route.GoalUnitId)))
                 .ToList();
-            // 상위 제작에 소비되는 전설은 활성 지원 슬롯이 아니다. 코어 지원을
-            // 밀어내지 않도록 보드 한도를 재료 수만큼 별도로 늘린다.
             effectiveTake += missingLegendaries.Count;
         }
 
-        // UI에서 상위를 직접 골랐으면 현재 패에서 가장 가까운 미보유 희귀함을 첫 행동으로 둔다.
-        // 기존 엔진 호출은 종전처럼 전설 뒤에 한 칸만 추가한다.
-        Recommendation? rarePick = null;
-        if (pinningFirstRareShip || pinningTargetRare)
+        if (rarePick is not null)
         {
-            rarePick = (pinningTargetRare ? missingTargetRareIds : rareShipTreeIds)
-                .Select(id => EvaluateInitialCandidate(catalog.Unit(id)))
-                .Where(item => pinningTargetRare || MeetsOwnedPrerequisites(
-                    catalog.Unit(item.Route.GoalUnitId), counts))
-                .OrderBy(item => item.RecipeProgress.MissingLeaves
-                    .Sum(leaf => leaf.MissingCount))
-                .ThenByDescending(item => item.RecipeProgress.CompletionRatio)
-                .FirstOrDefault();
             if (!pinningTargetRare && rarePick is not null &&
                 !nearest.Any(item => string.Equals(item.Route.GoalUnitId, rarePick.Route.GoalUnitId,
                     StringComparison.OrdinalIgnoreCase)))
@@ -279,7 +285,12 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Select((recommendation, index) => (recommendation, index))
             .OrderByDescending(pair =>
                 recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId)
-                    ? 3
+                    ? 4
+                    : stunPending &&
+                      IsActiveCommunityCore(pair.recommendation) &&
+                      GoalStrategyCalculator.StrategyMetricsFor(
+                          catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
+                        ? 3
                     : stunPending && GoalStrategyCalculator.StrategyMetricsFor(
                         catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
                         ? 2
@@ -343,9 +354,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .Where(pair => pair.Share >= 0.10)
                 .OrderByDescending(pair => pair.Share)
                 .FirstOrDefault();
-            if (bestSeraphim.Unit is not null && !results.Any(recommendation =>
-                    recommendation.Route.GoalUnitId.Equals(bestSeraphim.Unit.Id,
-                        StringComparison.OrdinalIgnoreCase)))
+            if (bestSeraphim.Unit is not null &&
+                !results.Any(recommendation =>
+                    BaseTier(catalog.Unit(recommendation.Route.GoalUnitId).Tier) ==
+                    "세라핌"))
             {
                 var seraphimScore = CommunityPriorityScore(goal, bestSeraphim.Unit);
                 var insertAt = results.Count;
@@ -758,6 +770,16 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                 strategy.FillCommunitySupports &&
                                 CommunityPriorityScore(goal, candidate.Unit) > 0)
             .ToList();
+        if (strategy.CommunityCoreTarget > 0)
+        {
+            var availableCoreCount = remaining.Count(candidate =>
+                IsCommunityCore(goal, candidate.Unit, strategy));
+            strategy = strategy with
+            {
+                CommunityCoreTarget = Math.Min(
+                    strategy.CommunityCoreTarget, availableCoreCount)
+            };
+        }
         var projected = AggregateStrategyMetrics(inventory);
         if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
             projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
@@ -908,6 +930,42 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
         if (!strategy.ArmorBeforeSlow) SelectArmorSet();
 
+        while (selected.Count < roleCap &&
+               projected.BossControl + 0.0001 < strategy.BossControlTarget)
+        {
+            var boss = OrderTowardsTarget(remaining
+                    .Where(candidate => candidate.Metrics.BossControl > 0)
+                    .Where(candidate => IsCompatibleSupport(
+                        goal, candidate.Unit, selected, inventory, projected, strategy))
+                    .Where(candidate => FitsStunCap(
+                        projected, candidate, strategy.StunCap)),
+                projected.BossControl, strategy.BossControlTarget,
+                candidate => candidate.Metrics.BossControl,
+                projected, strategy, goal)
+                .FirstOrDefault();
+            if (boss is null) break;
+            Add(boss);
+        }
+
+        while (selected.Count < roleCap &&
+               projected.BerserkBossControl + 0.0001 <
+               strategy.BerserkBossControlTarget)
+        {
+            var berserk = OrderTowardsTarget(remaining
+                    .Where(candidate => candidate.Metrics.BerserkBossControl > 0)
+                    .Where(candidate => IsCompatibleSupport(
+                        goal, candidate.Unit, selected, inventory, projected, strategy))
+                    .Where(candidate => FitsStunCap(
+                        projected, candidate, strategy.StunCap)),
+                projected.BerserkBossControl,
+                strategy.BerserkBossControlTarget,
+                candidate => candidate.Metrics.BerserkBossControl,
+                projected, strategy, goal)
+                .FirstOrDefault();
+            if (berserk is null) break;
+            Add(berserk);
+        }
+
         // 마딜 상위의 마감 깎기: 마방깎 소스를 최소 목표만큼 확보한다. 물딜의 방깎
         // 211과 달리 큰 수치 목표를 두지 않는다(실측상 보편 스택이 아님).
         while (selected.Count < roleCap &&
@@ -925,34 +983,6 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .FirstOrDefault();
             if (magicArmor is null) break;
             Add(magicArmor);
-        }
-
-        while (selected.Count < roleCap && projected.BossControl + 0.0001 < strategy.BossControlTarget)
-        {
-            var boss = OrderTowardsTarget(remaining
-                    .Where(candidate => candidate.Metrics.BossControl > 0)
-                    .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
-                    projected, strategy))
-                    .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap)), projected.BossControl,
-                strategy.BossControlTarget, candidate => candidate.Metrics.BossControl, projected, strategy, goal)
-                .FirstOrDefault();
-            if (boss is null) break;
-            Add(boss);
-        }
-
-        while (selected.Count < roleCap &&
-               projected.BerserkBossControl + 0.0001 < strategy.BerserkBossControlTarget)
-        {
-            var berserk = OrderTowardsTarget(remaining
-                    .Where(candidate => candidate.Metrics.BerserkBossControl > 0)
-                    .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
-                    projected, strategy))
-                    .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap)), projected.BerserkBossControl,
-                strategy.BerserkBossControlTarget, candidate => candidate.Metrics.BerserkBossControl,
-                projected, strategy, goal)
-                .FirstOrDefault();
-            if (berserk is null) break;
-            Add(berserk);
         }
 
         // 딜 밸런스(고인물 검증): 필수 유틸을 채운 뒤 남는 슬롯에서, 상위가 단일이면
@@ -1453,6 +1483,30 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         .ThenByDescending(candidate => candidate.Metrics.Total)
         .ThenBy(candidate => candidate.Recommendation.Route.Name, StringComparer.CurrentCulture);
 
+    private List<Recommendation> OrderCompatibleByCraftDistance(
+        UnitDefinition goal,
+        IReadOnlyDictionary<string, int> inventory,
+        IEnumerable<CraftCandidate> candidates,
+        int take)
+    {
+        var selected = new List<CraftCandidate>();
+        var projected = AggregateStrategyMetrics(inventory);
+        var compatibilityOnly = new GoalStrategyProfile(
+            0, 0, SlowTarget: 0, StunTarget: 0,
+            ArmorReductionTarget: 0, AirMovementTarget: 0,
+            StunCap: double.MaxValue);
+        foreach (var candidate in OrderByCraftDistance(candidates))
+        {
+            if (selected.Count >= take) break;
+            if (!IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
+                    projected, compatibilityOnly))
+                continue;
+            selected.Add(candidate);
+            projected += candidate.Metrics;
+        }
+        return selected.Select(candidate => candidate.Recommendation).ToList();
+    }
+
     private IOrderedEnumerable<CraftCandidate> OrderTowardsTarget(
         IEnumerable<CraftCandidate> candidates,
         double current,
@@ -1700,9 +1754,18 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     {
         if (goal.Rawcodes.Contains("F90H", StringComparer.Ordinal))
             return candidate.Rawcodes.Any(rawcode => rawcode is "F50h" or "O30h");
-        return strategy.CommunityCoreTarget > 0 &&
-               _activeClearProfile is { } profile &&
-               candidate.Rawcodes.Any(profile.CoreRawcodes.Contains);
+        if (strategy.CommunityCoreTarget <= 0) return false;
+        if (_activeClearProfile is { } profile)
+            return candidate.Rawcodes.Any(profile.CoreRawcodes.Contains);
+        var fallback = RecommendationCommunityPriorities.ForGoal(goal);
+        if (fallback is null) return false;
+        var fallbackCore = fallback
+            .OrderByDescending(pair => pair.Value)
+            .ThenBy(pair => pair.Key, StringComparer.Ordinal)
+            .Take(strategy.CommunityCoreTarget)
+            .Select(pair => pair.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        return candidate.Rawcodes.Any(fallbackCore.Contains);
     }
 
     private static int RemainingUsefulMetricCount(StrategyMetrics metrics,

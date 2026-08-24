@@ -13,6 +13,7 @@ public sealed class ClearBuildStats
     public const int MinimumGoalSamples = 12;
     public const double CoreShareThreshold = 0.25;
     public const int CoreCandidateLimit = 3;
+    private const double Wilson95Z = 1.959963984540054;
     private const double QualityWeightFloor = 0.5;
     private const double QualityWeightCeiling = 2.0;
     private const double RecencyHalfLifeDays = 14;
@@ -230,7 +231,7 @@ public sealed class ClearBuildStats
         var normalized = shares.ToDictionary(pair => pair.Key,
             pair => Math.Min(1.0, pair.Value / totalWeight), StringComparer.Ordinal);
         var core = normalized
-            .Where(pair => pair.Value >= CoreShareThreshold)
+            .Where(pair => IsConfidentCore(pair.Value, subset.Count))
             .OrderByDescending(pair => pair.Value)
             .Take(CoreCandidateLimit)
             .Select(pair => pair.Key)
@@ -281,7 +282,8 @@ public sealed class ClearBuildStats
                 .ToDictionary(pair => pair.Key, pair => Math.Min(1.0, pair.Value / totalWeight),
                     StringComparer.Ordinal);
             var core = shares
-                .Where(pair => pair.Value >= CoreShareThreshold)
+                .Where(pair => IsConfidentCore(
+                    pair.Value, goalSamples[goalCode]))
                 .OrderByDescending(pair => pair.Value)
                 .Take(CoreCandidateLimit)
                 .Select(pair => pair.Key)
@@ -290,6 +292,19 @@ public sealed class ClearBuildStats
                 scope);
         }
         return profiles;
+    }
+
+    private static bool IsConfidentCore(double share, int sampleCount)
+    {
+        if (sampleCount < MinimumGoalSamples) return false;
+        var probability = Math.Clamp(share, 0, 1);
+        var zSquared = Wilson95Z * Wilson95Z;
+        var denominator = 1 + zSquared / sampleCount;
+        var center = probability + zSquared / (2 * sampleCount);
+        var margin = Wilson95Z * Math.Sqrt(
+            probability * (1 - probability) / sampleCount +
+            zSquared / (4d * sampleCount * sampleCount));
+        return (center - margin) / denominator >= CoreShareThreshold;
     }
 
     public static ClearBuildStats Load(IEnumerable<string> samplePaths)

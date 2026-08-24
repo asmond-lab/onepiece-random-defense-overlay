@@ -6,6 +6,43 @@ namespace OrandOverlay.Tests;
 public sealed class RareRerollAdvisorTests
 {
     [Fact]
+    public void EveryRareUsesConsistentLateCleanupClassification()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var rares = catalog.AllUnits
+            .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "희귀함")
+            .Where(unit => unit.Rawcodes.Count > 0)
+            .DistinctBy(unit => unit.Id, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        Assert.True(rares.Count >= 40);
+        var dummyPlan = new[]
+        {
+            new Recommendation
+            {
+                Route = new RouteDefinition
+                {
+                    Id = "audit",
+                    GoalUnitId = "item_greenblood",
+                    Name = "감사"
+                }
+            }
+        };
+        var advisor = new RareRerollAdvisor(catalog);
+
+        foreach (var rare in rares)
+        {
+            var advice = advisor.Evaluate(
+                [new InventoryEntry { UnitId = rare.Id }],
+                dummyPlan, round: RareRerollAdvisor.LateGameCleanupRound);
+            if (RareRerollAdvisor.HasUtilityAbility(rare))
+                Assert.DoesNotContain(advice, item => item.UnitId == rare.Id);
+            else
+                Assert.Contains(advice, item => item.UnitId == rare.Id);
+        }
+    }
+
+    [Fact]
     public void SanjiRound44CleansUnusedRyumaAndOarsRares()
     {
         var catalog = new DataCatalog();
