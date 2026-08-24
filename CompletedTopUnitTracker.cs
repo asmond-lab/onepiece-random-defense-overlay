@@ -8,6 +8,8 @@ namespace OrandOverlay;
 public sealed class CompletedTopUnitTracker(DataCatalog catalog)
 {
     private readonly HashSet<string> _completed = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _completedGoalIngredients =
+        new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>텔레메트리용: 이번 세션에서 완료 처리된 상위 유닛 ID 목록.</summary>
     public IReadOnlyCollection<string> CompletedUnitIds => _completed.ToList();
@@ -26,7 +28,10 @@ public sealed class CompletedTopUnitTracker(DataCatalog catalog)
         var present = result.Where(entry => entry.Count > 0)
             .Select(entry => entry.UnitId)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        foreach (var unitId in _completed.Where(unitId => !present.Contains(unitId)))
+        foreach (var unitId in _completed
+                     .Concat(_completedGoalIngredients)
+                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                     .Where(unitId => !present.Contains(unitId)))
             result.Add(new InventoryEntry { UnitId = unitId, Count = 1, Confidence = 1 });
         return result;
     }
@@ -50,6 +55,10 @@ public sealed class CompletedTopUnitTracker(DataCatalog catalog)
             .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
                 StringComparer.OrdinalIgnoreCase);
+        foreach (var ingredient in goal.Recipe
+                     .Where(pair => IsLegendary(catalog.Unit(pair.Key)) &&
+                                    counts.GetValueOrDefault(pair.Key) >= pair.Value))
+            _completedGoalIngredients.Add(ingredient.Key);
         if (counts.GetValueOrDefault(goalId) > 0 || _completed.Contains(goalId))
         {
             if (_armedGoalId == goalId) _armedGoalId = null;
@@ -80,9 +89,13 @@ public sealed class CompletedTopUnitTracker(DataCatalog catalog)
         unit.Tier.Equals("자원", StringComparison.OrdinalIgnoreCase) ||
         unit.Rawcodes.Any(code => code is "GOLD" or "LUMBER" or "POINT" or "RANDOM");
 
+    private static bool IsLegendary(UnitDefinition unit) =>
+        unit.Tier.Split('[', 2)[0].Trim().Equals("전설", StringComparison.Ordinal);
+
     public void Reset()
     {
         _completed.Clear();
+        _completedGoalIngredients.Clear();
         _armedGoalId = null;
         _armedMissingStreak = 0;
     }

@@ -252,6 +252,12 @@ Assert(temporaryYamatoDropout.Any(entry => entry.UnitId == "yamato_transcendent"
 completedTopTracker.Reset();
 Assert(completedTopTracker.Apply([]).Count == 0,
     "게임 세션 경계에서는 완성 상위 유닛 잠금을 초기화");
+var completedJinbeIngredientTracker = new CompletedTopUnitTracker(catalog);
+completedJinbeIngredientTracker.ObserveGoalCraft("rawcode:A90H",
+    [new InventoryEntry { UnitId = "rawcode:G30h", Count = 1 }]);
+Assert(completedJinbeIngredientTracker.Apply([]).Any(entry =>
+        entry.UnitId == "rawcode:G30h" && entry.Count == 1),
+    "징베 초월의 전설 재료를 한 번 확인하면 일시 누락에도 반 더 데켄을 중복 추천하지 않음");
 var nearestDragon = engine.RecommendNearestCrafts("dragon_legend", dragonLeafInventory, 1)[0];
 Assert(nearestDragon.Score == 100 && nearestDragon.RecipeTree is { Children.Count: > 0 },
     "보유 최하위 패로 완성 가능한 드래곤을 100퍼센트로 계산하고 재귀 조합 트리 제공");
@@ -355,6 +361,11 @@ Assert(jinbeStunPackage.Sum(item => AbilityValue(item.CompositionUnits[0], "스�
        jinbeOneTop.Count(item => item.CompositionUnits[0].Abilities.Any(ability =>
            ability.Name is "아머브레이크" or "단일아머브레이크")) >= 2,
     "징베 초월 1상위도 스턴 1.4 패키지와 자체 암브 외 스모커 전설 한 기를 확보");
+var jinbeLegendOwned = engine.RecommendNearestCrafts("rawcode:A90H",
+    [new InventoryEntry { UnitId = "rawcode:G30h", Count = 1 }], 200,
+    "AlliedForces.DoubleBenefit", prioritizeTargetRare: true);
+Assert(jinbeLegendOwned.All(item => item.Route.GoalUnitId != "rawcode:T10h"),
+    "징베 전설 보유 시 이미 소비된 반 더 데켄 희귀함을 중복 추천하지 않음");
 var jinbeMultiTop = engine.RecommendNearestCrafts("rawcode:A90H", [], 200,
     "AlliedForces.DoubleBenefit");
 Assert(jinbeMultiTop.Count > 1 &&
