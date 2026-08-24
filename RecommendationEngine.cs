@@ -56,6 +56,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var counts = inventory
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.Sum(x => x.Count), StringComparer.OrdinalIgnoreCase);
+        RecipeWildcards.AddSyntheticCounts(counts, catalog.Unit);
 
         var ownedRoles = AggregateRoles(counts);
         var recipeCalculator = _recipeCalculator;
@@ -82,6 +83,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(x => x.Count),
                 StringComparer.OrdinalIgnoreCase);
+        RecipeWildcards.AddSyntheticCounts(counts, catalog.Unit);
         PrepareCandidateProgressCache(counts);
         _shipNeedCache.Clear();
         var calculator = _recipeCalculator;

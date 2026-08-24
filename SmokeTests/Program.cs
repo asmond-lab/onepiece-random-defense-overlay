@@ -1571,16 +1571,20 @@ Assert(fastRaresReady.Zip(fastRaresReady.Skip(1)).All(pair =>
            .RecipeProgress.CompletionRatio >= 0.999,
     "완성률 내림차순 정렬 + 재료 모인 희귀함은 100퍼센트");
 
-// 강화 폼 rawcode 별칭: 발라티에 강화 상디(G90H)는 H90H와 같은 유닛으로 통합된다.
-Assert(catalog.Unit("rawcode:G90H").Id == "rawcode:H90H" &&
-       catalog.Unit("rawcode:G90H").Name.Contains("상디", StringComparison.Ordinal),
-    "강화 상디(G90H)를 상디초월(H90H)로 해석");
+// 42479는 강화 폼을 별도 조합 카드로 제공하되, 메모리 보유·클리어 학습은
+// 기존 대표 폼으로 통합한다.
+Assert(catalog.Unit("rawcode:G90H").Id == "rawcode:G90H" &&
+       catalog.Unit("rawcode:G90H").Recipe.Keys.Any(id =>
+           catalog.Unit(id).Rawcodes.Contains("H90H", StringComparer.Ordinal)),
+    "강화 상디(G90H)의 별도 특강 조합을 보존");
 Assert(RawcodeCodec.TryParse("G90H", out var enhancedSanjiCode) &&
        RawcodeCodec.DynamicUnitId(enhancedSanjiCode) == "rawcode:H90H",
     "메모리 인식도 강화 상디를 대표 코드 id로 매핑");
 Assert(catalog.AllUnits.Count(unit =>
-        unit.Rawcodes.Contains("H90H", StringComparer.Ordinal)) == 1,
-    "별칭 등록으로 유닛 목록에 중복이 생기지 않음");
+           unit.Rawcodes.Contains("H90H", StringComparer.Ordinal)) == 1 &&
+       catalog.AllUnits.Count(unit =>
+           unit.Rawcodes.Contains("G90H", StringComparer.Ordinal)) == 1,
+    "기본 상디와 제르마 특강 조합 카드를 각각 한 번만 제공");
 Assert(bundledStats.GoalProfile(["H90H"], TopScope.MultiTop) is { SampleCount: >= 500 },
     "별칭 통합으로 상디초월 다상위 학습 표본이 대폭 증가");
 var sanjiClearEngine = new RecommendationEngine(catalog, bundledStats);
@@ -1669,9 +1673,12 @@ Assert(Math.Abs(greenBloodBuffStats.Stun - 0.3) < 0.001 &&
     "그린블러드 부여 효과(스턴 0.3 환산·공속 30)를 패 수치에 합산");
 
 // 스네이크맨 초월·빅맘 불멸: 마딜 파이프라인 + 다상위 실측 학습 확장.
-Assert(catalog.Unit("rawcode:MB0h").Id == "rawcode:E40h" &&
-       catalog.Unit("rawcode:E40h").Name.Contains("센고쿠", StringComparison.Ordinal),
-    "센고쿠 불멸 강화 폼(MB0h)을 E40h로 통합");
+Assert(catalog.Unit("rawcode:MB0h").Id == "rawcode:MB0h" &&
+       catalog.Unit("rawcode:MB0h").Recipe.Keys.Any(id =>
+           catalog.Unit(id).Rawcodes.Contains("E40h", StringComparer.Ordinal)) &&
+       RawcodeCodec.TryParse("MB0h", out var enhancedSengokuCode) &&
+       RawcodeCodec.DynamicUnitId(enhancedSengokuCode) == "rawcode:E40h",
+    "센고쿠 특강 조합은 보존하고 메모리 인식은 불멸 폼으로 통합");
 Assert(RawcodeCodec.TryParse("W50h", out var viviChangedCode) &&
        RawcodeCodec.DynamicUnitId(viviChangedCode) == "rawcode:O10h" &&
        catalog.Unit("rawcode:W50h").Tier == "변화된",

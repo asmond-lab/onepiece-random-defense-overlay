@@ -95,6 +95,17 @@
    "description": "보유 여부를 자동 인식하는 특수 아이템입니다. 적용 수치는 대상 유닛에서 확인합니다."
   },
   {
+   "id": "seraphim_any",
+   "name": "세라핌 1기",
+   "tier": "특수",
+   "roles": [],
+   "recipe": {},
+   "tags": [
+    "recipe-wildcard"
+   ],
+   "description": "베가펑크 조합에서 S-호크·S-샤크·S-스네이크·S-베어 중 한 기를 뜻합니다."
+  },
+  {
    "id": "dragon_legend",
    "name": "드래곤 전설",
    "tier": "전설",

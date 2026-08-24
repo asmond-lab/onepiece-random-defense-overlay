@@ -20,6 +20,7 @@ public sealed class DataCatalog
     private IReadOnlyDictionary<string, string> _unitIdsByRawcode =
         new Dictionary<string, string>(StringComparer.Ordinal);
     private IReadOnlySet<string> _nativeRawcodes = new HashSet<string>(StringComparer.Ordinal);
+    private IReadOnlySet<string> _appUnitIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
     public void Load()
     {
@@ -31,9 +32,12 @@ public sealed class DataCatalog
             ?? throw new InvalidDataException("게임 데이터를 읽을 수 없습니다.");
         if (Data.SchemaVersion != 1)
             throw new InvalidDataException($"지원하지 않는 데이터 스키마: {Data.SchemaVersion}");
+        _appUnitIds = Data.Units.Select(unit => unit.Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var nativeCatalog = ApplyBundledImages(
             ApplyTmoRecipeOverrides(
-                ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))));
+                ApplyTmoUnitAdditions(
+                    ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog())))));
         _nativeRawcodes = nativeCatalog.Keys.ToHashSet(StringComparer.Ordinal);
         RawcodeCatalog = WithAliasKeys(nativeCatalog);
         _unitIdsByRawcode = Data.Units
@@ -161,7 +165,9 @@ public sealed class DataCatalog
     {
         var recipe = entry.Recipe
             .Where(item => item.Count > 0 && !string.IsNullOrWhiteSpace(item.Id))
-            .Select(item => (UnitId: _unitIdsByRawcode.GetValueOrDefault(item.Id, "rawcode:" + item.Id), item.Count))
+            .Select(item => (UnitId: _appUnitIds.Contains(item.Id)
+                ? item.Id
+                : _unitIdsByRawcode.GetValueOrDefault(item.Id, "rawcode:" + item.Id), item.Count))
             .GroupBy(item => item.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(item => item.Count),
                 StringComparer.OrdinalIgnoreCase);
@@ -361,8 +367,37 @@ public sealed class DataCatalog
             merged[halves[0]] = CopyCatalogEntry(original, recipe: recipe);
             applied++;
         }
-        if (applied != 1)
+        if (applied != 14)
             throw new InvalidDataException($"TMO 42479 조합식 오버라이드 수가 잘못되었습니다: {applied}");
+        return merged;
+    }
+
+    private static IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyTmoUnitAdditions(
+        IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Data",
+            "tmo-unit-additions-42479.json");
+        if (!File.Exists(path))
+            throw new InvalidDataException("TMO 42479 신규 유닛 데이터가 없습니다.");
+
+        var document = JsonSerializer.Deserialize<RawcodeCatalogDocument>(
+                           File.ReadAllText(path), JsonOptions)
+                       ?? throw new InvalidDataException(
+                           "TMO 42479 신규 유닛 데이터를 읽을 수 없습니다.");
+        if (document.Units.Count != 7)
+            throw new InvalidDataException(
+                $"TMO 42479 신규 유닛 수가 잘못되었습니다: {document.Units.Count}");
+
+        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value,
+            StringComparer.Ordinal);
+        foreach (var unit in document.Units)
+        {
+            if (string.IsNullOrWhiteSpace(unit.Rawcode) ||
+                merged.ContainsKey(unit.Rawcode))
+                throw new InvalidDataException(
+                    $"TMO 42479 신규 유닛 항목이 잘못되었습니다: {unit.Rawcode}");
+            merged[unit.Rawcode] = unit;
+        }
         return merged;
     }
 

@@ -47,7 +47,7 @@ public sealed class CurrentMapDataTests
     }
 
     [Fact]
-    public void EveryCurrentMapRecipeOverrideIsApplied()
+    public void EveryCurrentMapRecipeOverrideIsAppliedUnlessTmo42479SupersedesIt()
     {
         var catalog = LoadCatalog();
         var path = Path.Combine(AppContext.BaseDirectory, "Data",
@@ -57,9 +57,21 @@ public sealed class CurrentMapDataTests
             .Select(ParseOverride)
             .ToList();
         Assert.Equal(64, entries.Count);
+        var tmoPath = Path.Combine(AppContext.BaseDirectory, "Data",
+            "tmo-recipe-overrides-42479.txt");
+        var tmoRawcodes = File.ReadLines(tmoPath)
+            .Where(line => line.Length > 0 && line[0] != '#')
+            .Select(line => line.Split('=', 2)[0])
+            .ToHashSet(StringComparer.Ordinal);
+        var superseded = entries.Select(entry => entry.Rawcode)
+            .Where(tmoRawcodes.Contains)
+            .OrderBy(rawcode => rawcode, StringComparer.Ordinal)
+            .ToList();
+        Assert.Equal(["590H", "AA0H", "CB0h", "KB0H"], superseded);
 
         var mismatches = new List<string>();
-        foreach (var (rawcode, sourceRecipe) in entries)
+        foreach (var (rawcode, sourceRecipe) in entries
+                     .Where(entry => !tmoRawcodes.Contains(entry.Rawcode)))
         {
             var expected = sourceRecipe.ToDictionary(
                 item => ResolveIngredientUnitId(catalog, item.Rawcode),
@@ -80,7 +92,12 @@ public sealed class CurrentMapDataTests
     {
         var catalog = LoadCatalog();
         var intentionallyTextOnly = new HashSet<string>(
-            ["FB0h", "I60h", "Z60h"], StringComparer.Ordinal);
+            [
+                "FB0h", "I60h", "Z60h",
+                // 42479에서 새로 확인한 특강·베가펑크 파생형은 아직 배포용
+                // rawcode 이미지가 없어 원격 그림 대신 안전한 글자 타일을 쓴다.
+                "390H", "G90H", "TB0H", "MB0h", "MA0H", "BA0H", "EA0H"
+            ], StringComparer.Ordinal);
         var missing = catalog.AllUnits
             .Where(unit => unit.Rawcodes.Count > 0)
             .Where(unit => BaseTier(unit.Tier) is not ("아이템" or "자원"))

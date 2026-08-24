@@ -22,6 +22,11 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
         var availability = inventory
             .Where(pair => pair.Value > 0)
             .ToDictionary(pair => pair.Key, pair => (long)pair.Value, StringComparer.OrdinalIgnoreCase);
+        var seraphimCount = availability
+            .Where(pair => RecipeWildcards.IsSeraphim(resolveUnit(pair.Key)))
+            .Sum(pair => pair.Value);
+        if (seraphimCount > 0)
+            availability[RecipeWildcards.AnySeraphim] = seraphimCount;
         var requiredLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         var ownedLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
 
