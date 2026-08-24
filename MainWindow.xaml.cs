@@ -13,7 +13,7 @@ namespace OrandOverlay;
 
 public partial class MainWindow : Window
 {
-    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromMilliseconds(500);
+    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromMilliseconds(250);
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);

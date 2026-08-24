@@ -6,11 +6,11 @@ namespace OrandOverlay.Tests;
 public sealed class RecommendationRefreshTests
 {
     [Fact]
-    public void DefaultRecommendationSettleDelayStaysResponsive()
+    public void DefaultRecommendationSettleDelayKeepsUnitDrawRefreshFast()
     {
         Assert.True(
             LatestBackgroundWorkCoordinator.DefaultSettleDelay <=
-            TimeSpan.FromMilliseconds(250),
+            TimeSpan.FromMilliseconds(100),
             $"현재 추천 안정 대기: {LatestBackgroundWorkCoordinator.DefaultSettleDelay.TotalMilliseconds}ms");
     }
 
