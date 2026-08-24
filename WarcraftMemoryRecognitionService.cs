@@ -115,7 +115,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             // 앵커가 있는데 로컬 플레이어가 없으면 대전 중이 아니다. 비싼 구조 스캔을 돌리지 않는다.
             if (profile.HasLocalPlayerAnchor && measuredSlot is null)
             {
-                ResetSessionCaches(force: true);
+                // 로딩·로비에서 앵커가 잠깐 읽혀도 전체 재탐색은 5초에 한 번만 허용한다.
+                ResetSessionCaches(allowPeriodicRescan: true);
                 return Failure(RecognitionState.Waiting, "대전 대기 중 · 기존 패 유지",
                     "게임에 입장하면 인식을 시작합니다.", baseDiagnostics);
             }
