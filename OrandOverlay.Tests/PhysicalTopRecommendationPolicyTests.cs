@@ -151,24 +151,72 @@ public sealed class PhysicalTopRecommendationPolicyTests
             $"완성 임박 방깎 경로가 먼 료쿠규보다 먼저여야 합니다: {order}");
     }
 
-    [Fact]
-    public void DoflamingoMultiTopNavigationDoesNotRecommendMagicTop()
+    [Theory]
+    [InlineData("PathOfKings.BountyHunter", false)]
+    [InlineData("PathOfKings.BountyHunter", true)]
+    [InlineData("Gambler.ContinuousBetting", false)]
+    [InlineData("Gambler.ContinuousBetting", true)]
+    public void DoflamingoNavigationDoesNotRecommendMagicUnit(
+        string navigationMode, bool ownsGoal)
     {
         var catalog = Catalog();
         var doflamingo = catalog.Unit("rawcode:E90H");
         Assert.Contains("[물딜]", doflamingo.Tier, StringComparison.Ordinal);
+        IReadOnlyList<InventoryEntry> inventory = ownsGoal
+            ? [Entry("rawcode:E90H")]
+            : [];
 
         var recommendations = Engine(catalog).RecommendNearestCrafts(
-            "rawcode:E90H", [Entry("rawcode:E90H")], take: 12,
-            navigationMode: "Gambler.ContinuousBetting");
+            "rawcode:E90H", inventory, take: 12,
+            navigationMode: navigationMode);
 
         Assert.DoesNotContain(recommendations, recommendation =>
         {
             var unit = catalog.Unit(recommendation.Route.GoalUnitId);
-            var tier = unit.Tier.Split('[', 2)[0].Trim();
-            return unit.Tier.Contains("[마딜]", StringComparison.Ordinal) &&
-                   tier is "초월" or "불멸" or "영원" or "제한됨" or "신비함" or "해적왕";
+            return unit.Rawcodes.Contains("130h", StringComparer.Ordinal) ||
+                   unit.Tier.Contains("[마딜]", StringComparison.Ordinal);
         });
+    }
+
+    [Fact]
+    public void DoflamingoDoesNotRecommendReadyFujitoraAsStunSupport()
+    {
+        var catalog = Catalog();
+        var fujitora = catalog.Unit("rawcode:130h");
+        var readyFujitora = fujitora.Recipe
+            .Select(pair => new InventoryEntry
+            {
+                UnitId = pair.Key,
+                Count = pair.Value
+            })
+            .Append(Entry("rawcode:E90H"))
+            .ToList();
+        var aokiji = catalog.AllUnits.First(unit =>
+            unit.Name.Equals("아오키지", StringComparison.Ordinal) &&
+            Math.Abs(Stun(unit) - 0.2) < 0.0001);
+
+        var recommendations = Engine(catalog).RecommendNearestCrafts(
+            "rawcode:E90H", readyFujitora.Append(Entry(aokiji.Id)).ToList(),
+            take: 12, navigationMode: "PathOfKings.BountyHunter");
+
+        Assert.DoesNotContain(recommendations, recommendation =>
+            catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes
+                .Contains("130h", StringComparer.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("yamato_transcendent")]
+    [InlineData("rawcode:B90H")]
+    [InlineData("rawcode:A90H")]
+    [InlineData("rawcode:F90H")]
+    [InlineData("rawcode:E90H")]
+    [InlineData("rawcode:C40h")]
+    public void PhysicalGoalRejectsFujitoraAsFinishedSupport(string goalUnitId)
+    {
+        var catalog = Catalog();
+
+        Assert.False(GoalStrategyCalculator.IsCompatibleSupportDamageType(
+            catalog.Unit(goalUnitId), catalog.Unit("rawcode:130h")));
     }
 
     [Theory]

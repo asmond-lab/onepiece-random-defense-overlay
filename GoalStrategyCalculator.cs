@@ -9,6 +9,11 @@ namespace OrandOverlay;
 /// </summary>
 internal static class GoalStrategyCalculator
 {
+    // 43747의 "[스턴]"은 역할 분류라 공격 타입이 사라진다. 후지토라는 마딜
+    // 전설이므로 물딜 목표의 완성 보조로 남기지 않는다. 물딜 상위의 필수 조합
+    // 재료로 소비되는 경로는 RecommendationEngine의 재료 클러스터가 별도로 다룬다.
+    private static readonly HashSet<string> MagicDamageSupportRawcodes =
+        new(StringComparer.Ordinal) { "130h" };
     private static readonly ConditionalWeakTable<UnitDefinition, StrongBox<StrategyMetrics>>
         StrategyMetricsCache = new();
 
@@ -189,6 +194,12 @@ internal static class GoalStrategyCalculator
             return IsPhysicalDamageGoal(candidate);
         return true;
     }
+
+    internal static bool IsCompatibleSupportDamageType(UnitDefinition goal,
+        UnitDefinition candidate) =>
+        !IsPhysicalDamageGoal(goal) ||
+        !IsMagicDamageTier(candidate.Tier) &&
+        !candidate.Rawcodes.Any(MagicDamageSupportRawcodes.Contains);
 
     /// <summary>신+ 오로성(판별 전역 변수)에 맞춰 역할 목표를 보정한다.</summary>
     internal static GoalStrategyProfile? ApplyGorosei(GoalStrategyProfile? strategy,

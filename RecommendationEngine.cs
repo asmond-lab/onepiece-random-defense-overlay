@@ -173,6 +173,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(unit => MeetsOwnedPrerequisites(unit, counts))
             .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
                            IsCheapFillerFor(goal, unit))
+            .Where(unit => GoalStrategyCalculator.IsCompatibleSupportDamageType(goal, unit))
             .Where(unit => !IsTopTier(unit.Tier) ||
                            GoalStrategyCalculator.IsCompatibleTopDamageType(goal, unit))
             .Where(unit => !avoidTraitHungryTops ||
@@ -1721,6 +1722,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         StrategyMetrics projected,
         GoalStrategyProfile strategy)
     {
+        if (!GoalStrategyCalculator.IsCompatibleSupportDamageType(goal, candidate))
+            return false;
+
         // 배 하나는 유닛 하나에만 들어간다. 이미 선택된 후보들이 보유한 배를 다
         // 예약했다면 추가 배 소비 후보는 함께 추천하지 않는다(유저 보고:
         // 해적선 1척에 모비딕·에넬이 동시 추천되던 문제).
