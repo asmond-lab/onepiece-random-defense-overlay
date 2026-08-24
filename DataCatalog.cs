@@ -32,7 +32,8 @@ public sealed class DataCatalog
         if (Data.SchemaVersion != 1)
             throw new InvalidDataException($"지원하지 않는 데이터 스키마: {Data.SchemaVersion}");
         var nativeCatalog = ApplyBundledImages(
-            ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog())));
+            ApplyTmoRecipeOverrides(
+                ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))));
         _nativeRawcodes = nativeCatalog.Keys.ToHashSet(StringComparer.Ordinal);
         RawcodeCatalog = WithAliasKeys(nativeCatalog);
         _unitIdsByRawcode = Data.Units
@@ -327,6 +328,41 @@ public sealed class DataCatalog
         }
         if (applied != 64)
             throw new InvalidDataException($"ORDR 2.314 조합식 오버라이드 수가 잘못되었습니다: {applied}");
+        return merged;
+    }
+
+    private static IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyTmoRecipeOverrides(
+        IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Data",
+            "tmo-recipe-overrides-42479.txt");
+        if (!File.Exists(path))
+            throw new InvalidDataException("TMO 42479 조합식 데이터가 없습니다.");
+
+        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value,
+            StringComparer.Ordinal);
+        var applied = 0;
+        foreach (var line in File.ReadLines(path))
+        {
+            if (string.IsNullOrWhiteSpace(line) || line[0] == '#') continue;
+            var halves = line.Split('=', 2);
+            if (halves.Length != 2 || !merged.TryGetValue(halves[0], out var original))
+                throw new InvalidDataException($"TMO 42479 조합식 항목이 잘못되었습니다: {line}");
+            var recipe = halves[1].Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(item =>
+                {
+                    var pair = item.Split(':', 2);
+                    return pair.Length == 2 && int.TryParse(pair[1], out var count) && count > 0
+                        ? new RawcodeRecipeEntry { Id = pair[0], Count = count }
+                        : throw new InvalidDataException(
+                            $"TMO 42479 조합식 재료가 잘못되었습니다: {line}");
+                })
+                .ToList();
+            merged[halves[0]] = CopyCatalogEntry(original, recipe: recipe);
+            applied++;
+        }
+        if (applied != 1)
+            throw new InvalidDataException($"TMO 42479 조합식 오버라이드 수가 잘못되었습니다: {applied}");
         return merged;
     }
 

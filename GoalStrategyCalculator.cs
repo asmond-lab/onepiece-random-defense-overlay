@@ -28,6 +28,9 @@ internal static class GoalStrategyCalculator
         // 거프 불멸의 적 방어 +15는 방깎 -15다. 절댓값으로 합치면 깎이 30 과대평가된다.
         var armor = AbilitySignedTotal(unit, "방어력 감소") +
                     AbilityTotal(unit, "발동방어력 감소", "중첩방어력 감소");
+        // TMO 43747 베르고: 마나 스킬의 공성업 비례 방깎은 최대 30.
+        // 지속 스턴으로 환산할 수 없는 액티브지만 방깎 마감 계산에는 포함한다.
+        if (unit.Rawcodes.Contains("W30h", StringComparer.Ordinal)) armor += 30;
         var magicArmor = AbilityTotal(unit, "마법방어력 감소");
         var armorBreak = AbilityPresenceOrTotal(unit, "아머브레이크", "단일아머브레이크");
         var airMovement = AbilityPresenceOrTotal(unit, "공중이동");
@@ -76,6 +79,8 @@ internal static class GoalStrategyCalculator
                 ? new GoalStrategyProfile(1, 1, SlowTarget: 40, StunTarget: 2.9, StunCap: 3.0)
                 : new GoalStrategyProfile(1, 1, StunTarget: 1.6, StunCap: 1.7);
         }
+        else if (rawcode.Equals("E90H", StringComparison.Ordinal)) // Doflamingo: zero self-stun.
+            profile = new GoalStrategyProfile(1, 1);
         else if (IsMagicDamageTier(goal.Tier))
         {
             // 마딜 상위는 물딜 방깎 파이프라인을 타면 안 된다.
@@ -95,7 +100,18 @@ internal static class GoalStrategyCalculator
             if (isPhysicalTop) profile = new GoalStrategyProfile(1, 1);
         }
 
-        return InferSupportNeeds(profile, goal);
+        var inferred = InferSupportNeeds(profile, goal);
+        // 모든 물딜 상위는 화면 순서대로 제작해도 생존 코어가 먼저 완성되어야 한다.
+        // 스턴을 채용률보다 앞세우고, 방깎은 211을 넘기는 최소 기물 세트까지만
+        // 추천한다. 마딜은 마방깎·버퍼 파이프라인을 그대로 유지한다.
+        return inferred is { } physical && IsPhysicalDamageGoal(goal)
+            ? physical with
+            {
+                PrioritizeStunRecommendations = true,
+                MinimizeArmorRecommendationSet = true,
+                StopAfterCoreTargets = true
+            }
+            : inferred;
     }
 
     /// <summary>
@@ -133,13 +149,24 @@ internal static class GoalStrategyCalculator
         if (selfSlowCovers && p.SlowTarget >= FullSlowTarget - 0.1)
             p = p with { SlowTarget = Math.Clamp(selfSlow + 20, 80, FullSlowTarget) };
 
-        if (soloCarry || buffScaler)
+        if ((soloCarry || buffScaler) && !p.StopAfterCoreTargets)
             p = p with { FillCommunitySupports = true };
 
         return p;
     }
 
     internal static bool IsMagicDamageTier(string tier) => DamageTiers.IsMagic(tier);
+
+    internal static bool IsPhysicalDamageTier(string tier) =>
+        tier.Contains("[물딜]", StringComparison.Ordinal);
+
+    private static bool IsPhysicalDamageGoal(UnitDefinition goal) =>
+        !IsMagicDamageTier(goal.Tier) &&
+        (IsPhysicalDamageTier(goal.Tier) ||
+         goal.Rawcodes.Contains("DB0H", StringComparer.Ordinal) ||
+         goal.OfficialAbilities.Any(ability =>
+             ability.Name.Equals("바제스", StringComparison.Ordinal) &&
+             !ability.DisplayValue.Equals("불가", StringComparison.OrdinalIgnoreCase)));
 
     /// <summary>신+ 오로성(판별 전역 변수)에 맞춰 역할 목표를 보정한다.</summary>
     internal static GoalStrategyProfile? ApplyGorosei(GoalStrategyProfile? strategy,
@@ -201,7 +228,8 @@ internal readonly record struct GoalStrategyProfile(double BossControlTarget,
     double AirMovementTarget = 1, double MagicArmorReductionTarget = 0,
     double SingleDamageTarget = 0, double FinisherDamageTarget = 0,
     double StunCap = GoalStrategyCalculator.MaximumUsefulStun,
-    bool PreferCheapStatFillers = false);
+    bool PreferCheapStatFillers = false, bool PrioritizeStunRecommendations = false,
+    bool MinimizeArmorRecommendationSet = false, bool StopAfterCoreTargets = false);
 
 /// <summary>보유 패의 전략 지표 합산 값(엔진에서 동작 보존으로 추출한 레코드).</summary>
 internal readonly record struct StrategyMetrics(double Slow = 0, double Stun = 0,

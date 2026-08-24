@@ -232,11 +232,12 @@ Assert(FirstRoleSupport(engine, yamatoSignedSlow, "yamato_transcendent").Composi
 var communityRankedYamato = engine.RecommendNearestCrafts("yamato_transcendent",
     Inventory("rawcode:060h"), 8);
 Assert(communityRankedYamato[0].Route.GoalUnitId == "yamato_transcendent" &&
-       FirstRoleSupport(engine, communityRankedYamato, "yamato_transcendent").Route.GoalUnitId ==
-       "mobydick" &&
+       AbilityValue(FirstRoleSupport(engine, communityRankedYamato,
+           "yamato_transcendent").CompositionUnits[0], "스턴") > 0 &&
+       communityRankedYamato.Any(item => item.Route.GoalUnitId == "mobydick") &&
        communityRankedYamato.Skip(1).Sum(item =>
            AbilityValue(item.CompositionUnits[0], "스턴")) is >= 1.3 and <= 1.5,
-    "해적선 보유 시 채용률 1위 모비딕을 목표 다음으로 올리고 스턴 1.4 패키지는 유지");
+    "해적선 보유 물딜도 스턴 1.4를 먼저 맞추고 모비딕 이감 코어는 유지");
 var craftedYamatoRecommendations = engine.RecommendNearestCrafts("yamato_transcendent",
     Inventory("yamato_transcendent"), 8);
 Assert(craftedYamatoRecommendations.Count > 0 && craftedYamatoRecommendations.All(item =>
@@ -507,8 +508,24 @@ Assert(GarpHas("V50h", "H30h", "M30h", "W50h", "830h", "Q30h", "3A0h"),
     "거프 1상위는 에이스왜곡·크래커·사보히든·비비·시저·모비딕·S호크 골격을 씀");
 Assert(GarpHas("K50h", "D20h", "H20h", "B20h", "F10h", "X90h"),
     "거프 1상위 추천에 짤이감(페로나·키드·크로커·아오희귀·스모커특별)이 들어감");
-Assert(GarpHas("U10h", "E10h", "X90h", "610h"),
-    "거프 1상위 추천에 짤깍(바질희귀·쵸파두뇌·드레이크)이 들어감");
+var garpBuild = garpOneTop.Select(item => new InventoryEntry
+{
+    UnitId = item.Route.GoalUnitId,
+    Count = 1
+}).ToList();
+var garpArmorTotal = new InventoryStatsCalculator(catalog)
+    .Calculate(garpBuild).TotalArmorReduction;
+var garpArmorContributors = garpOneTop.Where(item =>
+    new InventoryStatsCalculator(catalog).Calculate(garpBuild.Where(entry =>
+        entry.UnitId != item.Route.GoalUnitId)).TotalArmorReduction <
+    garpArmorTotal - 0.0001).ToList();
+Assert(garpArmorTotal < 211
+        ? garpArmorContributors.Count > 0
+        : garpArmorContributors.All(item =>
+            new InventoryStatsCalculator(catalog).Calculate(garpBuild.Where(entry =>
+                entry.UnitId != item.Route.GoalUnitId)).TotalArmorReduction < 211),
+    $"거프 1상위도 211 미달이면 방깎 진행, 달성하면 제거 불가능한 최소 세트 " +
+    $"(현재 {garpArmorTotal}: {string.Join(" > ", garpOneTop.Select(item => item.Route.Name))})");
 // 첫 희귀함(죠즈)이 목표 트리에 있으면 초기 빌드 보드에 추가된다.
 var mobyFirstRare = engine.RecommendNearestCrafts("rawcode:Q30h", [], 6,
     "PathOfKings.BountyHunter");
@@ -576,10 +593,19 @@ Assert(RecHasCode(yamatoCheap, catalog, "K50h", "D20h", "H20h", "B20h", "F10h", 
        yamatoCheap.Any(item =>
            catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim() == "희귀함"),
     "야마토도 풀이감·풀깎 뒤에 짤이감·짤깍 또는 첫 희귀함을 추천");
-Assert(nearestCrafts.All(item => !string.IsNullOrWhiteSpace(item.CompositionUnits[0].Image)) &&
-       nearestCrafts.SelectMany(item => item.RecipeProgress.Leaves)
-           .All(leaf => !string.IsNullOrWhiteSpace(leaf.Image)),
-    "남은 조합과 최하위 재료에 티모지지 공식 유닛 이미지 연결");
+var missingImages = nearestCrafts
+    .Where(item => string.IsNullOrWhiteSpace(item.CompositionUnits[0].Image))
+    .Select(item => item.Route.Name)
+    .Concat(nearestCrafts.SelectMany(item => item.RecipeProgress.Leaves)
+        // 그린블러드는 TMO 유닛 카드가 아닌 맵 특수 아이템이라 공식 유닛 이미지가 없다.
+        .Where(leaf => leaf.UnitId != "item_greenblood")
+        .Where(leaf => string.IsNullOrWhiteSpace(leaf.Image))
+        .Select(leaf => leaf.Name))
+    .Distinct()
+    .ToList();
+Assert(missingImages.Count == 0,
+    "남은 조합과 최하위 재료에 티모지지 공식 유닛 이미지 연결: " +
+    string.Join(" · ", missingImages));
 Assert(RecommendationPresentation.CraftUnitName(nearestCrafts[0].CompositionUnits[0]) == "야마토 - 초월" &&
        RecommendationPresentation.CompletionPercent(nearestDragon.RecipeProgress) == "100%",
     "유닛명-등급과 제작 완성도를 퍼센트로 표시");

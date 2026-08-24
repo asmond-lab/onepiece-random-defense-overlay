@@ -13,10 +13,11 @@ namespace OrandOverlay;
 
 public partial class MainWindow : Window
 {
-    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromSeconds(2);
+    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromMilliseconds(500);
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
+    private readonly LatestRefreshVersion _refreshVersion = new();
     private readonly DispatcherTimer _timer = new();
     // 릴리스 확인은 API가 아니라 리다이렉트 태그 조사라 호출 제한 부담이 없다 — 2분이면
     // 새 릴리스가 몇 분 안에 전 유저에게 퍼진다.
@@ -652,25 +653,21 @@ public partial class MainWindow : Window
             .ToList();
     }
 
-    private void RefreshAll(string? message = null)
+    private IReadOnlyList<InventoryEntry> RecommendationInventory()
+    {
+        var current = _automaticDisconnected
+            ? CombinedInventory(includeAutomatic: false)
+            : CombinedInventory();
+        return RecommendationInventoryPolicy.Build(
+            current, !_automaticDisconnected, _completedTopUnits, _greenBloodUsage.UsedOnUnit);
+    }
+
+    private async void RefreshAll(string? message = null)
     {
         if (!_initialized) return;
+        var refreshVersion = _refreshVersion.Next();
         var inventory = CombinedInventory();
-        var recommendationInventoryBase = _automaticDisconnected
-            ? CombinedInventory(includeAutomatic: false)
-            : inventory;
-        var recommendationInventory = _automaticDisconnected
-            ? recommendationInventoryBase
-            : _completedTopUnits.Apply(recommendationInventoryBase);
-        // 그린블러드를 유닛에 부여했으면 진력해방(스턴 1.2·공속 30)을 가상 항목으로
-        // 합산해 패 수치와 역할 목표 계산에 함께 반영한다(세라핌 제작 시 제외).
-        if (_greenBloodUsage.UsedOnUnit)
-            recommendationInventory = recommendationInventory
-                .Concat(new[]
-                {
-                    new InventoryEntry { UnitId = "greenblood_buff", Count = 1, Confidence = 1 }
-                })
-                .ToList();
+        var recommendationInventory = RecommendationInventory();
         // 자동 시작: 첫 희귀함이 잡히는 순간 목표를 전환하고, 아래에서 새 목표로 추천한다.
         var autoStartMessage = TryAutoStartGoal(recommendationInventory);
         var goal = GoalCombo.SelectedItem as UnitDefinition;
@@ -684,13 +681,24 @@ public partial class MainWindow : Window
         _settings.GoroseiMode = gorosei.ToString();
         // 니카 이감/노이감은 별도 토글 없이 현재 패의 스턴을 기준으로 자동 판정한다.
         // 지옥 이하는 그린블러드가 제공되지 않으므로 세라핌 조합 후보도 함께 뺀다.
+        var firstRareQuestWindow = FirstRareRecommendationGate.IsQuestWindow(
+            recommendationInventory, _lastRound);
         var prioritizeTargetRare = _firstRareRecommendationGate.ShouldPrioritize(
             goal.Id, recommendationInventory, _engine.RecipeRareUnitIds(goal.Id), _lastRound);
-        var recommendations = _engine.RecommendNearestCrafts(goal.Id, recommendationInventory,
-            navigationMode: navigation.Id, gorosei: gorosei, buildVariant: BuildVariants.AutoId,
-            suppressSeraphim: _greenBloodUsage.Used ||
-                !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty),
-            prioritizeTargetRare: prioritizeTargetRare);
+        var suppressSeraphim = _greenBloodUsage.Used ||
+                               !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty);
+        var nextEngine = new RecommendationEngine(
+            _catalog, _clearStats.HasData ? _clearStats : null, _combineHotkeys);
+        nextEngine.SetLiveStats(_liveStats);
+        var recommendations = await Task.Run(() =>
+            nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
+                navigationMode: navigation.Id, gorosei: gorosei,
+                buildVariant: BuildVariants.AutoId,
+                suppressSeraphim: suppressSeraphim,
+                prioritizeTargetRare: prioritizeTargetRare,
+                suppressFirstRareShip: !firstRareQuestWindow));
+        if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
+        _engine = nextEngine;
         _telemetrySession.ObserveTopRecommendations(
             recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();
@@ -741,7 +749,7 @@ public partial class MainWindow : Window
                    ?? visibleRecommendations.FirstOrDefault();
         var previewChildren = head is null
             ? []
-            : _engine.StoryClusterChildren(head.Route.GoalUnitId, CombinedInventory());
+            : _engine.StoryClusterChildren(head.Route.GoalUnitId, recommendationInventory);
         if (_selectedRouteId is null ||
             !BoardSelection.IsKnown(visibleRecommendations, previewChildren, _selectedRouteId))
         {
@@ -771,7 +779,8 @@ public partial class MainWindow : Window
             _engine.ActiveStunTarget, _engine.ActiveStunCap,
             phaseHint,
             rec => _engine.StoryClusterChildren(rec.Route.GoalUnitId, recommendationInventory),
-            (recs, selectedId) => _engine.Recascade(recs, CombinedInventory(), selectedId));
+            (recs, selectedId) => _engine.Recascade(
+                recs, RecommendationInventory(), selectedId));
         if (autoStartMessage is not null) FooterStatus.Text = autoStartMessage;
         else if (message is not null) FooterStatus.Text = message;
     }
@@ -808,12 +817,12 @@ public partial class MainWindow : Window
         var headId = BoardSelection.ClusterHeadId(
             _boardRecs, [], _selectedRouteId, _clusterHeadRouteId);
         if (_selectedRouteId is not null && _boardRecs.Count > 0)
-            _boardRecs = _engine.Recascade(_boardRecs, CombinedInventory(), headId);
+            _boardRecs = _engine.Recascade(_boardRecs, RecommendationInventory(), headId);
         var head = BoardSelection.Find(_boardRecs, headId) ?? _boardRecs.FirstOrDefault();
         _clusterHeadRouteId = head?.Route.Id;
         var children = head is null
             ? []
-            : _engine.StoryClusterChildren(head.Route.GoalUnitId, CombinedInventory());
+            : _engine.StoryClusterChildren(head.Route.GoalUnitId, RecommendationInventory());
         if (!BoardSelection.IsKnown(_boardRecs, children, _selectedRouteId))
             _selectedRouteId = head?.Route.Id;
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _boardRecs, _boardPlan,
@@ -828,7 +837,7 @@ public partial class MainWindow : Window
         var head = BoardSelection.Find(_boardRecs, headId);
         var currentChildren = head is null
             ? []
-            : _engine.StoryClusterChildren(head.Route.GoalUnitId, CombinedInventory());
+            : _engine.StoryClusterChildren(head.Route.GoalUnitId, RecommendationInventory());
         if (BoardSelection.Contains(_boardRecs, routeId) &&
             !BoardSelection.Contains(currentChildren, routeId))
             _clusterHeadRouteId = BoardSelection.Find(_boardRecs, routeId)!.Route.Id;
@@ -942,6 +951,7 @@ public partial class MainWindow : Window
             _scanInProgress = false;
         }
     }
+
 
 
     /// <summary>

@@ -326,6 +326,7 @@ public static class RawcodeAliases
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["G90H"] = "H90H", // 상디 초월 (발라티에 강화 폼)
+            ["D90H"] = "E90H", // 도플라밍고 초월 (필드 변신 폼)
             ["1B0H"] = "790H", // 아오키지 초월
             ["390H"] = "190H", // 쵸파 초월
             ["TB0H"] = "F90H", // 조로 초월

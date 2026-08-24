@@ -317,7 +317,7 @@ internal static class RecommendationBoard
         });
         body.Children.Add(new TextBlock
         {
-            Text = $"{step.OwnedCount}/{step.RequiredCount}",
+            Text = $"{RecommendationPresentation.FlowRemainingCount(step)}개 남음",
             Foreground = current ? OverlayTheme.GoldBrush : OverlayTheme.MutedBrush,
             FontSize = 11,
             FontWeight = FontWeights.SemiBold,

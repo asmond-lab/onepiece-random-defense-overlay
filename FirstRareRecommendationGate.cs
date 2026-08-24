@@ -7,6 +7,7 @@ namespace OrandOverlay;
 public sealed class FirstRareRecommendationGate
 {
     public const int QuestDeadlineRound = 8;
+    public const int MaximumUnknownRoundInventory = 20;
     private string? _goalUnitId;
     private bool _observedTargetRare;
 
@@ -26,9 +27,16 @@ public sealed class FirstRareRecommendationGate
                 entry.Count > 0 && targetRares.Contains(entry.UnitId));
         }
 
-        return currentRound < QuestDeadlineRound &&
+        return IsQuestWindow(inventory, currentRound) &&
                targetRareUnitIds.Count > 0 &&
                !_observedTargetRare;
+    }
+
+    public static bool IsQuestWindow(IEnumerable<InventoryEntry> inventory, int currentRound)
+    {
+        if (currentRound > 0) return currentRound < QuestDeadlineRound;
+        return inventory.Where(entry => entry.Count > 0).Sum(entry => entry.Count) <=
+               MaximumUnknownRoundInventory;
     }
 
     public void Reset()

@@ -5,6 +5,8 @@ public static class RecommendationPresentation
     public static string CompletionPercent(RecipeProgress progress) =>
         $"{Math.Round(progress.CompletionRatio * 100, MidpointRounding.AwayFromZero):0}%";
 
+    public static int FlowRemainingCount(RecipeCraftStep step) => step.MissingCount;
+
     /// <summary>
     /// 하위패를 고르면 그 패를 짜는 데 부족한 흔함을 먼저 보여 준다.
     /// 흔함 부족이 없으면 남은 하위 재료를 그대로 둔다.

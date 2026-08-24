@@ -6,10 +6,10 @@ namespace OrandOverlay.Tests;
 public sealed class MapStateReaderPerformanceTests
 {
     [Fact]
-    public void WarcraftRecognitionCadenceDoesNotRunFasterThanOncePerTwoSeconds()
+    public void WarcraftRecognitionCadenceStaysWithinResponsiveCpuBudget()
     {
-        Assert.True(MainWindow.RecognitionInterval >= TimeSpan.FromSeconds(2),
-            $"현재 인식 주기: {MainWindow.RecognitionInterval.TotalMilliseconds}ms");
+        Assert.InRange(MainWindow.RecognitionInterval,
+            TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(500));
     }
 
     [Fact]

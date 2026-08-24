@@ -1,0 +1,5 @@
+# schema=1
+# source=https://tmo.gg/g/ord/build-helper/42479
+# captured-at=2026-08-24
+# overrides=1
+V90h=M30h:1,V10h:1,A00h:1,F00h:1,LUMBER:3

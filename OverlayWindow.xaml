@@ -13,7 +13,8 @@
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*" MinHeight="340"/>
+        <RowDefinition Height="*"
+                       MinHeight="{x:Static local:OverlayLayoutPolicy.ScrollableBoardMinimumHeight}"/>
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
       <Grid Background="Transparent" Cursor="SizeAll" MouseLeftButtonDown="DragArea_OnMouseLeftButtonDown"

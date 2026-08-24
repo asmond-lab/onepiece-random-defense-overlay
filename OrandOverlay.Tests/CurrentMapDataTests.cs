@@ -6,6 +6,33 @@ namespace OrandOverlay.Tests;
 public sealed class CurrentMapDataTests
 {
     [Fact]
+    public void BurgessDistortedRecipeMatchesTmoGuide42479()
+    {
+        var catalog = LoadCatalog();
+        var expected = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            [ResolveIngredientUnitId(catalog, "M30h")] = 1,
+            [ResolveIngredientUnitId(catalog, "V10h")] = 1,
+            [ResolveIngredientUnitId(catalog, "A00h")] = 1,
+            [ResolveIngredientUnitId(catalog, "F00h")] = 1,
+            [ResolveIngredientUnitId(catalog, "LUMBER")] = 3
+        };
+
+        var burgess = catalog.Unit("rawcode:V90h");
+        Assert.Equal(expected, burgess.Recipe);
+
+        var recommendation = new RecommendationEngine(catalog)
+            .RecommendNearestCrafts(burgess.Id, [], 1)[0];
+        var flow = Assert.Single(recommendation.RemainingCraftSteps,
+            step => step.UnitId.Equals(burgess.Id, StringComparison.OrdinalIgnoreCase));
+        Assert.Equal(4, flow.Ingredients.Count);
+        Assert.All(["M30h", "V10h", "A00h", "F00h"], rawcode =>
+            Assert.Contains(flow.Ingredients, ingredient =>
+                ingredient.UnitId.Equals(ResolveIngredientUnitId(catalog, rawcode),
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [Fact]
     public void GarpRecipeUsesDragonLegendInsteadOfBlackMaria()
     {
         var catalog = LoadCatalog();

@@ -57,6 +57,7 @@ public sealed class InventoryStatsCalculator(DataCatalog catalog)
         var burgessProviders = 0;
         var singleDamageProviders = 0;
         var finisherDamageProviders = 0;
+        var conditionalJinbeCount = 0;
 
         foreach (var entry in inventory.Where(entry => entry.Count > 0))
         {
@@ -67,6 +68,8 @@ public sealed class InventoryStatsCalculator(DataCatalog catalog)
             triggeredSlow += Value(unit, "발동이동속도 감소") * count;
             armor += Value(unit, "방어력 감소") * count;
             triggeredArmor += Value(unit, "발동방어력 감소") * count;
+            if (unit.Rawcodes.Contains("W30h", StringComparer.Ordinal))
+                triggeredArmor += 30 * count;
             stackingArmor += Value(unit, "중첩방어력 감소") * count;
             singleArmor += Value(unit, "단일방어력 감소") * count;
             attack += Value(unit, "공격력 증가") * count;
@@ -87,7 +90,12 @@ public sealed class InventoryStatsCalculator(DataCatalog catalog)
             // 보완해야 하므로 두 딜 유형의 보유 기수를 따로 센다.
             if (Has(unit, "단일")) singleDamageProviders += count;
             if (Has(unit, "끝딜")) finisherDamageProviders += count;
+            if (unit.Rawcodes.Contains("G30h", StringComparer.Ordinal))
+                conditionalJinbeCount += count;
         }
+
+        if (conditionalJinbeCount > 0 && armorBreakProviders > 0)
+            triggeredArmor += conditionalJinbeCount * 25;
 
         return new InventoryStatSummary(stun, slow, triggeredSlow, armor, triggeredArmor,
             stackingArmor, singleArmor, attack, triggeredAttack, attackSpeed, healthRegen, manaRegen,

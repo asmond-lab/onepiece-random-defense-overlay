@@ -66,7 +66,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         GoroseiMode gorosei = GoroseiMode.None,
         string buildVariant = BuildVariants.AutoId,
         bool suppressSeraphim = false,
-        bool prioritizeTargetRare = false)
+        bool prioritizeTargetRare = false,
+        bool suppressFirstRareShip = false)
     {
         var counts = inventory
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
@@ -120,8 +121,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var missingTargetRareIds = rareShipTreeIds
             .Where(id => counts.GetValueOrDefault(id) <= 0)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var pinningTargetRare = prioritizeTargetRare && missingTargetRareIds.Count > 0;
-        var pinningFirstRareShip = !prioritizeTargetRare && rareShipTreeIds.Count > 0 &&
+        var pinningTargetRare = !goalOwned && prioritizeTargetRare &&
+                                missingTargetRareIds.Count > 0;
+        var pinningFirstRareShip = !goalOwned && !suppressFirstRareShip &&
+                                   !prioritizeTargetRare && rareShipTreeIds.Count > 0 &&
                                    !counts.Any(pair =>
                                        pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
         var candidates = catalog.AllUnits
@@ -168,7 +171,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
         // 초월은 하위 전설을 먼저 짜야 스토리를 민다. 역할 패키지보다 후보 보드 앞에 둔다.
         var recipeLegendaryIds = _recipes.RecipeLegendaryIds(goal);
-        if (recipeLegendaryIds.Count > 0)
+        if (!goalOwned && recipeLegendaryIds.Count > 0)
         {
             var missingLegendaries = recipeLegendaryIds
                 .Where(id => counts.GetValueOrDefault(id) <= 0)
@@ -205,12 +208,25 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         }
 
         // 어떤 유닛을 조합할지는 역할 로직이 고르고, 화면 순서는 신+ 채용률(또는
-        // 수작업 우선도)이 높은 순으로 보여준다. 동점은 역할 파이프라인 순서 유지.
-        // 초월의 하위 전설은 채용률보다 스토리 진행이 앞선다.
+        // 수작업 우선도)이 높은 순으로 보여준다. 다만 현재 스턴이 목표치보다 낮으면
+        // 스턴 후보가 채용률 높은 방깎 후보 뒤로 밀리지 않게 먼저 둔다. 사용자는
+        // 화면 순서대로 조합하므로 이 생존 축을 뒤로 보내면 완성 전에 라인이 터진다.
+        // 초월의 하위 전설은 채용률과 스턴보다 스토리 진행이 앞선다.
+        var projectedBeforeSupports = AggregateStrategyMetrics(counts) +
+                                      (showGoal
+                                          ? GoalStrategyCalculator.StrategyMetricsFor(goal)
+                                          : default);
+        var stunPending = strategy is { PrioritizeStunRecommendations: true } activeStrategy &&
+                          projectedBeforeSupports.Stun + 0.0001 < activeStrategy.StunTarget;
         nearest = nearest
             .Select((recommendation, index) => (recommendation, index))
             .OrderByDescending(pair =>
-                recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) ? 1 : 0)
+                recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId)
+                    ? 2
+                    : stunPending && GoalStrategyCalculator.StrategyMetricsFor(
+                        catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
+                        ? 1
+                        : 0)
             .ThenByDescending(pair =>
                 CommunityPriorityScore(goal, catalog.Unit(pair.recommendation.Route.GoalUnitId)))
             .ThenBy(pair => pair.index)
@@ -239,7 +255,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // 현재 목표 채용률이 충분한(10%+) 최고 세라핌 1기를, 역할 구성(스턴 페어 등)을
         // 밀어내지 않도록 목록에 '추가'로 끼워 넣는다(실측: 징베 S-호크 48%,
         // 상디 S-베어 34% — 목표별로 만드는 세라핌이 갈린다).
-        if (_activeClearProfile is { } seraphimProfile && !seraphimBlocked)
+        if (_activeClearProfile is { } seraphimProfile && !seraphimBlocked &&
+            strategy is not { StopAfterCoreTargets: true })
         {
             var bestSeraphim = catalog.AllUnits
                 .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "세라핌")
@@ -712,8 +729,16 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             Add(air);
         }
 
-        while (selected.Count < roleCap &&
-               projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
+        if (strategy.MinimizeArmorRecommendationSet && selected.Count < roleCap &&
+            projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
+        {
+            var armorSet = ChooseArmorSet(goal, strategy, projected, remaining, selected,
+                inventory, roleCap - selected.Count);
+            foreach (var candidate in armorSet)
+                Add(candidate);
+        }
+        else while (selected.Count < roleCap &&
+                    projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
         {
             var armorPool = remaining
                     .Where(candidate => candidate.Metrics.ArmorReduction > 0)
@@ -846,7 +871,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // A researched one-top profile can have mandatory buffers which are not expressible as
         // slow/stun/armor totals (for example Toki's attack speed for Mihawk eternal). Add those
         // only after the measurable core, retaining community priority before craft distance.
-        while (strategy.FillCommunitySupports && selected.Count < take)
+        while (strategy.FillCommunitySupports && !strategy.StopAfterCoreTargets &&
+               selected.Count < take)
         {
             var support = remaining
                 .Where(candidate => CommunityPriorityScore(goal, candidate.Unit) > 0)
@@ -1011,6 +1037,100 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         double stunCap) =>
         candidate.Metrics.Stun <= 0 ||
         projected.Stun + candidate.Metrics.Stun <= stunCap + 0.0001;
+
+    private List<CraftCandidate> ChooseArmorSet(UnitDefinition goal,
+        GoalStrategyProfile strategy,
+        StrategyMetrics projected,
+        IReadOnlyCollection<CraftCandidate> remaining,
+        IReadOnlyCollection<CraftCandidate> alreadySelected,
+        IReadOnlyDictionary<string, int> inventory,
+        int availableSlots)
+    {
+        if (availableSlots <= 0) return [];
+        var pool = OrderByCraftDistance(remaining
+                .Where(candidate => candidate.Metrics.ArmorReduction > 0)
+                .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, alreadySelected,
+                    inventory, projected, strategy))
+                .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap)))
+            .Take(18)
+            .ToList();
+        var maximumPicks = Math.Min(pool.Count, availableSlots);
+        List<CraftCandidate>? best = null;
+        var bestReachesTarget = false;
+        var bestSize = int.MaxValue;
+        var bestMissingLeaves = long.MaxValue;
+        var bestOvershoot = double.MaxValue;
+        var bestUsefulMetrics = -1;
+        var bestCommunityScore = double.MinValue;
+        var bestContribution = double.MinValue;
+        var current = new List<CraftCandidate>();
+
+        Search(0);
+        return best is null ? [] : OrderByCraftDistance(best).ToList();
+
+        void Search(int start)
+        {
+            if (current.Count > 0)
+            {
+                var contribution = current.Sum(candidate =>
+                    candidate.Metrics.ArmorReduction);
+                var reachesTarget = projected.ArmorReduction + contribution + 0.0001 >=
+                                    strategy.ArmorReductionTarget;
+                var size = current.Count;
+                var missingLeaves = current.Sum(candidate =>
+                    candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(leaf =>
+                        leaf.MissingCount));
+                var overshoot = reachesTarget
+                    ? projected.ArmorReduction + contribution - strategy.ArmorReductionTarget
+                    : double.MaxValue;
+                var usefulMetrics = current.Sum(candidate =>
+                    RemainingUsefulMetricCount(candidate.Metrics, projected, strategy));
+                var communityScore = current.Sum(candidate =>
+                    CommunityPriorityScore(goal, candidate.Unit));
+                var better = best is null ||
+                             reachesTarget && !bestReachesTarget ||
+                             reachesTarget == bestReachesTarget &&
+                             (reachesTarget
+                                 ? size < bestSize ||
+                                   size == bestSize && missingLeaves < bestMissingLeaves ||
+                                   size == bestSize && missingLeaves == bestMissingLeaves &&
+                                   overshoot < bestOvershoot - 0.0001 ||
+                                   size == bestSize && missingLeaves == bestMissingLeaves &&
+                                   Math.Abs(overshoot - bestOvershoot) < 0.0001 &&
+                                   usefulMetrics > bestUsefulMetrics ||
+                                   size == bestSize && missingLeaves == bestMissingLeaves &&
+                                   Math.Abs(overshoot - bestOvershoot) < 0.0001 &&
+                                   usefulMetrics == bestUsefulMetrics &&
+                                   communityScore > bestCommunityScore
+                                 : contribution > bestContribution + 0.0001 ||
+                                   Math.Abs(contribution - bestContribution) < 0.0001 &&
+                                   size < bestSize ||
+                                   Math.Abs(contribution - bestContribution) < 0.0001 &&
+                                   size == bestSize && missingLeaves < bestMissingLeaves);
+                if (better)
+                {
+                    best = current.ToList();
+                    bestReachesTarget = reachesTarget;
+                    bestSize = size;
+                    bestMissingLeaves = missingLeaves;
+                    bestOvershoot = overshoot;
+                    bestUsefulMetrics = usefulMetrics;
+                    bestCommunityScore = communityScore;
+                    bestContribution = contribution;
+                }
+            }
+
+            // 목표를 채운 최소 기수를 찾은 뒤에는 그보다 큰 조합을 탐색하지 않는다.
+            if (bestReachesTarget && current.Count >= bestSize) return;
+            if (current.Count >= maximumPicks) return;
+            for (var index = start; index < pool.Count; index++)
+            {
+                current.Add(pool[index]);
+                Search(index + 1);
+                current.RemoveAt(current.Count - 1);
+            }
+        }
+    }
 
     private static IOrderedEnumerable<CraftCandidate> OrderByCraftDistance(
         IEnumerable<CraftCandidate> candidates) => candidates
@@ -1361,15 +1481,26 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         return hasGreenBlood && hasMobyDick;
     }
 
-    private StrategyMetrics AggregateStrategyMetrics(IReadOnlyDictionary<string, int> inventory)
+    internal StrategyMetrics AggregateStrategyMetrics(
+        IReadOnlyDictionary<string, int> inventory)
     {
         var result = new StrategyMetrics();
+        var conditionalJinbeCount = 0;
         foreach (var (unitId, count) in inventory.Where(pair => pair.Value > 0))
         {
             var unit = catalog.Unit(unitId);
             if (!CountsAsCompletedSupport(unit)) continue;
             result += GoalStrategyCalculator.StrategyMetricsFor(unit) * count;
+            if (unit.Rawcodes.Contains("G30h", StringComparer.Ordinal))
+                conditionalJinbeCount += count;
         }
+        // TMO 43747 징베 전설: 암브 10 이상인 적에게 방깎 25를 1회 적용한다.
+        // 베르고·베이비5 등 암브 기물이 실제 패에 있을 때만 유효 방깎으로 센다.
+        if (conditionalJinbeCount > 0 && result.ArmorBreak > 0)
+            result = result with
+            {
+                ArmorReduction = result.ArmorReduction + conditionalJinbeCount * 25
+            };
         return result;
     }
 

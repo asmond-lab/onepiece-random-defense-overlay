@@ -14,8 +14,13 @@ public sealed class RecipeCatalogParityTests
         using var document = JsonDocument.Parse(File.ReadAllText(path));
         var units = document.RootElement.GetProperty("units").EnumerateArray().ToList();
         Assert.True(units.Count >= 250, $"공식 유닛 수가 비정상적으로 적습니다: {units.Count}");
-        var mapOverrideRawcodes = File.ReadLines(Path.Combine(AppContext.BaseDirectory,
-                "Data", "map-recipe-overrides-2314.txt"))
+        var recipeOverrideRawcodes = new[]
+            {
+                "map-recipe-overrides-2314.txt",
+                "tmo-recipe-overrides-42479.txt"
+            }
+            .SelectMany(file => File.ReadLines(Path.Combine(
+                AppContext.BaseDirectory, "Data", file)))
             .Where(line => line.Length > 0 && line[0] != '#')
             .Select(line => line.Split('=', 2)[0])
             .ToHashSet(StringComparer.Ordinal);
@@ -24,7 +29,7 @@ public sealed class RecipeCatalogParityTests
         foreach (var source in units)
         {
             var rawcode = source.GetProperty("rawcode").GetString()!;
-            if (mapOverrideRawcodes.Contains(rawcode)) continue;
+            if (recipeOverrideRawcodes.Contains(rawcode)) continue;
             var tier = source.GetProperty("tier").GetString() ?? "";
             // 세라핌은 번들 데이터에 레시피가 비어 있고 앱이 호스트 재료+그린블러드를
             // 주입하므로(SeraphimMaterialRawcodes 특례) 저장값 대조에서 제외한다.

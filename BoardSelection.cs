@@ -23,7 +23,7 @@ public static class BoardSelection
         IReadOnlyList<Recommendation> recs,
         IReadOnlyList<Recommendation> children,
         string? selectedId) =>
-        Find(recs, selectedId) ?? Find(children, selectedId) ?? recs.FirstOrDefault();
+        Find(children, selectedId) ?? Find(recs, selectedId) ?? recs.FirstOrDefault();
 
     public static string? ClusterHeadId(
         IReadOnlyList<Recommendation> recs,
