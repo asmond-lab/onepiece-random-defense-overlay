@@ -145,6 +145,7 @@ internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalo
                         Name = ingredient.Node.Name,
                         Tier = ingredient.Node.Tier,
                         RequiredCount = (int)Math.Min(int.MaxValue, ingredient.Required),
+                        OwnedCount = ingredient.Node.OwnedCount,
                         SelectionOrder = ingredient.SelectionOrder
                     })
                     .OrderBy(ingredient => ingredient.SelectionOrder)

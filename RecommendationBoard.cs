@@ -297,6 +297,7 @@ internal static class RecommendationBoard
     {
         var keys = RecommendationPresentation.CraftActionKeys(step);
         var selectName = RecommendationPresentation.CraftSelectUnitName(step);
+        var missingNames = RecommendationPresentation.CraftMissingIngredientNames(step);
         var companions = RecommendationPresentation.CraftCompanionNames(step);
         var select = step.Ingredients.OrderBy(item => item.SelectionOrder).FirstOrDefault();
         var body = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, Width = FlowNodeWidth };
@@ -353,6 +354,18 @@ internal static class RecommendationBoard
                 VerticalAlignment = VerticalAlignment.Center
             });
             body.Children.Add(pick);
+        }
+        else if (missingNames is { Length: > 0 })
+        {
+            body.Children.Add(new TextBlock
+            {
+                Text = "먼저 " + missingNames,
+                Foreground = OverlayTheme.WarnBrush,
+                FontSize = 10,
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 5, 0, 0)
+            });
         }
         else if (companions is { Length: > 0 })
         {

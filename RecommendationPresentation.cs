@@ -91,7 +91,11 @@ public static class RecommendationPresentation
     public static string CraftIngredientLine(RecipeCraftStep step)
     {
         var select = CraftSelectUnitName(step);
-        if (select is null) return "조합할 하위 유닛 없음";
+        if (select is null)
+        {
+            var missing = CraftMissingIngredientNames(step);
+            return missing is null ? "조합할 하위 유닛 없음" : "먼저 확보: " + missing;
+        }
         var line = $"선택할 유닛: {select}";
         // 채팅 명령어가 있으면 그걸 우선하고, 없으면 맵 단축키. 영문 명령어는 그대로 둔다.
         if (step.CombineCommands.Count > 0)
@@ -106,7 +110,27 @@ public static class RecommendationPresentation
     public static string? CraftSelectUnitName(RecipeCraftStep step)
     {
         if (step.Ingredients.Count == 0) return null;
+        if (step.Ingredients.Any(ingredient =>
+                !IsResource(ingredient) &&
+                ingredient.OwnedCount < ingredient.RequiredCount))
+            return null;
         return IngredientName(step.Ingredients.OrderBy(i => i.SelectionOrder).First());
+    }
+
+    public static string? CraftMissingIngredientNames(RecipeCraftStep step)
+    {
+        var missing = step.Ingredients
+            .Where(ingredient => !IsResource(ingredient) &&
+                                 ingredient.OwnedCount < ingredient.RequiredCount)
+            .OrderBy(ingredient => ingredient.SelectionOrder)
+            .Select(ingredient =>
+            {
+                var count = ingredient.RequiredCount - ingredient.OwnedCount;
+                var name = IngredientName(ingredient);
+                return count > 1 ? $"{name} ×{count}" : name;
+            })
+            .ToList();
+        return missing.Count == 0 ? null : string.Join(" / ", missing);
     }
 
     /// <summary>
@@ -135,6 +159,13 @@ public static class RecommendationPresentation
         // 어떤 유닛을 선택하고 함께 조합하는지만 간결하게 안내한다.
         return RemoveTierSuffix(SafeText(ingredient.Name).Trim(), tier);
     }
+
+    private static bool IsResource(RecipeCraftIngredient ingredient) =>
+        ingredient.Tier.Split('[', 2)[0].Trim() == "자원" ||
+        ingredient.UnitId.EndsWith("GOLD", StringComparison.Ordinal) ||
+        ingredient.UnitId.EndsWith("LUMBER", StringComparison.Ordinal) ||
+        ingredient.UnitId.EndsWith("POINT", StringComparison.Ordinal) ||
+        ingredient.UnitId.EndsWith("RANDOM", StringComparison.Ordinal);
 
     public static string LeafStatus(RecipeLeafProgress leaf) =>
         $"보유 {leaf.OwnedCount}/{leaf.RequiredCount}장 · {leaf.MissingCount}장 부족";

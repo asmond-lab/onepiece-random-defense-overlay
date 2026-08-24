@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _growthUnitIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
     private readonly LatestBackgroundWorkCoordinator _recommendationWork = new();
     private readonly DispatcherTimer _timer = new();
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
     private GreenBloodAdvisor _greenBloodAdvisor = null!;
     private GreenBloodAdvisor.UsageTracker _greenBloodUsage = null!;
     private SpecialDismantleAdvisor _specialAdvisor = null!;
+    private AlchemyDismantleAdvisor _alchemyAdvisor = null!;
     private NavigationAdvisor _navigationAdvisor = null!;
     private CombineHotkeyCatalog _combineHotkeys = null!;
     private AutoCombinePlanner _combinePlanner = null!;
@@ -92,6 +94,7 @@ public partial class MainWindow : Window
             _greenBloodAdvisor = new GreenBloodAdvisor(_catalog);
             _greenBloodUsage = new GreenBloodAdvisor.UsageTracker(_catalog);
             _specialAdvisor = new SpecialDismantleAdvisor(_catalog);
+            _alchemyAdvisor = new AlchemyDismantleAdvisor(_catalog);
             _navigationAdvisor = new NavigationAdvisor(_catalog);
             _combinePlanner = new AutoCombinePlanner(_catalog, _combineHotkeys);
             _completedTopUnits = new CompletedTopUnitTracker(_catalog);
@@ -778,7 +781,11 @@ public partial class MainWindow : Window
             combinePlan, RecognitionStatus.Text, DamageTiers.IsMagic(goal.Tier), emergencySummons,
             gorosei, _greenBloodUsage.Used,
             _specialAdvisor.Evaluate(recommendationInventory, recommendations, goal,
-                _clearStats.HasData ? _clearStats : null),
+                    _clearStats.HasData ? _clearStats : null)
+                .Concat(_alchemyAdvisor.Evaluate(
+                    recommendationInventory, recommendations, goal,
+                    navigation.Id, _growthUnitIds))
+                .ToList(),
             _engine.ActiveStunTarget, _engine.ActiveStunCap,
             phaseHint,
             rec => _engine.StoryClusterChildren(rec.Route.GoalUnitId, recommendationInventory),
@@ -808,6 +815,8 @@ public partial class MainWindow : Window
         var builder = new StringBuilder();
         foreach (var entry in CombinedInventory().OrderBy(x => x.UnitId, StringComparer.Ordinal))
             builder.Append(entry.UnitId).Append(':').Append(entry.Count).Append('|');
+        foreach (var growthId in _growthUnitIds.OrderBy(id => id, StringComparer.Ordinal))
+            builder.Append("growth:").Append(growthId).Append('|');
         builder.Append(_automaticStale).Append('|').Append(_automaticDisconnected).Append('|')
             .Append(_liveSessionActive).Append('|').Append(_autoStartApplied).Append('|')
             .Append(_greenBloodUsage.Used).Append('|').Append(_greenBloodUsage.UsedOnUnit)
@@ -901,6 +910,8 @@ public partial class MainWindow : Window
                 _greenBloodUsage.Observe(result.Entries);
                 _automatic.Clear();
                 foreach (var entry in result.Entries) _automatic[entry.UnitId] = entry;
+                _growthUnitIds.Clear();
+                _growthUnitIds.UnionWith(result.Diagnostics.GrowthUnitIds);
                 _automaticStale = false;
                 _automaticDisconnected = false;
                 _liveSessionActive = true;
@@ -910,6 +921,7 @@ public partial class MainWindow : Window
                          result, _confirmedWaitingScans))
             {
                 _automatic.Clear();
+                _growthUnitIds.Clear();
                 _automaticStale = false;
                 _automaticDisconnected = true;
             }

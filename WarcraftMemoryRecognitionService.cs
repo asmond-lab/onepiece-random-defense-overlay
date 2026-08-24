@@ -9,6 +9,9 @@ namespace OrandOverlay;
 // all layout offsets have been independently verified for that build.
 public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 {
+    // 2.0.4 CUnit: rawcode 0x178와 같은 베이스 구조의 보존된 플레이어 색상.
+    // SetUnitOwner(..., false) 뒤에도 원 소유 플레이어 색상이 남아 멀티 성장형을 구분한다.
+    internal const int UnitPlayerColorOffset = 0x16C;
     private readonly RawcodeUnitMap _unitMap;
     private readonly GrowthUnitPointerTracker _growthPointers = new();
     private long _growthCacheProcessStarted = long.MinValue;
@@ -156,7 +159,16 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var growthTotal = snapshot.NeutralGrowthCounts.Values.Sum();
             var adoptedNeutralGrowth = counts.Values.Sum() >
                                        snapshot.RawcodeCounts.Values.Sum();
+            var trackedNow = _growthPointers.Snapshot();
+            var growthRawcodes = snapshot.LocallyObservedGrowth.Values
+                .Concat(snapshot.SeenTrackedGrowthPointers
+                    .Where(trackedNow.ContainsKey)
+                    .Select(pointer => trackedNow[pointer]))
+                .ToList();
+            if (adoptedNeutralGrowth)
+                growthRawcodes.Add(snapshot.NeutralGrowthCounts.Single().Key);
             var mapped = _unitMap.Map(counts);
+            var growthUnitIds = MapGrowthUnitIds(_unitMap, growthRawcodes);
             var diagnostics = new RecognitionDiagnostics
             {
                 Source = baseDiagnostics.Source,
@@ -172,6 +184,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 MappedObjects = mapped.KnownCount + mapped.CatalogNamedCount,
                 UnknownObjects = mapped.UnknownCount,
                 UnknownRawcodes = mapped.UnknownRawcodes,
+                GrowthUnitIds = growthUnitIds,
                 Gorosei = snapshot.Gorosei,
                 Detail = $"목록 슬롯 {snapshot.ListCount} · 타 소유 {snapshot.ForeignObjects} · " +
                          $"추천 데이터 연결 {mapped.KnownCount} · " +
@@ -467,10 +480,22 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             }
             if (neutral)
             {
-                // 중앙에서 성장 중인 특별함 유닛은 중립 소유다. 어느 플레이어 것인지 판별할 수단이 없으므로
-                // 후보로만 모아 두고, 판 전체에 하나뿐일 때만 로컬 패로 인정한다.
                 if (isGrowth)
+                {
+                    var playerColor = memory.ReadByte(
+                        AddressMath.Add(unit, UnitPlayerColorOffset));
+                    if (GrowthUnitOwnershipPolicy.IsLocalNeutralGrowth(
+                            owner, playerColor, localPlayerSlot,
+                            profile.NeutralPlayerSlot))
+                    {
+                        locallyObservedGrowth[unit] = rawcode;
+                        seenTrackedGrowthPointers.Add(unit);
+                        ownedObjects++;
+                        counts[rawcode] = counts.GetValueOrDefault(rawcode) + 1;
+                        continue;
+                    }
                     neutralGrowth[rawcode] = neutralGrowth.GetValueOrDefault(rawcode) + 1;
+                }
                 continue;
             }
             ownedObjects++;
@@ -573,6 +598,15 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
     internal static bool ShouldInvalidateLocator(Exception exception) =>
         exception is not SnapshotChangedException;
+
+    internal static List<string> MapGrowthUnitIds(
+        RawcodeUnitMap unitMap, IEnumerable<uint> rawcodes) =>
+        unitMap.Map(rawcodes
+                .Distinct()
+                .ToDictionary(rawcode => rawcode, _ => 1))
+            .Entries
+            .Select(entry => entry.UnitId)
+            .ToList();
 
     private static RecognitionDiagnostics WithProfile(RecognitionDiagnostics source, MemoryProfile profile) => new()
     {

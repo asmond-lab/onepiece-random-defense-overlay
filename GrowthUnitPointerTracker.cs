@@ -99,6 +99,10 @@ internal static class GrowthUnitOwnershipPolicy
         result[neutral.Key] = result.GetValueOrDefault(neutral.Key) + 1;
         return result;
     }
+
+    public static bool IsLocalNeutralGrowth(
+        byte owner, byte playerColor, byte localPlayerSlot, byte neutralPlayerSlot) =>
+        owner == neutralPlayerSlot && playerColor == localPlayerSlot;
 }
 
 internal static class GrowthUnitPointerCacheStore

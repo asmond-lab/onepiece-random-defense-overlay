@@ -88,6 +88,7 @@ public sealed class AutoCombinePlanner(DataCatalog catalog, CombineHotkeyCatalog
                     Name = child.Name,
                     Tier = child.Tier,
                     RequiredCount = child.RequiredCount,
+                    OwnedCount = child.OwnedCount,
                     SelectionOrder = index
                 })
                 .ToList()

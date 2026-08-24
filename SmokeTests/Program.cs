@@ -634,20 +634,23 @@ Assert(doflamingoWithRareOwned.RemainingCraftSteps.All(step =>
 var doflamingoRareStep = doflamingoChanged.RemainingCraftSteps.Single(step =>
     step.UnitId == "rawcode:L10h");
 var doflamingoClickGuide = RecommendationPresentation.CraftIngredientLine(doflamingoRareStep);
-Assert(doflamingoClickGuide.StartsWith("선택할 유닛:") && doflamingoClickGuide.Contains("로브 루치") &&
-       doflamingoClickGuide.Contains("함께 조합:") && doflamingoClickGuide.Contains("쵸파 가드 포인트") &&
-       !doflamingoClickGuide.Contains('×') && !KoreanLabels.ContainsLatin(doflamingoClickGuide),
-    "각 조합 단계에 실제로 선택할 직전 재료 유닛을 한글로 표시");
+Assert(doflamingoClickGuide.StartsWith("먼저 확보:", StringComparison.Ordinal) &&
+       doflamingoClickGuide.Contains("로브 루치") &&
+       doflamingoClickGuide.Contains("쵸파 가드 포인트") &&
+       !doflamingoClickGuide.Contains("선택할 유닛:", StringComparison.Ordinal) &&
+       !KoreanLabels.ContainsLatin(doflamingoClickGuide),
+    "미준비 조합은 선택을 지시하지 않고 필요한 직전 재료를 한글로 표시");
 var yamatoEmpty = engine.RecommendNearestCrafts("yamato_transcendent", [], 1)[0];
 var enelSpecialStep = yamatoEmpty.RemainingCraftSteps.Single(step => step.UnitId == "rawcode:Q00h");
 var enelClickGuide = RecommendationPresentation.CraftIngredientLine(enelSpecialStep);
-Assert(enelClickGuide.StartsWith("선택할 유닛: 저격왕 우솝", StringComparison.Ordinal) &&
-       enelClickGuide.Contains("함께 조합: 베포 / 상디", StringComparison.Ordinal) &&
-       !enelClickGuide.Contains('×'),
-    "공식 조합식 순서를 보존하고 조합 안내의 중복 수량 표시는 제거");
-Assert(doflamingoChanged.RemainingCraftSteps.All(step =>
-        !RecommendationPresentation.CraftIngredientLine(step).Contains('×')),
-    "선택·함께 조합에는 수량을 숨기고 남은 제작에만 수량을 표시");
+Assert(enelClickGuide.StartsWith("먼저 확보:", StringComparison.Ordinal) &&
+       enelClickGuide.Contains("저격왕 우솝", StringComparison.Ordinal) &&
+       enelClickGuide.Contains("베포", StringComparison.Ordinal) &&
+       enelClickGuide.Contains("상디", StringComparison.Ordinal),
+    "공식 조합식 순서를 보존하고 미준비 재료를 모두 안내");
+Assert(doflamingoChanged.RemainingCraftSteps.Any(step =>
+        RecommendationPresentation.CraftIngredientLine(step).Contains('×')),
+    "미준비 조합에는 실제 부족 수량을 표시");
 
 Assert(RawcodeCodec.TryParse("300h", out var luffyRawcode) && luffyRawcode == 0x68303033,
     "rawcode 4CC 변환");

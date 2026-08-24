@@ -19,6 +19,52 @@ public sealed class GrowthUnitPointerTrackerTests
         ? buggy
         : throw new InvalidOperationException("510h rawcode 변환 실패");
 
+    [Theory]
+    [InlineData(24, 0, 0, 24, true)]
+    [InlineData(24, 1, 0, 24, false)]
+    [InlineData(0, 0, 0, 24, false)]
+    public void NeutralGrowthUsesPreservedPlayerColorForLocalAttribution(
+        byte owner, byte playerColor, byte localSlot, byte neutralSlot, bool expected)
+    {
+        Assert.Equal(expected, GrowthUnitOwnershipPolicy.IsLocalNeutralGrowth(
+            owner, playerColor, localSlot, neutralSlot));
+    }
+
+    [Fact]
+    public void LocalColorBrainGrowthCompletesLawRareRecipe()
+    {
+        Assert.True(RawcodeCodec.TryParse("E10h", out var brain));
+        Assert.True(GrowthUnitOwnershipPolicy.IsLocalNeutralGrowth(
+            owner: 24, playerColor: 0, localPlayerSlot: 0, neutralPlayerSlot: 24));
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var progress = new RecipeCompletionCalculator(catalog.Unit).Calculate(
+            ["rawcode:L20h"],
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["rawcode:H10h"] = 1,
+                ["rawcode:G10h"] = 1,
+                [RawcodeCodec.DynamicUnitId(brain)] = 1
+            });
+
+        Assert.Equal(1, progress.CompletionRatio);
+    }
+
+    [Fact]
+    public void GrowthDiagnosticsUseSameCanonicalIdsAsInventory()
+    {
+        Assert.True(RawcodeCodec.TryParse("300h", out var luffy));
+        Assert.True(RawcodeCodec.TryParse("E10h", out var brain));
+        var catalog = new DataCatalog();
+        catalog.Load();
+
+        var ids = WarcraftMemoryRecognitionService.MapGrowthUnitIds(
+            new RawcodeUnitMap(catalog), [luffy, brain]);
+
+        Assert.Contains("luffy_common", ids);
+        Assert.Contains("rawcode:E10h", ids);
+    }
+
     [Fact]
     public void LocallySeenJinbeRemainsAttributedAfterOwnerTransfer()
     {
