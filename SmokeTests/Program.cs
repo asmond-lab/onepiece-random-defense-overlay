@@ -1610,6 +1610,10 @@ Assert(Math.Abs(greenBloodBuffStats.Stun - 0.3) < 0.001 &&
 Assert(catalog.Unit("rawcode:MB0h").Id == "rawcode:E40h" &&
        catalog.Unit("rawcode:E40h").Name.Contains("센고쿠", StringComparison.Ordinal),
     "센고쿠 불멸 강화 폼(MB0h)을 E40h로 통합");
+Assert(RawcodeCodec.TryParse("W50h", out var viviChangedCode) &&
+       RawcodeCodec.DynamicUnitId(viviChangedCode) == "rawcode:O10h" &&
+       catalog.Unit("rawcode:W50h").Tier == "변화된",
+    "비비 변화 폼은 메모리 인식만 희귀 비비로 통합하고 원래 레시피는 보존");
 Assert(bundledStats.GoalProfile(["Q40h"], TopScope.MultiTop)
            is { SampleCount: >= 300, Scope: TopScope.MultiTop },
     "번들 스냅샷에 빅맘 불멸 다상위 표본 충분");

@@ -83,11 +83,17 @@ internal static class StructuralUnitPoolScanner
         try
         {
             var mask = Convert.ToUInt64(profile.LocalPlayerRootXorHex, 16);
-            var root = memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetA)) ^ mask ^
-                       memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetB));
-            if (!ReadOnlyProcessMemory.IsPlausibleUserAddress(root)) return null;
-            var slot = BitConverter.ToUInt16(memory.Read(AddressMath.Add(root, profile.LocalPlayerIdOffset), 2));
-            return slot <= 27 ? (byte)slot : null;
+            var rootBefore = memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetA)) ^ mask ^
+                             memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetB));
+            if (!ReadOnlyProcessMemory.IsPlausibleUserAddress(rootBefore)) return null;
+            var slotBefore = BitConverter.ToUInt16(
+                memory.Read(AddressMath.Add(rootBefore, profile.LocalPlayerIdOffset), 2));
+            var rootAfter = memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetA)) ^ mask ^
+                            memory.ReadUInt64(AddressMath.Add(moduleBase, profile.LocalPlayerRootOffsetB));
+            if (!ReadOnlyProcessMemory.IsPlausibleUserAddress(rootAfter)) return null;
+            var slotAfter = BitConverter.ToUInt16(
+                memory.Read(AddressMath.Add(rootAfter, profile.LocalPlayerIdOffset), 2));
+            return LocalPlayerSlotResolver.Resolve(rootBefore, slotBefore, rootAfter, slotAfter);
         }
         catch (Exception exception) when (exception is Win32Exception or InvalidDataException or OverflowException)
         {

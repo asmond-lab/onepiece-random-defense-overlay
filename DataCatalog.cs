@@ -19,6 +19,7 @@ public sealed class DataCatalog
     public IReadOnlyList<UnitDefinition> AllUnits { get; private set; } = [];
     private IReadOnlyDictionary<string, string> _unitIdsByRawcode =
         new Dictionary<string, string>(StringComparer.Ordinal);
+    private IReadOnlySet<string> _nativeRawcodes = new HashSet<string>(StringComparer.Ordinal);
 
     public void Load()
     {
@@ -30,8 +31,10 @@ public sealed class DataCatalog
             ?? throw new InvalidDataException("게임 데이터를 읽을 수 없습니다.");
         if (Data.SchemaVersion != 1)
             throw new InvalidDataException($"지원하지 않는 데이터 스키마: {Data.SchemaVersion}");
-        RawcodeCatalog = WithAliasKeys(ApplyBundledImages(
-            ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))));
+        var nativeCatalog = ApplyBundledImages(
+            ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog())));
+        _nativeRawcodes = nativeCatalog.Keys.ToHashSet(StringComparer.Ordinal);
+        RawcodeCatalog = WithAliasKeys(nativeCatalog);
         _unitIdsByRawcode = Data.Units
             .SelectMany(unit => unit.Rawcodes.Select(rawcode => (rawcode, unit.Id)))
             .GroupBy(x => x.rawcode, StringComparer.Ordinal)
@@ -82,8 +85,12 @@ public sealed class DataCatalog
         const string prefix = "rawcode:";
         if (id.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
         {
-            // 강화 폼 rawcode는 대표 코드로 통일해 같은 유닛 정의를 돌려준다.
-            var rawcode = RawcodeAliases.Canonical(id[prefix.Length..]);
+            // 실제 카탈로그 rawcode는 고유 레시피를 보존한다. 별칭 키만 대표 코드로
+            // 통일하고, 메모리 인식은 DynamicUnitId 단계에서 이미 대표 ID를 만든다.
+            var requestedRawcode = id[prefix.Length..];
+            var rawcode = _nativeRawcodes.Contains(requestedRawcode)
+                ? requestedRawcode
+                : RawcodeAliases.Canonical(requestedRawcode);
             id = prefix + rawcode;
             if (RawcodeCatalog.TryGetValue(rawcode, out var entry))
                 return new UnitDefinition
