@@ -79,7 +79,8 @@ internal static class GoalStrategyCalculator
         else if (rawcode.Equals("490H", StringComparison.Ordinal)) // Basil: recent reports need help.
             profile = new GoalStrategyProfile(2, 1);
         else if (rawcode.Equals("I70h", StringComparison.Ordinal)) // Katakuri: full armor for both.
-            profile = new GoalStrategyProfile(1, 1);
+            profile = new GoalStrategyProfile(1, 1, FillCommunitySupports: true,
+                CommunityCoreTarget: ClearBuildStats.CoreCandidateLimit);
         else if (rawcode.Equals("C40h", StringComparison.Ordinal))
             // 거프: 공중이동 슬롯을 안 쓰고 깎·버프에 쓴다. 스턴·짤필러는 추론이 채운다.
             profile = new GoalStrategyProfile(1, 1, FillCommunitySupports: true,

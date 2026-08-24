@@ -271,20 +271,27 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                           : default);
         var stunPending = strategy is { PrioritizeStunRecommendations: true } activeStrategy &&
                           projectedBeforeSupports.Stun + 0.0001 < activeStrategy.StunTarget;
+        bool IsActiveCommunityCore(Recommendation recommendation) =>
+            strategy is { CommunityCoreTarget: > 0 } coreStrategy &&
+            IsCommunityCore(goal,
+                catalog.Unit(recommendation.Route.GoalUnitId), coreStrategy);
         nearest = nearest
             .Select((recommendation, index) => (recommendation, index))
             .OrderByDescending(pair =>
                 recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId)
-                    ? 2
+                    ? 3
                     : stunPending && GoalStrategyCalculator.StrategyMetricsFor(
                         catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
-                        ? 1
+                        ? 2
+                        : IsActiveCommunityCore(pair.recommendation)
+                            ? 1
                         : 0)
             // 물딜의 같은 생존 단계에서는 방깎 후보를 이감·보조보다 먼저 두고,
             // 방깎 후보끼리는 현재 패 제작 거리를 채용률보다 먼저 비교한다.
             .ThenByDescending(pair =>
                 strategy is { ArmorBeforeSlow: true } &&
                 !recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) &&
+                !IsActiveCommunityCore(pair.recommendation) &&
                 GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(
                     pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0 ? 1 : 0)
             .ThenByDescending(pair =>
@@ -806,12 +813,12 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // 조초의 크제/봉히처럼 전용 파트너가 스턴 조합에 이미 포함되지 않았다면
         // 다음 순서에서 한 기만 보완한다.
         while (selected.Count < roleCap &&
-               selected.Count(candidate => IsCommunityCore(goal, candidate.Unit)) <
+               selected.Count(candidate => IsCommunityCore(goal, candidate.Unit, strategy)) <
                strategy.CommunityCoreTarget)
         {
             var core = remaining
                 .Where(candidate => CommunityPriorityScore(goal, candidate.Unit) > 0)
-                .Where(candidate => IsCommunityCore(goal, candidate.Unit))
+                .Where(candidate => IsCommunityCore(goal, candidate.Unit, strategy))
                 .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
                     projected, strategy))
                 .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap))
@@ -1264,7 +1271,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     // 먼저 충족한다. 그다음 스턴은 최소 기수로 채운다. 같은 1.4라도
                     // 3기 세트는 남은 추천 슬롯에서 이감·방깎·보조딜 자리를 빼앗는다.
                     var coreCoverage = Math.Min(strategy.CommunityCoreTarget,
-                        current.Count(candidate => IsCommunityCore(goal, candidate.Unit)));
+                        current.Count(candidate => IsCommunityCore(
+                            goal, candidate.Unit, strategy)));
                     var size = current.Count;
                     var usefulMetrics = current.Sum(candidate =>
                         RemainingUsefulMetricCount(candidate.Metrics, projected, strategy));
@@ -1591,7 +1599,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .Where(item => !item.Unit.Id.Equals(goal.Id, StringComparison.OrdinalIgnoreCase))
                 .Where(item => !protectedUnitIds.Contains(item.Unit.Id,
                     StringComparer.OrdinalIgnoreCase))
-                .Where(item => !IsCommunityCore(goal, item.Unit))
+                .Where(item => !IsCommunityCore(goal, item.Unit, strategy.Value))
                 .OrderBy(item => item.CoverageLoss)
                 // 역할 손실이 없는 중복 방깎은 현재 패에서 먼 후보부터 정리한다.
                 // 비방깎 지원의 기존 채용률 순서는 그대로 유지한다.
@@ -1687,9 +1695,15 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .DefaultIfEmpty().Max();
     }
 
-    private static bool IsCommunityCore(UnitDefinition goal, UnitDefinition candidate) =>
-        goal.Rawcodes.Contains("F90H", StringComparer.Ordinal) &&
-        candidate.Rawcodes.Any(rawcode => rawcode is "F50h" or "O30h");
+    private bool IsCommunityCore(UnitDefinition goal, UnitDefinition candidate,
+        GoalStrategyProfile strategy)
+    {
+        if (goal.Rawcodes.Contains("F90H", StringComparer.Ordinal))
+            return candidate.Rawcodes.Any(rawcode => rawcode is "F50h" or "O30h");
+        return strategy.CommunityCoreTarget > 0 &&
+               _activeClearProfile is { } profile &&
+               candidate.Rawcodes.Any(profile.CoreRawcodes.Contains);
+    }
 
     private static int RemainingUsefulMetricCount(StrategyMetrics metrics,
         StrategyMetrics projected,
@@ -1723,6 +1737,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         GoalStrategyProfile strategy)
     {
         if (!GoalStrategyCalculator.IsCompatibleSupportDamageType(goal, candidate))
+            return false;
+        if (BaseTier(candidate.Tier) == "세라핌" &&
+            (selected.Any(item => BaseTier(item.Unit.Tier) == "세라핌") ||
+             inventory.Any(pair => pair.Value > 0 &&
+                                   BaseTier(catalog.Unit(pair.Key).Tier) == "세라핌")))
             return false;
 
         // 배 하나는 유닛 하나에만 들어간다. 이미 선택된 후보들이 보유한 배를 다

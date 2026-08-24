@@ -219,6 +219,54 @@ public sealed class PhysicalTopRecommendationPolicyTests
             catalog.Unit(goalUnitId), catalog.Unit("rawcode:130h")));
     }
 
+    [Fact]
+    public void KatakuriSoloTopRecommendationsIncludeClearRecordCore()
+    {
+        var catalog = Catalog();
+        var stats = ClearBuildStats.Load(
+            [Path.Combine(AppContext.BaseDirectory, "Data", "tmo-clear-samples.json")]);
+        var profile = Assert.IsType<GoalClearProfile>(
+            stats.GoalProfile(["I70h"], TopScope.SoloTop));
+        Assert.Equal(472, profile.SampleCount);
+        Assert.True(profile.CoreRawcodes.SetEquals(["Q30h", "0A0h", "W50h"]));
+
+        var recommendations = Engine(catalog).RecommendNearestCrafts(
+            "rawcode:I70h",
+            [
+                Entry("rawcode:I70h"), Entry("item_greenblood"),
+                Entry("rawcode:060h")
+            ],
+            take: 12, navigationMode: "PathOfKings.BountyHunter");
+        var recommendedCodes = recommendations
+            .SelectMany(recommendation =>
+                catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes)
+            .ToHashSet(StringComparer.Ordinal);
+
+        Assert.All(profile.CoreRawcodes,
+            rawcode => Assert.Contains(rawcode, recommendedCodes));
+        var corePositions = recommendations
+            .Select((recommendation, index) => new
+            {
+                Index = index,
+                IsCore = catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes
+                    .Any(profile.CoreRawcodes.Contains)
+            })
+            .Where(item => item.IsCore)
+            .Select(item => item.Index)
+            .ToList();
+        Assert.Equal(3, corePositions.Count);
+        Assert.Equal(
+            Enumerable.Range(corePositions[0], corePositions.Count),
+            corePositions);
+        Assert.True(corePositions[^1] <= 4);
+        var seraphim = recommendations
+            .Select(recommendation => catalog.Unit(recommendation.Route.GoalUnitId))
+            .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "세라핌")
+            .ToList();
+        Assert.Single(seraphim);
+        Assert.Contains("0A0h", seraphim[0].Rawcodes);
+    }
+
     [Theory]
     [InlineData("yamato_transcendent")]
     [InlineData("rawcode:B90H")]
