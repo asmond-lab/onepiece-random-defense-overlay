@@ -711,7 +711,7 @@ public partial class MainWindow : Window
                 : "");
         var inventoryStats = _statsCalculator.Calculate(recommendationInventory);
         var rareRerolls = _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
-            goal, _clearStats.HasData ? _clearStats : null);
+            goal, _clearStats.HasData ? _clearStats : null, _lastRound);
         IReadOnlyList<GreenBloodAdvice> greenBloodAdvice = _greenBloodUsage.Used ||
             !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty)
             ? Array.Empty<GreenBloodAdvice>()

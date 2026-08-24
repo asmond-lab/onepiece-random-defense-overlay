@@ -16,11 +16,16 @@ public sealed record RareRerollAdvice(
 /// </summary>
 public sealed class RareRerollAdvisor(DataCatalog catalog)
 {
+    // 맵 메모리의 44는 화면상 44라운드 종료 직전, 플레이 체감상 45라운드
+    // 진입 시점이다. 여기부터 새 유틸 전설로 갈아타는 미래 재료는 보존하지 않는다.
+    public const int LateGameCleanupRound = 44;
+
     public IReadOnlyList<RareRerollAdvice> Evaluate(
         IEnumerable<InventoryEntry> inventory,
         IReadOnlyList<Recommendation> recommendations,
         UnitDefinition? goal = null,
-        ClearBuildStats? clearStats = null)
+        ClearBuildStats? clearStats = null,
+        int round = 0)
     {
         if (recommendations.Count == 0) return [];
         // 현재 목표의 신+ 클리어에서 실제 채용되는 지원 유닛 채용률 — 유틸 전설
@@ -51,6 +56,7 @@ public sealed class RareRerollAdvisor(DataCatalog catalog)
         // 부족한 희귀패가 하나도 없으면 리롤로 얻을 것이 없으므로 판매를 권한다.
         var hasMissingRare = rareDemand.Any(pair =>
             pair.Value > Math.Max(0, owned.GetValueOrDefault(pair.Key)));
+        var preserveFutureUtilityMaterials = round < LateGameCleanupRound;
 
         return owned
             .Select(pair => (pair.Key, Count: pair.Value, Unit: catalog.Unit(pair.Key)))
@@ -62,14 +68,19 @@ public sealed class RareRerollAdvisor(DataCatalog catalog)
             // 채용률 조건 없이 넓히면 정리 기능 자체가 무력화된다.
             .Where(item => rareDemand.GetValueOrDefault(item.Key) > 0 ||
                            (!HasUtilityAbility(item.Unit) &&
-                            !FeedsAdoptedUtilityLegend(item.Key, supportShare)))
+                            (!preserveFutureUtilityMaterials ||
+                             !FeedsAdoptedUtilityLegend(item.Key, supportShare))))
             .Select(item =>
             {
                 var needed = rareDemand.GetValueOrDefault(item.Key);
                 var reroll = Math.Max(0, item.Count - needed);
                 var sell = !hasMissingRare;
                 var reason = needed == 0
-                    ? sell ? "추천 제작에 안 씀 · 부족한 희귀패 없음" : "현재 추천 제작에는 사용하지 않음"
+                    ? sell
+                        ? "추천 제작에 안 씀 · 부족한 희귀패 없음"
+                        : preserveFutureUtilityMaterials
+                            ? "현재 추천 제작에는 사용하지 않음"
+                            : "후반 추천 제작에는 사용하지 않음"
                     : $"추천 제작에 {needed}장 필요 · 초과분";
                 return new RareRerollAdvice(item.Key, item.Unit.Name, item.Count,
                     needed, reroll, reason, sell);
