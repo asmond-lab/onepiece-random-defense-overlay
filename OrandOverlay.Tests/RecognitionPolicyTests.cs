@@ -42,6 +42,21 @@ public sealed class RecognitionPolicyTests
     }
 
     [Fact]
+    public void ViviTransformedRawcodeRetainsOwnRecipeIdentity()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var map = new RawcodeUnitMap(catalog);
+        Assert.True(RawcodeCodec.TryParse("W50h", out var rawcode));
+
+        var mapped = map.Map(new Dictionary<uint, int> { [rawcode] = 1 });
+
+        var entry = Assert.Single(mapped.Entries);
+        Assert.Equal("rawcode:W50h", entry.UnitId);
+        Assert.Equal("변화된", catalog.Unit(entry.UnitId).Tier);
+    }
+
+    [Fact]
     public void ShouldResetMatch_WaitsForTwoConfirmedBoundaryScans()
     {
         var confirmed = new RecognitionResult

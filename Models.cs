@@ -333,8 +333,7 @@ public static class RawcodeAliases
             ["OB0H"] = "LB0H", // 료쿠규 초월
             ["DA0h"] = "M70h", // 카이도 불멸
             ["BA0H"] = "G10h", // 파이러츠 도킹 5
-            ["MB0h"] = "E40h", // 센고쿠 불멸 (강화 폼)
-            ["W50h"] = "O10h"  // 비비 변화된 → 희귀함
+            ["MB0h"] = "E40h"  // 센고쿠 불멸 (강화 폼)
         };
 
     public static IReadOnlyDictionary<string, string> Map => AliasToCanonical;
