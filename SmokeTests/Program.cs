@@ -550,9 +550,9 @@ Assert(!firstRareGate.ShouldPrioritize("rawcode:A90H",
        !firstRareGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares, currentRound: 7),
     "첫 목표 희귀함이 전설 제작에 소비돼 사라져도 기존 추천 순위를 유지");
 var deadlineGate = new FirstRareRecommendationGate();
-Assert(!deadlineGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares,
+Assert(deadlineGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares,
         currentRound: FirstRareRecommendationGate.QuestDeadlineRound),
-    "8라운드가 시작되면 패스트유니크 희귀함 고정을 끝내고 기존 추천 순위로 복귀");
+    "패스트유니크 마감 뒤에도 목표 희귀함을 보기 전이면 대깨 진행 추천 유지");
 Assert(firstRareGate.ShouldPrioritize("rawcode:H90H", [],
         engine.RecipeRareUnitIds("rawcode:H90H"), currentRound: 7),
     "목표 상위를 바꾸면 새 목표의 첫 희귀함 단계를 시작");

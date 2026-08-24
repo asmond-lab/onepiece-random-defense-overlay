@@ -6,6 +6,28 @@ namespace OrandOverlay.Tests;
 public sealed class GoalProgressionTests
 {
     [Fact]
+    public void JinbeKeepsFirstRareRecommendationUntilTargetRareIsObserved()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var engine = new RecommendationEngine(catalog);
+        const string goalId = "rawcode:A90H";
+        var targetRares = engine.RecipeRareUnitIds(goalId);
+        var gate = new FirstRareRecommendationGate();
+
+        var prioritize = gate.ShouldPrioritize(
+            goalId, [], targetRares, currentRound: 45);
+        var recommendations = engine.RecommendNearestCrafts(
+            goalId, [], navigationMode: "PathOfKings.BountyHunter",
+            prioritizeTargetRare: prioritize);
+
+        Assert.True(prioritize);
+        Assert.Equal("희귀함", BaseTier(
+            catalog.Unit(recommendations[0].Route.GoalUnitId).Tier));
+        Assert.Equal(goalId, recommendations[0].ProgressionGoalUnitId);
+    }
+
+    [Fact]
     public void GarpGoalRecommendsOnlyNearestMissingTargetRareAfterFirstRare()
     {
         var catalog = new DataCatalog();

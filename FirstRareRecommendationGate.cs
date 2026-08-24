@@ -27,8 +27,12 @@ public sealed class FirstRareRecommendationGate
                 entry.Count > 0 && targetRares.Contains(entry.UnitId));
         }
 
-        return IsQuestWindow(inventory, currentRound) &&
-               targetRareUnitIds.Count > 0 &&
+        // 패스트 유니크 퀘스트 마감과 목표 상위의 첫 희귀함 진행은 별개다.
+        // 목표를 대깨하는 중이면 라운드가 지나도 실제 목표 희귀함을 보기 전까지 유지한다.
+        var knownMatchContext = currentRound > 0 ||
+                                inventory.Where(entry => entry.Count > 0)
+                                    .Sum(entry => entry.Count) <= MaximumUnknownRoundInventory;
+        return knownMatchContext && targetRareUnitIds.Count > 0 &&
                !_observedTargetRare;
     }
 

@@ -174,8 +174,31 @@ public sealed class DataCatalog
         return recipe;
     }
 
-    private static List<UnitAbilityDisplay> AbilitiesFor(RawcodeCatalogEntry entry) => entry.Abilities
-        .Select(pair => new UnitAbilityDisplay
+    // ORD 2.314 war3map.w3u/w3a 실측. TMO 보조 데이터는 특별함 능력치가 비어
+    // 있으므로, 현재 패 수치에 필요한 맵의 실제 지원 효과만 보완한다.
+    private static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, double>>
+        MapSpecialAbilities = new Dictionary<string, IReadOnlyDictionary<string, double>>(
+            StringComparer.Ordinal)
+        {
+            ["P00h"] = new Dictionary<string, double> { ["발동이동속도 감소"] = 5 },
+            ["H10h"] = new Dictionary<string, double> { ["공격속도 증가"] = 100 },
+            ["U00h"] = new Dictionary<string, double> { ["스턴"] = 0.09 },
+            ["610h"] = new Dictionary<string, double> { ["방어력 감소"] = 3 },
+            ["510h"] = new Dictionary<string, double> { ["스턴"] = 0.25 },
+            ["F10h"] = new Dictionary<string, double> { ["이동속도 감소"] = 5 },
+            ["110h"] = new Dictionary<string, double> { ["스턴"] = 0.09 },
+            ["810h"] = new Dictionary<string, double> { ["스턴"] = 0.05 },
+            ["E10h"] = new Dictionary<string, double> { ["방어력 감소"] = 3 },
+            ["A10h"] = new Dictionary<string, double> { ["이동속도 감소"] = 5 },
+            ["Y00h"] = new Dictionary<string, double> { ["이동속도 감소"] = 5 },
+            ["B10h"] = new Dictionary<string, double> { ["스턴"] = 0.03125 },
+            ["G10h"] = new Dictionary<string, double> { ["마법방어력 감소"] = 10 },
+            ["I10h"] = new Dictionary<string, double> { ["공격속도 증가"] = 30 }
+        };
+
+    private static List<UnitAbilityDisplay> AbilitiesFor(RawcodeCatalogEntry entry)
+    {
+        var abilities = entry.Abilities.Select(pair => new UnitAbilityDisplay
         {
             Name = CanonicalAbilityName(KoreanText(pair.Key)),
             DisplayValue = AbilityDisplayValue(pair.Value)
@@ -183,6 +206,17 @@ public sealed class DataCatalog
         .Where(ability => !string.IsNullOrWhiteSpace(ability.Name) &&
                           !string.IsNullOrWhiteSpace(ability.DisplayValue))
         .ToList();
+        if (MapSpecialAbilities.TryGetValue(entry.Rawcode, out var mapAbilities))
+            abilities.AddRange(mapAbilities
+                .Where(pair => abilities.All(ability => ability.Name != pair.Key))
+                .Select(pair => new UnitAbilityDisplay
+                {
+                    Name = pair.Key,
+                    DisplayValue = pair.Value.ToString("0.#####",
+                        CultureInfo.InvariantCulture)
+                }));
+        return abilities;
+    }
 
     private static string CanonicalAbilityName(string name) => name switch
     {
