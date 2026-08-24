@@ -89,7 +89,7 @@ public sealed class CompletedGoalRecommendationTests
     }
 
     [Fact]
-    public void DoflamingoBelowArmorTargetGetsSmallestCompletingSet()
+    public void DoflamingoBelowArmorTargetGetsCheapestCompletingSetWithinBoardLimit()
     {
         var catalog = new DataCatalog();
         catalog.Load();
@@ -99,7 +99,8 @@ public sealed class CompletedGoalRecommendationTests
             .Where(entry => entry.UnitId != "rawcode:3A0h")
             .ToList();
 
-        var recommendations = new RecommendationEngine(catalog, clearStats)
+        var engine = new RecommendationEngine(catalog, clearStats);
+        var recommendations = engine
             .RecommendNearestCrafts("rawcode:E90H", handWithoutHawk, take: 8,
                 navigationMode: "PathOfKings.BountyHunter", gorosei: GoroseiMode.Saturn);
         var stunSupports = recommendations
@@ -115,8 +116,20 @@ public sealed class CompletedGoalRecommendationTests
         var order = string.Join(" > ",
             recommendations.Select(recommendation => recommendation.Route.Name));
         Assert.True(stunSupports.Count == 1, "스턴 후보가 1기가 아닙니다: " + order);
-        Assert.True(armorFinishers.Count == 1, "방깎 마감이 1기가 아닙니다: " + order);
-        Assert.True(Armor(catalog.Unit(armorFinishers[0].Route.GoalUnitId)) >= 23);
+        Assert.NotEmpty(armorFinishers);
+        Assert.True(recommendations.Count <= 12, "추천 보드가 12칸을 넘었습니다: " + order);
+        var projectedBuild = handWithoutHawk
+            .Concat(recommendations.Select(recommendation => new InventoryEntry
+            {
+                UnitId = recommendation.Route.GoalUnitId,
+                Count = 1
+            }))
+            .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
+                StringComparer.OrdinalIgnoreCase);
+        var projectedArmor = engine.AggregateStrategyMetrics(projectedBuild).ArmorReduction;
+        Assert.True(projectedArmor >= GoalStrategyCalculator.FullArmorReductionTarget,
+            $"방깎 코어 미달 {projectedArmor:0}: {order}");
     }
 
     [Fact]

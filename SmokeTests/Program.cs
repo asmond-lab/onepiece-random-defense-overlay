@@ -223,11 +223,13 @@ var yamatoSlowPriority = engine.RecommendNearestCrafts("yamato_transcendent",
 Assert(FirstRoleSupport(engine, yamatoSlowPriority, "yamato_transcendent").Route.GoalUnitId ==
        "rawcode:V50h",
     "야마토는 스턴 완성 뒤 순수 50이감 스모커보다 최근 커뮤니티의 에이스 왜곡을 우선");
+var yamatoSignedInventory = Inventory("rawcode:O30h", "rawcode:Y30h", "rawcode:IC0h",
+    "rawcode:V20h", "mobydick", "rawcode:W50h");
 var yamatoSignedSlow = engine.RecommendNearestCrafts("yamato_transcendent",
-    Inventory("rawcode:O30h", "rawcode:Y30h", "rawcode:IC0h", "rawcode:V20h",
-        "mobydick", "rawcode:W50h"), 8);
-Assert(FirstRoleSupport(engine, yamatoSignedSlow, "yamato_transcendent").CompositionUnits[0]
-        .Abilities.Any(ability => ability.Name is "이동속도 감소" or "발동이동속도 감소"),
+    yamatoSignedInventory, 8);
+var yamatoSignedBuild = yamatoSignedInventory.Concat(yamatoSignedSlow.Select(item =>
+    new InventoryEntry { UnitId = item.Route.GoalUnitId, Count = 1 }));
+Assert(new InventoryStatsCalculator(catalog).Calculate(yamatoSignedBuild).TotalSlow >= 102,
     "야마토의 적 이동속도 증가를 음수 이감으로 반영해 실제 풀이감 102까지 추가 보강");
 var communityRankedYamato = engine.RecommendNearestCrafts("yamato_transcendent",
     Inventory("rawcode:060h"), 8);
@@ -336,10 +338,15 @@ var usoppRecommendedStun = usoppDaekkae.Skip(1)
 Assert(usoppRecommendedStun >= 1.3 && usoppRecommendedStun <= 1.5,
     "우솝 대깨 스턴 보강도 1.4 근처에서 멈춤");
 var zoroProfile = engine.RecommendNearestCrafts("rawcode:F90H", fullYamatoCoreInventory, 8);
+var zoroStory = engine.RecipeLegendaryUnitIds("rawcode:F90H");
 Assert(zoroProfile[0].Route.GoalUnitId == "rawcode:F90H" &&
-       FirstRoleSupport(engine, zoroProfile, "rawcode:F90H").CompositionUnits[0].Abilities.Any(ability =>
-           ability.Name is "보스 잡기" or "광폭화 잡기"),
-    "조로 초월은 핵심 수치 완성 뒤 고점용 보잡 후보 한 기만 선택적으로 제시");
+       zoroProfile.Skip(1)
+           .Where(item => !zoroStory.Contains(item.Route.GoalUnitId,
+               StringComparer.OrdinalIgnoreCase))
+           .All(item => !item.CompositionUnits[0].Abilities.Any(ability =>
+               ability.Name is "보스 잡기" or "광폭화 잡기")),
+    "조로 초월은 핵심 수치 완성 뒤 선택적 보잡을 추가하지 않음: " +
+    string.Join(" > ", zoroProfile.Select(item => item.Route.Name)));
 var zoroOneTop = engine.RecommendNearestCrafts("rawcode:F90H", [], 8,
     "PathOfKings.BountyHunter");
 Assert(zoroOneTop.Count > 1 &&
@@ -358,10 +365,9 @@ var jinbeStunPackage = jinbeOneTop.Skip(1)
     .Where(item => !jinbeStory.Contains(item.Route.GoalUnitId, StringComparer.OrdinalIgnoreCase))
     .Where(item => AbilityValue(item.CompositionUnits[0], "스턴") > 0).ToList();
 Assert(jinbeStunPackage.Sum(item => AbilityValue(item.CompositionUnits[0], "스턴")) is >= 1.3 and <= 1.5 &&
-       jinbeOneTop.Any(item => item.Route.GoalUnitId == "rawcode:V20h") &&
        jinbeOneTop.Count(item => item.CompositionUnits[0].Abilities.Any(ability =>
            ability.Name is "아머브레이크" or "단일아머브레이크")) >= 2,
-    "징베 초월 1상위도 스턴 1.4 패키지와 자체 암브 외 스모커 전설 한 기를 확보");
+    "징베 초월 1상위도 스턴 1.4 패키지와 자체 암브 외 추가 암브 한 기를 확보");
 var jinbeLegendOwned = engine.RecommendNearestCrafts("rawcode:A90H",
     [new InventoryEntry { UnitId = "rawcode:G30h", Count = 1 }], 200,
     "AlliedForces.DoubleBenefit", prioritizeTargetRare: true);
@@ -512,20 +518,16 @@ var garpBuild = garpOneTop.Select(item => new InventoryEntry
 {
     UnitId = item.Route.GoalUnitId,
     Count = 1
-}).ToList();
-var garpArmorTotal = new InventoryStatsCalculator(catalog)
-    .Calculate(garpBuild).TotalArmorReduction;
-var garpArmorContributors = garpOneTop.Where(item =>
-    new InventoryStatsCalculator(catalog).Calculate(garpBuild.Where(entry =>
-        entry.UnitId != item.Route.GoalUnitId)).TotalArmorReduction <
-    garpArmorTotal - 0.0001).ToList();
-Assert(garpArmorTotal < 211
-        ? garpArmorContributors.Count > 0
-        : garpArmorContributors.All(item =>
-            new InventoryStatsCalculator(catalog).Calculate(garpBuild.Where(entry =>
-                entry.UnitId != item.Route.GoalUnitId)).TotalArmorReduction < 211),
-    $"거프 1상위도 211 미달이면 방깎 진행, 달성하면 제거 불가능한 최소 세트 " +
-    $"(현재 {garpArmorTotal}: {string.Join(" > ", garpOneTop.Select(item => item.Route.Name))})");
+}).Where(entry => !engine.RecipeLegendaryUnitIds("rawcode:C40h")
+    .Contains(entry.UnitId, StringComparer.OrdinalIgnoreCase)).ToList();
+var garpStats = new InventoryStatsCalculator(catalog).Calculate(garpBuild);
+bool GarpCoreMet(InventoryStatSummary stats) =>
+    stats.Stun >= 1.4 && stats.TotalSlow >= 102 && stats.TotalArmorReduction >= 211 &&
+    stats.BossControlProviders >= 1 && stats.BerserkControlProviders >= 1;
+Assert(GarpCoreMet(garpStats) && garpOneTop.Count <= 12,
+    $"거프 1상위는 12칸 안에 스턴·이감·방깎·보잡 코어 완성 " +
+    $"(스턴 {garpStats.Stun}, 이감 {garpStats.TotalSlow}, 방깎 {garpStats.TotalArmorReduction}: " +
+    $"{string.Join(" > ", garpOneTop.Select(item => item.Route.Name))})");
 // 첫 희귀함(죠즈)이 목표 트리에 있으면 초기 빌드 보드에 추가된다.
 var mobyFirstRare = engine.RecommendNearestCrafts("rawcode:Q30h", [], 6,
     "PathOfKings.BountyHunter");
@@ -1464,10 +1466,12 @@ var seraphimEngine = new RecommendationEngine(catalog, bundledStats);
 var jinbeWithBlood = seraphimEngine.RecommendNearestCrafts("rawcode:A90H",
     [new InventoryEntry { UnitId = "item_greenblood", Count = 1, Confidence = 1 }], 8,
     navigationMode: "AlliedForces.EmergencyCall");
-Assert(jinbeWithBlood.Count <= 8 && jinbeWithBlood.Any(rec =>
-        rec.Route.GoalUnitId.Equals("rawcode:3A0h", StringComparison.OrdinalIgnoreCase) &&
-        rec.RecipeProgress.CompletionRatio < 1),
-    "징베는 8개 제한 안에서 S-호크를 추천하고 그린블러드만으로 100퍼센트가 되지 않음");
+var optionalJinbeHawk = jinbeWithBlood.FirstOrDefault(rec =>
+    rec.Route.GoalUnitId.Equals("rawcode:3A0h", StringComparison.OrdinalIgnoreCase));
+Assert(jinbeWithBlood.Count <= 12 &&
+       (optionalJinbeHawk is null || optionalJinbeHawk.RecipeProgress.CompletionRatio < 1),
+    $"징베는 핵심 코어 12칸 안에서 멈추며, S-호크가 있더라도 그린블러드만으로 100퍼센트가 되지 않음 " +
+    $"({jinbeWithBlood.Count}: {string.Join(" > ", jinbeWithBlood.Select(item => item.Route.Name))})");
 var hawkRecipe = catalog.Unit("rawcode:3A0h").Recipe;
 Assert(hawkRecipe.ContainsKey("item_greenblood") && hawkRecipe.ContainsKey("mihawk_hidden"),
     "S-호크 재료는 미호크 히든 + 그린블러드");
@@ -1497,7 +1501,7 @@ Assert(hawkChildren.Count == 1 &&
        hawkChildren[0].ClusterParentUnitId == "rawcode:3A0h" &&
        hawkChildren[0].RemainingCraftSteps.Count > 0,
     "S-호크를 고르면 하위패로 검호 히든이 붙고 그 조합 흐름이 있다");
-var hawkRec = jinbeWithBlood.First(rec =>
+var hawkRec = seraphimEngine.RecommendNearestCrafts("rawcode:3A0h", [], 1).First(rec =>
     rec.Route.GoalUnitId.Equals("rawcode:3A0h", StringComparison.OrdinalIgnoreCase));
 Assert(BoardSelection.Resolve([hawkRec], hawkChildren, hawkChildren[0].Route.Id)!
            .Route.GoalUnitId == "mihawk_hidden" &&
@@ -1750,9 +1754,12 @@ Assert(bundledStats.GoalProfile(["5B0H"], TopScope.MultiTop)
     "번들 스냅샷에 키자루 초월 다상위 표본 충분(실측 학습 발동)");
 var kizaruReversePicks = sanjiClearEngine.RecommendNearestCrafts("rawcode:5B0H", [], take: 10,
     navigationMode: "BestHelp.ReverseThinking");
+var kizaruReverseStory = sanjiClearEngine.RecipeLegendaryUnitIds("rawcode:5B0H");
 var kizaruReverseSupports = kizaruReversePicks.Skip(1)
+    .Where(item => !kizaruReverseStory.Contains(item.Route.GoalUnitId,
+        StringComparer.OrdinalIgnoreCase))
     .Select(item => catalog.Unit(item.Route.GoalUnitId)).ToList();
-Assert(kizaruReversePicks.Count <= 11 &&
+Assert(kizaruReverseSupports.Count <= 12 &&
        kizaruReverseSupports.Any(unit => SupportAbility(unit, "단일") > 0) &&
        kizaruReverseSupports.Any(unit => SupportAbility(unit, "끝딜") > 0),
     "역발상 키자루는 추천 제한 안에서 특포 부족을 단일·끝딜 보강으로 메움");

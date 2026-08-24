@@ -20,6 +20,15 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     private LiveStats _liveStats = new();
     // 조합 트리·조합식 등급 조회 전담 빌더(동작 보존 추출).
     private readonly RecipeTreeBuilder _recipes = new(catalog, combineHotkeys);
+    // 최하위 재료 전개는 카탈로그 수명 동안 불변이다. 엔진 호출마다 계산기를
+    // 새로 만들어 leaf cache를 버리지 않고 재사용한다.
+    private readonly RecipeCompletionCalculator _recipeCalculator = new(catalog.Unit);
+    // 같은 자동 인식 패가 반복될 때 후보별 RecipeProgress를 다시 전개하지 않는다.
+    // 패가 하나라도 바뀌면 전체 폐기하는 단일 스냅샷 캐시라 stale 결과가 남지 않는다.
+    private Dictionary<string, int> _candidateProgressInventory =
+        new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, RecipeProgress> _candidateProgressCache =
+        new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>자체 수집 통계의 게이트 통과 가중을 화면 순서 점수에 반영하도록 연결한다.</summary>
     public void SetLiveStats(LiveStats liveStats) => _liveStats = liveStats;
@@ -49,7 +58,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ToDictionary(g => g.Key, g => g.Sum(x => x.Count), StringComparer.OrdinalIgnoreCase);
 
         var ownedRoles = AggregateRoles(counts);
-        var recipeCalculator = new RecipeCompletionCalculator(catalog.Unit);
+        var recipeCalculator = _recipeCalculator;
         return catalog.Data.Routes
             .Where(x => x.GoalUnitId.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
             .Select(route => Evaluate(route, counts, ownedRoles, recipeCalculator))
@@ -73,8 +82,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(x => x.Count),
                 StringComparer.OrdinalIgnoreCase);
+        PrepareCandidateProgressCache(counts);
         _shipNeedCache.Clear();
-        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        var calculator = _recipeCalculator;
+        var initialCandidateEvaluations = new Dictionary<string, Recommendation>(
+            StringComparer.OrdinalIgnoreCase);
         var goal = catalog.Unit(goalUnitId);
         var goalSuggestion = EvaluateCraft(goal, counts, calculator);
         // 니카 루초/뱀초처럼 인게임 rawcode를 공유하는 목표는 어느 쪽으로 인식돼도
@@ -127,30 +139,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                    !prioritizeTargetRare && rareShipTreeIds.Count > 0 &&
                                    !counts.Any(pair =>
                                        pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
-        var candidates = catalog.AllUnits
-            .Where(unit => !unit.Id.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
-            .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
-            .Where(unit => !prioritizeTargetRare || BaseTier(unit.Tier) != "희귀함")
-            .Where(unit => !seraphimBlocked || unit.Tier.Split('[', 2)[0].Trim() != "세라핌")
-            .Where(unit => MeetsOwnedPrerequisites(unit, counts))
-            .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
-                           IsCheapFillerFor(goal, unit))
-            .Where(unit => !avoidTraitHungryTops ||
-                           !unit.Rawcodes.Any(TraitHungryTopRawcodes.Contains))
-            .Where(unit => !AvoidTraitPointCraftWithoutEconomy(navigation, unit, counts))
-            .Where(unit => unit.Recipe.Count > 0)
-            .Select(unit => new CraftCandidate(unit, EvaluateCraft(unit, counts, calculator),
-                GoalStrategyCalculator.StrategyMetricsFor(unit)))
-            .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
-            .ToList();
 
         var showGoal = navigation.CanCraftTopUnits && !goalOwned;
-        var maximumSupports = Math.Max(0, take - (showGoal ? 1 : 0));
         // 목표 자체 스턴 + 패에 쌓인 스턴으로 빌드 방향(니카 이감/노이감)을 판정한다.
         // 보유한 목표의 스턴은 집계에 이미 포함되고, 조합 예정이면 여기서 더한다.
         var committedStun = AggregateStrategyMetrics(counts).Stun +
                             (showGoal ? GoalStrategyCalculator.StrategyMetricsFor(goal).Stun : 0);
-        var strategy = GoalStrategyCalculator.ApplyGorosei(GoalStrategyCalculator.StrategyProfileFor(goal, committedStun, buildVariant), gorosei);
+        var strategy = GoalStrategyCalculator.ApplyGorosei(
+            GoalStrategyCalculator.StrategyProfileFor(goal, committedStun, buildVariant), gorosei);
         ActiveStunTarget = strategy?.StunTarget ?? StableStunTarget;
         ActiveStunCap = strategy?.StunCap ?? MaximumUsefulStun;
         // 키자루 초월 + 역발상: 레일리는 확정 획득이지만 특성포인트가 부족해 자체
@@ -164,10 +160,62 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 SingleDamageTarget = Math.Max(1, kizaruStrategy.SingleDamageTarget),
                 FinisherDamageTarget = Math.Max(1, kizaruStrategy.FinisherDamageTarget)
             };
-        var nearest = strategy is not null
-            ? OrderStrategySupports(goal, counts, candidates, maximumSupports, strategy.Value,
-                navigation.AllowsMultipleTopUnits, navigation.CanCraftTopUnits)
-            : OrderByCraftDistance(candidates).Take(maximumSupports).Select(x => x.Recommendation).ToList();
+        var includeBuffCandidates = strategy is
+        {
+            PreferCheapStatFillers: true,
+            ArmorReductionTarget: <= 0
+        };
+        var candidates = catalog.AllUnits
+            .Where(unit => !unit.Id.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
+            .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
+            .Where(unit => !prioritizeTargetRare || BaseTier(unit.Tier) != "희귀함")
+            .Where(unit => !seraphimBlocked || unit.Tier.Split('[', 2)[0].Trim() != "세라핌")
+            .Where(unit => MeetsOwnedPrerequisites(unit, counts))
+            .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
+                           IsCheapFillerFor(goal, unit))
+            .Where(unit => !avoidTraitHungryTops ||
+                           !unit.Rawcodes.Any(TraitHungryTopRawcodes.Contains))
+            .Where(unit => !AvoidTraitPointCraftWithoutEconomy(navigation, unit, counts))
+            .Where(unit => unit.Recipe.Count > 0)
+            .Select(unit => (Unit: unit,
+                Metrics: GoalStrategyCalculator.StrategyMetricsFor(unit)))
+            // 역할 파이프라인이 절대 소비하지 않을 후보는 비싼 레시피 전개 전에 뺀다.
+            .Where(candidate => strategy is null ||
+                                candidate.Metrics.HasAny ||
+                                includeBuffCandidates && IsCheapBuffFiller(candidate.Unit) ||
+                                strategy.Value.FillCommunitySupports &&
+                                CommunityPriorityScore(goal, candidate.Unit) > 0)
+            .Select(candidate => new CraftCandidate(candidate.Unit,
+                EvaluateInitialCandidate(candidate.Unit), candidate.Metrics))
+            .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
+            .ToList();
+
+        var effectiveTake = take;
+        var maximumSupports = Math.Max(0, effectiveTake - (showGoal ? 1 : 0));
+        List<Recommendation> nearest;
+        if (strategy is { } physicalStrategy)
+        {
+            const int maximumCoreBoardSize = 12;
+            while (true)
+            {
+                nearest = OrderStrategySupports(goal, counts, candidates, maximumSupports,
+                    physicalStrategy, navigation.AllowsMultipleTopUnits,
+                    navigation.CanCraftTopUnits);
+                var fitsCurrentBoard = nearest.Count <= maximumSupports;
+                if (!physicalStrategy.StopAfterCoreTargets ||
+                    fitsCurrentBoard &&
+                    MeetsCoreTargets(goal, counts, nearest, showGoal, physicalStrategy) ||
+                    effectiveTake >= maximumCoreBoardSize)
+                    break;
+                effectiveTake++;
+                maximumSupports = Math.Max(0, effectiveTake - (showGoal ? 1 : 0));
+            }
+        }
+        else
+        {
+            nearest = OrderByCraftDistance(candidates).Take(maximumSupports)
+                .Select(candidate => candidate.Recommendation).ToList();
+        }
 
         // 초월은 하위 전설을 먼저 짜야 스토리를 민다. 역할 패키지보다 후보 보드 앞에 둔다.
         var recipeLegendaryIds = _recipes.RecipeLegendaryIds(goal);
@@ -175,14 +223,16 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         {
             var missingLegendaries = recipeLegendaryIds
                 .Where(id => counts.GetValueOrDefault(id) <= 0)
-                .Select(id => EvaluateCraft(catalog.Unit(id), counts, calculator))
+                .Select(id => EvaluateInitialCandidate(catalog.Unit(id)))
                 .ToList();
             var pinned = new HashSet<string>(missingLegendaries.Select(item => item.Route.GoalUnitId),
                 StringComparer.OrdinalIgnoreCase);
             nearest = missingLegendaries
                 .Concat(nearest.Where(item => !pinned.Contains(item.Route.GoalUnitId)))
-                .Take(maximumSupports)
                 .ToList();
+            // 상위 제작에 소비되는 전설은 활성 지원 슬롯이 아니다. 코어 지원을
+            // 밀어내지 않도록 보드 한도를 재료 수만큼 별도로 늘린다.
+            effectiveTake += missingLegendaries.Count;
         }
 
         // UI에서 상위를 직접 골랐으면 현재 패에서 가장 가까운 미보유 희귀함을 첫 행동으로 둔다.
@@ -191,7 +241,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         if (pinningFirstRareShip || pinningTargetRare)
         {
             rarePick = (pinningTargetRare ? missingTargetRareIds : rareShipTreeIds)
-                .Select(id => EvaluateCraft(catalog.Unit(id), counts, calculator))
+                .Select(id => EvaluateInitialCandidate(catalog.Unit(id)))
                 .Where(item => pinningTargetRare || MeetsOwnedPrerequisites(
                     catalog.Unit(item.Route.GoalUnitId), counts))
                 .OrderBy(item => item.RecipeProgress.MissingLeaves
@@ -227,6 +277,19 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                         catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
                         ? 1
                         : 0)
+            // 물딜의 같은 생존 단계에서는 방깎 후보를 이감·보조보다 먼저 두고,
+            // 방깎 후보끼리는 현재 패 제작 거리를 채용률보다 먼저 비교한다.
+            .ThenByDescending(pair =>
+                strategy is { ArmorBeforeSlow: true } &&
+                !recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) &&
+                GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(
+                    pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0 ? 1 : 0)
+            .ThenByDescending(pair =>
+                !recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) &&
+                GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(
+                    pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0
+                    ? pair.recommendation.RecipeProgress.CompletionRatio
+                    : 0)
             .ThenByDescending(pair =>
                 CommunityPriorityScore(goal, catalog.Unit(pair.recommendation.Route.GoalUnitId)))
             .ThenBy(pair => pair.index)
@@ -248,7 +311,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             ? new[] { rarePick }.Concat(visibleGoal).Concat(nearest)
             : visibleGoal.Concat(nearest);
         var results = ordered
-            .Take(Math.Max(1, take + (pinningFirstRareShip || pinningTargetRare ? 1 : 0)))
+            .Take(Math.Max(1, effectiveTake +
+                              (pinningFirstRareShip || pinningTargetRare ? 1 : 0)))
             .ToList();
 
         // 세라핌은 역할 지표(스턴·이감·방깎)가 없어 파이프라인이 집지 못한다.
@@ -283,7 +347,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     insertAt = i;
                     break;
                 }
-                results.Insert(insertAt, EvaluateCraft(bestSeraphim.Unit, counts, calculator));
+                results.Insert(insertAt, EvaluateInitialCandidate(bestSeraphim.Unit));
             }
         }
 
@@ -295,7 +359,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             ? recipeLegendaryIds.Append(rarePick.Route.GoalUnitId).ToList()
             : recipeLegendaryIds;
         results = LimitRecommendationsPreservingStrategy(
-            results, take, goal, counts, strategy, showGoal, protectedUnitIds);
+            results, effectiveTake, goal, counts, strategy, showGoal, protectedUnitIds);
 
         IReadOnlyDictionary<string, int> cascadeInventory = counts;
         for (var i = 0; i < results.Count; i++)
@@ -328,6 +392,30 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes);
         }
         return results;
+
+        Recommendation EvaluateInitialCandidate(UnitDefinition unit)
+        {
+            if (initialCandidateEvaluations.TryGetValue(unit.Id, out var cached)) return cached;
+            if (!_candidateProgressCache.TryGetValue(unit.Id, out var progress))
+            {
+                progress = calculator.Calculate([unit.Id], counts);
+                _candidateProgressCache[unit.Id] = progress;
+            }
+            var evaluated = EvaluateCraftCandidate(unit, progress);
+            initialCandidateEvaluations[unit.Id] = evaluated;
+            return evaluated;
+        }
+    }
+
+    private void PrepareCandidateProgressCache(IReadOnlyDictionary<string, int> inventory)
+    {
+        if (_candidateProgressInventory.Count == inventory.Count &&
+            inventory.All(pair =>
+                _candidateProgressInventory.GetValueOrDefault(pair.Key) == pair.Value))
+            return;
+        _candidateProgressInventory = new Dictionary<string, int>(
+            inventory, StringComparer.OrdinalIgnoreCase);
+        _candidateProgressCache.Clear();
     }
 
     /// <summary>
@@ -344,7 +432,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
                 StringComparer.OrdinalIgnoreCase);
-        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        var calculator = _recipeCalculator;
         var selected = recs.FirstOrDefault(item =>
             item.Route.Id.Equals(consumeFirstRouteId, StringComparison.OrdinalIgnoreCase));
         var consumeOrder = selected is null
@@ -386,7 +474,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(x => x.Count),
                 StringComparer.OrdinalIgnoreCase);
-        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        var calculator = _recipeCalculator;
         var rares = catalog.AllUnits
             .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "희귀함")
             .Where(unit => unit.Recipe.Count > 0)
@@ -413,7 +501,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
                 StringComparer.OrdinalIgnoreCase);
         var unit = catalog.Unit(unitId);
-        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        var calculator = _recipeCalculator;
         return StoryClusterChildIds(unit)
             .Where(id => counts.GetValueOrDefault(id) <= 0)
             .Select(id =>
@@ -514,12 +602,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         IReadOnlyDictionary<string, int> inventory, HashSet<string> visiting)
     {
         if (!visiting.Add(unit.Id)) return true;
-        foreach (var childId in unit.Recipe.Keys)
+        foreach (var (childId, required) in unit.Recipe)
         {
             var child = catalog.Unit(childId);
             if (IsResourcePseudo(child)) continue;
-            if (inventory.GetValueOrDefault(child.Id) > 0 ||
-                inventory.GetValueOrDefault(childId) > 0) continue;
+            var owned = Math.Max(inventory.GetValueOrDefault(child.Id),
+                inventory.GetValueOrDefault(childId));
+            if (owned >= required) continue;
             if (IsSpecialPrerequisite(child)) return false;
             if (!SpecialRequirementSatisfied(child, inventory, visiting)) return false;
         }
@@ -546,10 +635,16 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     continue;
                 }
                 if (IsResourcePseudo(child)) continue;
-                if (inventory.GetValueOrDefault(child.Id) > 0 ||
-                    inventory.GetValueOrDefault(childId) > 0) continue;
+                var owned = Math.Max(inventory.GetValueOrDefault(child.Id),
+                    inventory.GetValueOrDefault(childId));
+                if (owned >= required) continue;
                 if (IsSpecialPrerequisite(child))
-                    missing.Add(child.Name);
+                {
+                    var missingCount = required - owned;
+                    missing.Add(missingCount > 1
+                        ? $"{child.Name} ×{missingCount}"
+                        : child.Name);
+                }
                 else
                     Walk(child, visiting);
             }
@@ -561,22 +656,29 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     private readonly Dictionary<string, List<string>> _shipNeedCache =
         new(StringComparer.OrdinalIgnoreCase);
 
-    private List<string> RequiredShipCodes(UnitDefinition unit,
+    internal List<string> RequiredShipCodes(UnitDefinition unit,
         IReadOnlyDictionary<string, int> inventory)
     {
         if (_shipNeedCache.TryGetValue(unit.Id, out var cached)) return cached;
         var needed = new List<string>();
-        Walk(unit, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+        var availability = inventory
+            .Where(pair => pair.Value > 0)
+            .ToDictionary(pair => pair.Key, pair => pair.Value,
+                StringComparer.OrdinalIgnoreCase);
+        Walk(unit, 1, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
         _shipNeedCache[unit.Id] = needed;
         return needed;
 
-        void Walk(UnitDefinition current, HashSet<string> visiting)
+        void Walk(UnitDefinition current, int multiplier, HashSet<string> visiting)
         {
             if (!visiting.Add(current.Id)) return;
-            foreach (var childId in current.Recipe.Keys)
+            foreach (var (childId, required) in current.Recipe)
             {
                 var child = catalog.Unit(childId);
                 if (IsResourcePseudo(child)) continue;
+                var totalRequired = required > int.MaxValue / Math.Max(1, multiplier)
+                    ? int.MaxValue
+                    : required * multiplier;
                 // 배 재료는 보유 여부와 무관하게 소요로 센다 — 보유한 배가 바로
                 // 이 후보가 소모할 자원이다. 배가 아닌 보유 중간재는 이미 완성돼
                 // 있으므로(그 배도 그때 소모됨) 하위를 더 세지 않는다.
@@ -584,17 +686,49 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     ShipPrerequisiteRawcodes.Contains(code, StringComparer.Ordinal));
                 if (ship is not null)
                 {
-                    needed.Add(ship);
+                    for (var count = 0; count < totalRequired; count++)
+                        needed.Add(ship);
                     continue;
                 }
-                if (inventory.GetValueOrDefault(child.Id) > 0) continue;
-                Walk(child, visiting);
+                var owned = Math.Min(totalRequired,
+                    availability.GetValueOrDefault(child.Id));
+                if (owned > 0) availability[child.Id] -= owned;
+                var remaining = totalRequired - owned;
+                if (remaining > 0) Walk(child, remaining, visiting);
             }
+            visiting.Remove(current.Id);
         }
     }
 
     // 물딜·마딜 공용 역할 파이프라인. 스턴 1.4 축은 공통이고, 마감 깎기만
     // 물딜(방깎 211)과 마딜(마방깎 소스 1)로 갈린다.
+    private bool MeetsCoreTargets(UnitDefinition goal,
+        IReadOnlyDictionary<string, int> inventory,
+        IReadOnlyCollection<Recommendation> supports,
+        bool includeGoal,
+        GoalStrategyProfile strategy)
+    {
+        var projected = AggregateStrategyMetrics(inventory);
+        if (includeGoal) projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+        foreach (var support in supports)
+            projected += GoalStrategyCalculator.StrategyMetricsFor(
+                catalog.Unit(support.Route.GoalUnitId));
+        return MeetsStrategyTargets(projected, strategy);
+    }
+
+    private static bool MeetsStrategyTargets(StrategyMetrics projected,
+        GoalStrategyProfile strategy) =>
+        projected.Slow + 0.0001 >= strategy.SlowTarget &&
+               projected.Stun + 0.0001 >= strategy.StunTarget &&
+               projected.ArmorReduction + 0.0001 >= strategy.ArmorReductionTarget &&
+               projected.ArmorBreak + 0.0001 >= strategy.ArmorBreakTarget &&
+               projected.AirMovement + 0.0001 >= strategy.AirMovementTarget &&
+               projected.BossControl + 0.0001 >= strategy.BossControlTarget &&
+               projected.BerserkBossControl + 0.0001 >= strategy.BerserkBossControlTarget &&
+               projected.MagicArmorReduction + 0.0001 >= strategy.MagicArmorReductionTarget &&
+               projected.SingleDamage + 0.0001 >= strategy.SingleDamageTarget &&
+               projected.FinisherDamage + 0.0001 >= strategy.FinisherDamageTarget;
+
     private List<Recommendation> OrderStrategySupports(UnitDefinition goal,
         IReadOnlyDictionary<string, int> inventory,
         IReadOnlyCollection<CraftCandidate> candidates,
@@ -617,6 +751,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var projected = AggregateStrategyMetrics(inventory);
         if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
             projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+        var armorWasPendingAtStart =
+            projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget;
 
         // 마딜은 짤깍 칸 대신 쵸파 희귀 같은 버퍼 1기를 남긴다.
         var magicBuffPending = strategy.PreferCheapStatFillers &&
@@ -624,6 +760,35 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                !inventory.Any(pair => pair.Value > 0 &&
                                                       IsCheapBuffFiller(catalog.Unit(pair.Key)));
         var roleCap = Math.Max(0, take - (magicBuffPending ? 1 : 0));
+
+        void SelectArmorSet()
+        {
+            if (strategy.MinimizeArmorRecommendationSet && selected.Count < roleCap &&
+                projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
+            {
+                var armorSet = ChooseArmorSet(goal, strategy, projected, remaining, selected,
+                    inventory, roleCap - selected.Count);
+                foreach (var candidate in armorSet)
+                    Add(candidate);
+            }
+            else while (selected.Count < roleCap &&
+                        projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
+            {
+                var armorPool = remaining
+                        .Where(candidate => candidate.Metrics.ArmorReduction > 0)
+                        .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected,
+                            inventory, projected, strategy))
+                        .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap));
+                var armor = OrderTowardsTarget(
+                        PreferCheapFillers(armorPool, IsCheapArmorFiller, BigMetricCount(
+                            metrics => metrics.ArmorReduction, IsCheapArmorFiller), 3),
+                        projected.ArmorReduction, strategy.ArmorReductionTarget,
+                        candidate => candidate.Metrics.ArmorReduction, projected, strategy, goal)
+                    .FirstOrDefault();
+                if (armor is null) break;
+                Add(armor);
+            }
+        }
 
         // 모든 물딜은 상위별 시너지보다 먼저 스턴 1.4를 확보해 라인을 안정시킨다.
         if (strategy.StunBeforeSlow && selected.Count < roleCap &&
@@ -671,6 +836,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             if (armorBreak is null) break;
             Add(armorBreak);
         }
+
+        if (strategy.ArmorBeforeSlow) SelectArmorSet();
 
         while (selected.Count < roleCap && projected.Slow + 0.0001 < strategy.SlowTarget)
         {
@@ -729,31 +896,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             Add(air);
         }
 
-        if (strategy.MinimizeArmorRecommendationSet && selected.Count < roleCap &&
-            projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
-        {
-            var armorSet = ChooseArmorSet(goal, strategy, projected, remaining, selected,
-                inventory, roleCap - selected.Count);
-            foreach (var candidate in armorSet)
-                Add(candidate);
-        }
-        else while (selected.Count < roleCap &&
-                    projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget)
-        {
-            var armorPool = remaining
-                    .Where(candidate => candidate.Metrics.ArmorReduction > 0)
-                    .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
-                    projected, strategy))
-                    .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap));
-            var armor = OrderTowardsTarget(
-                    PreferCheapFillers(armorPool, IsCheapArmorFiller, BigMetricCount(
-                        metrics => metrics.ArmorReduction, IsCheapArmorFiller), 3),
-                    projected.ArmorReduction, strategy.ArmorReductionTarget,
-                    candidate => candidate.Metrics.ArmorReduction, projected, strategy, goal)
-                .FirstOrDefault();
-            if (armor is null) break;
-            Add(armor);
-        }
+        if (!strategy.ArmorBeforeSlow) SelectArmorSet();
 
         // 마딜 상위의 마감 깎기: 마방깎 소스를 최소 목표만큼 확보한다. 물딜의 방깎
         // 211과 달리 큰 수치 목표를 두지 않는다(실측상 보편 스택이 아님).
@@ -903,6 +1046,42 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             Add(upper);
         }
 
+        if (strategy.StopAfterCoreTargets && !allowsMultipleTopUnits)
+        {
+            selected = OptimizeCoreSetForCraftDistance(goal, inventory, candidates,
+                selected, strategy, canCraftGoal);
+            projected = AggregateStrategyMetrics(inventory);
+            if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
+                projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+            foreach (var candidate in selected) projected += candidate.Metrics;
+
+            // 핵심 목표를 유지하면서 중복 후보를 지울 때는 현재 패에서 먼 기물부터
+            // 제거한다. 가까운 방깎을 꼬리 삽입됐다는 이유로 다시 버리지 않는다.
+            foreach (var candidate in selected
+                         .OrderByDescending(item => item.Recommendation.RecipeProgress.MissingLeaves
+                             .Sum(leaf => leaf.MissingCount))
+                         .ThenBy(item => item.Recommendation.RecipeProgress.CompletionRatio)
+                         .ToList())
+            {
+                var candidateMissing = candidate.Recommendation.RecipeProgress.MissingLeaves
+                    .Sum(leaf => leaf.MissingCount);
+                var hasFartherArmor = candidate.Metrics.ArmorReduction > 0 &&
+                    armorWasPendingAtStart &&
+                    candidateMissing <= 2 &&
+                    selected.Any(other => !ReferenceEquals(other, candidate) &&
+                        other.Metrics.ArmorReduction > 0 &&
+                        (other.Recommendation.RecipeProgress.CompletionRatio + 0.0001 <
+                         candidate.Recommendation.RecipeProgress.CompletionRatio ||
+                         other.Recommendation.RecipeProgress.MissingLeaves
+                             .Sum(leaf => leaf.MissingCount) > candidateMissing));
+                if (hasFartherArmor) continue;
+                var trial = projected + candidate.Metrics * -1;
+                if (!MeetsStrategyTargets(trial, strategy)) continue;
+                projected = trial;
+                selected.Remove(candidate);
+            }
+        }
+
         return selected.Select(candidate => candidate.Recommendation).ToList();
 
         void Add(CraftCandidate candidate)
@@ -941,6 +1120,105 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         }
     }
 
+    private List<CraftCandidate> OptimizeCoreSetForCraftDistance(UnitDefinition goal,
+        IReadOnlyDictionary<string, int> inventory,
+        IReadOnlyCollection<CraftCandidate> candidates,
+        List<CraftCandidate> selected,
+        GoalStrategyProfile strategy,
+        bool canCraftGoal)
+    {
+        var baseline = AggregateStrategyMetrics(inventory);
+        if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
+            baseline += GoalStrategyCalculator.StrategyMetricsFor(goal);
+        if (baseline.ArmorReduction + 0.0001 >= strategy.ArmorReductionTarget)
+            return selected;
+
+        StrategyMetrics Metrics(IReadOnlyCollection<CraftCandidate> plan)
+        {
+            var metrics = baseline;
+            foreach (var candidate in plan) metrics += candidate.Metrics;
+            return metrics;
+        }
+
+        var best = selected.ToList();
+        var bestMeetsTargets = MeetsStrategyTargets(Metrics(best), strategy);
+        var maximumRoleCap = 12 - (canCraftGoal &&
+                                   inventory.GetValueOrDefault(goal.Id) <= 0 ? 1 : 0);
+        var alternatives = OrderByCraftDistance(candidates
+                .Where(candidate => candidate.Metrics.ArmorReduction > 0)
+                .Where(candidate => MissingLeafCost(candidate) <= 2))
+            .Take(18)
+            .ToList();
+        foreach (var alternative in alternatives)
+        {
+            if (best.Any(candidate => candidate.Unit.Id.Equals(alternative.Unit.Id,
+                    StringComparison.OrdinalIgnoreCase)))
+                continue;
+            var fartherArmor = best
+                .Where(candidate => candidate.Metrics.ArmorReduction > 0)
+                .Where(candidate => IsCloser(alternative, candidate))
+                .ToList();
+            if (fartherArmor.Count == 0) continue;
+
+            var trial = best.Append(alternative)
+                .DistinctBy(candidate => candidate.Unit.Id, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            while (trial.Count > maximumRoleCap)
+            {
+                var removable = fartherArmor
+                    .Where(candidate => trial.Contains(candidate))
+                    .OrderByDescending(MissingLeafCost)
+                    .ThenBy(candidate =>
+                        candidate.Recommendation.RecipeProgress.CompletionRatio)
+                    .FirstOrDefault(candidate =>
+                    {
+                        var without = trial.Where(item => !ReferenceEquals(item, candidate))
+                            .ToList();
+                        return MeetsStrategyTargets(Metrics(without), strategy) &&
+                               IsCompatiblePlan(without);
+                    });
+                if (removable is null) break;
+                trial.Remove(removable);
+            }
+            if (trial.Count <= maximumRoleCap && IsCompatiblePlan(trial) &&
+                (!bestMeetsTargets || MeetsStrategyTargets(Metrics(trial), strategy)))
+            {
+                best = trial;
+                break;
+            }
+        }
+        return best;
+
+        bool IsCompatiblePlan(IReadOnlyCollection<CraftCandidate> plan)
+        {
+            var accepted = new List<CraftCandidate>();
+            var projected = baseline;
+            foreach (var candidate in plan)
+            {
+                if (!IsCompatibleSupport(goal, candidate.Unit, accepted, inventory,
+                        projected, strategy))
+                    return false;
+                accepted.Add(candidate);
+                projected += candidate.Metrics;
+            }
+            return projected.Stun <= strategy.StunCap + 0.0001;
+        }
+
+        static long MissingLeafCost(CraftCandidate candidate) =>
+            candidate.Recommendation.RecipeProgress.MissingLeaves
+                .Sum(leaf => (long)leaf.MissingCount);
+
+        static bool IsCloser(CraftCandidate candidate, CraftCandidate current)
+        {
+            var candidateCompletion =
+                candidate.Recommendation.RecipeProgress.CompletionRatio;
+            var currentCompletion = current.Recommendation.RecipeProgress.CompletionRatio;
+            return candidateCompletion > currentCompletion + 0.0001 ||
+                   Math.Abs(candidateCompletion - currentCompletion) < 0.0001 &&
+                   MissingLeafCost(candidate) < MissingLeafCost(current);
+        }
+    }
+
     private List<CraftCandidate> ChooseStunSet(UnitDefinition goal,
         GoalStrategyProfile strategy,
         StrategyMetrics projected,
@@ -958,6 +1236,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ToList();
         var maximumPicks = Math.Min(3, availableSlots);
         List<CraftCandidate>? best = null;
+        var bestReachesTarget = false;
         var bestDistance = double.MaxValue;
         var bestCoreCoverage = -1;
         var bestSize = int.MaxValue;
@@ -977,6 +1256,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 if (totalStun <= strategy.StunCap + 0.0001)
                 {
                     var distance = Math.Abs(strategy.StunTarget - totalStun);
+                    var reachesTarget = totalStun + 0.0001 >= strategy.StunTarget;
                     // 조로의 봉쿠레/크로커다일처럼 전용 홀딩 축은 스턴 세트 안에서
                     // 먼저 충족한다. 그다음 스턴은 최소 기수로 채운다. 같은 1.4라도
                     // 3기 세트는 남은 추천 슬롯에서 이감·방깎·보조딜 자리를 빼앗는다.
@@ -992,18 +1272,22 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                         candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(leaf => leaf.MissingCount));
                     var sameDistance = Math.Abs(distance - bestDistance) < 0.0001;
                     var sameCore = coreCoverage == bestCoreCoverage;
-                    if (distance < bestDistance - 0.0001 ||
-                        sameDistance && coreCoverage > bestCoreCoverage ||
-                        sameDistance && sameCore && size < bestSize ||
-                        sameDistance && sameCore && size == bestSize &&
-                        usefulMetrics > bestUsefulMetrics ||
-                        sameDistance && sameCore && size == bestSize &&
-                        usefulMetrics == bestUsefulMetrics && bestOvershoot && !overshoot ||
-                        sameDistance && sameCore && size == bestSize &&
-                        usefulMetrics == bestUsefulMetrics && bestOvershoot == overshoot &&
-                        craftScore > bestCraftScore)
+                    if (best is null ||
+                        reachesTarget && !bestReachesTarget ||
+                        reachesTarget == bestReachesTarget &&
+                        (distance < bestDistance - 0.0001 ||
+                         sameDistance && coreCoverage > bestCoreCoverage ||
+                         sameDistance && sameCore && size < bestSize ||
+                         sameDistance && sameCore && size == bestSize &&
+                         usefulMetrics > bestUsefulMetrics ||
+                         sameDistance && sameCore && size == bestSize &&
+                         usefulMetrics == bestUsefulMetrics && bestOvershoot && !overshoot ||
+                         sameDistance && sameCore && size == bestSize &&
+                         usefulMetrics == bestUsefulMetrics && bestOvershoot == overshoot &&
+                         craftScore > bestCraftScore))
                     {
                         best = current.ToList();
+                        bestReachesTarget = reachesTarget;
                         bestDistance = distance;
                         bestCoreCoverage = coreCoverage;
                         bestSize = size;
@@ -1047,11 +1331,20 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         int availableSlots)
     {
         if (availableSlots <= 0) return [];
-        var pool = OrderByCraftDistance(remaining
+        var compatible = remaining
                 .Where(candidate => candidate.Metrics.ArmorReduction > 0)
                 .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, alreadySelected,
                     inventory, projected, strategy))
-                .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap)))
+                .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap))
+                .ToList();
+        // 빈 패에서도 211에 닿을 수 있도록 고방깎 후보를 반드시 풀에 남기고,
+        // 현재 패에서 가까운 후보를 함께 섞어 기수 최소 → 제작비 최소 비교를 한다.
+        var pool = compatible
+            .OrderByDescending(candidate => candidate.Metrics.ArmorReduction)
+            .ThenByDescending(candidate => candidate.Recommendation.RecipeProgress.CompletionRatio)
+            .Take(10)
+            .Concat(OrderByCraftDistance(compatible).Take(10))
+            .DistinctBy(candidate => candidate.Unit.Id, StringComparer.OrdinalIgnoreCase)
             .Take(18)
             .ToList();
         var maximumPicks = Math.Min(pool.Count, availableSlots);
@@ -1064,29 +1357,33 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var bestCommunityScore = double.MinValue;
         var bestContribution = double.MinValue;
         var current = new List<CraftCandidate>();
+        var missingLeafCosts = pool
+            .Select(candidate => candidate.Recommendation.RecipeProgress.MissingLeaves
+                .Sum(leaf => (long)leaf.MissingCount))
+            .ToArray();
+        var usefulMetricCounts = pool
+            .Select(candidate =>
+                RemainingUsefulMetricCount(candidate.Metrics, projected, strategy))
+            .ToArray();
+        var communityScores = pool
+            .Select(candidate => CommunityPriorityScore(goal, candidate.Unit))
+            .ToArray();
 
-        Search(0);
+        Search(0, contribution: 0, missingLeaves: 0, usefulMetrics: 0,
+            communityScore: 0);
         return best is null ? [] : OrderByCraftDistance(best).ToList();
 
-        void Search(int start)
+        void Search(int start, double contribution, long missingLeaves,
+            int usefulMetrics, double communityScore)
         {
             if (current.Count > 0)
             {
-                var contribution = current.Sum(candidate =>
-                    candidate.Metrics.ArmorReduction);
                 var reachesTarget = projected.ArmorReduction + contribution + 0.0001 >=
                                     strategy.ArmorReductionTarget;
                 var size = current.Count;
-                var missingLeaves = current.Sum(candidate =>
-                    candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(leaf =>
-                        leaf.MissingCount));
                 var overshoot = reachesTarget
                     ? projected.ArmorReduction + contribution - strategy.ArmorReductionTarget
                     : double.MaxValue;
-                var usefulMetrics = current.Sum(candidate =>
-                    RemainingUsefulMetricCount(candidate.Metrics, projected, strategy));
-                var communityScore = current.Sum(candidate =>
-                    CommunityPriorityScore(goal, candidate.Unit));
                 var better = best is null ||
                              reachesTarget && !bestReachesTarget ||
                              reachesTarget == bestReachesTarget &&
@@ -1125,8 +1422,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             if (current.Count >= maximumPicks) return;
             for (var index = start; index < pool.Count; index++)
             {
-                current.Add(pool[index]);
-                Search(index + 1);
+                var candidate = pool[index];
+                current.Add(candidate);
+                Search(index + 1,
+                    contribution + candidate.Metrics.ArmorReduction,
+                    missingLeaves + missingLeafCosts[index],
+                    usefulMetrics + usefulMetricCounts[index],
+                    communityScore + communityScores[index]);
                 current.RemoveAt(current.Count - 1);
             }
         }
@@ -1275,6 +1577,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                         Unit = unit,
                         CoverageLoss = StrategyCoverageLoss(fullMetrics, without, strategy.Value),
                         CommunityPriority = CommunityPriorityScore(goal, unit),
+                        IsArmor = GoalStrategyCalculator.StrategyMetricsFor(unit)
+                            .ArmorReduction > 0,
+                        Completion = recommendation.RecipeProgress.CompletionRatio,
+                        MissingLeaves = recommendation.RecipeProgress.MissingLeaves
+                            .Sum(leaf => leaf.MissingCount),
                         IsSeraphim = BaseTier(unit.Tier) == "세라핌"
                     };
                 })
@@ -1283,6 +1590,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     StringComparer.OrdinalIgnoreCase))
                 .Where(item => !IsCommunityCore(goal, item.Unit))
                 .OrderBy(item => item.CoverageLoss)
+                // 역할 손실이 없는 중복 방깎은 현재 패에서 먼 후보부터 정리한다.
+                // 비방깎 지원의 기존 채용률 순서는 그대로 유지한다.
+                .ThenBy(item => item.IsArmor ? 0 : 1)
+                .ThenBy(item => item.IsArmor ? item.Completion : 0)
+                .ThenByDescending(item => item.IsArmor ? item.MissingLeaves : 0)
                 .ThenBy(item => item.CommunityPriority)
                 // 같은 손실·채용률이면 세라핌보다 일반 후보를 먼저 정리한다.
                 .ThenBy(item => item.IsSeraphim ? 1 : 0)
@@ -1594,6 +1906,27 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         IReadOnlyDictionary<string, int> inventory,
         RecipeCompletionCalculator calculator) =>
         EvaluateCraft(unit, inventory, calculator, out _);
+
+    /// <summary>
+    /// 후보 탐색에는 제작 진행도와 경로 식별자만 필요하다. 화면에 노출될지 모르는
+    /// 모든 후보의 조합 트리·남은 단계·특수 경고를 미리 만들지 않는다.
+    /// 최종 결과는 캐스케이드 단계에서 <see cref="EvaluateCraft"/>로 완전 재구성한다.
+    /// </summary>
+    private static Recommendation EvaluateCraftCandidate(UnitDefinition unit,
+        RecipeProgress progress)
+    {
+        return new Recommendation
+        {
+            Route = new RouteDefinition
+            {
+                Id = "craft:" + unit.Id,
+                GoalUnitId = unit.Id,
+                Name = unit.Name
+            },
+            Score = progress.CompletionRatio * 100,
+            RecipeProgress = progress
+        };
+    }
 
     /// <summary>remainingAfterBuild = 이 유닛의 빌드가 소비하고 남는 패(순위 캐스케이드용).</summary>
     private Recommendation EvaluateCraft(UnitDefinition unit,

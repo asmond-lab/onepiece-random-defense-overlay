@@ -18,9 +18,6 @@ namespace OrandOverlay;
 /// </summary>
 internal static class StructuralUnitPoolScanner
 {
-    /// <summary>전역 풀로 인정할 최소 슬롯 수. 훑는 도중 후보를 걸러 담기 위한 하한이다.</summary>
-    private const int MinimumPoolSlots = 64;
-
     private static readonly TimeSpan FailureCooldown = TimeSpan.FromSeconds(5);
     private static readonly object Gate = new();
     private static DateTime _lastFailureUtc = DateTime.MinValue;
@@ -158,7 +155,8 @@ internal static class StructuralUnitPoolScanner
 
             if (!alignedOffsets || index + entriesWord >= words.Length) continue;
             var count = (int)(uint)words[index + countWord];
-            if (count < MinimumPoolSlots || count > profile.MaximumUnits) continue;
+            if (count < Math.Max(1, profile.MinimumUnitObjects) ||
+                count > profile.MaximumUnits) continue;
             var entries = words[index + entriesWord];
             if (!ReadOnlyProcessMemory.IsPlausibleUserAddress(entries) || (entries & 7) != 0) continue;
             structs.Add(new PoolStruct(chunkBase + (ulong)index * 8, count, entries));
@@ -196,8 +194,10 @@ internal static class StructuralUnitPoolScanner
         // 풀 밖의 CUnit(죽은 유닛·다른 구조체 소속)도 함께 잡히기 때문이다. 실제로 판이
         // 길어져 유닛이 565개로 늘었을 때 과반 조건이 인식을 통째로 막았다.
         // 순위 매기기(소유자 종류 → 유닛 수)가 진짜 풀을 골라 주므로 하한은 낮게 둔다.
-        var minimumDistinctUnits = Math.Max(profile.MinimumUnitObjects,
-            Math.Min(MinimumPoolSlots, units.Count / 4));
+        // 한 판의 실제 전역 풀 슬롯은 48까지 내려간다. 전체 힙에서 잡힌 죽은 CUnit
+        // 수(실측 705)로 하한을 64까지 끌어올리면 정상 풀 44개가 영구 탈락한다.
+        // 실행 파일별 검증 프로필이 정한 최소 CUnit 수만 사용한다.
+        var minimumDistinctUnits = PoolDistinctUnitMinimum(units.Count, profile);
         var candidates = new List<(ulong Address, int Hits, int Owners, int Count, ulong Entries)>();
         var distinctUnits = new HashSet<ulong>();
         var owners = new HashSet<byte>();
@@ -226,7 +226,10 @@ internal static class StructuralUnitPoolScanner
         }
 
         if (candidates.Count == 0)
-            throw new PoolNotReadyException("대전 준비 중입니다(유닛 풀이 아직 만들어지지 않았습니다).");
+            throw new PoolNotReadyException(
+                $"대전 준비 중입니다(유닛 풀이 아직 만들어지지 않았습니다). " +
+                $"CUnit {units.Count} · 구조체 {structs.Count} · 판별 하한 {minimumDistinctUnits} · " +
+                $"최대 슬롯 {(structs.Count == 0 ? 0 : structs.Max(item => item.Count))}");
 
         // 8바이트씩 훑다 보면 진짜 구조체 주변의 어긋난 위치도 그럴듯한 (개수, 배열) 쌍을 만든다.
         // 같은 유닛 집합을 담는 후보 중에서는 슬롯이 가장 적은 것이 실제 풀이다.
@@ -243,6 +246,9 @@ internal static class StructuralUnitPoolScanner
         }
         return ranked[0].Address;
     }
+
+    internal static int PoolDistinctUnitMinimum(int observedCUnits, MemoryProfile profile) =>
+        Math.Max(1, profile.MinimumUnitObjects);
 
     private readonly record struct PoolStruct(ulong Address, int Count, ulong Entries);
 

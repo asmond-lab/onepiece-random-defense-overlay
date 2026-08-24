@@ -10,6 +10,11 @@ namespace OrandOverlay;
 public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 {
     private readonly RawcodeUnitMap _unitMap;
+    private readonly GrowthUnitPointerTracker _growthPointers = new();
+    private long _growthCacheProcessStarted = long.MinValue;
+    private int _savedGrowthRevision = -1;
+    private static string GrowthPointerCachePath =>
+        Path.Combine(AppPaths.UserDataDirectory, "growth-unit-pointers.json");
     private readonly MemoryProfileRepository _profiles = new();
     private readonly object _cacheGate = new();
     internal const int MapStateBackgroundBudgetBytes = 4 * 1024 * 1024;
@@ -109,6 +114,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
             using var memory = ReadOnlyProcessMemory.Open(process.Id);
             var processStarted = process.StartTime.ToUniversalTime().Ticks;
+            EnsureGrowthPointerCache(processStarted);
             var moduleBase = (ulong)module.BaseAddress.ToInt64();
             // 로컬 슬롯은 실측 앵커가 있으면 실제 값을, 없으면 프로필 고정값을 쓴다.
             var measuredSlot = StructuralUnitPoolScanner.TryReadLocalPlayerSlot(memory, moduleBase, profile);
@@ -126,26 +132,24 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             MemoryUnitSnapshot snapshot;
             try
             {
-                snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot, _unitMap.IsGrowthUnit, token);
+                snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot,
+                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), token);
             }
             catch (SnapshotChangedException)
             {
                 token.ThrowIfCancellationRequested();
                 listAddress = FollowPointerPath(memory, locatorAddress, profile.PointerOffsets);
-                snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot, _unitMap.IsGrowthUnit, token);
+                snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot,
+                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), token);
             }
 
-            // 성장 중인 특별함 유닛이 판 전체에 하나뿐이면 그것은 로컬 플레이어 것이다.
-            // 여럿이면 어느 플레이어 것인지 가릴 수단이 없으므로 아무것도 넣지 않는다(오귀속 방지).
-            var counts = snapshot.RawcodeCounts;
+            _growthPointers.Commit(snapshot.LocallyObservedGrowth, snapshot.SeenTrackedGrowthPointers);
+            SaveGrowthPointerCache(processStarted);
+            // 중립 성장형은 한 기뿐이어도 다른 플레이어 것일 수 있다. 로컬 소유로
+            // 직접 봤거나 같은 CUnit 포인터로 소유권 이전을 증명한 카드만 포함한다.
+            var counts = GrowthUnitOwnershipPolicy.InventoryCounts(
+                snapshot.RawcodeCounts, snapshot.NeutralGrowthCounts);
             var growthTotal = snapshot.NeutralGrowthCounts.Values.Sum();
-            var adoptedGrowth = growthTotal == 1;
-            if (adoptedGrowth)
-            {
-                counts = new Dictionary<uint, int>(counts);
-                foreach (var pair in snapshot.NeutralGrowthCounts)
-                    counts[pair.Key] = counts.GetValueOrDefault(pair.Key) + pair.Value;
-            }
             var mapped = _unitMap.Map(counts);
             var diagnostics = new RecognitionDiagnostics
             {
@@ -156,7 +160,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 ProfileRevision = profile.ProfileRevision,
                 ProfileSource = loaded.Source,
                 ResolvedListAddress = $"0x{listAddress:X}",
-                ObservedObjects = snapshot.OwnedObjects + (adoptedGrowth ? 1 : 0),
+                ObservedObjects = snapshot.OwnedObjects,
                 ForeignObjects = snapshot.ForeignObjects,
                 MapState = ReadMapStateThrottled(memory, token),
                 MappedObjects = mapped.KnownCount + mapped.CatalogNamedCount,
@@ -165,8 +169,12 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 Detail = $"목록 슬롯 {snapshot.ListCount} · 타 소유 {snapshot.ForeignObjects} · " +
                          $"추천 데이터 연결 {mapped.KnownCount} · " +
                          $"이름 카탈로그 연결 {mapped.CatalogNamedCount} · 중복 포인터 {snapshot.DuplicatePointers}" +
-                         (adoptedGrowth ? " · 중앙 성장형 1기 포함" :
-                             growthTotal > 1 ? $" · 중앙 성장형 {growthTotal}기(귀속 불가로 제외)" : "") +
+                         (snapshot.RetainedGrowthObjects > 0
+                             ? $" · 소유권 이동 성장형 {snapshot.RetainedGrowthObjects}기 유지"
+                             : "") +
+                         (growthTotal > 0
+                             ? $" · 중립 성장형 {growthTotal}기(로컬 관측 없음으로 제외)"
+                             : "") +
                          (profile.LocatorKind == MemoryLocatorKind.StructuralScan
                              ? $" · 구조 탐색 {StructuralUnitPoolScanner.LastScanMilliseconds}ms"
                              : "")
@@ -262,6 +270,10 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         _lastMapState = null;
         _lastMapStateAt = DateTimeOffset.MinValue;
         _mapStateScanner.Reset();
+        _growthPointers.Reset();
+        GrowthUnitPointerCacheStore.Delete(GrowthPointerCachePath);
+        _growthCacheProcessStarted = long.MinValue;
+        _savedGrowthRevision = -1;
         _sessionBoundaryCachesCleared = true;
         _nextWaitingLocatorRescanAt = allowPeriodicRescan
             ? now + WaitingLocatorRescanInterval
@@ -272,6 +284,23 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     {
         _sessionBoundaryCachesCleared = false;
         _nextWaitingLocatorRescanAt = DateTimeOffset.MinValue;
+    }
+
+    private void EnsureGrowthPointerCache(long processStarted)
+    {
+        if (_growthCacheProcessStarted == processStarted) return;
+        _growthPointers.Restore(GrowthUnitPointerCacheStore.Load(
+            GrowthPointerCachePath, processStarted));
+        _growthCacheProcessStarted = processStarted;
+        _savedGrowthRevision = _growthPointers.Revision;
+    }
+
+    private void SaveGrowthPointerCache(long processStarted)
+    {
+        if (_savedGrowthRevision == _growthPointers.Revision) return;
+        GrowthUnitPointerCacheStore.Save(GrowthPointerCachePath, processStarted,
+            _growthPointers.Snapshot());
+        _savedGrowthRevision = _growthPointers.Revision;
     }
 
     private ulong GetLocatorAddress(ReadOnlyProcessMemory memory, Process process, long processStarted,
@@ -330,7 +359,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     }
 
     private static MemoryUnitSnapshot ReadConsistentSnapshot(ReadOnlyProcessMemory memory, ulong listAddress,
-        MemoryProfile profile, byte localPlayerSlot, Func<uint, bool> isGrowthUnit, CancellationToken token)
+        MemoryProfile profile, byte localPlayerSlot, Func<uint, bool> isGrowthUnit,
+        IReadOnlyDictionary<ulong, uint> trackedGrowthPointers, CancellationToken token)
     {
         var countAddress = AddressMath.Add(listAddress, profile.CountOffset);
         var entriesAddress = AddressMath.Add(listAddress, profile.EntriesPointerOffset);
@@ -343,6 +373,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
         var counts = new Dictionary<uint, int>();
         var neutralGrowth = new Dictionary<uint, int>();
+        var locallyObservedGrowth = new Dictionary<ulong, uint>();
+        var seenTrackedGrowthPointers = new HashSet<ulong>();
+        var retainedGrowthObjects = 0;
         var foreignObjects = 0;
         var seenPointers = new HashSet<ulong>();
         var duplicatePointers = 0;
@@ -371,14 +404,30 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var owner = memory.ReadByte(ownerAddress);
             var neutral = owner == profile.NeutralPlayerSlot;
             if (owner != localPlayerSlot) foreignObjects++;
-            if (owner != localPlayerSlot && !neutral) continue;
+            var trackedGrowth = trackedGrowthPointers.TryGetValue(unit, out var trackedRawcode);
+            if (owner != localPlayerSlot && !neutral && !trackedGrowth) continue;
             var rawcodeAddress = FollowObjectFieldPath(memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
             var rawcode = memory.ReadUInt32(rawcodeAddress);
+            var isGrowth = isGrowthUnit(rawcode);
+            var retainedGrowth = trackedGrowth && trackedRawcode == rawcode && isGrowth;
+            if (retainedGrowth) seenTrackedGrowthPointers.Add(unit);
+            if (owner == localPlayerSlot && isGrowth)
+            {
+                locallyObservedGrowth[unit] = rawcode;
+                seenTrackedGrowthPointers.Add(unit);
+            }
+            if (owner != localPlayerSlot && retainedGrowth)
+            {
+                ownedObjects++;
+                retainedGrowthObjects++;
+                counts[rawcode] = counts.GetValueOrDefault(rawcode) + 1;
+                continue;
+            }
             if (neutral)
             {
                 // 중앙에서 성장 중인 특별함 유닛은 중립 소유다. 어느 플레이어 것인지 판별할 수단이 없으므로
                 // 후보로만 모아 두고, 판 전체에 하나뿐일 때만 로컬 패로 인정한다.
-                if (isGrowthUnit(rawcode))
+                if (isGrowth)
                     neutralGrowth[rawcode] = neutralGrowth.GetValueOrDefault(rawcode) + 1;
                 continue;
             }
@@ -391,7 +440,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         if (countAfter != countBefore || entriesAfter != entriesBefore)
             throw new SnapshotChangedException();
         return new MemoryUnitSnapshot(countBefore, ownedObjects, duplicatePointers, counts, neutralGrowth,
-            foreignObjects);
+            foreignObjects, locallyObservedGrowth, seenTrackedGrowthPointers, retainedGrowthObjects);
     }
 
     private static ulong FollowObjectFieldPath(ReadOnlyProcessMemory memory, ulong objectAddress,
@@ -487,7 +536,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private sealed record LocatorCacheKey(int ProcessId, long Started, ulong ModuleBase, string ProfileId,
         int Revision, long ProfileGeneration);
     private sealed record MemoryUnitSnapshot(int ListCount, int OwnedObjects, int DuplicatePointers,
-        Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects);
+        Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects,
+        Dictionary<ulong, uint> LocallyObservedGrowth, HashSet<ulong> SeenTrackedGrowthPointers,
+        int RetainedGrowthObjects);
     private sealed class SnapshotChangedException : InvalidOperationException;
 }
 

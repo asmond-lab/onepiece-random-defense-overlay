@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace OrandOverlay;
 
@@ -8,6 +9,9 @@ namespace OrandOverlay;
 /// </summary>
 internal static class GoalStrategyCalculator
 {
+    private static readonly ConditionalWeakTable<UnitDefinition, StrongBox<StrategyMetrics>>
+        StrategyMetricsCache = new();
+
     // TMO build-helper 43747 strategy baseline: full slow is 102 on both Divine/Nightmare.
     internal const double FullSlowTarget = 102;
     internal const double FullArmorReductionTarget = 211;
@@ -21,7 +25,12 @@ internal static class GoalStrategyCalculator
     // 채용률 정렬에 맡긴다.
     internal const double MagicArmorSourceTarget = 1;
 
-    internal static StrategyMetrics StrategyMetricsFor(UnitDefinition unit)
+    internal static StrategyMetrics StrategyMetricsFor(UnitDefinition unit) =>
+        StrategyMetricsCache.GetValue(unit,
+            static value => new StrongBox<StrategyMetrics>(
+                CalculateStrategyMetrics(value))).Value;
+
+    private static StrategyMetrics CalculateStrategyMetrics(UnitDefinition unit)
     {
         var slow = AbilitySignedTotal(unit, "이동속도 감소", "발동이동속도 감소");
         var stun = AbilityTotal(unit, "스턴");
@@ -109,7 +118,10 @@ internal static class GoalStrategyCalculator
             {
                 PrioritizeStunRecommendations = true,
                 MinimizeArmorRecommendationSet = true,
-                StopAfterCoreTargets = true
+                StopAfterCoreTargets = true,
+                ArmorBeforeSlow = true,
+                StunBeforeSlow =
+                    physical.StunTarget > AbilityTotal(goal, "스턴") + 0.0001
             }
             : inferred;
     }
@@ -229,7 +241,8 @@ internal readonly record struct GoalStrategyProfile(double BossControlTarget,
     double SingleDamageTarget = 0, double FinisherDamageTarget = 0,
     double StunCap = GoalStrategyCalculator.MaximumUsefulStun,
     bool PreferCheapStatFillers = false, bool PrioritizeStunRecommendations = false,
-    bool MinimizeArmorRecommendationSet = false, bool StopAfterCoreTargets = false);
+    bool MinimizeArmorRecommendationSet = false, bool StopAfterCoreTargets = false,
+    bool ArmorBeforeSlow = false);
 
 /// <summary>보유 패의 전략 지표 합산 값(엔진에서 동작 보존으로 추출한 레코드).</summary>
 internal readonly record struct StrategyMetrics(double Slow = 0, double Stun = 0,

@@ -79,6 +79,110 @@ public sealed class PhysicalTopRecommendationPolicyTests
         });
     }
 
+    [Fact]
+    public void GarpFirstBoardCompletesStableStunAndFullArmor()
+    {
+        var catalog = Catalog();
+        var engine = Engine(catalog);
+        var recommendations = engine.RecommendNearestCrafts(
+            "rawcode:C40h", [], take: 8,
+            navigationMode: "PathOfKings.BountyHunter", gorosei: GoroseiMode.Saturn);
+        var storyIngredients = engine.RecipeLegendaryUnitIds("rawcode:C40h");
+        var build = recommendations
+            .Where(recommendation => !storyIngredients.Contains(
+                recommendation.Route.GoalUnitId, StringComparer.OrdinalIgnoreCase))
+            .GroupBy(recommendation => recommendation.Route.GoalUnitId,
+                StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Count(),
+                StringComparer.OrdinalIgnoreCase);
+        var metrics = engine.AggregateStrategyMetrics(build);
+        var order = string.Join(" > ",
+            recommendations.Select(recommendation => recommendation.Route.Name));
+
+        Assert.True(metrics.Stun >= 1.4,
+            $"거프 첫 보드 스턴 {metrics.Stun:0.0}: {order}");
+        Assert.True(metrics.ArmorReduction >= 211,
+            $"거프 첫 보드 방깎 {metrics.ArmorReduction:0}: {order}");
+        Assert.True(metrics.Slow >= 102,
+            $"거프 첫 보드 이감 {metrics.Slow:0}: {order}");
+    }
+
+    [Fact]
+    public void CloserUsefulArmorPathPrecedesDistantHigherArmorPath()
+    {
+        var catalog = Catalog();
+        var engine = Engine(catalog);
+        var kalgaraId = "rawcode:F30h";
+        var kalgaraRares = engine.RecipeRareUnitIds(kalgaraId);
+        Assert.True(kalgaraRares.Count >= 3);
+        var lastRareSpecials = engine.RecipeSpecialUnitIds(kalgaraRares[^1]);
+        Assert.True(lastRareSpecials.Count >= 2);
+        var inventory = kalgaraRares.Take(kalgaraRares.Count - 1)
+            .Concat(lastRareSpecials)
+            .Select(Entry)
+            .Append(Entry("rawcode:C40h"))
+            .ToList();
+        var directKalgara = engine.RecommendNearestCrafts(kalgaraId, inventory, take: 1)
+            .First(recommendation => recommendation.Route.GoalUnitId.Equals(kalgaraId,
+                StringComparison.OrdinalIgnoreCase));
+
+        var recommendations = engine.RecommendNearestCrafts(
+            "rawcode:C40h", inventory, take: 8,
+            navigationMode: "PathOfKings.BountyHunter", gorosei: GoroseiMode.Saturn)
+            .ToList();
+        var ryokugyuIndex = recommendations.FindIndex(recommendation =>
+            catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes.Contains(
+                "N30h", StringComparer.Ordinal));
+        var order = string.Join(" > ",
+            recommendations.Select(recommendation => recommendation.Route.Name));
+
+        Assert.True(directKalgara.RecipeProgress.CompletionRatio >= 0.9,
+            $"카르가라 직접 완성도 부족: {directKalgara.RecipeProgress.CompletionRatio:P0}");
+        var beforeRyokugyu = ryokugyuIndex < 0
+            ? recommendations
+            : recommendations.Take(ryokugyuIndex).ToList();
+        var hasCloserArmorPath = beforeRyokugyu
+            .Where(recommendation =>
+                Armor(catalog.Unit(recommendation.Route.GoalUnitId)) > 0)
+            .Any(recommendation => engine.RecommendNearestCrafts(
+                    recommendation.Route.GoalUnitId, inventory, take: 1)
+                .First().RecipeProgress.CompletionRatio >= 0.9);
+        Assert.True(hasCloserArmorPath,
+            $"완성 임박 방깎 경로가 먼 료쿠규보다 먼저여야 합니다: {order}");
+    }
+
+    [Theory]
+    [InlineData("yamato_transcendent")]
+    [InlineData("rawcode:B90H")]
+    [InlineData("rawcode:A90H")]
+    [InlineData("rawcode:F90H")]
+    public void OwnedPhysicalTopBoardCompletesConfiguredCoreTargets(string goalUnitId)
+    {
+        var catalog = Catalog();
+        var engine = Engine(catalog);
+        var recommendations = engine.RecommendNearestCrafts(
+            goalUnitId, [Entry(goalUnitId)], take: 8,
+            navigationMode: "PathOfKings.BountyHunter");
+        var build = recommendations
+            .Select(recommendation => recommendation.Route.GoalUnitId)
+            .Append(goalUnitId)
+            .GroupBy(unitId => unitId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Count(),
+                StringComparer.OrdinalIgnoreCase);
+        var metrics = engine.AggregateStrategyMetrics(build);
+        var profile = Assert.IsType<GoalStrategyProfile>(
+            GoalStrategyCalculator.StrategyProfileFor(catalog.Unit(goalUnitId)));
+        var order = string.Join(" > ",
+            recommendations.Select(recommendation => recommendation.Route.Name));
+
+        Assert.True(metrics.Stun + 0.0001 >= profile.StunTarget,
+            $"{goalUnitId} 스턴 {metrics.Stun:0.0}/{profile.StunTarget:0.0}: {order}");
+        Assert.True(metrics.ArmorReduction + 0.0001 >= profile.ArmorReductionTarget,
+            $"{goalUnitId} 방깎 {metrics.ArmorReduction:0}/{profile.ArmorReductionTarget:0}: {order}");
+        Assert.True(metrics.Slow + 0.0001 >= profile.SlowTarget,
+            $"{goalUnitId} 이감 {metrics.Slow:0}/{profile.SlowTarget:0}: {order}");
+    }
+
     private static DataCatalog Catalog()
     {
         var catalog = new DataCatalog();
