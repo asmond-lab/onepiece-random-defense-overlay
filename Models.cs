@@ -235,6 +235,7 @@ public sealed class RecognitionDiagnostics
     public int ObservedObjects { get; init; }
     public int MappedObjects { get; init; }
     public int UnknownObjects { get; init; }
+    public GoroseiMode Gorosei { get; init; } = GoroseiMode.None;
     /// <summary>풀에 있는 다른 소유자(적·중립·도감존)의 유닛 수. 패배 판정에 쓴다.</summary>
     public int ForeignObjects { get; init; }
 
@@ -261,6 +262,9 @@ public sealed class RecognitionDiagnostics
                 parts.Add($"객체 {ObservedObjects} · 매핑 {MappedObjects} · 미등록 {UnknownObjects}");
             if (UnknownRawcodes.Count > 0)
                 parts.Add("미등록 rawcode: " + string.Join(", ", UnknownRawcodes.Take(8)));
+            if (Gorosei != GoroseiMode.None)
+                parts.Add("오로성 " + GoroseiEffects.Options
+                    .First(option => option.Mode == Gorosei).Name);
             if (!string.IsNullOrWhiteSpace(Detail)) parts.Add(Detail);
             return string.Join(" | ", parts);
         }
@@ -279,6 +283,9 @@ public sealed class RecognitionDiagnostics
             if (MappedObjects > 0 || ObservedObjects > 0)
                 parts.Add($"인식 패 {MappedObjects}개");
             if (UnknownObjects > 0) parts.Add($"내부 유닛 {UnknownObjects}개 제외");
+            if (Gorosei != GoroseiMode.None)
+                parts.Add("오로성 " + GoroseiEffects.Options
+                    .First(option => option.Mode == Gorosei).Name + " 자동 감지");
             if (parts.Count > 0) return string.Join(" · ", parts);
             return string.IsNullOrWhiteSpace(Detail) ? "연동 상태를 확인하는 중입니다." : Detail;
         }
@@ -394,7 +401,7 @@ public static class GoroseiEffects
 {
     public static IReadOnlyList<GoroseiOption> Options { get; } =
     [
-        new(GoroseiMode.None, "선택 안 함", "오로성 보정 없이 기본 목표를 사용합니다."),
+        new(GoroseiMode.None, "자동 감지", "대전 시작 후 맵의 오로성 마커를 자동 확인합니다."),
         new(GoroseiMode.Nasjuro, "나스쥬로", "적 이속 +10% · 아군 공속 -10% — 이감 목표를 112로 올립니다."),
         new(GoroseiMode.Warcury, "워큐리", "적 방어력 +10 · 마방 +10% — 방깎 221, 마방깎 10을 목표로 합니다."),
         new(GoroseiMode.Saturn, "새턴", "아군 공격력 -20% · 폭뎀 -7% — 단일·끝딜을 모두 확보합니다.")

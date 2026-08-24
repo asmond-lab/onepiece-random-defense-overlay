@@ -50,6 +50,7 @@ public partial class MainWindow : Window
     private bool _scanInProgress;
     private bool _automaticStale;
     private bool _automaticDisconnected;
+    private GoroseiMode _detectedGorosei = GoroseiMode.None;
     private bool _liveSessionActive;
     private bool _autoStartApplied;
     private bool _relockAfterMove;
@@ -810,8 +811,28 @@ public partial class MainWindow : Window
         builder.Append(_automaticStale).Append('|').Append(_automaticDisconnected).Append('|')
             .Append(_liveSessionActive).Append('|').Append(_autoStartApplied).Append('|')
             .Append(_greenBloodUsage.Used).Append('|').Append(_greenBloodUsage.UsedOnUnit)
-            .Append('|').Append(_lastRound);
+            .Append('|').Append(_lastRound).Append('|').Append(_detectedGorosei);
         return builder.ToString();
+    }
+
+    private void ApplyDetectedGorosei(GoroseiMode detected)
+    {
+        if (detected == GoroseiMode.None) return;
+        var current = GoroseiEffects.Parse(_settings.GoroseiMode);
+        var resolved = GoroseiMemoryDetector.Resolve(current, detected);
+        var firstDetection = _detectedGorosei != resolved;
+        _detectedGorosei = resolved;
+        if (current != resolved)
+        {
+            _settings.GoroseiMode = resolved.ToString();
+            SettingsStore.Save(_settings);
+        }
+
+        var option = GoroseiEffects.Options.First(item => item.Mode == resolved);
+        if ((GoroseiCombo.SelectedItem as GoroseiOption)?.Mode != resolved)
+            GoroseiCombo.SelectedItem = option;
+        if (firstDetection)
+            GoroseiSummaryText.Text = "자동 감지 · " + option.Summary;
     }
 
     private void FillMainBoard()
@@ -863,6 +884,7 @@ public partial class MainWindow : Window
             LogUnknownRawcodes(result);
             if (!string.IsNullOrWhiteSpace(result.Diagnostics.ProcessVersion))
                 _lastWarcraftVersion = result.Diagnostics.ProcessVersion;
+            ApplyDetectedGorosei(result.Diagnostics.Gorosei);
             _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
                                      result.ConfirmsSessionBoundary
                 ? _confirmedWaitingScans + 1

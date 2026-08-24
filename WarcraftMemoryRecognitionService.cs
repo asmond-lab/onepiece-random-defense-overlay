@@ -168,6 +168,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 MappedObjects = mapped.KnownCount + mapped.CatalogNamedCount,
                 UnknownObjects = mapped.UnknownCount,
                 UnknownRawcodes = mapped.UnknownRawcodes,
+                Gorosei = snapshot.Gorosei,
                 Detail = $"목록 슬롯 {snapshot.ListCount} · 타 소유 {snapshot.ForeignObjects} · " +
                          $"추천 데이터 연결 {mapped.KnownCount} · " +
                          $"이름 카탈로그 연결 {mapped.CatalogNamedCount} · 중복 포인터 {snapshot.DuplicatePointers}" +
@@ -395,6 +396,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         var locallyObservedGrowth = new Dictionary<ulong, uint>();
         var seenTrackedGrowthPointers = new HashSet<ulong>();
         var retainedGrowthObjects = 0;
+        var gorosei = GoroseiMode.None;
         var foreignObjects = 0;
         var seenPointers = new HashSet<ulong>();
         var duplicatePointers = 0;
@@ -424,9 +426,24 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var neutral = owner == profile.NeutralPlayerSlot;
             if (owner != localPlayerSlot) foreignObjects++;
             var trackedGrowth = trackedGrowthPointers.TryGetValue(unit, out var trackedRawcode);
+            uint rawcode = 0;
+            var rawcodeRead = false;
+            if (owner == 7)
+            {
+                var markerAddress = FollowObjectFieldPath(
+                    memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
+                rawcode = memory.ReadUInt32(markerAddress);
+                rawcodeRead = true;
+                var detected = GoroseiMemoryDetector.FromRawcode(rawcode);
+                if (detected != GoroseiMode.None) gorosei = detected;
+            }
             if (owner != localPlayerSlot && !neutral && !trackedGrowth) continue;
-            var rawcodeAddress = FollowObjectFieldPath(memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
-            var rawcode = memory.ReadUInt32(rawcodeAddress);
+            if (!rawcodeRead)
+            {
+                var rawcodeAddress = FollowObjectFieldPath(
+                    memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
+                rawcode = memory.ReadUInt32(rawcodeAddress);
+            }
             var isGrowth = isGrowthUnit(rawcode);
             var retainedGrowth = trackedGrowth && trackedRawcode == rawcode && isGrowth;
             if (retainedGrowth) seenTrackedGrowthPointers.Add(unit);
@@ -459,7 +476,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         if (countAfter != countBefore || entriesAfter != entriesBefore)
             throw new SnapshotChangedException();
         return new MemoryUnitSnapshot(countBefore, ownedObjects, duplicatePointers, counts, neutralGrowth,
-            foreignObjects, locallyObservedGrowth, seenTrackedGrowthPointers, retainedGrowthObjects);
+            foreignObjects, locallyObservedGrowth, seenTrackedGrowthPointers, retainedGrowthObjects,
+            gorosei);
     }
 
     private static ulong FollowObjectFieldPath(ReadOnlyProcessMemory memory, ulong objectAddress,
@@ -537,6 +555,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 ProfileId = diagnostics.ProfileId,
                 ProfileRevision = diagnostics.ProfileRevision,
                 ProfileSource = diagnostics.ProfileSource,
+                Gorosei = diagnostics.Gorosei,
                 Detail = detail
             }
     };
@@ -565,7 +584,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private sealed record MemoryUnitSnapshot(int ListCount, int OwnedObjects, int DuplicatePointers,
         Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects,
         Dictionary<ulong, uint> LocallyObservedGrowth, HashSet<ulong> SeenTrackedGrowthPointers,
-        int RetainedGrowthObjects);
+        int RetainedGrowthObjects, GoroseiMode Gorosei);
     internal sealed class SnapshotChangedException : InvalidOperationException;
 }
 
