@@ -19,7 +19,7 @@ public sealed class NavigationAdvisor(DataCatalog catalog)
     public const int SpecialPileCount = 4;
 
     private static readonly string[] TraitHungryUserRawcodes =
-        ["5B0H", "Q80h", "750h"]; // 키자루 초월 · 알비다 제한 · 비비 영원
+        ["5B0H", "Q80h"]; // 키자루 초월 · 알비다 제한
     private static readonly string[] KizaruRawcodes = ["5B0H"];
     private static readonly string[] ShipFollowUps = ["Q30h", "E50h", "U30h"]; // 모비딕 · 에넬 · 레드포스
     private static readonly string[] LegendTiers = ["전설", "히든", "변화된", "왜곡됨"];
@@ -44,6 +44,7 @@ public sealed class NavigationAdvisor(DataCatalog catalog)
         if (owned.Count == 0) return [];
 
         var scored = new List<(int Score, NavigationAdvice Advice)>();
+        Add(scored, ViviAlchemy(goal));
         Add(scored, TraitEngineering(owned, goal));
         Add(scored, ReverseThinking(owned, goal));
         Add(scored, EmergencyCall(owned));
@@ -57,6 +58,13 @@ public sealed class NavigationAdvisor(DataCatalog catalog)
             .Take(take)
             .ToList();
     }
+
+    private static (int Score, NavigationAdvice Advice)? ViviAlchemy(UnitDefinition? goal) =>
+        goal?.Rawcodes.Contains("750h", StringComparer.Ordinal) == true
+            ? (100, new NavigationAdvice("BestHelp.Alchemy", "연금술",
+                "대깨 비영: 중급도박 특별함을 한 번 분해해 재료 전환",
+                ["Z30h", "780h", "640h", "Q30h"]))
+            : null;
 
     public static string FormatHint(IReadOnlyList<NavigationAdvice> advice)
     {

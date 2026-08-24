@@ -85,6 +85,12 @@ internal static class GoalStrategyCalculator
             // 거프: 공중이동 슬롯을 안 쓰고 깎·버프에 쓴다. 스턴·짤필러는 추론이 채운다.
             profile = new GoalStrategyProfile(1, 1, FillCommunitySupports: true,
                 AirMovementTarget: 0);
+        else if (rawcode.Equals("750h", StringComparison.Ordinal))
+            // 비비 영원 장인 공략: 자체 광보잡을 인정하고 토키·키쿠·모비딕 및
+            // 상디/키드 한 기에 자원을 집중한다. 물딜 방깎·마방깎은 강제하지 않는다.
+            profile = new GoalStrategyProfile(1, 1, FillCommunitySupports: true,
+                SlowTarget: 80, ArmorReductionTarget: 0,
+                MagicArmorReductionTarget: 0);
         else if (goal.Rawcodes.Any(code => code is "KB0H" or "KB0H_"))
         {
             // 니카(루초·뱀초): 신+ 216판이 이감 버전(스턴 1.6)과 노이감(2.9)으로 갈린다.

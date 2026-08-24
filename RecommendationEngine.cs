@@ -144,12 +144,16 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                        pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
 
         var showGoal = navigation.CanCraftTopUnits && !goalOwned;
+        var viviPartnerId = SelectViviExpertPartner(
+            goal, counts, calculator, navigation.AllowsMultipleTopUnits);
         // 목표 자체 스턴 + 패에 쌓인 스턴으로 빌드 방향(니카 이감/노이감)을 판정한다.
         // 보유한 목표의 스턴은 집계에 이미 포함되고, 조합 예정이면 여기서 더한다.
         var committedStun = AggregateStrategyMetrics(counts).Stun +
                             (showGoal ? GoalStrategyCalculator.StrategyMetricsFor(goal).Stun : 0);
         var strategy = GoalStrategyCalculator.ApplyGorosei(
             GoalStrategyCalculator.StrategyProfileFor(goal, committedStun, buildVariant), gorosei);
+        if (viviPartnerId == "rawcode:4B0H" && strategy is { } viviKidStrategy)
+            strategy = viviKidStrategy with { StunTarget = 0, StunCap = 0 };
         ActiveStunTarget = strategy?.StunTarget ?? StableStunTarget;
         ActiveStunCap = strategy?.StunCap ?? MaximumUsefulStun;
         // 키자루 초월 + 역발상: 레일리는 확정 획득이지만 특성포인트가 부족해 자체
@@ -182,6 +186,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(unit => !avoidTraitHungryTops ||
                            !unit.Rawcodes.Any(TraitHungryTopRawcodes.Contains))
             .Where(unit => !AvoidTraitPointCraftWithoutEconomy(navigation, unit, counts))
+            .Where(unit => IsViviExpertCompatible(
+                goal, unit, viviPartnerId, goalOwned))
             .Where(unit => unit.Recipe.Count > 0)
             .Select(unit => (Unit: unit,
                 Metrics: GoalStrategyCalculator.StrategyMetricsFor(unit)))
@@ -240,6 +246,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             nearest = OrderCompatibleByCraftDistance(
                 goal, counts, candidates, maximumSupports);
         }
+        if (IsViviEternal(goal))
+            nearest = AddViviExpertSupports(
+                nearest, candidates, viviPartnerId, counts, goalOwned,
+                EvaluateInitialCandidate);
 
         // 초월은 하위 전설을 먼저 짜야 스토리를 민다. 역할 패키지보다 후보 보드 앞에 둔다.
         if (missingLegendaryIds.Count > 0)
@@ -286,6 +296,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .OrderByDescending(pair =>
                 recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId)
                     ? 4
+                    : ViviExpertPriority(
+                        goal, pair.recommendation.Route.GoalUnitId,
+                        viviPartnerId, goalOwned) > 0
+                        ? 3
                     : stunPending &&
                       IsActiveCommunityCore(pair.recommendation) &&
                       GoalStrategyCalculator.StrategyMetricsFor(
@@ -311,6 +325,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0
                     ? pair.recommendation.RecipeProgress.CompletionRatio
                     : 0)
+            .ThenByDescending(pair =>
+                ViviExpertPriority(
+                    goal, pair.recommendation.Route.GoalUnitId,
+                    viviPartnerId, goalOwned))
             .ThenByDescending(pair =>
                 CommunityPriorityScore(goal, catalog.Unit(pair.recommendation.Route.GoalUnitId)))
             .ThenBy(pair => pair.index)
@@ -409,7 +427,12 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         foreach (var recommendation in results)
         {
             if (recommendation.Route.GoalUnitId.Equals(goalUnitId, StringComparison.OrdinalIgnoreCase))
+            {
+                if (IsViviEternal(goal))
+                    recommendation.Warnings.Add(
+                        "대깨 비영: 7강에서 멈춤 · 목재는 리롤 포함 20~28개까지만 사용");
                 continue;
+            }
             recommendation.ClearEvidence = BuildClearEvidence(
                 catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes);
         }
@@ -2079,7 +2102,102 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         };
     }
 
-                private static bool IsRecommendedCraftTier(string tier, bool allowsMultipleTopUnits)
+    private static bool IsViviEternal(UnitDefinition goal) =>
+        goal.Rawcodes.Contains("750h", StringComparer.Ordinal);
+
+    private string? SelectViviExpertPartner(
+        UnitDefinition goal,
+        IReadOnlyDictionary<string, int> inventory,
+        RecipeCompletionCalculator calculator,
+        bool allowsMultipleTopUnits)
+    {
+        if (!IsViviEternal(goal) || !allowsMultipleTopUnits) return null;
+        const string sanji = "rawcode:H90H";
+        const string kid = "rawcode:4B0H";
+        if (inventory.GetValueOrDefault(sanji) > 0) return sanji;
+        if (inventory.GetValueOrDefault(kid) > 0) return kid;
+
+        var sanjiProgress = calculator.Calculate([sanji], inventory);
+        var kidProgress = calculator.Calculate([kid], inventory);
+        var sanjiMissing = sanjiProgress.MissingLeaves.Sum(leaf => leaf.MissingCount);
+        var kidMissing = kidProgress.MissingLeaves.Sum(leaf => leaf.MissingCount);
+        if (kidMissing < sanjiMissing) return kid;
+        if (sanjiMissing < kidMissing) return sanji;
+        return kidProgress.CompletionRatio > sanjiProgress.CompletionRatio
+            ? kid
+            : sanji;
+    }
+
+    private static bool IsViviExpertCompatible(
+        UnitDefinition goal,
+        UnitDefinition candidate,
+        string? partnerId,
+        bool goalOwned)
+    {
+        if (!IsViviEternal(goal)) return true;
+        if (candidate.Id is "rawcode:P30h" or "rawcode:R80h") return false;
+        if (goalOwned && candidate.Id == "rawcode:Z30h") return false;
+        if (IsTopTier(candidate.Tier) && candidate.Id != partnerId) return false;
+        if (partnerId == "rawcode:4B0H" &&
+            GoalStrategyCalculator.StrategyMetricsFor(candidate).Stun > 0)
+            return false;
+        return true;
+    }
+
+    private List<Recommendation> AddViviExpertSupports(
+        IReadOnlyList<Recommendation> selected,
+        IReadOnlyList<CraftCandidate> candidates,
+        string? partnerId,
+        IReadOnlyDictionary<string, int> inventory,
+        bool goalOwned,
+        Func<UnitDefinition, Recommendation> evaluate)
+    {
+        var byId = candidates.ToDictionary(
+            candidate => candidate.Unit.Id,
+            candidate => candidate.Recommendation,
+            StringComparer.OrdinalIgnoreCase);
+        var priorityIds = new List<string>();
+        if (!goalOwned) priorityIds.Add("rawcode:Z30h");
+        priorityIds.AddRange(
+        [
+            "rawcode:780h",
+            partnerId ?? "",
+            "rawcode:640h",
+            "mobydick"
+        ]);
+        foreach (var id in priorityIds.Where(id => !string.IsNullOrWhiteSpace(id)))
+        {
+            if (byId.ContainsKey(id) || inventory.GetValueOrDefault(id) > 0) continue;
+            var unit = catalog.Unit(id);
+            if (id is "rawcode:780h" or "mobydick" &&
+                !MeetsOwnedPrerequisites(unit, inventory))
+                continue;
+            byId[id] = evaluate(unit);
+        }
+        return priorityIds
+            .Where(byId.ContainsKey)
+            .Select(id => byId[id!])
+            .Concat(selected)
+            .DistinctBy(item => item.Route.GoalUnitId, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static int ViviExpertPriority(
+        UnitDefinition goal,
+        string unitId,
+        string? partnerId,
+        bool goalOwned)
+    {
+        if (!IsViviEternal(goal)) return 0;
+        if (!goalOwned && unitId == "rawcode:Z30h") return 600;
+        if (unitId == "rawcode:780h") return 500;
+        if (unitId == partnerId) return 450;
+        if (unitId == "rawcode:640h") return 400;
+        if (unitId == "mobydick") return 350;
+        return 0;
+    }
+
+    private static bool IsRecommendedCraftTier(string tier, bool allowsMultipleTopUnits)
     {
         var baseTier = tier.Split('[', 2)[0].Trim();
         // 세라핌은 그린블러드로 제작하는 지원 유닛 — 어떤 세라핌을 만드는지가
