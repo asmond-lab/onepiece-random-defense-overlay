@@ -522,6 +522,24 @@ Assert(mobyVisibleWithEmptyInventory.Count == 2 &&
        mobyVisibleWithEmptyInventory.Any(item => string.Equals(item.Route.GoalUnitId,
            catalog.Unit("rawcode:E20h").Id, StringComparison.OrdinalIgnoreCase)),
     "대깨 상위를 직접 골라도 빈 패 보드에 목표와 첫 희귀함을 함께 표시");
+var firstRareGate = new FirstRareRecommendationGate();
+var jinbeTargetRares = engine.RecipeRareUnitIds("rawcode:A90H");
+Assert(firstRareGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares, currentRound: 7),
+    "목표 희귀함을 한 번도 못 얻었으면 가장 가까운 희귀함을 우선");
+Assert(!firstRareGate.ShouldPrioritize("rawcode:A90H",
+        Inventory(jinbeTargetRares[0]), jinbeTargetRares, currentRound: 7) &&
+       !firstRareGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares, currentRound: 7),
+    "첫 목표 희귀함이 전설 제작에 소비돼 사라져도 기존 추천 순위를 유지");
+var deadlineGate = new FirstRareRecommendationGate();
+Assert(!deadlineGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares,
+        currentRound: FirstRareRecommendationGate.QuestDeadlineRound),
+    "8라운드가 시작되면 패스트유니크 희귀함 고정을 끝내고 기존 추천 순위로 복귀");
+Assert(firstRareGate.ShouldPrioritize("rawcode:H90H", [],
+        engine.RecipeRareUnitIds("rawcode:H90H"), currentRound: 7),
+    "목표 상위를 바꾸면 새 목표의 첫 희귀함 단계를 시작");
+firstRareGate.Reset();
+Assert(firstRareGate.ShouldPrioritize("rawcode:A90H", [], jinbeTargetRares, currentRound: 0),
+    "새 판에서는 첫 희귀함 단계를 다시 시작");
 var garpExtraStun = garpOneTop.Skip(1)
     .Sum(item => AbilityValue(item.CompositionUnits[0], "스턴"));
 Assert(garpExtraStun <= 0.6,

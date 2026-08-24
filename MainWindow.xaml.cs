@@ -13,7 +13,7 @@ namespace OrandOverlay;
 
 public partial class MainWindow : Window
 {
-    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromSeconds(1);
+    internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromSeconds(2);
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
@@ -35,6 +35,7 @@ public partial class MainWindow : Window
     private ClearBuildStats _clearStats = ClearBuildStats.Empty;
     private LiveStats _liveStats = new();
     private CompletedTopUnitTracker _completedTopUnits = null!;
+    private readonly FirstRareRecommendationGate _firstRareRecommendationGate = new();
     private readonly TelemetryUploader _telemetry = new();
     private readonly MatchOutcomeDetector _outcome = new();
     // 텔레메트리 세션 상태(버퍼·시작 시각·상위 추천)는 전용 세션이 소유한다.
@@ -683,11 +684,13 @@ public partial class MainWindow : Window
         _settings.GoroseiMode = gorosei.ToString();
         // 니카 이감/노이감은 별도 토글 없이 현재 패의 스턴을 기준으로 자동 판정한다.
         // 지옥 이하는 그린블러드가 제공되지 않으므로 세라핌 조합 후보도 함께 뺀다.
+        var prioritizeTargetRare = _firstRareRecommendationGate.ShouldPrioritize(
+            goal.Id, recommendationInventory, _engine.RecipeRareUnitIds(goal.Id), _lastRound);
         var recommendations = _engine.RecommendNearestCrafts(goal.Id, recommendationInventory,
             navigationMode: navigation.Id, gorosei: gorosei, buildVariant: BuildVariants.AutoId,
             suppressSeraphim: _greenBloodUsage.Used ||
                 !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty),
-            prioritizeTargetRare: true);
+            prioritizeTargetRare: prioritizeTargetRare);
         _telemetrySession.ObserveTopRecommendations(
             recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();
@@ -957,6 +960,7 @@ public partial class MainWindow : Window
         _liveSessionActive = false;
         _autoStartApplied = false;
         _completedTopUnits.Reset();
+        _firstRareRecommendationGate.Reset();
         _greenBloodUsage.Reset();
         _selectedRouteId = null;
         _clusterHeadRouteId = null;

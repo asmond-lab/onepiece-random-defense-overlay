@@ -12,6 +12,13 @@ namespace OrandOverlay.Tests;
 /// </summary>
 public sealed class OverlayVisibilityPolicyTests
 {
+    [Fact]
+    public void EdgePanPollingDoesNotRunFasterThanTenTimesPerSecond()
+    {
+        Assert.True(OverlayWindowBase.EdgePanPollInterval >= TimeSpan.FromMilliseconds(100),
+            $"현재 엣지 팬 폴링 주기: {OverlayWindowBase.EdgePanPollInterval.TotalMilliseconds}ms");
+    }
+
     private static RecognitionResult Result(RecognitionState state, bool sessionBoundary = false,
         string unitId = "mobydick", int count = 1) => new()
     {

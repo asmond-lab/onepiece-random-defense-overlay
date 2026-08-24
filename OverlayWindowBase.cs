@@ -16,6 +16,7 @@ namespace OrandOverlay;
 /// </summary>
 public abstract class OverlayWindowBase : Window
 {
+    internal static readonly TimeSpan EdgePanPollInterval = TimeSpan.FromMilliseconds(100);
     private const int GwlExStyle = -20;
     private const int WsExTransparent = 0x20;
     private const int WsExToolWindow = 0x80;
@@ -33,7 +34,7 @@ public abstract class OverlayWindowBase : Window
     private bool _allowClose;
     private readonly DispatcherTimer _edgePanTimer = new()
     {
-        Interval = TimeSpan.FromMilliseconds(10)
+        Interval = EdgePanPollInterval
     };
 
     protected OverlayWindowBase()

@@ -18,8 +18,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private LocatorCache? _locatorCache;
 
     /// <summary>전체 힙 스캔 대신 매 인식 틱에 작은 조각만 읽는다.</summary>
-    private static readonly TimeSpan MapStateSliceInterval = TimeSpan.FromMilliseconds(500);
-    private const int MapStateEndgameBudget = 8 * 1024 * 1024;
+    private static readonly TimeSpan MapStateSliceInterval = TimeSpan.FromSeconds(1);
+    internal const int MapStateEndgameBudgetBytes = 128 * 1024;
     private DateTimeOffset _lastMapStateAt = DateTimeOffset.MinValue;
     private MapStateSample? _lastMapState;
     private static readonly TimeSpan WaitingLocatorRescanInterval = TimeSpan.FromSeconds(5);
@@ -439,10 +439,10 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         {
             var endgame = _lastMapState is { MaxRound: >= 60 };
             int? budget = endgame
-                ? MapStateEndgameBudget
+                ? MapStateEndgameBudgetBytes
                 : null;
             _lastMapState = _mapStateScanner.ScanStep(memory, token, budget,
-                hotRescanEverySteps: endgame ? 1 : 4);
+                hotRescanEverySteps: 4);
         }
         catch (Exception) when (!token.IsCancellationRequested)
         {

@@ -6,9 +6,9 @@ namespace OrandOverlay.Tests;
 public sealed class MapStateReaderPerformanceTests
 {
     [Fact]
-    public void WarcraftRecognitionCadenceDoesNotRunFasterThanOncePerSecond()
+    public void WarcraftRecognitionCadenceDoesNotRunFasterThanOncePerTwoSeconds()
     {
-        Assert.True(MainWindow.RecognitionInterval >= TimeSpan.FromSeconds(1),
+        Assert.True(MainWindow.RecognitionInterval >= TimeSpan.FromSeconds(2),
             $"현재 인식 주기: {MainWindow.RecognitionInterval.TotalMilliseconds}ms");
     }
 
@@ -17,6 +17,13 @@ public sealed class MapStateReaderPerformanceTests
     {
         Assert.InRange(WarcraftMemoryRecognitionService.MapStateBackgroundBudgetBytes,
             1, 4 * 1024 * 1024);
+    }
+
+    [Fact]
+    public void WarcraftRecognizerLimitsEndgameMapScanTo128Kilobytes()
+    {
+        Assert.InRange(WarcraftMemoryRecognitionService.MapStateEndgameBudgetBytes,
+            1, 128 * 1024);
     }
 
     [Fact]
