@@ -131,10 +131,9 @@ public partial class MainWindow : Window
         _overlay.Stats.PositionCommitted += StatsOverlay_OnPositionCommitted;
         _overlay.HiddenByUser += () =>
         {
-            _overlayVisibility = _overlayVisibility.HideByUser();
-            HideOverlayWindows();
-            OverlayButton.Content = "오버레이 보이기";
+            HideOverlayByUser();
         };
+        _overlay.Stats.HiddenByUser += HideOverlayByUser;
         _overlay.ReRecommendRequested += ShowReRecommendMenu;
         // 인게임 패가 잡히기 전에는 오버레이를 띄우지 않는다.
         // 배율이 적용된 뒤라야 창 크기가 확정되므로 기본 배치는 로드 후에 잡는다.
@@ -1281,17 +1280,8 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
             return;
         }
 
-        if (_overlay.IsVisible || _overlay.Stats.IsVisible)
-        {
-            _overlayVisibility = _overlayVisibility.HideByUser();
-            HideOverlayWindows();
-            OverlayButton.Content = "오버레이 보이기";
-        }
-        else
-        {
-            _overlayVisibility = _overlayVisibility.ShowByUser();
-            ShowOverlayWindows();
-        }
+        var state = OverlayDisplayPolicy.Toggle(CurrentOverlayDisplayState());
+        ApplyOverlayDisplayState(state, save: true);
     }
 
     /// <summary>스캔 결과를 가시성 정책으로 해석해 오버레이를 전이한다. 상태가
@@ -1340,15 +1330,33 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void ShowOverlayWindows()
     {
-        if (!_overlayVisibility.ShouldShow) return;
-        if (!_overlay.IsVisible) _overlay.Show();
-        if (!_overlay.Stats.IsVisible) _overlay.Stats.Show();
+        var visibility = OverlayDisplayPolicy.Visibility(
+            CurrentOverlayDisplayState());
+        if (visibility.RecommendationVisible)
+        {
+            if (!_overlay.IsVisible) _overlay.Show();
+        }
+        else if (_overlay.IsVisible) _overlay.Hide();
+        if (visibility.StatsVisible)
+        {
+            if (!_overlay.Stats.IsVisible) _overlay.Stats.Show();
+        }
+        else if (_overlay.Stats.IsVisible) _overlay.Stats.Hide();
+        if (!visibility.RecommendationVisible && !visibility.StatsVisible)
+        {
+            OverlayButton.Content = _overlayVisibility.HandAvailable
+                ? "오버레이 보이기"
+                : "패 인식 대기 중";
+            return;
+        }
         _overlay.Dispatcher.BeginInvoke(new Action(ApplyDefaultOverlayLayout),
             System.Windows.Threading.DispatcherPriority.Loaded);
-        _overlay.EnsureVisible();
-        _overlay.Stats.EnsureVisible();
+        if (visibility.RecommendationVisible) _overlay.EnsureVisible();
+        if (visibility.StatsVisible) _overlay.Stats.EnsureVisible();
         _overlay.SetClickThrough(_settings.ClickThroughOverlay);
-        OverlayButton.Content = "오버레이 숨기기";
+        OverlayButton.Content = visibility.RecommendationVisible
+            ? "오버레이 숨기기"
+            : "패수치 숨기기";
     }
 
     private void HideOverlayWindows()
@@ -1356,6 +1364,27 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         if (_overlay.IsVisible) _overlay.Hide();
         if (_overlay.Stats.IsVisible) _overlay.Stats.Hide();
     }
+
+    private OverlayDisplayState CurrentOverlayDisplayState() =>
+        new(_settings.OverlayDisplayMode,
+            _settings.LastVisibleOverlayDisplayMode,
+            _overlayVisibility.HandAvailable);
+
+    private void ApplyOverlayDisplayState(OverlayDisplayState state,
+        bool save)
+    {
+        _settings.OverlayDisplayMode = state.Mode;
+        _settings.LastVisibleOverlayDisplayMode = state.LastVisibleMode;
+        _overlayVisibility =
+            _overlayVisibility.WithHandAvailability(state.Available);
+        if (save) SettingsStore.Save(_settings);
+        ShowOverlayWindows();
+    }
+
+    private void HideOverlayByUser() =>
+        ApplyOverlayDisplayState(OverlayDisplayPolicy.Select(
+            CurrentOverlayDisplayState(), OverlayDisplayMode.Hidden),
+            save: true);
 
     // 워크 창이 포커스를 가진 상태에서도 오버레이를 켜고 끌 수 있는 전역 단축키.
     // 기본 Scroll Lock — 워크 기본 단축키(Alt·Ctrl+숫자·F9~F12·문자키)와 겹치지 않는다.

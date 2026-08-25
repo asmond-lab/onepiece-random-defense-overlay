@@ -28,11 +28,6 @@ public partial class OverlayWindow : OverlayWindowBase
             OverlayTheme.AttachRoundClip(FlowWell, OverlayTheme.WellRadius);
             OverlayTheme.AttachRoundClip(BoardWell, OverlayTheme.WellRadius);
         };
-        IsVisibleChanged += (_, e) =>
-        {
-            if ((bool)e.NewValue) Stats.Show();
-            else Stats.Hide();
-        };
     }
 
     protected override double DesignWidth => 540;
