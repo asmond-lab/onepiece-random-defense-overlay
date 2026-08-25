@@ -22,5 +22,6 @@
     <Compile Remove="SmokeTests\**\*.cs" />
     <Compile Remove="MemoryDiagnostics\**\*.cs" />
     <Compile Remove="OrandOverlay.Tests\**\*.cs" />
+    <Compile Remove="Tools\**\*.cs" />
   </ItemGroup>
 </Project>

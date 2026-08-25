@@ -198,8 +198,9 @@ dotnet run -c Release --project SmokeTests/OrandOverlay.SmokeTests.csproj
     `(?:^|[\\s·,/()\\[\\]])(?:솔딜|1상위)(?=$|[\\s·,/()\\[\\]])`와
     `(?:^|[\\s·,/()\\[\\]])다상위(?=$|[\\s·,/()\\[\\]])`를 사용한다.
 11. canonical JSON은 UTF-8 BOM 없음, LF, 2-space indent, property 순서
-    `schemaVersion`, `generatorVersion`, `sourceFiles`, `entries`; entry property 순서
-    `goalUnitId`, `mode`, `source`, `reason`; entries는 `goalUnitId` ordinal 정렬이다.
+    `schemaVersion`, `generatorVersion`, `sourceFiles`, `source`, `entries`; `entries`는
+    `goalUnitId: mode` map을 goalUnitId ordinal 순서로 직렬화한다. 공통 source와 mode별
+    reason 문구는 loader가 immutable entry로 materialize한다.
 12. 같은 goal ID가 두 번 생성되면 즉시 실패하고, 생성 ID set이 effective top-grade ID set과
     정확히 같아야 한다.
 

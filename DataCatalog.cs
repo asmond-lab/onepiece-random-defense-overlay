@@ -17,12 +17,13 @@ public sealed class DataCatalog
     public IReadOnlyDictionary<string, RawcodeCatalogEntry> RawcodeCatalog { get; private set; }
         = new Dictionary<string, RawcodeCatalogEntry>();
     public IReadOnlyList<UnitDefinition> AllUnits { get; private set; } = [];
+    public GoalCarryPolicy CarryPolicy { get; private set; } = GoalCarryPolicy.Empty;
     private IReadOnlyDictionary<string, string> _unitIdsByRawcode =
         new Dictionary<string, string>(StringComparer.Ordinal);
     private IReadOnlySet<string> _nativeRawcodes = new HashSet<string>(StringComparer.Ordinal);
     private IReadOnlySet<string> _appUnitIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public void Load()
+    public void Load(bool loadCarryPolicy = true)
     {
         var bundled = Path.Combine(AppContext.BaseDirectory, "Data", "game-data.demo.json");
         var overridePath = Path.Combine(AppPaths.UserDataDirectory, "game-data.json");
@@ -55,6 +56,9 @@ public sealed class DataCatalog
             .GroupBy(unit => unit.Id, StringComparer.OrdinalIgnoreCase)
             .Select(group => group.First())
             .ToList();
+        if (loadCarryPolicy)
+            CarryPolicy = GoalCarryPolicy.Load(Path.Combine(
+                AppContext.BaseDirectory, "Data", "goal-carry-policy.json"), this);
     }
 
     /// <summary>
