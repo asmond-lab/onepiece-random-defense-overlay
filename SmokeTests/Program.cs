@@ -1411,6 +1411,7 @@ Assert(ClearBuildStats.FromSamples([brokenCountSample]).TotalGodPlusSamples == 1
 
 var bundledStats = ClearBuildStats.Load(
     [Path.Combine(AppContext.BaseDirectory, "Data", "tmo-clear-samples.json")]);
+Console.WriteLine($"DEBUG INITIAL BIGMOM={bundledStats.GoalProfile(["Q40h"], TopScope.MultiTop)?.SampleCount}");
 Assert(bundledStats.HasData && bundledStats.TotalGodPlusSamples >= 10000,
     "번들 신+ 클리어 스냅샷 로드");
 Assert(bundledStats.GoalProfile(["A90H"]) is { SampleCount: >= 100 },
@@ -1963,8 +1964,16 @@ Assert(combinePlanner.Plan([enelGoal], Inventory(enelFill)).Count == 0,
     "해적선 없는 에넬 목표는 중간 조합을 지금 조합 가능으로 안내하지 않음");
 var hotkeyEngine = new RecommendationEngine(catalog, null, combineHotkeys);
 var hotkeyPicks = hotkeyEngine.RecommendNearestCrafts("yamato_transcendent", [], take: 3);
-var keyedStep = hotkeyPicks.SelectMany(item => item.RemainingCraftSteps)
+var unavailableKeyedStep = hotkeyPicks.SelectMany(item => item.RemainingCraftSteps)
     .FirstOrDefault(step => step.CombineKey is { Length: > 0 });
+var keyedInventory = unavailableKeyedStep?.Ingredients
+    .SelectMany(ingredient => Enumerable.Repeat(ingredient.UnitId,
+        ingredient.RequiredCount))
+    .ToArray() ?? [];
+var keyedStep = hotkeyEngine.RecommendNearestCrafts(unavailableKeyedStep!.UnitId,
+        Inventory(keyedInventory), take: 1)
+    .SelectMany(item => item.RemainingCraftSteps)
+    .FirstOrDefault(step => step.UnitId == unavailableKeyedStep?.UnitId);
 Assert(keyedStep is not null &&
        RecommendationPresentation.CraftIngredientLine(keyedStep)
            .Contains("유닛 조합 키: ", StringComparison.Ordinal),
@@ -2010,21 +2019,23 @@ Assert(jinbeGoalCard.CombineCommands.SequenceEqual(["바다의협객", "jinbe tr
 Assert(RecommendationPresentation.OverlayCommandLine(jinbeGoalCard) ==
        "조합 명령어: 바다의협객 / jinbe tr",
     "추천 오버레이 접힌 카드에 조합 명령어를 표시한다");
-var jinbeLine = RecommendationPresentation.CraftIngredientLine(jinbeCraftStep);
-Assert(jinbeLine.Contains("조합 명령어", StringComparison.Ordinal) &&
-       jinbeLine.Contains("바다의협객", StringComparison.Ordinal) &&
-       jinbeLine.Contains("jinbe tr", StringComparison.Ordinal),
-    "초월 조합 안내에 한글·영문 명령어를 그대로 보여준다");
-Assert(RecommendationPresentation.CraftActionKeys(jinbeCraftStep)
-           .SequenceEqual(["바다의협객", "jinbe tr"]) &&
-       RecommendationPresentation.CraftSelectUnitName(jinbeCraftStep) is { Length: > 0 },
-    "단축키가 없는 초월은 채팅 명령어와 선택 유닛을 흐름에 보여준다");
 var jinbeReady = jinbeUnit.Recipe.Keys
     .SelectMany(id => Enumerable.Repeat(id, jinbeUnit.Recipe[id]))
     .Where(id => catalog.Unit(id).Tier.Split('[', 2)[0].Trim() is not "자원")
     .ToArray();
 var jinbeReadyCrafts = new RecommendationEngine(catalog, null, combineHotkeys)
     .RecommendNearestCrafts("rawcode:A90H", Inventory(jinbeReady), 1);
+var jinbeReadyStep = jinbeReadyCrafts.SelectMany(item => item.RemainingCraftSteps)
+    .First(step => step.UnitId == "rawcode:A90H");
+var jinbeLine = RecommendationPresentation.CraftIngredientLine(jinbeReadyStep);
+Assert(jinbeLine.Contains("조합 명령어", StringComparison.Ordinal) &&
+       jinbeLine.Contains("바다의협객", StringComparison.Ordinal) &&
+       jinbeLine.Contains("jinbe tr", StringComparison.Ordinal),
+    "초월 조합 안내에 한글·영문 명령어를 그대로 보여준다");
+Assert(RecommendationPresentation.CraftActionKeys(jinbeReadyStep)
+           .SequenceEqual(["바다의협객", "jinbe tr"]) &&
+       RecommendationPresentation.CraftSelectUnitName(jinbeReadyStep) is { Length: > 0 },
+    "단축키가 없는 초월은 채팅 명령어와 선택 유닛을 흐름에 보여준다");
 Assert(combinePlanner.Plan(jinbeReadyCrafts, Inventory(jinbeReady))
         .Any(step => step.TargetUnitId.Equals("rawcode:A90H", StringComparison.OrdinalIgnoreCase) &&
                      step.Commands.Contains("바다의협객") && step.Commands.Contains("jinbe tr")),
