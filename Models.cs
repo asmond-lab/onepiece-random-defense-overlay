@@ -350,6 +350,13 @@ public static class RawcodeAliases
     public static string Canonical(string rawcode) =>
         AliasToCanonical.GetValueOrDefault(rawcode, rawcode);
 
+    // 비비 변화 폼은 메모리 보유 수량만 희귀 비비로 합치며, 클리어 표본에서는
+    // 변화 폼 자체의 지원 채용률과 레시피를 보존한다.
+    public static string CanonicalForStats(string rawcode) =>
+        rawcode.Equals("W50h", StringComparison.Ordinal)
+            ? rawcode
+            : Canonical(rawcode);
+
     // 니카 루초/뱀초처럼 카탈로그는 갈라놨지만(조합 트리가 다름) 인게임 rawcode가
     // 같아 클리어 기록이 한 코드로 잡히는 경우: 목표 학습 조회용 코드만 공유한다.
     private static readonly IReadOnlyDictionary<string, string[]> SharedStats =

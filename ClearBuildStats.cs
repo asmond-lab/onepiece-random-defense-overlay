@@ -190,12 +190,15 @@ public sealed class ClearBuildStats
 
     /// <summary>강화 폼 rawcode(예: 상디초월 G90H)를 대표 코드로 통일해 집계한다.</summary>
     private static ClearSample CanonicalizeSample(ClearSample sample) =>
-        sample.Units.All(unit => RawcodeAliases.Canonical(unit.Code) == unit.Code)
+        sample.Units.All(unit => RawcodeAliases.CanonicalForStats(unit.Code) == unit.Code)
             ? sample
             : sample with
             {
                 Units = sample.Units
-                    .Select(unit => unit with { Code = RawcodeAliases.Canonical(unit.Code) })
+                    .Select(unit => unit with
+                    {
+                        Code = RawcodeAliases.CanonicalForStats(unit.Code)
+                    })
                     .ToList()
             };
 

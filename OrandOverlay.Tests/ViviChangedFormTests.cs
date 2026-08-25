@@ -14,6 +14,7 @@ public sealed class ViviChangedFormTests
         var changedUnit = catalog.Unit("rawcode:W50h");
 
         Assert.Equal("rawcode:O10h", RawcodeCodec.DynamicUnitId(changed));
+        Assert.Equal("W50h", RawcodeAliases.CanonicalForStats("W50h"));
         Assert.Equal("변화된", changedUnit.Tier);
         Assert.NotEmpty(changedUnit.Recipe);
         Assert.Equal("rawcode:W50h", changedUnit.Id);
