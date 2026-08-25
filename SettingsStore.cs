@@ -18,7 +18,8 @@ public static class SettingsStore
             if (changed) File.WriteAllText(path, migrated);
             try
             {
-                return JsonSerializer.Deserialize<AppSettings>(migrated, Options) ?? new();
+                return Normalize(
+                    JsonSerializer.Deserialize<AppSettings>(migrated, Options) ?? new());
             }
             catch (JsonException)
             {
@@ -61,5 +62,12 @@ public static class SettingsStore
         var temp = path + ".tmp";
         File.WriteAllText(temp, JsonSerializer.Serialize(settings, Options));
         File.Move(temp, path, overwrite: true);
+    }
+
+    private static AppSettings Normalize(AppSettings settings)
+    {
+        if (settings.LastVisibleOverlayDisplayMode == OverlayDisplayMode.Hidden)
+            settings.LastVisibleOverlayDisplayMode = OverlayDisplayMode.Full;
+        return settings;
     }
 }
