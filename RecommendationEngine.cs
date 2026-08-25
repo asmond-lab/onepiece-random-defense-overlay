@@ -436,7 +436,29 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             recommendation.ClearEvidence = BuildClearEvidence(
                 catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes);
         }
-        return results;
+        var readinessInventory = counts.Select(pair => new InventoryEntry
+        {
+            UnitId = pair.Key,
+            Count = pair.Value
+        });
+        var readiness = CombatReadinessCalculator.Calculate(
+            catalog, goal, readinessInventory);
+        var carryMode = catalog.CarryPolicy.ForGoal(goal.Id).Mode;
+        var gate = SecondaryTopGate.Apply(
+            results,
+            goal.Id,
+            carryMode,
+            readiness,
+            effectiveTake,
+            unitId => TopGradePolicy.IsTopGrade(catalog.Unit(unitId).Tier));
+        foreach (var recommendation in gate.Recommendations)
+        {
+            recommendation.CombatReadiness = readiness;
+            recommendation.CarryMode = carryMode;
+            recommendation.DeferredSecondaryTopCount = gate.DeferredCount;
+            recommendation.DeferredSecondaryTopReason = gate.DeferredReason;
+        }
+        return gate.Recommendations;
 
         Recommendation EvaluateInitialCandidate(UnitDefinition unit)
         {

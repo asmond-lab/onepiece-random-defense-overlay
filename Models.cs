@@ -101,6 +101,10 @@ public sealed class Recommendation
     /// 첫 희귀함의 특별함. 없으면 단독 칸.
     /// </summary>
     public string? ClusterParentUnitId { get; set; }
+    public CombatReadiness? CombatReadiness { get; set; }
+    public GoalCarryMode CarryMode { get; set; } = GoalCarryMode.Unknown;
+    public int DeferredSecondaryTopCount { get; set; }
+    public string? DeferredSecondaryTopReason { get; set; }
 }
 
 public sealed class RecipeCraftStep
