@@ -547,10 +547,9 @@ public partial class MainWindow : Window
         if (!_clearStats.HasData) return null;
         var solo = _clearStats.GoalProfile(goal.Rawcodes, TopScope.SoloTop)?.SampleCount ?? 0;
         var multi = _clearStats.GoalProfile(goal.Rawcodes, TopScope.MultiTop)?.SampleCount ?? 0;
-        var preferMulti = multi > solo;
-        bool FitsScope(NavigationOption option) => preferMulti
-            ? option.AllowsMultipleTopUnits
-            : option.CanCraftTopUnits && !option.AllowsMultipleTopUnits;
+        var carry = _catalog.CarryPolicy.ForGoal(goal.Id);
+        bool FitsScope(NavigationOption option) =>
+            NavigationCarryPolicy.Fits(carry.Mode, option);
         var learned = NavigationProfiles.Categories
             .SelectMany(category => VisibleNavigations(category.Id))
             .ToList();
@@ -559,10 +558,18 @@ public partial class MainWindow : Window
             return null;
         var pick = learned.FirstOrDefault(FitsScope) ?? learned.FirstOrDefault();
         if (pick is null) return null;
-        return (pick, preferMulti
-            ? $"다상위 {multi:#,0}판 > 1상위 {solo:#,0}판"
-            : $"1상위 {solo:#,0}판 우세");
+        return (pick, carry.Mode == GoalCarryMode.MultiRequired
+            ? $"다상위 필요 · 표본 1상위 {solo:#,0} / 다상위 {multi:#,0}"
+            : $"{CarryModeLabel(carry.Mode)} · 표본 1상위 {solo:#,0} / 다상위 {multi:#,0}");
     }
+
+    private static string CarryModeLabel(GoalCarryMode mode) => mode switch
+    {
+        GoalCarryMode.SoloPreferred => "1상위 권장",
+        GoalCarryMode.MultiAllowed => "다상위 가능",
+        GoalCarryMode.MultiRequired => "다상위 필요",
+        _ => "판단 보류 — 1상위 우선"
+    };
 
     // 항법 콤보를 특정 항법으로 강제 선택한다(자동 시작의 항법 추천용).
     private void SelectNavigation(NavigationOption option)
