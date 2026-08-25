@@ -10,7 +10,32 @@ public partial class StatsOverlayWindow : OverlayWindowBase
 {
     public StatsOverlayWindow() => InitializeComponent();
 
-    protected override double DesignWidth => 228;
-    protected override double DesignHeight => 700;
+    private OverlayDisplayMode _mode = OverlayDisplayMode.Full;
+
+    protected override double DesignWidth =>
+        OverlayLayoutPolicy.StatsLayout(_mode).Width;
+    protected override double DesignHeight =>
+        OverlayLayoutPolicy.StatsLayout(_mode).Height;
     protected override UIElement? ClickThroughIndicator => ClickThroughBadge;
+
+    public void SetDisplayMode(OverlayDisplayMode mode)
+    {
+        _mode = mode;
+        var layout = OverlayLayoutPolicy.StatsLayout(mode);
+        NonCoreSectionsPanel.Visibility = layout.NonCoreVisible
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        ApplyResolutionScale();
+    }
+
+    public void SetReadiness(string? text, bool ready)
+    {
+        ReadinessSummaryText.Text = text ?? "";
+        ReadinessSummaryText.Foreground = ready
+            ? OverlayTheme.OkBrush
+            : OverlayTheme.WarnBrush;
+        ReadinessSummaryText.Visibility = string.IsNullOrWhiteSpace(text)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+    }
 }

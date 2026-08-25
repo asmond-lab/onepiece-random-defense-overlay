@@ -115,6 +115,12 @@ public partial class MainWindow : Window
         GoroseiCombo.SelectedItem = GoroseiEffects.Options.First(option => option.Mode == selectedGorosei);
         GoroseiSummaryText.Text = GoroseiEffects.Options.First(option => option.Mode == selectedGorosei).Summary;
         ClickThroughCheck.IsChecked = _settings.ClickThroughOverlay;
+        OverlayModeCombo.SelectedIndex = _settings.OverlayDisplayMode switch
+        {
+            OverlayDisplayMode.StatsOnlyCompact => 1,
+            OverlayDisplayMode.Hidden => 2,
+            _ => 0
+        };
         AutoScanCheck.IsChecked = _settings.AutoScanEnabled;
         ClearDataRefreshCheck.IsChecked = _settings.ClearDataAutoRefresh;
         _ = _telemetry.FlushPendingAsync();
@@ -1141,6 +1147,18 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         SettingsStore.Save(_settings);
     }
 
+    private void OverlayModeCombo_OnSelectionChanged(
+        object sender, SelectionChangedEventArgs e)
+    {
+        if (!_initialized ||
+            OverlayModeCombo.SelectedItem is not ComboBoxItem item ||
+            !Enum.TryParse<OverlayDisplayMode>(item.Tag?.ToString(),
+                out var mode))
+            return;
+        ApplyOverlayDisplayState(OverlayDisplayPolicy.Select(
+            CurrentOverlayDisplayState(), mode), save: true);
+    }
+
     /// <summary>마지막 패 스냅샷으로 익명 레코드를 보낸다. 판당 1회, fail-silent.</summary>
     private void SendMatchTelemetry()
     {
@@ -1330,6 +1348,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void ShowOverlayWindows()
     {
+        _overlay.Stats.SetDisplayMode(_settings.OverlayDisplayMode);
         var visibility = OverlayDisplayPolicy.Visibility(
             CurrentOverlayDisplayState());
         if (visibility.RecommendationVisible)

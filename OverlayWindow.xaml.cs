@@ -96,11 +96,15 @@ public partial class OverlayWindow : OverlayWindowBase
                 ? OverlayTheme.OkBrush
                 : OverlayTheme.WarnBrush;
             ReadinessText.Visibility = Visibility.Visible;
+            Stats.SetReadiness(
+                RecommendationPresentation.ReadinessLine(readiness),
+                readiness.IsReady);
         }
         else
         {
             CarryModeText.Visibility = Visibility.Collapsed;
             ReadinessText.Visibility = Visibility.Collapsed;
+            Stats.SetReadiness(null, ready: false);
         }
         PhaseHintText.Text = phaseHint ?? "";
         PhaseHintText.Visibility = phaseHint is { Length: > 0 }

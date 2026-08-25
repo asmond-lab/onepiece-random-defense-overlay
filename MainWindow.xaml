@@ -79,6 +79,13 @@
           <TextBlock Text="설정" FontSize="14" FontWeight="SemiBold"/>
           <CheckBox x:Name="AutoScanCheck" Content="실시간 메모리 인식" Margin="3,10,0,5" IsChecked="True" Checked="AutoScan_OnChanged" Unchecked="AutoScan_OnChanged"/>
           <CheckBox x:Name="ClickThroughCheck" Content="오버레이 클릭 통과" Margin="3,5" IsChecked="False" Checked="ClickThrough_OnChanged" Unchecked="ClickThrough_OnChanged"/>
+          <TextBlock Text="오버레이 표시" Style="{StaticResource FieldLabel}" Margin="0,10,0,0"/>
+          <ComboBox x:Name="OverlayModeCombo" Margin="0,6,0,2"
+                    SelectionChanged="OverlayModeCombo_OnSelectionChanged">
+            <ComboBoxItem Content="전체" Tag="Full"/>
+            <ComboBoxItem Content="패수치만" Tag="StatsOnlyCompact"/>
+            <ComboBoxItem Content="숨김" Tag="Hidden"/>
+          </ComboBox>
           <CheckBox x:Name="ClearDataRefreshCheck" Content="신+ 클리어 데이터 자동 갱신" Margin="3,5" IsChecked="True" Checked="ClearDataRefresh_OnChanged" Unchecked="ClearDataRefresh_OnChanged"/>
           <Button Content="오버레이 이동" Click="EnableOverlayMove_OnClick" HorizontalAlignment="Left" Margin="0,4,0,0"
                   ToolTip="누른 뒤 오버레이 상단을 끌어 옮깁니다"/>

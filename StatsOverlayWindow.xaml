@@ -19,7 +19,11 @@
           <ColumnDefinition/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="패 수치" Foreground="#FFF0C75E" FontSize="13" FontWeight="Bold"/>
+        <StackPanel>
+          <TextBlock Text="패 수치" Foreground="#FFF0C75E" FontSize="13" FontWeight="Bold"/>
+          <TextBlock x:Name="ReadinessSummaryText" Foreground="#FFB4BBC6" FontSize="10"
+                     TextWrapping="Wrap" Margin="0,3,0,0" Visibility="Collapsed"/>
+        </StackPanel>
         <Border Grid.Column="1" x:Name="ClickThroughBadge" Visibility="Collapsed"
                 Background="#331C2028" CornerRadius="8" Padding="8,3" VerticalAlignment="Center">
           <TextBlock Text="클릭 통과" Foreground="#FF8B93A7" FontSize="10"/>
@@ -30,18 +34,20 @@
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel>
           <StackPanel x:Name="CurrentStatsPanel"/>
-          <TextBlock x:Name="EmergencyHeader" Text="긴급소집" Foreground="#FFF0C75E"
-                     FontSize="10" FontWeight="SemiBold" Margin="0,12,0,6" Visibility="Collapsed"/>
-          <WrapPanel x:Name="EmergencyPanel" Visibility="Collapsed"/>
-          <TextBlock Text="정리" Foreground="#FF8B93A7" FontSize="10"
-                     FontWeight="SemiBold" Margin="0,12,0,6"/>
-          <WrapPanel x:Name="RareRerollPanel"/>
-          <TextBlock x:Name="SpecialHeader" Text="특수함" Foreground="#FF8B93A7" FontSize="10"
-                     FontWeight="SemiBold" Margin="0,10,0,6" Visibility="Collapsed"/>
-          <WrapPanel x:Name="SpecialPanel" Visibility="Collapsed"/>
-          <TextBlock x:Name="GreenBloodHeader" Text="그린블러드" Foreground="#FF3DDC84" FontSize="10"
-                     FontWeight="SemiBold" Margin="0,10,0,6" Visibility="Collapsed"/>
-          <WrapPanel x:Name="GreenBloodPanel" Visibility="Collapsed"/>
+          <StackPanel x:Name="NonCoreSectionsPanel">
+            <TextBlock x:Name="EmergencyHeader" Text="긴급소집" Foreground="#FFF0C75E"
+                       FontSize="10" FontWeight="SemiBold" Margin="0,12,0,6" Visibility="Collapsed"/>
+            <WrapPanel x:Name="EmergencyPanel" Visibility="Collapsed"/>
+            <TextBlock Text="정리" Foreground="#FF8B93A7" FontSize="10"
+                       FontWeight="SemiBold" Margin="0,12,0,6"/>
+            <WrapPanel x:Name="RareRerollPanel"/>
+            <TextBlock x:Name="SpecialHeader" Text="특수함" Foreground="#FF8B93A7" FontSize="10"
+                       FontWeight="SemiBold" Margin="0,10,0,6" Visibility="Collapsed"/>
+            <WrapPanel x:Name="SpecialPanel" Visibility="Collapsed"/>
+            <TextBlock x:Name="GreenBloodHeader" Text="그린블러드" Foreground="#FF3DDC84" FontSize="10"
+                       FontWeight="SemiBold" Margin="0,10,0,6" Visibility="Collapsed"/>
+            <WrapPanel x:Name="GreenBloodPanel" Visibility="Collapsed"/>
+          </StackPanel>
         </StackPanel>
       </ScrollViewer>
     </Grid>
