@@ -7,7 +7,7 @@ namespace OrandOverlay;
 public enum OverlayDisplayMode
 {
     Full,
-    StatsOnlyCompact,
+    StatsOnly,
     Hidden
 }
 

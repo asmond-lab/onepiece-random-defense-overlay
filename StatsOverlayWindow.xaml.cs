@@ -21,10 +21,7 @@ public partial class StatsOverlayWindow : OverlayWindowBase
     public void SetDisplayMode(OverlayDisplayMode mode)
     {
         _mode = mode;
-        var layout = OverlayLayoutPolicy.StatsLayout(mode);
-        NonCoreSectionsPanel.Visibility = layout.NonCoreVisible
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        NonCoreSectionsPanel.Visibility = Visibility.Visible;
         ApplyResolutionScale();
     }
 

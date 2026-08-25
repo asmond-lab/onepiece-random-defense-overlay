@@ -1,7 +1,7 @@
-# 초보 클리어 안정화와 패수치 컴팩트 모드
+# 초보 클리어 안정화와 기존 패수치 단독 모드
 
 status: reviewed
-intent: 원딜/다상위 추천을 구분하고 55라운드 생존 수치를 우선하며, 패수치만 남기는 컴팩트 오버레이를 설계한다.
+intent: 원딜/다상위 추천을 구분하고 55라운드 생존 수치를 우선하며, 기존 패수치 오버레이만 독립 표시한다.
 review_required: false
 approval_gate: 승인 완료; `.omo/plans/beginner-clear-and-stats-compact.md` 작성
 
@@ -13,10 +13,10 @@ approval_gate: 승인 완료; `.omo/plans/beginner-clear-and-stats-compact.md` �
 ## 결정 장부
 - 조합식 권위: TMO 42479.
 - 추천의 최우선 목표: 상위 수를 늘리는 것보다 현재 주딜이 요구하는 생존 지원 수치 확보.
-- 컴팩트 모드의 핵심: 추천 보드와 설정을 숨겨도 패수치는 실시간 갱신.
+- 패수치 단독 모드의 핵심: 추천 보드만 숨겨도 기존 패수치는 전부 실시간 갱신.
 - 권장 기본값: `초보 안전 모드` 활성. 표본 수가 많다는 이유만으로 다상위를 자동 선택하지 않는다.
 - 원딜/다상위 분류: 명시적 목표 메타데이터를 우선하고, 클리어 표본은 보조 증거로만 사용한다.
-- 패수치 컴팩트 모드: 기존 `StatsOverlayWindow`를 독립 표시하고 추천 창만 숨긴다.
+- 패수치 단독 모드: 기존 `StatsOverlayWindow`의 내용·크기를 유지하고 추천 창만 숨긴다.
 
 ## 조사 장부
 - [x] 현재 다상위 추천 진입 조건: `multi sample > solo sample`이면 자동으로 다상위 계열을 고른다.
@@ -41,13 +41,13 @@ approval_gate: 승인 완료; `.omo/plans/beginner-clear-and-stats-compact.md` �
 - 세 수치가 모두 충족된 뒤에만 `MultiAllowed`의 추가 상위가 열린다.
 - UI 패수치와 추천 엔진의 현재/목표 수치가 항상 동일하다.
 
-## 추천 설계 B — 패수치 전용 컴팩트 모드
-1. `OverlayDisplayMode = Full | StatsOnlyCompact | Hidden`을 설정에 저장한다.
-2. `StatsOnlyCompact`에서는 추천 창을 숨기고 기존 `StatsOverlayWindow`만 독립 표시한다.
+## 추천 설계 B — 기존 패수치 단독 모드
+1. `OverlayDisplayMode = Full | StatsOnly | Hidden`을 설정에 저장한다.
+2. `StatsOnly`에서는 추천 창만 숨기고 기존 `StatsOverlayWindow` 전체를 독립 표시한다.
 3. 상단에 `55라 준비` 상태를 두고 스턴·이감·방깎(마딜은 마방깎)을 현재/목표 형식으로 표시한다.
 4. 공격력·공속·재생 등 나머지 패수치는 작은 보조 칩으로 유지하고, 리롤·긴급·특별함·그린블러드 추천 패널은 접는다.
 5. 메인 설정에 `전체 / 패수치만 / 숨김` 선택을 추가하고 기존 위치·클릭 통과·배율·드래그를 그대로 사용한다.
-6. 추천 창 닫기나 일시적 인식 오류가 컴팩트 통계를 함께 숨기지 않도록 두 창의 visibility 결합을 해제한다.
+6. 추천 창 닫기나 일시적 인식 오류가 기존 Stats 창을 함께 숨기지 않도록 visibility 결합을 해제한다.
 
 ### 설계 B 수용 기준
 - 패수치만 모드에서 추천 보드가 보이지 않고 핵심 수치는 계속 실시간 갱신된다.

@@ -6,6 +6,20 @@ namespace OrandOverlay.Tests;
 public sealed class SecondaryTopGateTests
 {
     [Fact]
+    public void NoSecondaryCandidatesStillRespectTake()
+    {
+        var result = SecondaryTopGate.Apply(
+            Enumerable.Range(0, 10)
+                .Select(index => Recommendation($"support-{index}",
+                    100 - index))
+                .ToList(),
+            "goal", GoalCarryMode.Unknown, Readiness(false), take: 4,
+            _ => false);
+
+        Assert.Equal(4, result.Recommendations.Count);
+    }
+
+    [Fact]
     public void RealEngineCannotRecommendSecondTopBeforeReadiness()
     {
         var catalog = new DataCatalog();
@@ -22,6 +36,7 @@ public sealed class SecondaryTopGateTests
             .ToList();
 
         Assert.Empty(secondaryTops);
+        Assert.True(recommendations.Count <= 12);
         Assert.Contains(recommendations,
             item => item.DeferredSecondaryTopCount > 0 &&
                     item.DeferredSecondaryTopReason is not null);
@@ -44,6 +59,25 @@ public sealed class SecondaryTopGateTests
         Assert.Equal(2, result.DeferredCount);
         Assert.Contains("55라", result.DeferredReason);
     }
+
+    [Fact]
+    public void RequiredPartnerIsNotTreatedAsOptionalSecondaryTop()
+    {
+        var result = SecondaryTopGate.Apply(
+            [Recommendation("goal", 100), Recommendation("partner", 90),
+                Recommendation("top-a", 80)],
+            "goal",
+            GoalCarryMode.Unknown,
+            Readiness(false),
+            take: 4,
+            id => id is "goal" or "partner" or "top-a",
+            new HashSet<string>(["partner"], StringComparer.OrdinalIgnoreCase));
+
+        Assert.Equal(["goal", "partner"],
+            result.Recommendations.Select(item => item.Route.GoalUnitId));
+        Assert.Equal(1, result.DeferredCount);
+    }
+
 
     [Theory]
     [InlineData(GoalCarryMode.Unknown)]

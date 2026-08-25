@@ -53,7 +53,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         IEnumerable<InventoryEntry> inventory,
         int take = 3)
     {
-        var counts = inventory
+        var inventoryList = inventory.ToList();
+        var counts = inventoryList
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.Sum(x => x.Count), StringComparer.OrdinalIgnoreCase);
         RecipeWildcards.AddSyntheticCounts(counts, catalog.Unit);
@@ -77,9 +78,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         string buildVariant = BuildVariants.AutoId,
         bool suppressSeraphim = false,
         bool prioritizeTargetRare = false,
-        bool suppressFirstRareShip = false)
+        bool suppressFirstRareShip = false,
+        bool suppressSecondaryTopCandidates = false)
     {
-        var counts = inventory
+        var inventoryList = inventory.ToList();
+        var counts = inventoryList
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Sum(x => x.Count),
                 StringComparer.OrdinalIgnoreCase);
@@ -183,6 +186,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(unit => IsRecommendedCraftTier(unit.Tier, navigation.AllowsMultipleTopUnits) ||
                            IsCheapFillerFor(goal, unit))
             .Where(unit => GoalStrategyCalculator.IsCompatibleSupportDamageType(goal, unit))
+            .Where(unit => !suppressSecondaryTopCandidates ||
+                           !IsTopTier(unit.Tier) ||
+                           unit.Id.Equals(viviPartnerId,
+                               StringComparison.OrdinalIgnoreCase) ||
+                           GoalStrategyCalculator.IsMagicDamageTier(goal.Tier) &&
+                           GoalStrategyCalculator.StrategyMetricsFor(unit)
+                               .MagicArmorReduction > 0)
             .Where(unit => !IsTopTier(unit.Tier) ||
                            GoalStrategyCalculator.IsCompatibleTopDamageType(goal, unit))
             .Where(unit => !avoidTraitHungryTops ||
@@ -400,8 +410,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var protectedUnitIds = pinningTargetRare && rarePick is not null
             ? recipeLegendaryIds.Append(rarePick.Route.GoalUnitId).ToList()
             : recipeLegendaryIds;
+        var preGateTake = navigation.AllowsMultipleTopUnits &&
+                          !suppressSecondaryTopCandidates &&
+                          !GoalStrategyCalculator.IsMagicDamageTier(goal.Tier)
+            ? Math.Min(32, effectiveTake + 8)
+            : effectiveTake;
         results = LimitRecommendationsPreservingStrategy(
-            results, effectiveTake, goal, counts, strategy, showGoal, protectedUnitIds);
+            results, preGateTake,
+            goal, counts, strategy, showGoal, protectedUnitIds);
 
         IReadOnlyDictionary<string, int> cascadeInventory = counts;
         for (var i = 0; i < results.Count; i++)
@@ -444,13 +460,51 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var readiness = CombatReadinessCalculator.Calculate(
             catalog, goal, readinessInventory);
         var carryMode = catalog.CarryPolicy.ForGoal(goal.Id).Mode;
+        var requiredTopSupportIds = results
+            .Where(item =>
+                item.Route.GoalUnitId.Equals(viviPartnerId,
+                    StringComparison.OrdinalIgnoreCase) ||
+                GoalStrategyCalculator.IsMagicDamageTier(goal.Tier) &&
+                GoalStrategyCalculator.StrategyMetricsFor(
+                    catalog.Unit(item.Route.GoalUnitId))
+                    .MagicArmorReduction > 0)
+            .Select(item => item.Route.GoalUnitId)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var gate = SecondaryTopGate.Apply(
             results,
             goal.Id,
             carryMode,
             readiness,
-            effectiveTake,
-            unitId => TopGradePolicy.IsTopGrade(catalog.Unit(unitId).Tier));
+            navigation.AllowsMultipleTopUnits ? take : effectiveTake,
+            unitId => TopGradePolicy.IsTopGrade(catalog.Unit(unitId).Tier),
+            requiredTopSupportIds);
+        if (gate.DeferredCount > 0 &&
+            !readiness.IsReady &&
+            navigation.AllowsMultipleTopUnits &&
+            gorosei != GoroseiMode.Warcury &&
+            !suppressSecondaryTopCandidates)
+        {
+            var safe = RecommendNearestCrafts(
+                goalUnitId,
+                inventoryList,
+                take,
+                navigationMode,
+                gorosei,
+                buildVariant,
+                suppressSeraphim,
+                prioritizeTargetRare,
+                suppressFirstRareShip,
+                suppressSecondaryTopCandidates: true);
+            foreach (var recommendation in safe)
+            {
+                recommendation.DeferredSecondaryTopCount =
+                    Math.Max(gate.DeferredCount,
+                        recommendation.DeferredSecondaryTopCount);
+                recommendation.DeferredSecondaryTopReason =
+                    "55라 준비 미달 — 2상위 보류";
+            }
+            return safe;
+        }
         foreach (var recommendation in gate.Recommendations)
         {
             recommendation.CombatReadiness = readiness;

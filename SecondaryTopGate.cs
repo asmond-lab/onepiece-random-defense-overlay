@@ -13,7 +13,8 @@ internal static class SecondaryTopGate
         GoalCarryMode carryMode,
         CombatReadiness readiness,
         int take,
-        Func<string, bool> isTopGrade)
+        Func<string, bool> isTopGrade,
+        IReadOnlySet<string>? requiredPartnerIds = null)
     {
         var deduplicated = source
             .GroupBy(item => item.Route.GoalUnitId,
@@ -24,6 +25,8 @@ internal static class SecondaryTopGate
             .Where(item =>
                 !item.Route.GoalUnitId.Equals(primaryGoalId,
                     StringComparison.OrdinalIgnoreCase) &&
+                !(requiredPartnerIds?.Contains(
+                    item.Route.GoalUnitId) ?? false) &&
                 isTopGrade(item.Route.GoalUnitId))
             .OrderByDescending(item => item.Score)
             .ThenByDescending(item => item.RecipeProgress.CompletionRatio)
@@ -32,7 +35,8 @@ internal static class SecondaryTopGate
             .ThenBy(item => item.Route.GoalUnitId, StringComparer.Ordinal)
             .ToList();
         if (secondary.Count == 0)
-            return new SecondaryTopGateResult(deduplicated, 0, null);
+            return new SecondaryTopGateResult(
+                deduplicated.Take(take).ToList(), 0, null);
 
         var canUseSecondary = readiness.IsReady &&
                               carryMode is GoalCarryMode.MultiAllowed or

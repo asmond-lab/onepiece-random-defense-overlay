@@ -42,7 +42,7 @@ public sealed class RecognitionPolicyTests
     }
 
     [Fact]
-    public void ViviTransformedRawcodeRetainsOwnRecipeIdentity()
+    public void ViviTransformedRawcodeMapsMemoryToRareIdentity()
     {
         var catalog = new DataCatalog();
         catalog.Load();
@@ -52,8 +52,9 @@ public sealed class RecognitionPolicyTests
         var mapped = map.Map(new Dictionary<uint, int> { [rawcode] = 1 });
 
         var entry = Assert.Single(mapped.Entries);
-        Assert.Equal("rawcode:W50h", entry.UnitId);
-        Assert.Equal("변화된", catalog.Unit(entry.UnitId).Tier);
+        Assert.Equal("rawcode:O10h", entry.UnitId);
+        Assert.Equal("희귀함", catalog.Unit(entry.UnitId).Tier);
+        Assert.Equal("변화된", catalog.Unit("rawcode:W50h").Tier);
     }
 
     [Fact]

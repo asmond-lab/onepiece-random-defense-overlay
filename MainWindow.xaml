@@ -83,7 +83,7 @@
           <ComboBox x:Name="OverlayModeCombo" Margin="0,6,0,2"
                     SelectionChanged="OverlayModeCombo_OnSelectionChanged">
             <ComboBoxItem Content="전체" Tag="Full"/>
-            <ComboBoxItem Content="패수치만" Tag="StatsOnlyCompact"/>
+            <ComboBoxItem Content="패수치만" Tag="StatsOnly"/>
             <ComboBoxItem Content="숨김" Tag="Hidden"/>
           </ComboBox>
           <CheckBox x:Name="ClearDataRefreshCheck" Content="신+ 클리어 데이터 자동 갱신" Margin="3,5" IsChecked="True" Checked="ClearDataRefresh_OnChanged" Unchecked="ClearDataRefresh_OnChanged"/>

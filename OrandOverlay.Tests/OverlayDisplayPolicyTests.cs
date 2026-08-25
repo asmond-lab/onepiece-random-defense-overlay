@@ -7,10 +7,10 @@ public sealed class OverlayDisplayPolicyTests
 {
     [Theory]
     [InlineData(OverlayDisplayMode.Full, true, true, true)]
-    [InlineData(OverlayDisplayMode.StatsOnlyCompact, true, false, true)]
+    [InlineData(OverlayDisplayMode.StatsOnly, true, false, true)]
     [InlineData(OverlayDisplayMode.Hidden, true, false, false)]
     [InlineData(OverlayDisplayMode.Full, false, false, false)]
-    [InlineData(OverlayDisplayMode.StatsOnlyCompact, false, false, false)]
+    [InlineData(OverlayDisplayMode.StatsOnly, false, false, false)]
     [InlineData(OverlayDisplayMode.Hidden, false, false, false)]
     public void VisibilityMatrixMatchesModeAndAvailability(
         OverlayDisplayMode mode, bool available,
@@ -29,11 +29,11 @@ public sealed class OverlayDisplayPolicyTests
     public void HiddenToggleRestoresLastCompactMode()
     {
         var hidden = new OverlayDisplayState(OverlayDisplayMode.Hidden,
-            OverlayDisplayMode.StatsOnlyCompact, true);
+            OverlayDisplayMode.StatsOnly, true);
 
         var restored = OverlayDisplayPolicy.Toggle(hidden);
 
-        Assert.Equal(OverlayDisplayMode.StatsOnlyCompact, restored.Mode);
+        Assert.Equal(OverlayDisplayMode.StatsOnly, restored.Mode);
         Assert.True(OverlayDisplayPolicy.Visibility(restored).StatsVisible);
         Assert.False(OverlayDisplayPolicy.Visibility(restored)
             .RecommendationVisible);
@@ -43,8 +43,8 @@ public sealed class OverlayDisplayPolicyTests
     public void AvailabilityLossNeverChangesStoredMode()
     {
         var compact = new OverlayDisplayState(
-            OverlayDisplayMode.StatsOnlyCompact,
-            OverlayDisplayMode.StatsOnlyCompact, true);
+            OverlayDisplayMode.StatsOnly,
+            OverlayDisplayMode.StatsOnly, true);
 
         var unavailable = OverlayDisplayPolicy.WithAvailability(
             compact, false);

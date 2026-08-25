@@ -16,7 +16,7 @@ public static class OverlayDisplayPolicy
     {
         if (!state.Available || state.Mode == OverlayDisplayMode.Hidden)
             return new OverlayWindowVisibility(false, false);
-        return state.Mode == OverlayDisplayMode.StatsOnlyCompact
+        return state.Mode == OverlayDisplayMode.StatsOnly
             ? new OverlayWindowVisibility(false, true)
             : new OverlayWindowVisibility(true, true);
     }

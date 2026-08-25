@@ -117,7 +117,7 @@ public partial class MainWindow : Window
         ClickThroughCheck.IsChecked = _settings.ClickThroughOverlay;
         OverlayModeCombo.SelectedIndex = _settings.OverlayDisplayMode switch
         {
-            OverlayDisplayMode.StatsOnlyCompact => 1,
+            OverlayDisplayMode.StatsOnly => 1,
             OverlayDisplayMode.Hidden => 2,
             _ => 0
         };

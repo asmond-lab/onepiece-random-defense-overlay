@@ -380,13 +380,15 @@ Assert(jinbeMultiTop.Count > 1 &&
     "징베 다상위는 첫 상위 특강을 전제로 특성공학이 아니면 알비다를 추천하지 않음");
 var jinbeTraitEng = engine.RecommendNearestCrafts("rawcode:A90H", [], 200,
     "AlliedForces.TraitEngineering");
-Assert(jinbeTraitEng.Any(item => item.Route.GoalUnitId == "rawcode:Q80h"),
-    "징베 특성공학은 특포가 넉넉해서 알비다를 추천한다");
+Assert(jinbeTraitEng.All(item => item.Route.GoalUnitId != "rawcode:Q80h") &&
+       jinbeTraitEng.Any(item => item.DeferredSecondaryTopCount > 0),
+    "징베 특성공학도 55라 준비 전에는 알비다 제한을 보류한다");
 var jinbeWithSparePoints = engine.RecommendNearestCrafts("rawcode:A90H",
     [new InventoryEntry { UnitId = "rawcode:POINT", Count = 8 }], 200,
     "AlliedForces.DoubleBenefit");
-Assert(jinbeWithSparePoints.Any(item => item.Route.GoalUnitId == "rawcode:Q80h"),
-    "특포가 첫 상위 특강(4) 이후에도 알비다(4)만큼 남으면 추천한다");
+Assert(jinbeWithSparePoints.All(item => item.Route.GoalUnitId != "rawcode:Q80h") &&
+       jinbeWithSparePoints.Any(item => item.DeferredSecondaryTopCount > 0),
+    "특포가 남아도 55라 준비 전에는 알비다 제한을 보류한다");
 var jinbeWithExactEnhance = engine.RecommendNearestCrafts("rawcode:A90H",
     [new InventoryEntry { UnitId = "rawcode:POINT", Count = 4 }], 200,
     "AlliedForces.DoubleBenefit");
@@ -416,11 +418,14 @@ Assert(basilProfile.Skip(1).Count(item => item.CompositionUnits[0].Abilities.Any
     "바질 초월은 최근 2.314 사례에 따라 보잡 보조 두 기를 목표로 함");
 var alliedForcesRecommendations = engine.RecommendNearestCrafts("yamato_transcendent", [], 200,
     "AlliedForces");
-Assert(alliedForcesRecommendations.Skip(1).Any(item => new[]
-    {
-        "신비함", "초월", "불멸", "영원", "제한됨"
-    }.Any(tier => item.CompositionUnits[0].Tier.StartsWith(tier, StringComparison.OrdinalIgnoreCase))),
-    "연합세력 등 다상위 항법에서는 다른 최상위 유닛도 전략 후보로 허용");
+Assert(alliedForcesRecommendations.Skip(1).All(item => !new[]
+       {
+           "신비함", "초월", "불멸", "영원", "제한됨"
+       }.Any(tier => item.CompositionUnits[0].Tier.StartsWith(
+           tier, StringComparison.OrdinalIgnoreCase))) &&
+       alliedForcesRecommendations.Any(item =>
+           item.DeferredSecondaryTopCount > 0),
+    "다상위 항법도 55라 준비 전에는 다른 최상위를 보류");
 Assert(NavigationProfiles.Categories.Count == 5 &&
        NavigationProfiles.Categories.All(category => NavigationProfiles.ForCategory(category.Id).Count == 3) &&
        NavigationProfiles.Options.Select(option => option.Id).Distinct(StringComparer.OrdinalIgnoreCase).Count() == 15,
@@ -1771,9 +1776,10 @@ var kizaruReverseSupports = kizaruReversePicks.Skip(1)
         StringComparer.OrdinalIgnoreCase))
     .Select(item => catalog.Unit(item.Route.GoalUnitId)).ToList();
 Assert(kizaruReverseSupports.Count <= 12 &&
-       kizaruReverseSupports.Any(unit => SupportAbility(unit, "단일") > 0) &&
-       kizaruReverseSupports.Any(unit => SupportAbility(unit, "끝딜") > 0),
-    "역발상 키자루는 추천 제한 안에서 특포 부족을 단일·끝딜 보강으로 메움");
+       kizaruReverseSupports.All(unit =>
+           !TopGradePolicy.IsTopGrade(unit.Tier) ||
+           SupportAbility(unit, "마법방어력 감소") > 0),
+    "역발상 키자루도 55라 준비 전에는 단일·끝딜 추가 상위를 보류");
 // 특공 키자루: 특포 반복 소모(스킬강화) 때문에 특강(필수) 상위와 경합 —
 // 핸콕·오뎅·알비다 같은 특포 의존 상위를 추가 상위 후보에서 제외한다.
 var kizaruTraitPicks = sanjiClearEngine.RecommendNearestCrafts("rawcode:5B0H", [], take: 10,
@@ -2552,6 +2558,45 @@ if (Environment.GetEnvironmentVariable("ORAND_DIAG") == "drill")
     if (diagRec.RecipeTree is not null) Dump(diagRec.RecipeTree, 0);
     return;
 }
+
+Assert(NavigationCarryPolicy.PreferredScope(GoalCarryMode.Unknown) ==
+       TopScope.SoloTop &&
+       NavigationCarryPolicy.PreferredScope(GoalCarryMode.MultiRequired) ==
+       TopScope.MultiTop,
+    "carry 분류가 표본 수 대신 안전 항법을 결정");
+Console.WriteLine("PASS: T3 carry 기반 자동 항법");
+
+var safeGatePicks = new RecommendationEngine(catalog)
+    .RecommendNearestCrafts("rawcode:A90H", [], 12,
+        navigationMode: "AlliedForces.EmergencyCall");
+Assert(!safeGatePicks.Any(item =>
+        item.Route.GoalUnitId != "rawcode:A90H" &&
+        TopGradePolicy.IsTopGrade(
+            catalog.Unit(item.Route.GoalUnitId).Tier)) &&
+       safeGatePicks.Any(item => item.DeferredSecondaryTopCount > 0),
+    "55라 준비 전 두 번째 상위 추천 보류");
+Console.WriteLine("PASS: T4 두 번째 상위 readiness gate");
+
+Assert(RecommendationPresentation.ReadinessLine(
+        new CombatReadiness(ReadinessDamageType.Physical,
+            1.3, 1.4, 84, 102, 176, 211, 0, 0))
+    .Contains("55라 준비 미달", StringComparison.Ordinal),
+    "carry와 55라 준비 상태 표시");
+Console.WriteLine("PASS: T5 carry·55라 준비 표시");
+
+var compactVisibility = OverlayDisplayPolicy.Visibility(
+    new OverlayDisplayState(OverlayDisplayMode.StatsOnly,
+        OverlayDisplayMode.StatsOnly, true));
+Assert(!compactVisibility.RecommendationVisible &&
+       compactVisibility.StatsVisible,
+    "패수치만 모드는 추천 창과 Stats 창 visibility를 분리");
+Console.WriteLine("PASS: T7 추천·Stats visibility 분리");
+
+var compactLayout = OverlayLayoutPolicy.StatsLayout(
+    OverlayDisplayMode.StatsOnly);
+Assert(compactLayout is { Width: 228, Height: 700, NonCoreVisible: true },
+    "패수치만 모드는 기존 Stats 전체 레이아웃을 유지");
+Console.WriteLine("PASS: T8 기존 패수치 단독 표시");
 
 Console.WriteLine("PASS: 추천/메모리 연동 스모크 테스트 통과");
 return;

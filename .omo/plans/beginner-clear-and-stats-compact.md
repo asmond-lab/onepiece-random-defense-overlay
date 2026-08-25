@@ -1,4 +1,4 @@
-# 초보 클리어 안전 추천과 패수치 컴팩트 모드
+# 초보 클리어 안전 추천과 기존 패수치 단독 표시
 
 ## 개요
 
@@ -36,7 +36,7 @@
 - 두 번째 상위 추천 잠금/해제
 - 패수치와 추천 엔진 수치 계산의 공통 경로
 - 추천 카드의 carry/준비 상태 표시
-- `Full`, `StatsOnlyCompact`, `Hidden` 표시 모드
+- `Full`, `StatsOnly`, `Hidden` 표시 모드
 - 독립 Stats 창 visibility, 크기, 위치, 클릭 통과, 설정 영속화
 - 순수 정책 테스트, WPF 실제 사용 QA, 버전/Release 검증
 
@@ -83,13 +83,12 @@
 
 ### 표시 모드
 
-- `OverlayDisplayMode`: `Full`, `StatsOnlyCompact`, `Hidden`.
+- `OverlayDisplayMode`: `Full`, `StatsOnly`, `Hidden`.
 - 별도 `userHidden` 상태를 추가하지 않는다. 숨김 의도는 `OverlayDisplayMode.Hidden` 하나로 표현한다.
-- `LastVisibleOverlayDisplayMode`는 `Full` 또는 `StatsOnlyCompact`만 저장한다.
+- `LastVisibleOverlayDisplayMode`는 `Full` 또는 `StatsOnly`만 저장한다.
 - 이전 설정 파일에 필드가 없으면 `Full`.
-- `StatsOnlyCompact`는 Stats 창만 표시하고 추천 창은 숨긴다.
-- 컴팩트 Stats 창은 준비 상태, 스턴, 이감, 방깎/마방깎, 보조 패수치 칩만 유지한다.
-- 리롤·긴급·특별함·그린블러드 패널은 컴팩트 모드에서 `Collapsed`.
+- `StatsOnly`는 기존 Stats 창의 크기·내용을 그대로 표시하고 추천 창만 숨긴다.
+- 기존 리롤·긴급·특별함·그린블러드와 모든 패수치 영역을 유지한다.
 - 인식 availability는 transient 입력이며 저장된 display mode를 절대 변경하지 않는다.
 
 ### 표시 상태 전이표
@@ -97,13 +96,13 @@
 | 이벤트 | 저장 mode | last visible | 추천 창 | Stats 창 |
 |---|---|---|---|---|
 | `전체` 선택, available | Full | Full | 표시 | 표시 |
-| `패수치만` 선택, available | StatsOnlyCompact | StatsOnlyCompact | 숨김 | 표시 |
+| `패수치만` 선택, available | StatsOnly | StatsOnly | 숨김 | 기존 전체 표시 |
 | `숨김` 선택/현재 보이는 창 닫기 | Hidden | 이전 값 유지 | 숨김 | 숨김 |
 | hotkey, 현재 visible | Hidden | 이전 visible mode | 숨김 | 숨김 |
 | hotkey, 현재 Hidden | last visible | 이전 값 | mode대로 | mode대로 |
 | 일시 인식 불가/세션 종료 | 변경 없음 | 변경 없음 | 숨김 | 숨김 |
 | 인식 복귀, 저장 mode Full | Full | Full | 표시 | 표시 |
-| 인식 복귀, 저장 mode StatsOnlyCompact | StatsOnlyCompact | StatsOnlyCompact | 숨김 | 표시 |
+| 인식 복귀, 저장 mode StatsOnly | StatsOnly | StatsOnly | 숨김 | 기존 전체 표시 |
 | 인식 복귀, 저장 mode Hidden | Hidden | 이전 값 유지 | 숨김 | 숨김 |
 
 ## 의존성 그래프
@@ -118,7 +117,7 @@
 | T5 준비 상태 추천 UI | T2, T4 | T7과 병렬 |
 | T6 표시 모드 설정 모델 | T0 | T1, T2와 병렬 |
 | T7 창 visibility 분리 | T6 | T5와 병렬 |
-| T8 Stats 컴팩트 렌더링 | T2, T6, T7 | 없음 |
+| T8 기존 Stats 단독 표시 | T2, T6, T7 | 없음 |
 | T9 통합 회귀·실전 QA | T0, T3, T4, T5, T8 | 없음 |
 | T10 버전·Release | T9 | 없음 |
 
@@ -439,7 +438,7 @@ dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --no-restore --filter "
 
 **테스트 — TDD**
 
-- Full/StatsOnlyCompact/Hidden 및 last-visible 저장·복원.
+- Full/StatsOnly/Hidden 및 last-visible 저장·복원.
 - 기존 JSON은 Full.
 - 손상된 enum 값은 안전한 Full 또는 명시적 migration 규칙으로 복구.
 
@@ -480,9 +479,9 @@ dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --no-restore --filter "
 **테스트 — TDD**
 
 - Full은 둘 다 표시.
-- StatsOnlyCompact는 Stats만 표시.
+- StatsOnly는 기존 Stats만 전체 표시.
 - Hidden/unavailable은 둘 다 숨기되, unavailable은 저장 mode를 변경하지 않는다.
-- 일시적 인식 오류 후 저장 mode Full/StatsOnlyCompact는 각각 복원되고 Hidden은 계속 숨김.
+- 일시적 인식 오류 후 저장 mode Full/StatsOnly는 각각 복원되고 Hidden은 계속 숨김.
 - 실제 세션 종료에서만 availability가 숨김.
 
 **수용 기준**
@@ -501,7 +500,7 @@ dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --no-restore --filter "
 
 ---
 
-### T8. StatsOverlay 컴팩트 렌더링 추가
+### T8. 기존 StatsOverlay 단독 표시 추가
 
 **참조**
 
@@ -515,19 +514,19 @@ dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --no-restore --filter "
 **구현**
 
 1. Stats XAML에 `ReadinessPanel`, core KPI, secondary chip, non-core section 이름을 부여한다.
-2. compact mode에서 Emergency/Reroll/Special/GreenBlood 영역을 `Collapsed`.
-3. compact 크기를 core KPI가 잘리지 않는 고정 폭 + 콘텐츠 높이로 정의한다.
+2. StatsOnly에서도 Emergency/Reroll/Special/GreenBlood 영역을 기존처럼 유지한다.
+3. StatsOnly와 Full이 동일한 `228x700` Stats 크기와 렌더링을 사용한다.
 4. Main 설정에 `전체 / 패수치만 / 숨김` 선택을 추가한다.
 5. 기존 Stats 위치, DPI scale, monitor clamp, drag, click-through를 재사용한다.
 6. 모드 변경은 창을 재생성하지 않고 visibility/layout만 바꾼다.
-7. 위치 필드는 기존 `StatsOverlayLeft/Top`, 클릭 통과는 `ClickThroughOverlay`, 배율은 기존 overlay scale을 그대로 사용한다. compact/full 크기는 설정에 저장하지 않고 mode별 layout policy가 결정한다.
+7. 위치 필드는 기존 `StatsOverlayLeft/Top`, 클릭 통과는 `ClickThroughOverlay`, 배율은 기존 overlay scale을 그대로 사용한다. StatsOnly/Full 모두 기존 크기를 유지한다.
 8. 위치 저장은 기존 `PositionCommitted` 시점만 사용한다. 재시작·모니터 제거·DPI 변경 시 기존 clamp 로직으로 현재 monitor work area 안에 복원한다.
 
 **테스트 — tests-after**
 
-- compact에서 핵심 KPI visible, 비핵심 panel collapsed.
+- StatsOnly에서 핵심·비핵심 기존 패널이 모두 유지된다.
 - 물딜/마딜 readiness 라벨.
-- compact/full 크기 정책.
+- StatsOnly/Full 동일 크기 정책.
 - 모드 변경 후 Stats 위치 불변.
 - 위치/클릭 통과/배율 round-trip과 monitor clamp.
 
@@ -538,14 +537,14 @@ dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --no-restore --filter "
 
 **QA**
 
-- Full → StatsOnlyCompact → Hidden → Full 전환.
+- Full → StatsOnly → Hidden → Full 전환.
 - 재시작 후 모드/위치 복원.
 - click-through on/off, drag, Caps Lock overlay hotkey.
 - FHD, 울트라와이드, 혼합 DPI 캡처 후 `visual-qa`.
 
 **Commit: REQUIRED**
 
-`패수치 전용 컴팩트 오버레이 추가`
+`기존 패수치 오버레이 단독 표시 추가`
 
 ---
 
@@ -574,7 +573,7 @@ assertion은 각각 명시적 PASS line을 출력하고, 누락·실패·excepti
 2. 실제 패 변화 이벤트를 구독한 상태에서 지원 유닛을 확보하고 readiness가 갱신되는지 확인.
 3. 세 목표를 충족한 뒤 `MultiAllowed`만 secondary top이 열리는지 확인.
 4. 마딜 목표에서 물딜 방깎이 아니라 마방깎 공급원을 검사하는지 확인.
-5. StatsOnlyCompact에서 추천 창 없이 패수치가 갱신되는지 확인.
+5. StatsOnly에서 기존 Stats 전체가 추천 창 없이 갱신되는지 확인.
 6. 일시 인식 오류와 세션 종료를 구분하는지 확인.
 7. 실제 화면 캡처를 `visual-qa`로 검토.
 
@@ -587,7 +586,7 @@ assertion은 각각 명시적 PASS line을 출력하고, 누락·실패·excepti
 
 **Commit: REQUIRED**
 
-`초보 안전 추천과 컴팩트 모드 통합 검증`
+`초보 안전 추천과 Stats 단독 모드 통합 검증`
 
 ---
 
@@ -607,7 +606,7 @@ assertion은 각각 명시적 PASS line을 출력하고, 누락·실패·excepti
 4. 버전 commit 후 작업 트리가 clean하고 `HEAD == origin/main`인 상태에서 Release publish를
    다시 실행한다. T9의 이전 binary를 재사용하지 않는다.
 5. 같은 final HEAD에서 전체 xUnit, Release build, 전체 SmokeTests를 다시 실행한다.
-6. final Release binary로 T9의 물딜/마딜 readiness, compact mode, 실제 WPF/visual QA를
+6. final Release binary로 T9의 물딜/마딜 readiness, StatsOnly mode, 실제 WPF/visual QA를
    다시 실행하고 evidence에 tested HEAD를 기록한다.
 7. publish 직후 HEAD를 기록하고 그 binary로만 새 GitHub Release를 생성한다.
 8. 원격 자산을 새 디렉터리에 재다운로드한다.
@@ -636,14 +635,14 @@ git status --short
 
 **Commit: REQUIRED**
 
-`vX.Y.Z 초보 안전 추천과 패수치 컴팩트 모드`
+`vX.Y.Z 초보 안전 추천과 패수치 단독 모드`
 
 ## 최종 완료 정의
 
 - carry 분류가 표본 수 우세와 분리됨.
 - 생존 수치 미달에서 secondary top이 앞서지 않음.
 - readiness와 UI 패수치가 같은 계산 결과를 사용함.
-- StatsOnlyCompact가 독립적으로 표시·저장·복원됨.
+- StatsOnly가 기존 Stats 내용·크기 그대로 독립 표시·저장·복원됨.
 - 전체 xUnit, Release build, 전체 SmokeTests와 새 smoke assertions가 모두 green.
 - 실제 게임/시각 QA 증거가 남음.
 - 신규 Release 원격 SHA256까지 일치함.

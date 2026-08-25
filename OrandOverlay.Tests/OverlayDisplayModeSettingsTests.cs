@@ -7,7 +7,7 @@ public sealed class OverlayDisplayModeSettingsTests
 {
     [Theory]
     [InlineData(OverlayDisplayMode.Full)]
-    [InlineData(OverlayDisplayMode.StatsOnlyCompact)]
+    [InlineData(OverlayDisplayMode.StatsOnly)]
     [InlineData(OverlayDisplayMode.Hidden)]
     public void DisplayModeRoundTrips(OverlayDisplayMode mode)
     {
@@ -19,7 +19,7 @@ public sealed class OverlayDisplayModeSettingsTests
                 OverlayDisplayMode = mode,
                 LastVisibleOverlayDisplayMode =
                     mode == OverlayDisplayMode.Hidden
-                        ? OverlayDisplayMode.StatsOnlyCompact
+                        ? OverlayDisplayMode.StatsOnly
                         : mode
             };
 

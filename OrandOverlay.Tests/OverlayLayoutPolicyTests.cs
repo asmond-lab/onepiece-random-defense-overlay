@@ -6,16 +6,16 @@ namespace OrandOverlay.Tests;
 public sealed class OverlayLayoutPolicyTests
 {
     [Fact]
-    public void CompactStatsLayoutKeepsCoreAndCollapsesNonCore()
+    public void StatsOnlyKeepsExistingFullStatsLayout()
     {
         var compact = OverlayLayoutPolicy.StatsLayout(
-            OverlayDisplayMode.StatsOnlyCompact);
+            OverlayDisplayMode.StatsOnly);
         var full = OverlayLayoutPolicy.StatsLayout(
             OverlayDisplayMode.Full);
 
         Assert.Equal(228, compact.Width);
-        Assert.Equal(360, compact.Height);
-        Assert.False(compact.NonCoreVisible);
+        Assert.Equal(700, compact.Height);
+        Assert.True(compact.NonCoreVisible);
         Assert.Equal(700, full.Height);
         Assert.True(full.NonCoreVisible);
     }
