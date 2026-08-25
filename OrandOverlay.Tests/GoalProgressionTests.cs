@@ -6,6 +6,28 @@ namespace OrandOverlay.Tests;
 public sealed class GoalProgressionTests
 {
     [Fact]
+    public void UnknownRoundInventoryGrowthKeepsUnseenFirstRare()
+    {
+        var gate = new FirstRareRecommendationGate();
+        var targetRares = new[] { "rawcode:L20h" };
+
+        Assert.True(gate.ShouldPrioritize(
+            "rawcode:A90H", InventoryCount(20), targetRares, currentRound: 0));
+        Assert.True(gate.ShouldPrioritize(
+            "rawcode:A90H", InventoryCount(21), targetRares, currentRound: 0));
+    }
+
+    [Fact]
+    public void ActiveMatchStartingAboveFallbackThresholdPrioritizesFirstRare()
+    {
+        var gate = new FirstRareRecommendationGate();
+
+        Assert.True(gate.ShouldPrioritize(
+            "rawcode:A90H", InventoryCount(21), ["rawcode:L20h"],
+            currentRound: 0, matchActive: true));
+    }
+
+    [Fact]
     public void JinbeKeepsFirstRareRecommendationUntilTargetRareIsObserved()
     {
         var catalog = new DataCatalog();
@@ -72,10 +94,10 @@ public sealed class GoalProgressionTests
         Assert.Equal(goalId, first.ProgressionGoalUnitId);
         Assert.Equal("거프 불멸", first.ProgressionGoalName);
         Assert.Contains(first.RemainingCraftSteps, step => step.UnitId == firstUnit.UnitId);
-        Assert.Contains(first.RemainingCraftSteps, step => step.UnitId == goalId);
-        Assert.True(
-            first.RemainingCraftSteps.FindIndex(step => step.UnitId == firstUnit.UnitId) <
-            first.RemainingCraftSteps.FindIndex(step => step.UnitId == goalId));
+        Assert.DoesNotContain(first.RemainingCraftSteps, step => step.UnitId == goalId);
+        var focusedRareTree = RecipeTreeIds(catalog, firstUnit.UnitId);
+        Assert.All(first.RemainingCraftSteps,
+            step => Assert.Contains(step.UnitId, focusedRareTree));
 
         var recascaded = engine.Recascade(recommendations,
             [new InventoryEntry { UnitId = targetRares[0], Count = 1 }],
@@ -87,7 +109,41 @@ public sealed class GoalProgressionTests
             "재계산 후에도 희귀함 카드는 한 장이어야 함: " +
             string.Join(", ", recascadedRareCards.Select(item => item.Route.GoalUnitId)));
         Assert.Equal(goalId, recascaded[0].ProgressionGoalUnitId);
-        Assert.Contains(recascaded[0].RemainingCraftSteps, step => step.UnitId == goalId);
+        Assert.DoesNotContain(recascaded[0].RemainingCraftSteps,
+            step => step.UnitId == goalId);
+    }
+
+    [Fact]
+    public void ReadyBrookRareKeepsOnlyBrookCraftFlowForJinbeGoal()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var calculator = new RecipeCompletionCalculator(catalog.Unit);
+        const string brookRareId = "rawcode:N10h";
+        var missing = calculator.Calculate([brookRareId],
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+        var inventory = missing.Leaves
+            .Select(leaf => new InventoryEntry
+            {
+                UnitId = leaf.UnitId,
+                Count = checked((int)leaf.RequiredCount)
+            })
+            .ToList();
+        var engine = new RecommendationEngine(catalog);
+
+        var first = engine.RecommendNearestCrafts("rawcode:A90H", inventory,
+            navigationMode: "PathOfKings.BountyHunter",
+            prioritizeTargetRare: true)[0];
+
+        Assert.Equal(brookRareId, first.Route.GoalUnitId);
+        Assert.Equal(1, first.RecipeProgress.CompletionRatio);
+        Assert.Contains(first.RemainingCraftSteps,
+            step => step.UnitId == brookRareId);
+        var brookTree = RecipeTreeIds(catalog, brookRareId);
+        Assert.All(first.RemainingCraftSteps,
+            step => Assert.Contains(step.UnitId, brookTree));
+        Assert.DoesNotContain(first.RemainingCraftSteps,
+            step => step.UnitId == "rawcode:A90H");
     }
 
     private static HashSet<string> RecipeTreeIds(DataCatalog catalog, string rootId)
@@ -105,4 +161,7 @@ public sealed class GoalProgressionTests
     }
 
     private static string BaseTier(string tier) => tier.Split('[', 2)[0].Trim();
+
+    private static IReadOnlyList<InventoryEntry> InventoryCount(int count) =>
+        [new InventoryEntry { UnitId = "rawcode:100h", Count = count }];
 }

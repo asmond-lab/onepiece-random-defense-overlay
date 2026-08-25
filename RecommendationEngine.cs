@@ -416,8 +416,6 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             results.FirstOrDefault(item => item.Route.GoalUnitId.Equals(
                 rarePick.Route.GoalUnitId, StringComparison.OrdinalIgnoreCase)) is { } progression)
         {
-            progression.RemainingCraftSteps.Clear();
-            progression.RemainingCraftSteps.AddRange(goalSuggestion.RemainingCraftSteps);
             progression.ProgressionGoalUnitId = goal.Id;
             var goalTier = BaseTier(goal.Tier);
             progression.ProgressionGoalName = goal.Name.Contains(
@@ -497,9 +495,6 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             crafted.ClearEvidence = rec.ClearEvidence;
             if (rec.ProgressionGoalUnitId is { Length: > 0 } progressionGoalId)
             {
-                var progression = EvaluateCraft(catalog.Unit(progressionGoalId), counts, calculator);
-                crafted.RemainingCraftSteps.Clear();
-                crafted.RemainingCraftSteps.AddRange(progression.RemainingCraftSteps);
                 crafted.ProgressionGoalUnitId = progressionGoalId;
                 crafted.ProgressionGoalName = rec.ProgressionGoalName ??
                                               catalog.Unit(progressionGoalId).Name;

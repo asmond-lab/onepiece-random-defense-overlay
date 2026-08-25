@@ -689,7 +689,8 @@ public partial class MainWindow : Window
         var firstRareQuestWindow = FirstRareRecommendationGate.IsQuestWindow(
             recommendationInventory, _lastRound);
         var prioritizeTargetRare = _firstRareRecommendationGate.ShouldPrioritize(
-            goal.Id, recommendationInventory, _engine.RecipeRareUnitIds(goal.Id), _lastRound);
+            goal.Id, recommendationInventory, _engine.RecipeRareUnitIds(goal.Id), _lastRound,
+            _liveSessionActive);
         var suppressSeraphim = _greenBloodUsage.Used ||
                                !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty);
         var nextEngine = new RecommendationEngine(
