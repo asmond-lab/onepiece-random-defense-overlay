@@ -35,9 +35,10 @@ public sealed class DataCatalog
         _appUnitIds = Data.Units.Select(unit => unit.Id)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var nativeCatalog = ApplyBundledImages(
-            ApplyTmoRecipeOverrides(
-                ApplyTmoUnitAdditions(
-                    ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog())))));
+            ApplyMapCombineCommands(
+                ApplyTmoRecipeOverrides(
+                    ApplyTmoUnitAdditions(
+                        ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))))));
         _nativeRawcodes = nativeCatalog.Keys.ToHashSet(StringComparer.Ordinal);
         RawcodeCatalog = WithAliasKeys(nativeCatalog);
         _unitIdsByRawcode = Data.Units
@@ -369,6 +370,46 @@ public sealed class DataCatalog
         }
         if (applied != 14)
             throw new InvalidDataException($"TMO 42479 조합식 오버라이드 수가 잘못되었습니다: {applied}");
+        return merged;
+    }
+
+    private static IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyMapCombineCommands(
+        IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Data",
+            "map-combine-commands-2314.txt");
+        if (!File.Exists(path))
+            throw new InvalidDataException("2.314 맵 조합 명령 데이터가 없습니다.");
+
+        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value,
+            StringComparer.Ordinal);
+        var applied = 0;
+        foreach (var line in File.ReadLines(path))
+        {
+            var text = line.Trim();
+            if (text.Length == 0 || text.StartsWith('#')) continue;
+            var parts = text.Split('=', 2);
+            if (parts.Length != 2 || !merged.TryGetValue(parts[0], out var original))
+                throw new InvalidDataException($"맵 조합 명령 항목이 잘못되었습니다: {text}");
+            var commands = parts[1].Split('|', StringSplitOptions.RemoveEmptyEntries |
+                                              StringSplitOptions.TrimEntries);
+            if (commands.Length != 2)
+                throw new InvalidDataException($"맵 조합 명령 별칭 수가 잘못되었습니다: {text}");
+            merged[parts[0]] = new RawcodeCatalogEntry
+            {
+                Rawcode = original.Rawcode,
+                Name = original.Name,
+                Tier = original.Tier,
+                Image = original.Image,
+                Recipe = original.Recipe,
+                Abilities = original.Abilities,
+                Description = original.Description,
+                Commands = commands.ToList()
+            };
+            applied++;
+        }
+        if (applied != 81)
+            throw new InvalidDataException($"맵 조합 명령 유닛 수가 잘못되었습니다: {applied}");
         return merged;
     }
 
