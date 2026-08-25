@@ -86,6 +86,27 @@ public partial class OverlayWindow : OverlayWindowBase
         _storyChildren = storyChildren;
         _recascade = recascade;
         GoalText.Text = goalName;
+        var lead = recommendations.FirstOrDefault();
+        if (lead?.CombatReadiness is { } readiness)
+        {
+            CarryModeText.Text =
+                RecommendationPresentation.CarryModeLabel(lead.CarryMode);
+            CarryModeText.Visibility = Visibility.Visible;
+            ReadinessText.Text =
+                RecommendationPresentation.ReadinessLine(readiness) +
+                (lead.DeferredSecondaryTopReason is { Length: > 0 } reason
+                    ? $"\n{reason}"
+                    : "");
+            ReadinessText.Foreground = readiness.IsReady
+                ? OverlayTheme.OkBrush
+                : OverlayTheme.WarnBrush;
+            ReadinessText.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            CarryModeText.Visibility = Visibility.Collapsed;
+            ReadinessText.Visibility = Visibility.Collapsed;
+        }
         PhaseHintText.Text = phaseHint ?? "";
         PhaseHintText.Visibility = phaseHint is { Length: > 0 }
             ? Visibility.Visible

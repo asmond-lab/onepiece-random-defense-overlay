@@ -2,6 +2,29 @@ namespace OrandOverlay;
 
 public static class RecommendationPresentation
 {
+    public static string CarryModeLabel(GoalCarryMode mode) => mode switch
+    {
+        GoalCarryMode.SoloPreferred => "1상위 권장",
+        GoalCarryMode.MultiAllowed => "다상위 가능",
+        GoalCarryMode.MultiRequired => "다상위 필요",
+        _ => "판단 보류 · 1상위 우선"
+    };
+
+    public static string ReadinessLine(CombatReadiness readiness)
+    {
+        var prefix = readiness.IsReady ? "55라 준비 완료" : "55라 준비 미달";
+        var damage = readiness.DamageType == ReadinessDamageType.Physical
+            ? $"방깎 {Format(readiness.CurrentArmorReduction)}/{Format(readiness.RequiredArmorReduction)}"
+            : $"마방깎 공급원 {readiness.CurrentMagicArmorSources}/{readiness.RequiredMagicArmorSources}";
+        return $"{prefix} · 스턴 {Format(readiness.CurrentStun)}/{Format(readiness.RequiredStun)}" +
+               $" · 이감 {Format(readiness.CurrentSlow)}/{Format(readiness.RequiredSlow)}" +
+               $" · {damage}";
+
+        static string Format(double value) =>
+            Math.Round(value, 1).ToString("0.#",
+                System.Globalization.CultureInfo.InvariantCulture);
+    }
+
     public static string CompletionPercent(RecipeProgress progress) =>
         $"{Math.Round(progress.CompletionRatio * 100, MidpointRounding.AwayFromZero):0}%";
 
