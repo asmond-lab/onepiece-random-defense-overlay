@@ -135,7 +135,9 @@ public sealed class GoalCarryPolicy
             .OrderBy(name => name, StringComparer.Ordinal)
             .Select(name =>
             {
-                var bytes = File.ReadAllBytes(Path.Combine(data, name));
+                var canonicalText = File.ReadAllText(Path.Combine(data, name))
+                    .ReplaceLineEndings("\n");
+                var bytes = Encoding.UTF8.GetBytes(canonicalText);
                 return new GoalCarrySourceFile(name,
                     Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant());
             })
