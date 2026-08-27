@@ -2598,6 +2598,85 @@ Assert(compactLayout is { Width: 228, Height: 700, NonCoreVisible: true },
     "패수치만 모드는 기존 Stats 전체 레이아웃을 유지");
 Console.WriteLine("PASS: T8 기존 패수치 단독 표시");
 
+{
+    var dataDirectory = Path.Combine(AppContext.BaseDirectory, "Data");
+    var replay = new AdaptivePlanningReplayHost(dataDirectory);
+    var goal = catalog.AllUnits.First(unit =>
+        unit.Tier.Split('[', 2)[0].Trim() is "신비함" or "초월" or "불멸" or "영원" or "제한됨" &&
+        AdaptiveRouteEvaluator.ClassifyDamage(unit) != DamageLane.Unknown);
+    var legend = catalog.AllUnits.First(unit =>
+        unit.Tier.Split('[', 2)[0].Trim() == "전설");
+    var rare = catalog.AllUnits.First(unit =>
+        unit.Tier.Split('[', 2)[0].Trim() == "희귀함");
+    var units = catalog.AllUnits.ToDictionary(unit => unit.Id,
+        StringComparer.OrdinalIgnoreCase);
+    AdaptivePlanningInputSource Source(int round) => new()
+    {
+        MatchGeneration = 0,
+        RecognitionRevision = round,
+        Round = round,
+        Phase = replay.State.Phase,
+        ActiveStoryStage = 9,
+        CompletedStoryMilestones = ["stage-1", "stage-9"],
+        Inventory =
+        [
+            new InventoryEntry { UnitId = legend.Id, Count = 1 },
+            new InventoryEntry { UnitId = rare.Id, Count = 1 }
+        ],
+        Units = units,
+        GoalUnitId = goal.Id,
+        RouteGoalUnitIds = [goal.Id],
+        NavigationOptionId = "AlliedForces.DoubleBenefit",
+        GoroseiMode = GoroseiMode.None,
+        RewardWisps = System.Collections.Immutable.ImmutableDictionary<string, int>.Empty
+            .Add("e016", 0).Add("e019", 0),
+        ManualLatches = replay.ManualLatches
+    };
+    var reads = new AdaptivePlanningReadCounters(
+        new AdaptivePlanningReadMetric(640, 10, TimeSpan.FromMilliseconds(4)),
+        new AdaptivePlanningReadMetric(1_048_576, 16, TimeSpan.FromMilliseconds(18)),
+        new AdaptivePlanningReadMetric(20, 5, TimeSpan.FromMilliseconds(2)));
+    var round20 = replay.Apply(Source(20), reads, TimeSpan.FromMilliseconds(24));
+    var round21 = replay.Apply(Source(21), reads, TimeSpan.FromMilliseconds(24));
+    var round24 = replay.Apply(Source(24), reads, TimeSpan.FromMilliseconds(24));
+
+    Assert(round20 is not null && round21 is not null && round24 is not null &&
+           round20.Presentation.IsRecommendationOnly &&
+           round21.Applied.Navigation.State == NavigationRecommendationState.Actionable &&
+           round24.Applied.Navigation.State == NavigationRecommendationState.SourceExpectedForced,
+        "production composition adaptive planning replay");
+    Console.WriteLine("PASS: adaptive planning replay");
+
+    var scoringFrame = round21 ?? throw new InvalidOperationException(
+        "adaptive planning replay did not produce round 21");
+    Assert(scoringFrame.OptionIds.SequenceEqual(NavigationProfiles.Options.Select(option => option.Id)) &&
+           scoringFrame.OptionIds.Length == 15 &&
+           scoringFrame.ProfileHash.Length == 64 && scoringFrame.DataHash.Length == 64 &&
+           scoringFrame.Performance.Reads.UnitTraversal.Calls == 10 &&
+           scoringFrame.Performance.Reads.MapState.Calls == 16 &&
+           scoringFrame.Performance.Reads.SideChannel.Calls == 5 &&
+           scoringFrame.Performance.IsWithinBudget,
+        "source-pinned interval navigation data and timing");
+    Console.WriteLine($"REPLAY_PINS profile={scoringFrame.ProfileHash} data={scoringFrame.DataHash}");
+    Console.WriteLine($"REPLAY_OPTIONS count={scoringFrame.OptionIds.Length} ids={string.Join(',', scoringFrame.OptionIds)}");
+    Console.WriteLine("PERF_COUNTERS " +
+        $"unitBytes={scoringFrame.Performance.Reads.UnitTraversal.Bytes} " +
+        $"unitCalls={scoringFrame.Performance.Reads.UnitTraversal.Calls} " +
+        $"unitMs={scoringFrame.Performance.Reads.UnitTraversal.Elapsed.TotalMilliseconds:0.###} " +
+        $"mapBytes={scoringFrame.Performance.Reads.MapState.Bytes} " +
+        $"mapCalls={scoringFrame.Performance.Reads.MapState.Calls} " +
+        $"mapMs={scoringFrame.Performance.Reads.MapState.Elapsed.TotalMilliseconds:0.###} " +
+        $"sideBytes={scoringFrame.Performance.Reads.SideChannel.Bytes} " +
+        $"sideCalls={scoringFrame.Performance.Reads.SideChannel.Calls} " +
+        $"sideMs={scoringFrame.Performance.Reads.SideChannel.Elapsed.TotalMilliseconds:0.###} " +
+        $"recognitionMs={scoringFrame.Performance.RecognitionElapsed.TotalMilliseconds:0.###} " +
+        $"settleMs={scoringFrame.Performance.SettleElapsed.TotalMilliseconds:0.###} " +
+        $"scoringMs={scoringFrame.Performance.ScoringElapsed.TotalMilliseconds:0.###} " +
+        $"totalMs={scoringFrame.Performance.TotalElapsed.TotalMilliseconds:0.###} " +
+        $"budgetMs={AdaptivePlanningPerformanceSample.TotalBudget.TotalMilliseconds:0}");
+    Console.WriteLine("PASS: navigation scoring/data/timing");
+}
+
 Console.WriteLine("PASS: 추천/메모리 연동 스모크 테스트 통과");
 return;
 

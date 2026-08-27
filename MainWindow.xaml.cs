@@ -20,8 +20,7 @@ public partial class MainWindow : Window
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _growthUnitIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
-    private readonly AdaptivePlanningCoordinator _adaptivePlanning = new();
-    private AdaptivePlanningCoordinatorInputFactory _adaptivePlanningInputFactory = null!;
+    private AdaptivePlanningCompositionRoot _adaptivePlanning = null!;
     private readonly AdaptiveDecisionTraceBuffer _adaptiveDecisionTrace = new();
     private readonly LatestBackgroundWorkCoordinator _recommendationWork = new();
     private readonly DispatcherTimer _timer = new();
@@ -96,7 +95,7 @@ public partial class MainWindow : Window
         try
         {
             _catalog.Load();
-            _adaptivePlanningInputFactory = new AdaptivePlanningCoordinatorInputFactory(
+            _adaptivePlanning = new AdaptivePlanningCompositionRoot(
                 Path.Combine(AppContext.BaseDirectory, "Data"));
             _clearStats = ClearBuildStats.Load(ClearSamplePaths());
             _liveStats = LiveStats.Load(Path.Combine(AppContext.BaseDirectory, "Data", "orand-live-stats.json"));
@@ -662,7 +661,7 @@ public partial class MainWindow : Window
                 StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.First(),
                 StringComparer.OrdinalIgnoreCase);
-        var input = _adaptivePlanningInputFactory.Create(new AdaptivePlanningInputSource
+        var input = _adaptivePlanning.CreateInput(new AdaptivePlanningInputSource
         {
             MatchGeneration = _adaptivePlanning.MatchGeneration,
             RecognitionRevision = _scanGeneration,
@@ -756,7 +755,7 @@ public partial class MainWindow : Window
                 suppressSeraphim: suppressSeraphim,
                 prioritizeTargetRare: prioritizeTargetRare,
                 suppressFirstRareShip: !firstRareQuestWindow),
-                adaptiveWork is null ? null : AdaptivePlanningCoordinator.Evaluate(adaptiveWork)));
+                adaptiveWork is null ? null : AdaptivePlanningCompositionRoot.Evaluate(adaptiveWork)));
         if (computation is null) return;
         if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
         _engine = computation.Engine;
