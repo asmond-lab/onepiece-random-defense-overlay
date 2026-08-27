@@ -1,0 +1,153 @@
+{
+  "MapVersion": "2.314",
+  "Archive": {
+    "FileName": "ORDR_S2_2.314[R].w3x",
+    "LengthBytes": 134758580,
+    "Sha256": "f9ddd3af7c0fbfd39b7a6df2ca0f5f295675bba5e8b91a5322dcec93d7ca8a83"
+  },
+  "Members": [
+    { "Name": "war3map.j", "LengthBytes": 3069240, "Sha256": "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028" },
+    { "Name": "war3map.w3u", "LengthBytes": 857425, "Sha256": "a9aa2cb9c08130c3bee970aecb05b62fdc3db867685f4997dd2533735d2ea278" },
+    { "Name": "war3map.wts", "LengthBytes": 1756386, "Sha256": "bef1477f56bfffef3ef6b030f324b7fc75a69564760e185c8aa4da8a618a275c" }
+  ],
+  "JassPins": [
+    { "Artifact": "war3map.j", "StartLine": 53220, "EndLine": 53220, "Purpose": "owner-5 objective n000 creation" },
+    { "Artifact": "war3map.j", "StartLine": 69202, "EndLine": 69202, "Purpose": "owner-5 objective n002 creation" },
+    { "Artifact": "war3map.j", "StartLine": 75426, "EndLine": 75426, "Purpose": "owner-5 objective n003 creation" },
+    { "Artifact": "war3map.j", "StartLine": 55264, "EndLine": 55264, "Purpose": "owner-5 objective n004 creation" },
+    { "Artifact": "war3map.j", "StartLine": 22629, "EndLine": 22629, "Purpose": "owner-5 objective n005 creation" },
+    { "Artifact": "war3map.j", "StartLine": 25935, "EndLine": 25935, "Purpose": "owner-5 objective n006 creation" },
+    { "Artifact": "war3map.j", "StartLine": 66422, "EndLine": 66422, "Purpose": "owner-5 objective n007 creation" },
+    { "Artifact": "war3map.j", "StartLine": 39665, "EndLine": 39665, "Purpose": "owner-5 objective n008 creation" },
+    { "Artifact": "war3map.j", "StartLine": 39633, "EndLine": 39633, "Purpose": "owner-5 objective n00A creation" },
+    { "Artifact": "war3map.j", "StartLine": 80315, "EndLine": 80315, "Purpose": "owner-5 objective n001 creation" },
+    { "Artifact": "war3map.j", "StartLine": 24849, "EndLine": 24849, "Purpose": "owner-5 objective n00C creation" },
+    { "Artifact": "war3map.j", "StartLine": 54975, "EndLine": 54975, "Purpose": "owner-5 objective n00D creation" },
+    { "Artifact": "war3map.j", "StartLine": 5327, "EndLine": 5327, "Purpose": "owner-5 objective n00B creation" },
+    { "Artifact": "war3map.j", "StartLine": 62877, "EndLine": 62877, "Purpose": "owner-5 objective n009 creation" },
+    { "Artifact": "war3map.j", "StartLine": 87363, "EndLine": 87376, "Purpose": "ordered story objective table" },
+    { "Artifact": "war3map.j", "StartLine": 6423, "EndLine": 6443, "Purpose": "bounded reward unit factories for e0IX and e018" },
+    { "Artifact": "war3map.j", "StartLine": 16167, "EndLine": 16171, "Purpose": "bounded reward unit factory for e017" }
+  ],
+  "W3uEvidence": {
+    "MemberName": "war3map.w3u",
+    "ParserLimits": {
+      "MaxMemberBytes": 536870912,
+      "MaxTables": 2,
+      "MaxRecordsPerTable": 100000,
+      "MaxModificationsPerRecord": 100000,
+      "MaxStringBytes": 1048576
+    },
+    "Layout": {
+      "Version": 3,
+      "HeaderEndOffset": 4,
+      "Tables": [
+        { "Name": "Original", "CountOffset": 4, "RecordCount": 1, "RecordsStartOffset": 8, "EndOffset": 93 },
+        { "Name": "Custom", "CountOffset": 93, "RecordCount": 1410, "RecordsStartOffset": 97, "EndOffset": 857425 }
+      ],
+      "TotalRecordCount": 1411,
+      "TotalModificationCount": 45163,
+      "ZeroSanityMarkerCount": 45163,
+      "ConsumedBytes": 857425,
+      "TrailingBytes": 0
+    },
+    "Records": [
+      {
+        "ObjectId": "e0IX", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 653,
+        "StartOffset": 444221, "EndOffset": 444488, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 444237, "ModificationCount": 15, "SemanticKind": "RandomReward",
+        "Fields": [
+          { "ModificationIndex": 7, "StartOffset": 444353, "FieldId": "unam", "ValueType": 3, "ValueOffset": 444361, "Value": "TRIGSTR_848", "SanityOffset": 444373, "SanityValue": "00000000", "EndOffset": 444377 },
+          { "ModificationIndex": 10, "StartOffset": 444409, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 444417, "Value": "1", "SanityOffset": 444421, "SanityValue": "00000000", "EndOffset": 444425 },
+          { "ModificationIndex": 11, "StartOffset": 444425, "FieldId": "utip", "ValueType": 3, "ValueOffset": 444433, "Value": "TRIGSTR_849", "SanityOffset": 444445, "SanityValue": "00000000", "EndOffset": 444449 }
+        ]
+      },
+      {
+        "ObjectId": "e0IA", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 676,
+        "StartOffset": 455895, "EndOffset": 456397, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 455911, "ModificationCount": 28, "SemanticKind": "MechanicalDummy",
+        "Fields": [
+          { "ModificationIndex": 0, "StartOffset": 455915, "FieldId": "uabi", "ValueType": 3, "ValueOffset": 455923, "Value": "A17J,Aloc,Avul", "SanityOffset": 455938, "SanityValue": "00000000", "EndOffset": 455942 },
+          { "ModificationIndex": 10, "StartOffset": 456083, "FieldId": "umdl", "ValueType": 3, "ValueOffset": 456091, "Value": "bijuuexplosion.mdl", "SanityOffset": 456110, "SanityValue": "00000000", "EndOffset": 456114 },
+          { "ModificationIndex": 13, "StartOffset": 456143, "FieldId": "uhpm", "ValueType": 0, "ValueOffset": 456151, "Value": "3", "SanityOffset": 456155, "SanityValue": "00000000", "EndOffset": 456159 },
+          { "ModificationIndex": 17, "StartOffset": 456207, "FieldId": "unam", "ValueType": 3, "ValueOffset": 456215, "Value": "TRIGSTR_894", "SanityOffset": 456227, "SanityValue": "00000000", "EndOffset": 456231 },
+          { "ModificationIndex": 22, "StartOffset": 456298, "FieldId": "utip", "ValueType": 3, "ValueOffset": 456306, "Value": "TRIGSTR_895", "SanityOffset": 456318, "SanityValue": "00000000", "EndOffset": 456322 },
+          { "ModificationIndex": 23, "StartOffset": 456322, "FieldId": "utyp", "ValueType": 3, "ValueOffset": 456330, "Value": "mechanical", "SanityOffset": 456341, "SanityValue": "00000000", "EndOffset": 456345 }
+        ]
+      },
+      {
+        "ObjectId": "e01A", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 1288,
+        "StartOffset": 768517, "EndOffset": 768786, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 768533, "ModificationCount": 15, "SemanticKind": "TranscendenceReward",
+        "Fields": [
+          { "ModificationIndex": 0, "StartOffset": 768537, "FieldId": "uabi", "ValueType": 3, "ValueOffset": 768545, "Value": "Aeth,Avul", "SanityOffset": 768555, "SanityValue": "00000000", "EndOffset": 768559 },
+          { "ModificationIndex": 6, "StartOffset": 768633, "FieldId": "uhpm", "ValueType": 0, "ValueOffset": 768641, "Value": "10", "SanityOffset": 768645, "SanityValue": "00000000", "EndOffset": 768649 },
+          { "ModificationIndex": 7, "StartOffset": 768649, "FieldId": "unam", "ValueType": 3, "ValueOffset": 768657, "Value": "TRIGSTR_2118", "SanityOffset": 768670, "SanityValue": "00000000", "EndOffset": 768674 },
+          { "ModificationIndex": 10, "StartOffset": 768706, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 768714, "Value": "1", "SanityOffset": 768718, "SanityValue": "00000000", "EndOffset": 768722 },
+          { "ModificationIndex": 11, "StartOffset": 768722, "FieldId": "utip", "ValueType": 3, "ValueOffset": 768730, "Value": "TRIGSTR_2119", "SanityOffset": 768743, "SanityValue": "00000000", "EndOffset": 768747 }
+        ]
+      },
+      {
+        "ObjectId": "e019", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 1289,
+        "StartOffset": 768786, "EndOffset": 769055, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 768802, "ModificationCount": 15, "SemanticKind": "RareReward",
+        "Fields": [
+          { "ModificationIndex": 7, "StartOffset": 768918, "FieldId": "unam", "ValueType": 3, "ValueOffset": 768926, "Value": "TRIGSTR_2120", "SanityOffset": 768939, "SanityValue": "00000000", "EndOffset": 768943 },
+          { "ModificationIndex": 10, "StartOffset": 768975, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 768983, "Value": "1", "SanityOffset": 768987, "SanityValue": "00000000", "EndOffset": 768991 },
+          { "ModificationIndex": 11, "StartOffset": 768991, "FieldId": "utip", "ValueType": 3, "ValueOffset": 768999, "Value": "TRIGSTR_2121", "SanityOffset": 769012, "SanityValue": "00000000", "EndOffset": 769016 }
+        ]
+      },
+      {
+        "ObjectId": "e018", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 1290,
+        "StartOffset": 769055, "EndOffset": 769337, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 769071, "ModificationCount": 16, "SemanticKind": "CommonSelectableReward",
+        "Fields": [
+          { "ModificationIndex": 7, "StartOffset": 769187, "FieldId": "unam", "ValueType": 3, "ValueOffset": 769195, "Value": "TRIGSTR_2122", "SanityOffset": 769208, "SanityValue": "00000000", "EndOffset": 769212 },
+          { "ModificationIndex": 10, "StartOffset": 769244, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 769252, "Value": "1", "SanityOffset": 769256, "SanityValue": "00000000", "EndOffset": 769260 },
+          { "ModificationIndex": 11, "StartOffset": 769260, "FieldId": "utip", "ValueType": 3, "ValueOffset": 769268, "Value": "TRIGSTR_2123", "SanityOffset": 769281, "SanityValue": "00000000", "EndOffset": 769285 }
+        ]
+      },
+      {
+        "ObjectId": "e017", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 1291,
+        "StartOffset": 769337, "EndOffset": 769606, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 769353, "ModificationCount": 15, "SemanticKind": "UncommonReward",
+        "Fields": [
+          { "ModificationIndex": 7, "StartOffset": 769469, "FieldId": "unam", "ValueType": 3, "ValueOffset": 769477, "Value": "TRIGSTR_2124", "SanityOffset": 769490, "SanityValue": "00000000", "EndOffset": 769494 },
+          { "ModificationIndex": 10, "StartOffset": 769526, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 769534, "Value": "1", "SanityOffset": 769538, "SanityValue": "00000000", "EndOffset": 769542 },
+          { "ModificationIndex": 11, "StartOffset": 769542, "FieldId": "utip", "ValueType": 3, "ValueOffset": 769550, "Value": "TRIGSTR_2125", "SanityOffset": 769563, "SanityValue": "00000000", "EndOffset": 769567 }
+        ]
+      },
+      {
+        "ObjectId": "e016", "BaseId": "ewsp", "Table": "Custom", "RecordIndex": 1292,
+        "StartOffset": 769606, "EndOffset": 769875, "Reserved0": 1, "Reserved1": 0,
+        "ModificationCountOffset": 769622, "ModificationCount": 15, "SemanticKind": "SpecialReward",
+        "Fields": [
+          { "ModificationIndex": 7, "StartOffset": 769738, "FieldId": "unam", "ValueType": 3, "ValueOffset": 769746, "Value": "TRIGSTR_2126", "SanityOffset": 769759, "SanityValue": "00000000", "EndOffset": 769763 },
+          { "ModificationIndex": 10, "StartOffset": 769795, "FieldId": "uspe", "ValueType": 0, "ValueOffset": 769803, "Value": "1", "SanityOffset": 769807, "SanityValue": "00000000", "EndOffset": 769811 },
+          { "ModificationIndex": 11, "StartOffset": 769811, "FieldId": "utip", "ValueType": 3, "ValueOffset": 769819, "Value": "TRIGSTR_2127", "SanityOffset": 769832, "SanityValue": "00000000", "EndOffset": 769836 }
+        ]
+      }
+    ]
+  },
+  "WtsEvidence": {
+    "MemberName": "war3map.wts",
+    "TargetTextEncoding": "UTF-8",
+    "ParsedRecordCount": 10646,
+    "Records": [
+      { "ObjectId": "e0IX", "FieldId": "unam", "RecordId": 848, "RecordStartOffset": 115009, "RecordEndOffset": 115093, "TextStartOffset": 115078, "TextEndOffset": 115090, "ResolvedText": "랜덤위습", "RecordSha256": "44bd7d0169ac998719ba6e01d4a192794b90761c584cc29783ee6e550ad4686e" },
+      { "ObjectId": "e0IX", "FieldId": "utip", "RecordId": 849, "RecordStartOffset": 115097, "RecordEndOffset": 115199, "TextStartOffset": 115184, "TextEndOffset": 115196, "ResolvedText": "랜덤위습", "RecordSha256": "97acb4329be2923cbd305bf8c567c913b58deaf2550d6698a5c74611a7ea8eb6" },
+      { "ObjectId": "e0IA", "FieldId": "unam", "RecordId": 894, "RecordStartOffset": 119993, "RecordEndOffset": 120093, "TextStartOffset": 120070, "TextEndOffset": 120090, "ResolvedText": "!0909_bijuuexplosion", "RecordSha256": "ea0ecf4dd0baa4a4fedba75c7e97fa75d865a54846db6ec8e0bf909949122c8f" },
+      { "ObjectId": "e0IA", "FieldId": "utip", "RecordId": 895, "RecordStartOffset": 120097, "RecordEndOffset": 120207, "TextStartOffset": 120192, "TextEndOffset": 120204, "ResolvedText": "더미유닛", "RecordSha256": "25b134d6fc2ae240de73f47756e7e106cb2a3e4f8e136690e3310c9561ab5bd6" },
+      { "ObjectId": "e01A", "FieldId": "unam", "RecordId": 2118, "RecordStartOffset": 258602, "RecordEndOffset": 258687, "TextStartOffset": 258672, "TextEndOffset": 258684, "ResolvedText": "초월위습", "RecordSha256": "42edf275e42b94632e5c3f6185b1232dbc6beadbb7b99cf80bfaba0ac1bb8415" },
+      { "ObjectId": "e01A", "FieldId": "utip", "RecordId": 2119, "RecordStartOffset": 258691, "RecordEndOffset": 258794, "TextStartOffset": 258779, "TextEndOffset": 258791, "ResolvedText": "초월위습", "RecordSha256": "dd6949be7e49c377a418c591306fde6ce0266036dcf511663481e6d8d457a1b6" },
+      { "ObjectId": "e019", "FieldId": "unam", "RecordId": 2120, "RecordStartOffset": 258798, "RecordEndOffset": 258883, "TextStartOffset": 258868, "TextEndOffset": 258880, "ResolvedText": "희귀위습", "RecordSha256": "2b8164fa2e253d15d1079c3319c1122d5ba8b1e382a348cf805d3f5b083f2075" },
+      { "ObjectId": "e019", "FieldId": "utip", "RecordId": 2121, "RecordStartOffset": 258887, "RecordEndOffset": 258990, "TextStartOffset": 258975, "TextEndOffset": 258987, "ResolvedText": "희귀위습", "RecordSha256": "083f64170670e48f9bd8707bfa8e81c255195918d93bd9ccf03974adfa7f837c" },
+      { "ObjectId": "e018", "FieldId": "unam", "RecordId": 2122, "RecordStartOffset": 258994, "RecordEndOffset": 259091, "TextStartOffset": 259070, "TextEndOffset": 259088, "ResolvedText": "흔함선택위습", "RecordSha256": "d39e5aa1c6ccea00d840f3cccfe7ab60b52a4716894e3cb9896f07a07c01ff5b" },
+      { "ObjectId": "e018", "FieldId": "utip", "RecordId": 2123, "RecordStartOffset": 259095, "RecordEndOffset": 259210, "TextStartOffset": 259189, "TextEndOffset": 259207, "ResolvedText": "흔함선택위습", "RecordSha256": "1d0a748dd53f60d3e944f30ad914b3b22cf5b46d466e8c3113f54c0c9a9149ea" },
+      { "ObjectId": "e017", "FieldId": "unam", "RecordId": 2124, "RecordStartOffset": 259214, "RecordEndOffset": 259305, "TextStartOffset": 259287, "TextEndOffset": 259302, "ResolvedText": "안흔함위습", "RecordSha256": "dc9e2b9e4ede4e6f8ff15e21a68c7199fe829071a00bdb6e7accbbbe0edafa76" },
+      { "ObjectId": "e017", "FieldId": "utip", "RecordId": 2125, "RecordStartOffset": 259309, "RecordEndOffset": 259418, "TextStartOffset": 259400, "TextEndOffset": 259415, "ResolvedText": "안흔함위습", "RecordSha256": "6dc30533c005a39191f124b85cfc01064645b83339e715f1e6fa4de5fe5868ad" },
+      { "ObjectId": "e016", "FieldId": "unam", "RecordId": 2126, "RecordStartOffset": 259422, "RecordEndOffset": 259507, "TextStartOffset": 259492, "TextEndOffset": 259504, "ResolvedText": "특별위습", "RecordSha256": "371e801e977fb9aa021e482670ad37b51bff43535dfe2781336aee9b1af97dbe" },
+      { "ObjectId": "e016", "FieldId": "utip", "RecordId": 2127, "RecordStartOffset": 259511, "RecordEndOffset": 259614, "TextStartOffset": 259599, "TextEndOffset": 259611, "ResolvedText": "특별위습", "RecordSha256": "bc94327004e519282964730c9deea297965a281a36a2f18878c2ee8991b3402c" }
+    ]
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "task": "Task 1 - source-pinned story progression data pack",
+  "status": "DONE",
+  "date": "2026-08-26",
+  "criterionMap": {
+    "archiveJassW3uWtsBinding": {
+      "status": "PASS",
+      "evidence": [
+        "The loader pins both shipped JSON byte SHA-256 values and separately pins their typed semantic-contract SHA-256 values.",
+        "The source model pins the authoritative archive plus war3map.j, war3map.w3u, and war3map.wts lengths and SHA-256 values.",
+        "The development archive utility independently opened the literal archive and reproduced every member digest."
+      ]
+    },
+    "e01ATranscendenceVersusE0IADummy": {
+      "status": "PASS",
+      "evidence": [
+        "Full W3U version-3 consumption: 857425/857425 bytes, 1411 records, 45163 modifications, 45163 zero sanity markers, zero trailing bytes.",
+        "e01A: custom record 1288 at [768517,768786), uabi type 3 Aeth,Avul, uspe type 0 value 1, unam TRIGSTR_2118.",
+        "e0IA: custom record 676 at [455895,456397), umdl type 3 bijuuexplosion.mdl, uhpm type 0 value 3, utyp type 3 mechanical, unam TRIGSTR_894.",
+        "WTS resolves e01A records 2118/2119 to 초월위습 and e0IA records 894/895 to !0909_bijuuexplosion/더미유닛.",
+        "Stage 10 has exactly one e01A base reward; no component in any stage contains e0IA."
+      ]
+    },
+    "fourExactImmutableGroupsAcrossFourteenStages": {
+      "status": "PASS",
+      "evidence": [
+        "All 14 stages explicitly ship EveryPlayerBase, ContributionAtLeast25Percent, MVP, and HiddenOrSideEffect immutable arrays.",
+        "The pack contains 102 typed components with exact amount, limit, reduced chance, condition, function range, and evidence line.",
+        "Independent test authority reproduces all 102 component signatures rather than deriving expectations from shipped JSON."
+      ]
+    },
+    "failClosedWithoutRuntimeMpqOrJass": {
+      "status": "PASS",
+      "evidence": [
+        "Release loader good surface succeeds with only the two copied Data JSON files and no archive/member files.",
+        "Malformed, missing, extra, reordered, swapped, byte-mutated, semantic source-mutated, W3U field/sanity/layout-swapped, WTS-mutated, reward missing/extra/swapped/e0IA/source-line cases reject.",
+        "The Release loader bad surface rejects appended story bytes with InvalidDataException.",
+        "No product code opens MPQ, war3map.j, war3map.w3u, or war3map.wts at runtime."
+      ]
+    },
+    "redGreenChronology": {
+      "status": "PASS",
+      "evidence": [
+        "The earlier Task-1 RED record for the then-missing RewardSources contract remains historical and was not rewritten.",
+        "The user-authorized closure added four behavioral assertions before the remaining shipped-contract edits.",
+        "The first shared runner attempt was blocked by concurrent Task-2 compile edits and was not counted as a Task-1 behavioral RED.",
+        "An isolated faithful runner then produced the valid RED: 4 failed, 12 passed, 16 total; missing W3U/WTS evidence, explicit groups, and immutable snapshots were the four failures.",
+        "The final real project targeted runner is GREEN: 23 passed, 0 failed, 0 skipped."
+      ]
+    },
+    "releaseGatesAndCleanup": {
+      "status": "PASS",
+      "evidence": [
+        "Targeted, relevant, and full Release tests ran sequentially and passed.",
+        "Product and archive utility warn-as-error builds passed with zero warnings/errors.",
+        "Release SmokeTests passed through the real smoke entry point.",
+        "The actual archive utility passed the authoritative archive and rejected a one-byte-mutated archive by SHA-256.",
+        "Temporary extracted members, mutated archive, isolated test/driver projects, and task-local logs were removed; no product runtime extraction was retained."
+      ]
+    }
+  },
+  "authority": {
+    "archive": {
+      "pathUsedForVerification": "C:/Users/123/Documents/Warcraft III/Maps/Download/ORDR_S2_2.314[R].w3x",
+      "lengthBytes": 134758580,
+      "sha256": "f9ddd3af7c0fbfd39b7a6df2ca0f5f295675bba5e8b91a5322dcec93d7ca8a83"
+    },
+    "members": [
+      { "name": "war3map.j", "lengthBytes": 3069240, "sha256": "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028", "lineCount": 88592 },
+      { "name": "war3map.w3u", "lengthBytes": 857425, "sha256": "a9aa2cb9c08130c3bee970aecb05b62fdc3db867685f4997dd2533735d2ea278" },
+      { "name": "war3map.wts", "lengthBytes": 1756386, "sha256": "bef1477f56bfffef3ef6b030f324b7fc75a69564760e185c8aa4da8a618a275c" }
+    ],
+    "w3uLayout": {
+      "version": 3,
+      "originalTable": { "countOffset": 4, "records": 1, "startOffset": 8, "endOffset": 93 },
+      "customTable": { "countOffset": 93, "records": 1410, "startOffset": 97, "endOffset": 857425 },
+      "totalRecords": 1411,
+      "totalModifications": 45163,
+      "zeroSanityMarkers": 45163,
+      "consumedBytes": 857425,
+      "trailingBytes": 0
+    },
+    "wts": {
+      "parsedRecordCount": 10646,
+      "targetRecordCount": 14,
+      "transcendence": "초월위습",
+      "dummy": "더미유닛"
+    }
+  },
+  "stageSurface": [
+    { "ordinal": 1, "objective": "n000", "groupCounts": [2,1,2,0] },
+    { "ordinal": 2, "objective": "n002", "groupCounts": [2,1,2,0] },
+    { "ordinal": 3, "objective": "n003", "groupCounts": [3,1,2,0] },
+    { "ordinal": 4, "objective": "n004", "groupCounts": [4,1,2,0] },
+    { "ordinal": 5, "objective": "n005", "groupCounts": [4,1,2,2] },
+    { "ordinal": 6, "objective": "n006", "groupCounts": [4,1,1,1] },
+    { "ordinal": 7, "objective": "n007", "groupCounts": [3,1,1,0] },
+    { "ordinal": 8, "objective": "n008", "groupCounts": [3,1,1,3] },
+    { "ordinal": 9, "objective": "n00A", "milestone": "Marineford", "groupCounts": [4,1,1,2] },
+    { "ordinal": 10, "objective": "n001", "baseWisps": ["e0IXx2","e01Ax1"], "groupCounts": [4,1,2,2] },
+    { "ordinal": 11, "objective": "n00C", "groupCounts": [4,1,2,1] },
+    { "ordinal": 12, "objective": "n00D", "groupCounts": [5,1,2,3] },
+    { "ordinal": 13, "objective": "n00B", "groupCounts": [4,1,2,2] },
+    { "ordinal": 14, "objective": "n009", "groupCounts": [3,1,1,0] }
+  ],
+  "shippedContracts": {
+    "sourceJsonSha256": "2d262ff929fcae3d70a94c6c76969708f37f28a62b9dd06b52b0af80d4c10c82",
+    "storyJsonSha256": "8c24aff6b74ebc6a4117c9aa57bfc236cbd286d12ad85faf802c6453dc58ae0b",
+    "sourceSemanticContractSha256": "bba2a20b78d5af531c8289ae35683f4ea33928048b43461009b4a4e0967d04cc",
+    "storySemanticContractSha256": "ed1e0e6c15c57c4887b275abdd8e70cb8e9bcaa77157c5e58c3004916bf9c596",
+    "releaseAssemblySha256": "25af0f3c9c16875454f3ec2cec6331e6b3fc7e77706f68f9300f251d411a763d",
+    "releaseDataCopiesMatchSource": true
+  },
+  "archiveUtility": {
+    "sourcePath": "D:/OrandOverlay/work/MpqEvidence/Program.cs",
+    "sourceSha256": "60d53bd38ba0b927632d5bca893467678e8d5a90206b7e05bd3f28bdb804a944",
+    "executableSha256": "f5ef9e098c6078f850d5958d8360b2c96d8e38feda488faae9178f62386e82b8",
+    "goodSurface": "STORY_ARCHIVE_OK; W3U 1411/45163/857425/0; WTS 10646/14; story 14/e01A=1/e0IA=0",
+    "badSurface": "one-byte archive mutation rejected: archive SHA-256 mismatch (nonzero exit)"
+  },
+  "verification": [
+    { "gate": "RED", "result": "expected failure", "summary": "4 failed, 12 passed, 16 total" },
+    { "gate": "targeted Release", "command": "dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj -c Release --filter FullyQualifiedName~StoryProgressionProfileTests --no-restore", "result": "23 passed, 0 failed, 0 skipped" },
+    { "gate": "relevant Release", "command": "dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj -c Release --filter FullyQualifiedName~StoryProgressionProfileTests|FullyQualifiedName~NavigationMechanicsProfileTests --no-restore", "result": "64 passed, 0 failed, 0 skipped" },
+    { "gate": "full Release", "command": "dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj -c Release --no-restore", "result": "357 passed, 0 failed, 0 skipped" },
+    { "gate": "warn-as-error Release build", "command": "dotnet build OrandOverlay.csproj -c Release --no-restore -warnaserror", "result": "0 warnings, 0 errors" },
+    { "gate": "Release SmokeTests", "command": "dotnet run --project SmokeTests/OrandOverlay.SmokeTests.csproj -c Release --no-restore", "result": "PASS: recommendation/memory integration smoke tests" },
+    { "gate": "real Release loader", "result": "GOOD stages=14/stage10=n001/e01A=1; BAD mutated story rejected" },
+    { "gate": "LSP", "result": "unavailable: csharp-ls is not installed; compiler, tests, and warn-as-error build were used" }
+  ],
+  "scope": {
+    "task1Files": [
+      "Data/map-source-metadata-2314.json",
+      "Data/story-progression-2314.json",
+      "StoryProgressionProfile.cs",
+      "OrandOverlay.Tests/StoryProgressionProfileTests.cs",
+      "docs/evidence/task-1-story-progression-2314.json"
+    ],
+    "externalDevelopmentUtilityFiles": [
+      "D:/OrandOverlay/work/MpqEvidence/Program.cs",
+      "D:/OrandOverlay/work/MpqEvidence/MpqEvidence.csproj"
+    ],
+    "preserved": "Task-2/3/4 and unrelated worktree files were not edited by this closure. The external shared MPQ utility retained its existing --hash surface while gaining the Task-1 verifier; no Git, version, release, UI, manifest, or parent .omo state edit was made."
+  },
+  "doneClaim": "Task-1 is fully closed: the source-derived immutable 14-stage story pack, semantic/cryptographic loader, independent W3U/WTS distinction, fail-closed behavior, real archive utility, Release loader surfaces, sequential test gates, warn-as-error builds, smoke surface, evidence, and cleanup all pass."
+}

@@ -1,0 +1,304 @@
+{
+  "Source": {
+    "MapVersion": "2.314",
+    "SourceMetadataSha256": "2d262ff929fcae3d70a94c6c76969708f37f28a62b9dd06b52b0af80d4c10c82",
+    "ArchiveSha256": "f9ddd3af7c0fbfd39b7a6df2ca0f5f295675bba5e8b91a5322dcec93d7ca8a83",
+    "JassSha256": "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028",
+    "W3uSha256": "a9aa2cb9c08130c3bee970aecb05b62fdc3db867685f4997dd2533735d2ea278",
+    "WtsSha256": "bef1477f56bfffef3ef6b030f324b7fc75a69564760e185c8aa4da8a618a275c"
+  },
+  "Stages": [
+    {
+      "Ordinal": 1, "ObjectiveRawcode": "n000", "OwnerId": 5, "MilestoneId": "stage1",
+      "RewardKinds": ["common_selectable"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 180, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "LBN", "StartLine": 6444, "EndLine": 6457, "EvidenceLine": 6451 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "LBN", "StartLine": 6444, "EndLine": 6457, "EvidenceLine": 6452 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "y0E", "StartLine": 6524, "EndLine": 6534, "EvidenceLine": 6530 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 500, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "AeG", "StartLine": 6535, "EndLine": 6555, "EvidenceLine": 6544 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "AeG", "StartLine": 6535, "EndLine": 6555, "EvidenceLine": 6545 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    },
+    {
+      "Ordinal": 2, "ObjectiveRawcode": "n002", "OwnerId": 5, "MilestoneId": "stage2",
+      "RewardKinds": ["common_selectable"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 800, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vON", "StartLine": 44224, "EndLine": 44237, "EvidenceLine": 44231 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vON", "StartLine": 44224, "EndLine": 44237, "EvidenceLine": 44232 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "dlE", "StartLine": 44213, "EndLine": 44223, "EvidenceLine": 44219 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 1500, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Ucw", "StartLine": 44238, "EndLine": 44258, "EvidenceLine": 44247 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Ucw", "StartLine": 44238, "EndLine": 44258, "EvidenceLine": 44248 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    },
+    {
+      "Ordinal": 3, "ObjectiveRawcode": "n003", "OwnerId": 5, "MilestoneId": "stage3",
+      "RewardKinds": ["common_selectable", "uncommon"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 1000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "RBE", "StartLine": 16172, "EndLine": 16186, "EvidenceLine": 16179 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 4, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "RBE", "StartLine": 16172, "EndLine": 16186, "EvidenceLine": 16180 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] },
+          { "Kind": "Unit", "Id": "e017", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "RBE", "StartLine": 16172, "EndLine": 16186, "EvidenceLine": 16181 }, { "Function": "G5E", "StartLine": 16167, "EndLine": 16171, "EvidenceLine": 16170 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "a_w", "StartLine": 16187, "EndLine": 16197, "EvidenceLine": 16193 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 2500, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "FIw", "StartLine": 16198, "EndLine": 16218, "EvidenceLine": 16207 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "FIw", "StartLine": 16198, "EndLine": 16218, "EvidenceLine": 16208 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    },
+    {
+      "Ordinal": 4, "ObjectiveRawcode": "n004", "OwnerId": 5, "MilestoneId": "stage4",
+      "RewardKinds": ["special", "uncommon"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 2000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Q8G", "StartLine": 43508, "EndLine": 43533, "EvidenceLine": 43519 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Q8G", "StartLine": 43508, "EndLine": 43533, "EvidenceLine": 43521 }] },
+          { "Kind": "Unit", "Id": "e016", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Q8G", "StartLine": 43508, "EndLine": 43533, "EvidenceLine": 43526 }] },
+          { "Kind": "Unit", "Id": "e017", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Q8G", "StartLine": 43508, "EndLine": 43533, "EvidenceLine": 43522 }, { "Function": "G5E", "StartLine": 16167, "EndLine": 16171, "EvidenceLine": 16170 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "S7G", "StartLine": 43534, "EndLine": 43544, "EvidenceLine": 43540 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 3000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "U9w", "StartLine": 43545, "EndLine": 43565, "EvidenceLine": 43554 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "U9w", "StartLine": 43545, "EndLine": 43565, "EvidenceLine": 43555 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    },
+    {
+      "Ordinal": 5, "ObjectiveRawcode": "n005", "OwnerId": 5, "MilestoneId": "stage5",
+      "RewardKinds": ["special", "uncommon"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 3000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40170 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40172 }] },
+          { "Kind": "Unit", "Id": "e016", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40177 }] },
+          { "Kind": "Unit", "Id": "e017", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40173 }, { "Function": "G5E", "StartLine": 16167, "EndLine": 16171, "EvidenceLine": 16170 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "icw", "StartLine": 40192, "EndLine": 40202, "EvidenceLine": 40198 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 5000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "R7G", "StartLine": 40203, "EndLine": 40223, "EvidenceLine": 40212 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "R7G", "StartLine": 40203, "EndLine": 40223, "EvidenceLine": 40213 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "Technology", "Id": "R01N", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40178 }] },
+          { "Kind": "RandomItem", "Id": "AI03", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 20, "Condition": "ActivePlayerAndMissingItem", "Sources": [{ "Function": "Tew", "StartLine": 40158, "EndLine": 40191, "EvidenceLine": 40181 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 6, "ObjectiveRawcode": "n006", "OwnerId": 5, "MilestoneId": "stage6",
+      "RewardKinds": ["special", "uncommon"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 4000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "WeN", "StartLine": 77368, "EndLine": 77400, "EvidenceLine": 77380 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "WeN", "StartLine": 77368, "EndLine": 77400, "EvidenceLine": 77382 }] },
+          { "Kind": "Unit", "Id": "e016", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "WeN", "StartLine": 77368, "EndLine": 77400, "EvidenceLine": 77387 }] },
+          { "Kind": "Unit", "Id": "e017", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "WeN", "StartLine": 77368, "EndLine": 77400, "EvidenceLine": 77383 }, { "Function": "G5E", "StartLine": 16167, "EndLine": 16171, "EvidenceLine": 16170 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "dON", "StartLine": 77401, "EndLine": 77411, "EvidenceLine": 77407 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "voN", "StartLine": 77444, "EndLine": 77460, "EvidenceLine": 77451 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "RandomItem", "Id": "AI00", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 20, "Condition": "ActivePlayerAndMissingItem", "Sources": [{ "Function": "WeN", "StartLine": 77368, "EndLine": 77400, "EvidenceLine": 77390 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 7, "ObjectiveRawcode": "n007", "OwnerId": 5, "MilestoneId": "stage7",
+      "RewardKinds": ["rare"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 6000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "GGP", "StartLine": 60235, "EndLine": 60259, "EvidenceLine": 60246 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 4, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "GGP", "StartLine": 60235, "EndLine": 60259, "EvidenceLine": 60248 }] },
+          { "Kind": "Unit", "Id": "e019", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "GGP", "StartLine": 60235, "EndLine": 60259, "EvidenceLine": 60252 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "SQE", "StartLine": 60260, "EndLine": 60273, "EvidenceLine": 60268 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "iNw", "StartLine": 60306, "EndLine": 60322, "EvidenceLine": 60313 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    },
+    {
+      "Ordinal": 8, "ObjectiveRawcode": "n008", "OwnerId": 5, "MilestoneId": "stage8",
+      "RewardKinds": ["rare"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 8000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65482 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 4, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65484 }] },
+          { "Kind": "Unit", "Id": "e019", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65488 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "y2E", "StartLine": 65505, "EndLine": 65518, "EvidenceLine": 65513 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "mhN", "StartLine": 65519, "EndLine": 65535, "EvidenceLine": 65526 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "Technology", "Id": "R01O", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65489 }] },
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65491 }] },
+          { "Kind": "RandomItem", "Id": "AI02", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 20, "Condition": "ActivePlayerAndMissingItem", "Sources": [{ "Function": "gPw", "StartLine": 65470, "EndLine": 65504, "EvidenceLine": 65494 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 9, "ObjectiveRawcode": "n00A", "OwnerId": 5, "MilestoneId": "Marineford",
+      "RewardKinds": ["common_selectable"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 9000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59771 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 5, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59773 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59774 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] },
+          { "Kind": "Unit", "Id": "h05Y", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59775 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "bON", "StartLine": 59817, "EndLine": 59830, "EvidenceLine": 59825 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "hrE", "StartLine": 59831, "EndLine": 59847, "EvidenceLine": 59838 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "Technology", "Id": "R01P", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59776 }] },
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "COw", "StartLine": 59763, "EndLine": 59784, "EvidenceLine": 59778 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 10, "ObjectiveRawcode": "n001", "OwnerId": 5, "MilestoneId": "stage10",
+      "RewardKinds": ["random", "transcendence"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 10000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12961 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 4, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12963 }] },
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12964 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] },
+          { "Kind": "Unit", "Id": "e01A", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12965 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "lEE", "StartLine": 12937, "EndLine": 12950, "EvidenceLine": 12945 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "ECE", "StartLine": 12975, "EndLine": 12992, "EvidenceLine": 12982 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "ECE", "StartLine": 12975, "EndLine": 12992, "EvidenceLine": 12983 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "Technology", "Id": "R01Q", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12966 }] },
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "vNN", "StartLine": 12951, "EndLine": 12974, "EvidenceLine": 12968 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 11, "ObjectiveRawcode": "n00C", "OwnerId": 5, "MilestoneId": "stage11",
+      "RewardKinds": ["common_selectable", "uncommon"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 12500, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Jcw", "StartLine": 22196, "EndLine": 22216, "EvidenceLine": 22204 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 4, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Jcw", "StartLine": 22196, "EndLine": 22216, "EvidenceLine": 22206 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Jcw", "StartLine": 22196, "EndLine": 22216, "EvidenceLine": 22207 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] },
+          { "Kind": "Unit", "Id": "e017", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Jcw", "StartLine": 22196, "EndLine": 22216, "EvidenceLine": 22208 }, { "Function": "G5E", "StartLine": 16167, "EndLine": 16171, "EvidenceLine": 16170 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "BLG", "StartLine": 22182, "EndLine": 22195, "EvidenceLine": 22190 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Kcw", "StartLine": 22249, "EndLine": 22266, "EvidenceLine": 22256 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Kcw", "StartLine": 22249, "EndLine": 22266, "EvidenceLine": 22257 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "Jcw", "StartLine": 22196, "EndLine": 22216, "EvidenceLine": 22210 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 12, "ObjectiveRawcode": "n00D", "OwnerId": 5, "MilestoneId": "stage12",
+      "RewardKinds": ["common_selectable", "special"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 10000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38824 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38826 }] },
+          { "Kind": "TraitPoint", "Id": "PLAYER_STATE_RESOURCE_FOOD_USED", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38828 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38829 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] },
+          { "Kind": "Unit", "Id": "e016", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38833 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "tNw", "StartLine": 38845, "EndLine": 38858, "EvidenceLine": 38853 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Q6N", "StartLine": 38859, "EndLine": 38877, "EvidenceLine": 38866 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "Q6N", "StartLine": 38859, "EndLine": 38877, "EvidenceLine": 38867 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "Technology", "Id": "R01S", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38834 }] },
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "rgE", "StartLine": 38812, "EndLine": 38844, "EvidenceLine": 38836 }] },
+          { "Kind": "MissionActivation", "Id": "MoriaKill", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "Always", "Sources": [{ "Function": "Q6N", "StartLine": 38859, "EndLine": 38877, "EvidenceLine": 38874 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 13, "ObjectiveRawcode": "n00B", "OwnerId": 5, "MilestoneId": "stage13",
+      "RewardKinds": ["common_selectable"],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 5000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "N8E", "StartLine": 62920, "EndLine": 62940, "EvidenceLine": 62928 }] },
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 3, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "N8E", "StartLine": 62920, "EndLine": 62940, "EvidenceLine": 62930 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 2, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "N8E", "StartLine": 62920, "EndLine": 62940, "EvidenceLine": 62931 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] },
+          { "Kind": "HeroExperience", "Id": "OwnedHeroes", "Amount": 300, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "N8E", "StartLine": 62920, "EndLine": 62940, "EvidenceLine": 62932 }, { "Function": "n9G", "StartLine": 65679, "EndLine": 65681, "EvidenceLine": 65680 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Lumber", "Id": "PLAYER_STATE_RESOURCE_LUMBER", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "JHE", "StartLine": 62906, "EndLine": 62919, "EvidenceLine": 62914 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "kDw", "StartLine": 62987, "EndLine": 63014, "EvidenceLine": 62995 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] },
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "kDw", "StartLine": 62987, "EndLine": 63014, "EvidenceLine": 62996 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": [
+          { "Kind": "StockMaximumIncrement", "Id": "H0AW", "Amount": 1, "Limit": 8, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "N8E", "StartLine": 62920, "EndLine": 62940, "EvidenceLine": 62934 }] },
+          { "Kind": "ConditionalTimerSeconds", "Id": "EggheadAppearance", "Amount": 120, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "DifficultyAtLeast5", "Sources": [{ "Function": "kDw", "StartLine": 62987, "EndLine": 63014, "EvidenceLine": 63012 }] }
+        ]
+      }
+    },
+    {
+      "Ordinal": 14, "ObjectiveRawcode": "n009", "OwnerId": 5, "MilestoneId": "stage14",
+      "RewardKinds": [],
+      "RewardComponents": {
+        "EveryPlayerBase": [
+          { "Kind": "Gold", "Id": "PLAYER_STATE_RESOURCE_GOLD", "Amount": 5000, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "KOE", "StartLine": 8896, "EndLine": 8914, "EvidenceLine": 8904 }] },
+          { "Kind": "HeroExperience", "Id": "OwnedHeroes", "Amount": 300, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "KOE", "StartLine": 8896, "EndLine": 8914, "EvidenceLine": 8905 }, { "Function": "RNw", "StartLine": 40602, "EndLine": 40604, "EvidenceLine": 40603 }] },
+          { "Kind": "PermanentAbility", "Id": "A13A", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayer", "Sources": [{ "Function": "KOE", "StartLine": 8896, "EndLine": 8914, "EvidenceLine": 8908 }] }
+        ],
+        "ContributionAtLeast25Percent": [
+          { "Kind": "Unit", "Id": "e0IX", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "ActivePlayerAndDamagePercentAtLeast25", "Sources": [{ "Function": "p2N", "StartLine": 8947, "EndLine": 8957, "EvidenceLine": 8953 }, { "Function": "B9w", "StartLine": 6434, "EndLine": 6438, "EvidenceLine": 6437 }] }
+        ],
+        "MVP": [
+          { "Kind": "Unit", "Id": "e018", "Amount": 1, "Limit": 0, "ChanceNumerator": 1, "ChanceDenominator": 1, "Condition": "MaximumDamageContributor", "Sources": [{ "Function": "C4w", "StartLine": 8958, "EndLine": 8977, "EvidenceLine": 8968 }, { "Function": "RwE", "StartLine": 6439, "EndLine": 6443, "EvidenceLine": 6442 }] }
+        ],
+        "HiddenOrSideEffect": []
+      }
+    }
+  ]
+}
