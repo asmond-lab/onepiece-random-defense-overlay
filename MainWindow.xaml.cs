@@ -145,6 +145,7 @@ public partial class MainWindow : Window
         _ = _telemetry.FlushPendingAsync();
         AutoStartCheck.IsChecked = _settings.AutoStartGoal;
         AutoNavigationCheck.IsChecked = _settings.AutoRecommendNavigation;
+        UpdateNavigationSelectionVisibility();
         if (!_settings.AutoRecommendNavigation)
             _adaptivePlanning.LatchManualNavigationOverride();
         DataVersionText.Text = $"데이터 {_catalog.Data.DataVersion} · {_catalog.Data.Disclaimer}" +
@@ -487,8 +488,7 @@ public partial class MainWindow : Window
             _adaptivePlanning.ClearManualNavigationOverride();
         else
             _adaptivePlanning.LatchManualNavigationOverride();
-        if (NavigationCombo.SelectedItem is NavigationOption selected)
-            NavigationSummaryText.Text = NavigationSummary(selected);
+        UpdateNavigationSelectionVisibility();
         SettingsStore.Save(_settings);
         RefreshAll(enabled
             ? "항법 자동 추천을 켰습니다. 추천은 설정에만 반영되며 게임에서는 직접 선택하세요."
@@ -589,8 +589,6 @@ public partial class MainWindow : Window
             NavigationCombo.ItemsSource = options;
             NavigationCombo.SelectedItem = options.FirstOrDefault(item => item.Id == option.Id)
                                            ?? options[0];
-            if (NavigationCombo.SelectedItem is NavigationOption selected)
-                NavigationSummaryText.Text = NavigationSummary(selected);
             _settings.NavigationMode = option.Id;
             return !string.Equals(previousId, option.Id, StringComparison.OrdinalIgnoreCase);
         }
@@ -643,8 +641,6 @@ public partial class MainWindow : Window
             NavigationCombo.ItemsSource = options;
             NavigationCombo.SelectedItem =
                 options.FirstOrDefault(option => option.Id == currentOption.Id) ?? options[0];
-            if (NavigationCombo.SelectedItem is NavigationOption selected)
-                NavigationSummaryText.Text = NavigationSummary(selected);
         }
         finally
         {
@@ -1205,8 +1201,6 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         if (_updatingSelections) return;
         UseManualNavigationMode();
-        if (NavigationCombo.SelectedItem is NavigationOption navigation)
-            NavigationSummaryText.Text = NavigationSummary(navigation);
         RefreshAll();
     }
 
@@ -1219,30 +1213,21 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         _updatingSelections = true;
         try { AutoNavigationCheck.IsChecked = false; }
         finally { _updatingSelections = false; }
+        UpdateNavigationSelectionVisibility();
         if (wasAutomatic) SettingsStore.Save(_settings);
     }
 
-    private string NavigationSummary(NavigationOption navigation)
+    private void UpdateNavigationSelectionVisibility()
     {
-        var details = WrapNavigationSummary(navigation.Summary);
-        return _settings.AutoRecommendNavigation
-            ? $"자동 추천 사용\n{details}\n20라운드는 미리보기\n21~23라운드는 설정 자동 반영\n게임 항법은 직접 선택하세요."
-            : $"수동 설정\n{details}";
+        var visibility = NavigationSelectionVisibility(_settings.AutoRecommendNavigation);
+        NavigationLabel.Visibility = visibility;
+        NavigationSelectRow.Visibility = visibility;
     }
 
-    private static string WrapNavigationSummary(string summary)
-    {
-        const int maxLineLength = 22;
-        var lines = new List<string>();
-        foreach (var word in summary.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-        {
-            if (lines.Count == 0 || lines[^1].Length + word.Length + 1 > maxLineLength)
-                lines.Add(word);
-            else
-                lines[^1] += " " + word;
-        }
-        return string.Join('\n', lines);
-    }
+    internal static Visibility NavigationSelectionVisibility(bool automaticRecommendation) =>
+        automaticRecommendation
+            ? Visibility.Collapsed
+            : Visibility.Visible;
 
     private void GoroseiCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {

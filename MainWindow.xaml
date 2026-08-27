@@ -43,8 +43,9 @@
                     Visibility="Collapsed"/>
           <TextBlock x:Name="BuildVariantSummaryText" Style="{StaticResource FieldHint}"
                      Margin="3,5,3,0" Visibility="Collapsed"/>
-          <TextBlock Text="항법" Style="{StaticResource FieldLabel}" Margin="0,12,0,0"/>
-          <Grid Margin="0,6,0,0">
+          <TextBlock x:Name="NavigationLabel" Text="항법" Style="{StaticResource FieldLabel}"
+                     Margin="0,12,0,0"/>
+          <Grid x:Name="NavigationSelectRow" Margin="0,6,0,0">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="*"/>
@@ -58,7 +59,6 @@
                     Checked="AutoNavigation_OnChanged" Unchecked="AutoNavigation_OnChanged"
                     AutomationProperties.Name="항법 자동 추천"
                     ToolTip="라운드 20에는 후보를 미리 보여주고, 21~23에는 안전한 추천을 설정에 자동 반영합니다. 워크래프트 안의 항법 선택은 직접 해야 합니다."/>
-          <TextBlock x:Name="NavigationSummaryText" Style="{StaticResource FieldHint}" Margin="3,5,3,0"/>
           <TextBlock Text="오로성 (신 이상 판별 효과)" Style="{StaticResource FieldLabel}" Margin="0,12,0,0"/>
           <ComboBox x:Name="GoroseiCombo" DisplayMemberPath="Name"
                     SelectionChanged="GoroseiCombo_OnSelectionChanged" Margin="0,6,0,0"/>
