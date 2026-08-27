@@ -71,6 +71,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
     private RecognitionResult Recognize(CancellationToken token)
     {
+        var recognitionStarted = Stopwatch.GetTimestamp();
         var localPlayerConfirmed = false;
         try
         {
@@ -189,6 +190,10 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 growthRawcodes.Add(snapshot.NeutralGrowthCounts.Single().Key);
             var mapped = _unitMap.Map(counts);
             var growthUnitIds = MapGrowthUnitIds(_unitMap, growthRawcodes);
+            var mapState = ReadMapStateThrottled(memory, token);
+            var recognitionObservation = new AdaptivePlanningRecognitionObservation(
+                memory.SnapshotReads(), Stopwatch.GetElapsedTime(recognitionStarted),
+                snapshot.SideChannelByteBudget, snapshot.SideChannelCallBudget);
             var diagnostics = new RecognitionDiagnostics
             {
                 Source = baseDiagnostics.Source,
@@ -200,7 +205,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 ResolvedListAddress = $"0x{listAddress:X}",
                 ObservedObjects = snapshot.OwnedObjects + (adoptedNeutralGrowth ? 1 : 0),
                 ForeignObjects = snapshot.ForeignObjects,
-                MapState = ReadMapStateThrottled(memory, token),
+                MapState = mapState,
+                AdaptivePlanningObservation = recognitionObservation,
                 MappedObjects = mapped.KnownCount + mapped.CatalogNamedCount,
                 UnknownObjects = mapped.UnknownCount,
                 UnknownRawcodes = mapped.UnknownRawcodes,
@@ -448,6 +454,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         var ownedObjects = 0;
         var objectiveRawcodes = new List<uint>();
         var rewardWispRawcodes = new List<uint>();
+        long sideChannelByteBudget = 0;
+        long sideChannelCallBudget = 0;
         byte[]? entryPointers = null;
         ulong firstEntry = 0;
         if (countBefore > 0 && profile.EntriesContainPointers)
@@ -474,13 +482,29 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var trackedGrowth = trackedGrowthPointers.TryGetValue(unit, out var trackedRawcode);
             uint rawcode = 0;
             var rawcodeRead = false;
+            AdaptivePlanningReadCounters? rawcodeReadBefore = null;
+            var ownerFiveCandidate = false;
             if (MapSignalReadPolicy.ShouldReadRawcode(
                     owner, localPlayerSlot, profile.NeutralPlayerSlot, trackedGrowth))
             {
-                var markerAddress = FollowObjectFieldPath(
-                    memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
-                rawcode = memory.ReadUInt32(markerAddress);
+                rawcodeReadBefore = memory.SnapshotReads();
+                ownerFiveCandidate = owner == MapSignalRecognitionProfile.StoryObjectiveOwner;
+                using (ownerFiveCandidate
+                           ? memory.BeginReadChannel(AdaptivePlanningReadChannel.SideChannel)
+                           : null)
+                {
+                    var markerAddress = FollowObjectFieldPath(
+                        memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
+                    rawcode = memory.ReadUInt32(markerAddress);
+                }
                 rawcodeRead = true;
+                if (ownerFiveCandidate)
+                {
+                    sideChannelByteBudget = checked(sideChannelByteBudget +
+                        profile.RawcodePointerOffsets.Length * sizeof(ulong) + sizeof(uint));
+                    sideChannelCallBudget = checked(sideChannelCallBudget +
+                        profile.RawcodePointerOffsets.Length + 1);
+                }
                 if (owner == 7)
                 {
                     var detected = GoroseiMemoryDetector.FromRawcode(rawcode);
@@ -490,6 +514,17 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var signalKind = rawcodeRead
                 ? mapSignalProfile.Classify(owner, localPlayerSlot, rawcode)
                 : MapSignalKind.None;
+            if (signalKind is MapSignalKind.StoryObjective or MapSignalKind.RewardWisp)
+            {
+                if (!ownerFiveCandidate && rawcodeReadBefore is not null)
+                {
+                    memory.ReattributeUnitReadsToSideChannel(rawcodeReadBefore);
+                    sideChannelByteBudget = checked(sideChannelByteBudget +
+                        profile.RawcodePointerOffsets.Length * sizeof(ulong) + sizeof(uint));
+                    sideChannelCallBudget = checked(sideChannelCallBudget +
+                        profile.RawcodePointerOffsets.Length + 1);
+                }
+            }
             if (signalKind == MapSignalKind.StoryObjective)
             {
                 objectiveRawcodes.Add(rawcode);
@@ -554,7 +589,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         return new MemoryUnitSnapshot(countBefore, ownedObjects, duplicatePointers, counts, neutralGrowth,
             foreignObjects, locallyObservedGrowth, seenTrackedGrowthPointers, retainedGrowthObjects,
             gorosei, new MapSignalRawSnapshot(
-                objectiveRawcodes.ToImmutableArray(), rewardWispRawcodes.ToImmutableArray()));
+                objectiveRawcodes.ToImmutableArray(), rewardWispRawcodes.ToImmutableArray()),
+            sideChannelByteBudget, sideChannelCallBudget);
     }
 
     private static ulong FollowObjectFieldPath(ReadOnlyProcessMemory memory, ulong objectAddress,
@@ -600,6 +636,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         _lastMapStateAt = now;
         try
         {
+            using var observation = memory.BeginReadChannel(
+                AdaptivePlanningReadChannel.MapState);
             var endgame = _lastMapState is { MaxRound: >= 60 };
             int? budget = endgame
                 ? MapStateEndgameBudgetBytes
@@ -671,7 +709,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private sealed record MemoryUnitSnapshot(int ListCount, int OwnedObjects, int DuplicatePointers,
         Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects,
         Dictionary<ulong, uint> LocallyObservedGrowth, HashSet<ulong> SeenTrackedGrowthPointers,
-        int RetainedGrowthObjects, GoroseiMode Gorosei, MapSignalRawSnapshot MapSignalSnapshot);
+        int RetainedGrowthObjects, GoroseiMode Gorosei, MapSignalRawSnapshot MapSignalSnapshot,
+        long SideChannelByteBudget, long SideChannelCallBudget);
     internal sealed class SnapshotChangedException : InvalidOperationException;
 }
 
@@ -710,6 +749,7 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
     private const uint ProcessVmRead = 0x0010;
     private const uint ProcessQueryLimitedInformation = 0x1000;
     private readonly SafeProcessHandle _handle;
+    private readonly AdaptivePlanningReadObserver _readObserver = new();
 
     private ReadOnlyProcessMemory(SafeProcessHandle handle) => _handle = handle;
 
@@ -727,7 +767,11 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
         if (count < 0 || count > 512 * 1024 * 1024) throw new ArgumentOutOfRangeException(nameof(count));
         if (count > 0 && !IsPlausibleUserAddress(address)) throw new InvalidDataException($"비정상 읽기 주소: 0x{address:X}");
         var bytes = new byte[count];
-        if (!ReadProcessMemory(_handle, (nint)address, bytes, count, out var read) || read.ToInt64() != count)
+        var started = Stopwatch.GetTimestamp();
+        var succeeded = ReadProcessMemory(_handle, (nint)address, bytes, count, out var read);
+        var actual = Math.Clamp(read.ToInt64(), 0, count);
+        _readObserver.Record(actual, Stopwatch.GetElapsedTime(started));
+        if (!succeeded || actual != count)
             throw new Win32Exception(Marshal.GetLastWin32Error(), $"메모리 읽기 실패: 0x{address:X}");
         return bytes;
     }
@@ -738,8 +782,10 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
         if (count > 64 * 1024 * 1024) throw new ArgumentOutOfRangeException(nameof(count));
         if (!IsPlausibleUserAddress(address)) return [];
         var bytes = new byte[count];
+        var started = Stopwatch.GetTimestamp();
         var ok = ReadProcessMemory(_handle, (nint)address, bytes, count, out var read);
         var actual = Math.Clamp(read.ToInt64(), 0, count);
+        _readObserver.Record(actual, Stopwatch.GetElapsedTime(started));
         if (!ok && actual == 0) return [];
         if (actual == count) return bytes;
         Array.Resize(ref bytes, (int)actual);
@@ -777,8 +823,10 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
     {
         if (count < 0 || count > buffer.Length)
             throw new ArgumentOutOfRangeException(nameof(count));
+        var started = Stopwatch.GetTimestamp();
         var succeeded = ReadProcessMemory(_handle, (nint)address, buffer, count, out var read);
         var actual = Math.Clamp(read.ToInt64(), 0, count);
+        _readObserver.Record(actual, Stopwatch.GetElapsedTime(started));
         return succeeded || actual > 0 ? (int)actual : 0;
     }
 
@@ -810,6 +858,11 @@ internal sealed class ReadOnlyProcessMemory : IDisposable
     public int ReadInt32(ulong address) => BitConverter.ToInt32(Read(address, 4));
     public uint ReadUInt32(ulong address) => BitConverter.ToUInt32(Read(address, 4));
     public ulong ReadUInt64(ulong address) => BitConverter.ToUInt64(Read(address, 8));
+    internal IDisposable BeginReadChannel(AdaptivePlanningReadChannel channel) =>
+        _readObserver.Begin(channel);
+    internal AdaptivePlanningReadCounters SnapshotReads() => _readObserver.Snapshot();
+    internal void ReattributeUnitReadsToSideChannel(AdaptivePlanningReadCounters before) =>
+        _readObserver.ReattributeUnitDelta(before);
     public void Dispose() => _handle.Dispose();
 
     [DllImport("kernel32.dll", SetLastError = true)]

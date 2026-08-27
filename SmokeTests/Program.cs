@@ -2636,9 +2636,11 @@ Console.WriteLine("PASS: T8 기존 패수치 단독 표시");
         new AdaptivePlanningReadMetric(640, 10, TimeSpan.FromMilliseconds(4)),
         new AdaptivePlanningReadMetric(1_048_576, 16, TimeSpan.FromMilliseconds(18)),
         new AdaptivePlanningReadMetric(20, 5, TimeSpan.FromMilliseconds(2)));
-    var round20 = replay.Apply(Source(20), reads, TimeSpan.FromMilliseconds(24));
-    var round21 = replay.Apply(Source(21), reads, TimeSpan.FromMilliseconds(24));
-    var round24 = replay.Apply(Source(24), reads, TimeSpan.FromMilliseconds(24));
+    var observation = new AdaptivePlanningRecognitionObservation(reads,
+        TimeSpan.FromMilliseconds(24), 20, 5);
+    var round20 = replay.Apply(Source(20), observation);
+    var round21 = replay.Apply(Source(21), observation);
+    var round24 = replay.Apply(Source(24), observation);
 
     Assert(round20 is not null && round21 is not null && round24 is not null &&
            round20.Presentation.IsRecommendationOnly &&

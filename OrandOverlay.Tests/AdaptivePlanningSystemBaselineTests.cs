@@ -68,7 +68,8 @@ public sealed class AdaptivePlanningSystemBaselineTests
         public AdaptivePlanningInputSource Source(int round, PlannerPhase phase,
             int stage = 9, int specialWisps = 0, int rareWisps = 0,
             ManualLatches? latches = null, bool transient = false,
-            long matchGeneration = 0) => new()
+            long matchGeneration = 0, IReadOnlyList<InventoryEntry>? inventory = null,
+            ImmutableArray<string> previouslyObservedLegendIds = default) => new()
         {
             MatchGeneration = matchGeneration,
             RecognitionRevision = round,
@@ -77,7 +78,7 @@ public sealed class AdaptivePlanningSystemBaselineTests
             ActiveStoryStage = transient ? null : stage,
             CompletedStoryMilestones = Enumerable.Range(1, Math.Max(0, stage - 1))
                 .Select(value => $"stage-{value}").ToImmutableArray(),
-            Inventory =
+            Inventory = inventory ??
             [
                 new InventoryEntry { UnitId = Legend.Id, Count = 1 },
                 new InventoryEntry { UnitId = Rare.Id, Count = 1 }
@@ -90,6 +91,8 @@ public sealed class AdaptivePlanningSystemBaselineTests
             GoroseiMode = GoroseiMode.None,
             RewardWisps = ImmutableDictionary<string, int>.Empty
                 .Add("e016", specialWisps).Add("e019", rareWisps),
+            PreviouslyObservedLegendIds = previouslyObservedLegendIds.IsDefault
+                ? [] : previouslyObservedLegendIds,
             ManualLatches = latches ?? ManualLatches.None,
             IsTransient = transient
         };

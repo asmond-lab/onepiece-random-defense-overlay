@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Runtime.InteropServices;
 using OrandOverlay;
 using Xunit;
 
@@ -13,18 +14,39 @@ public sealed class AdaptivePlanningSystemTests
         var host = new AdaptivePlanningReplayHost(fixture.DataDirectory);
         var frames = new List<AdaptivePlanningReplayFrame>();
 
+        var incomplete = new[]
+        {
+            new InventoryEntry { UnitId = fixture.Rare.Id, Count = 1 }
+        };
         frames.Add(host.Apply(fixture.Source(5, PlannerPhase.AwaitFirstRare,
-            stage: 5, specialWisps: 1, rareWisps: 1))!);
+            stage: 6, rareWisps: 1, inventory: incomplete))!);
         frames.Add(host.Apply(fixture.Source(6, host.State.Phase,
-            stage: 6, specialWisps: 0, rareWisps: 0))!);
+            stage: 7, inventory: incomplete))!);
+        var fallbackLegendId = frames[1].Applied.SuggestedLegendId;
+        Assert.NotNull(fallbackLegendId);
+        var observedInventory = new[]
+        {
+            new InventoryEntry { UnitId = fixture.Rare.Id, Count = 1 },
+            new InventoryEntry { UnitId = fallbackLegendId!, Count = 1 }
+        };
+        frames.Add(host.Apply(fixture.Source(6, host.State.Phase, stage: 7,
+            inventory: observedInventory))!);
         frames.Add(host.Apply(fixture.Source(20, host.State.Phase,
-            stage: 9, specialWisps: 0, rareWisps: 1))!);
+            stage: 9, specialWisps: 0, rareWisps: 1,
+            inventory: observedInventory,
+            previouslyObservedLegendIds: [fallbackLegendId!]))!);
         frames.Add(host.Apply(fixture.Source(20, host.State.Phase,
-            stage: 9, specialWisps: 0, rareWisps: 0))!);
+            stage: 9, specialWisps: 0, rareWisps: 0,
+            inventory: observedInventory,
+            previouslyObservedLegendIds: [fallbackLegendId!]))!);
         frames.Add(host.Apply(fixture.Source(21, host.State.Phase,
-            stage: 9, specialWisps: 0, rareWisps: 0))!);
+            stage: 9, specialWisps: 0, rareWisps: 0,
+            inventory: observedInventory,
+            previouslyObservedLegendIds: [fallbackLegendId!]))!);
         frames.Add(host.Apply(fixture.Source(24, host.State.Phase,
-            stage: 9, specialWisps: 0, rareWisps: 0))!);
+            stage: 9, specialWisps: 0, rareWisps: 0,
+            inventory: observedInventory,
+            previouslyObservedLegendIds: [fallbackLegendId!]))!);
         var lockedGoal = host.State.RouteLock?.GoalUnitId;
         var lockedNavigation = host.State.NavigationLockId;
         frames.Add(host.Apply(fixture.Source(25, host.State.Phase,
@@ -32,28 +54,46 @@ public sealed class AdaptivePlanningSystemTests
         {
             Inventory =
             [
-                new InventoryEntry { UnitId = fixture.Legend.Id, Count = 2 },
+                new InventoryEntry { UnitId = fallbackLegendId!, Count = 2 },
                 new InventoryEntry { UnitId = fixture.Rare.Id, Count = 2 }
             ]
         })!);
         host.LatchManualNavigationOverride();
         frames.Add(host.Apply(fixture.Source(25, host.State.Phase,
-            stage: 9, latches: host.ManualLatches))!);
+            stage: 9, latches: host.ManualLatches,
+            inventory: observedInventory,
+            previouslyObservedLegendIds: [fallbackLegendId!]))!);
 
-        Assert.Contains(AdaptiveBuildBlocker.UnspentSpecialUncommonWisps,
+        Assert.Contains(AdaptiveBuildBlocker.NoLegendCandidate,
             frames[0].Applied.Blockers);
+        Assert.All(frames[0].BuildSnapshot.LegendCandidates, candidate =>
+        {
+            Assert.False(candidate.CardAllocationComplete);
+            Assert.Equal(ResourceCompletion.Incomplete, candidate.Resources);
+        });
+        Assert.Null(frames[0].Applied.SuggestedLegendId);
+        Assert.Null(frames[0].Applied.State.RouteLock);
         Assert.Equal(PlannerPhase.ChooseLegend, frames[1].Applied.State.Phase);
-        Assert.Contains(AdaptiveBuildBlocker.UnspentRareWisps, frames[2].Applied.Blockers);
-        Assert.Equal(PlannerEvidenceState.Round20Preview, frames[3].Presentation.State);
-        Assert.Equal(PlannerEvidenceState.Round21Actionable, frames[4].Presentation.State);
+        var expectedFallback = frames[1].BuildSnapshot.LegendCandidates
+            .OrderBy(candidate => candidate.MissingLeaves)
+            .ThenByDescending(candidate => candidate.PreservedRouteCount)
+            .ThenBy(candidate => candidate.UnitId, StringComparer.Ordinal)
+            .First().UnitId;
+        Assert.Equal(expectedFallback, fallbackLegendId);
+        Assert.Contains(AdaptiveBuildBlocker.LegendFallback, frames[1].Applied.Blockers);
+        Assert.Equal(fallbackLegendId, frames[2].Applied.State.LockedFirstLegendId);
+        Assert.Equal(FirstLegendHistory.Observed, frames[2].Applied.State.FirstLegendHistory);
+        Assert.Contains(AdaptiveBuildBlocker.UnspentRareWisps, frames[3].Applied.Blockers);
+        Assert.Equal(fallbackLegendId, frames[3].Applied.State.LockedFirstLegendId);
+        Assert.Equal(PlannerEvidenceState.Round20Preview, frames[4].Presentation.State);
+        Assert.Equal(PlannerEvidenceState.Round21Actionable, frames[5].Presentation.State);
         Assert.Equal(NavigationRecommendationState.SourceExpectedForced,
-            frames[5].Applied.Navigation.State);
+            frames[6].Applied.Navigation.State);
         Assert.Equal("AlliedForces.DoubleBenefit",
-            frames[5].Applied.Navigation.RecommendedOptionId);
-        Assert.Equal(lockedGoal, frames[6].Applied.State.RouteLock?.GoalUnitId);
-        Assert.Equal(lockedNavigation, frames[6].Applied.State.NavigationLockId);
-        Assert.Equal(PlannerEvidenceState.ManualOverride, frames[7].Presentation.State);
-        Assert.NotNull(frames[2].Applied.State.LockedFirstLegendId);
+            frames[6].Applied.Navigation.RecommendedOptionId);
+        Assert.Equal(lockedGoal, frames[7].Applied.State.RouteLock?.GoalUnitId);
+        Assert.Equal(lockedNavigation, frames[7].Applied.State.NavigationLockId);
+        Assert.Equal(PlannerEvidenceState.ManualOverride, frames[8].Presentation.State);
         Assert.All(frames, frame => Assert.Equal(NavigationProfiles.Options.Select(x => x.Id),
             frame.OptionIds));
         Assert.All(frames, frame =>
@@ -168,35 +208,81 @@ public sealed class AdaptivePlanningSystemTests
     }
 
     [Fact]
-    public void FakeReadOnlyPerformanceCountersStaySeparatedAndUnderTotalGate()
+    public void ProductionReadOnlyMemoryObservationsFeedTheSharedPerformanceSample()
     {
         var fixture = AdaptivePlanningSystemBaselineTests.Fixture();
         var host = new AdaptivePlanningReplayHost(fixture.DataDirectory);
-        var reads = new AdaptivePlanningReadCounters(
-            new AdaptivePlanningReadMetric(640, 10, TimeSpan.FromMilliseconds(4)),
-            new AdaptivePlanningReadMetric(1_048_576, 16, TimeSpan.FromMilliseconds(18)),
-            new AdaptivePlanningReadMetric(20, 5, TimeSpan.FromMilliseconds(2)));
+        var bytes = GC.AllocateArray<byte>(64, pinned: true);
+        var handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+        AdaptivePlanningReadCounters reads;
+        try
+        {
+            var address = checked((ulong)handle.AddrOfPinnedObject().ToInt64());
+            using var memory = ReadOnlyProcessMemory.Open(Environment.ProcessId);
+            _ = memory.Read(address, 8);
+            using (memory.BeginReadChannel(AdaptivePlanningReadChannel.MapState))
+                _ = memory.Read(address, 16);
+            using (memory.BeginReadChannel(AdaptivePlanningReadChannel.SideChannel))
+                _ = memory.Read(address, 4);
+            reads = memory.SnapshotReads();
+        }
+        finally
+        {
+            handle.Free();
+        }
+        var observation = new AdaptivePlanningRecognitionObservation(reads,
+            TimeSpan.FromMilliseconds(20), 4, 1);
 
-        var frame = host.Apply(fixture.Source(20, PlannerPhase.SpendRares), reads,
-            TimeSpan.FromMilliseconds(24))!;
+        var frame = host.Apply(fixture.Source(20, PlannerPhase.SpendRares),
+            observation)!;
 
-        Assert.Equal(640, frame.Performance.Reads.UnitTraversal.Bytes);
-        Assert.Equal(10, frame.Performance.Reads.UnitTraversal.Calls);
-        Assert.Equal(TimeSpan.FromMilliseconds(4),
-            frame.Performance.Reads.UnitTraversal.Elapsed);
-        Assert.Equal(1_048_576, frame.Performance.Reads.MapState.Bytes);
-        Assert.Equal(16, frame.Performance.Reads.MapState.Calls);
-        Assert.Equal(TimeSpan.FromMilliseconds(18),
-            frame.Performance.Reads.MapState.Elapsed);
-        Assert.Equal(20, frame.Performance.Reads.SideChannel.Bytes);
-        Assert.Equal(5, frame.Performance.Reads.SideChannel.Calls);
-        Assert.Equal(TimeSpan.FromMilliseconds(2),
-            frame.Performance.Reads.SideChannel.Elapsed);
+        Assert.Equal(8, frame.Performance.Reads.UnitTraversal.Bytes);
+        Assert.Equal(1, frame.Performance.Reads.UnitTraversal.Calls);
+        Assert.Equal(16, frame.Performance.Reads.MapState.Bytes);
+        Assert.Equal(1, frame.Performance.Reads.MapState.Calls);
+        Assert.Equal(4, frame.Performance.Reads.SideChannel.Bytes);
+        Assert.Equal(1, frame.Performance.Reads.SideChannel.Calls);
+        Assert.All(new[] { frame.Performance.Reads.UnitTraversal.Elapsed,
+                frame.Performance.Reads.MapState.Elapsed,
+                frame.Performance.Reads.SideChannel.Elapsed },
+            elapsed => Assert.True(elapsed >= TimeSpan.Zero));
         Assert.Equal(LatestBackgroundWorkCoordinator.DefaultSettleDelay,
             frame.Performance.SettleElapsed);
         Assert.True(frame.Performance.ScoringElapsed >= TimeSpan.Zero);
         Assert.True(frame.Performance.TotalElapsed <= TimeSpan.FromMilliseconds(350));
         Assert.True(frame.Performance.IsWithinBudget);
+    }
+
+    [Fact]
+    public void PerformanceGateEnforcesEveryChannelByteCallAndTimeBudget()
+    {
+        var allowed = new AdaptivePlanningReadMetric(1, 1, TimeSpan.FromMilliseconds(1));
+        AdaptivePlanningPerformanceSample Sample(AdaptivePlanningReadMetric unit,
+            AdaptivePlanningReadMetric map, AdaptivePlanningReadMetric side,
+            long sideBytes = 1, long sideCalls = 1, TimeSpan? total = null) => new(
+            new AdaptivePlanningReadCounters(unit, map, side), TimeSpan.Zero, TimeSpan.Zero,
+            TimeSpan.Zero, total ?? TimeSpan.Zero, sideBytes, sideCalls);
+
+        Assert.False(Sample(new(AdaptivePlanningPerformanceSample.UnitTraversalByteBudget + 1,
+            1, TimeSpan.Zero), allowed, allowed).IsWithinBudget);
+        Assert.False(Sample(new(1,
+            AdaptivePlanningPerformanceSample.UnitTraversalCallBudget + 1, TimeSpan.Zero),
+            allowed, allowed).IsWithinBudget);
+        Assert.False(Sample(new(1, 1, TimeSpan.FromMilliseconds(351)),
+            allowed, allowed).IsWithinBudget);
+        Assert.False(Sample(allowed, new(AdaptivePlanningPerformanceSample.MapStateByteBudget + 1,
+            1, TimeSpan.Zero), allowed).IsWithinBudget);
+        Assert.False(Sample(allowed, new(1,
+            AdaptivePlanningPerformanceSample.MapStateCallBudget + 1, TimeSpan.Zero),
+            allowed).IsWithinBudget);
+        Assert.False(Sample(allowed, new(1, 1, TimeSpan.FromMilliseconds(351)),
+            allowed).IsWithinBudget);
+        Assert.False(Sample(allowed, allowed, new(2, 1, TimeSpan.Zero)).IsWithinBudget);
+        Assert.False(Sample(allowed, allowed, new(1, 2, TimeSpan.Zero)).IsWithinBudget);
+        Assert.False(Sample(allowed, allowed, new(1, 1,
+            TimeSpan.FromMilliseconds(351))).IsWithinBudget);
+        Assert.False(Sample(allowed, allowed, allowed,
+            total: TimeSpan.FromMilliseconds(351)).IsWithinBudget);
     }
 
     private static string CopyProfileSet(string source)

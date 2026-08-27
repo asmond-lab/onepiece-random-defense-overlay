@@ -36,6 +36,21 @@ public sealed class AdaptivePlanningCompositionRoot
     public static AdaptivePlanningComputed Evaluate(AdaptivePlanningWork work) =>
         AdaptivePlanningCoordinator.Evaluate(work);
 
+    public static AdaptivePlanningEvaluation EvaluateObserved(AdaptivePlanningWork work,
+        AdaptivePlanningRecognitionObservation observation)
+    {
+        ArgumentNullException.ThrowIfNull(observation);
+        var started = System.Diagnostics.Stopwatch.GetTimestamp();
+        var computed = Evaluate(work);
+        var scoringElapsed = System.Diagnostics.Stopwatch.GetElapsedTime(started);
+        var settleElapsed = LatestBackgroundWorkCoordinator.DefaultSettleDelay;
+        var total = observation.RecognitionElapsed + settleElapsed + scoringElapsed;
+        return new AdaptivePlanningEvaluation(computed, new AdaptivePlanningPerformanceSample(
+            observation.Reads, observation.RecognitionElapsed, settleElapsed, scoringElapsed,
+            total, observation.SideChannelByteBudget,
+            observation.SideChannelCallBudget));
+    }
+
     public void ScheduleApply(AdaptivePlanningComputed computed, Action<Action> schedule,
         Action<AdaptivePlanningApplied> mutate) =>
         _coordinator.ScheduleApply(computed, schedule, mutate);
@@ -78,18 +93,37 @@ public sealed record AdaptivePlanningPerformanceSample(
     TimeSpan RecognitionElapsed,
     TimeSpan SettleElapsed,
     TimeSpan ScoringElapsed,
-    TimeSpan TotalElapsed)
+    TimeSpan TotalElapsed,
+    long SideChannelByteBudget,
+    long SideChannelCallBudget)
 {
     public static TimeSpan TotalBudget => TimeSpan.FromMilliseconds(350);
+    public const long UnitTraversalByteBudget = 512L * 1024 * 1024;
+    public const long UnitTraversalCallBudget = 100_000;
+    public const long MapStateByteBudget = 4L * 1024 * 1024;
+    public const long MapStateCallBudget = 1_024;
     public bool IsWithinBudget => TotalElapsed <= TotalBudget &&
-                                  Reads.MapState.Bytes <= 4L * 1024 * 1024;
+                                  Reads.UnitTraversal.Bytes <= UnitTraversalByteBudget &&
+                                  Reads.UnitTraversal.Calls <= UnitTraversalCallBudget &&
+                                  Reads.UnitTraversal.Elapsed <= TotalBudget &&
+                                  Reads.MapState.Bytes <= MapStateByteBudget &&
+                                  Reads.MapState.Calls <= MapStateCallBudget &&
+                                  Reads.MapState.Elapsed <= TotalBudget &&
+                                  Reads.SideChannel.Bytes <= SideChannelByteBudget &&
+                                  Reads.SideChannel.Calls <= SideChannelCallBudget &&
+                                  Reads.SideChannel.Elapsed <= TotalBudget;
 }
+
+public sealed record AdaptivePlanningEvaluation(
+    AdaptivePlanningComputed Computed,
+    AdaptivePlanningPerformanceSample Performance);
 
 public sealed record AdaptivePlanningReplayFrame(
     string InputFingerprint,
     string ProfileHash,
     string DataHash,
     ImmutableArray<string> OptionIds,
+    AdaptiveBuildSnapshot BuildSnapshot,
     AdaptivePlanningApplied Applied,
     PlannerEvidenceView Presentation,
     AdaptivePlanningPerformanceSample Performance);
@@ -106,48 +140,40 @@ public sealed class AdaptivePlanningReplayHost
     public AdaptivePlanningApplied? LastApplied => _composition.LastApplied;
 
     public AdaptivePlanningReplayFrame? Apply(AdaptivePlanningInputSource source) =>
-        Apply(source, AdaptivePlanningReadCounters.Empty, TimeSpan.Zero);
+        Apply(source, AdaptivePlanningRecognitionObservation.Empty);
 
     public AdaptivePlanningReplayFrame? Apply(AdaptivePlanningInputSource source,
-        AdaptivePlanningReadCounters reads, TimeSpan recognitionElapsed)
+        AdaptivePlanningRecognitionObservation observation)
     {
         AdaptivePlanningReplayFrame? frame = null;
         TryApply(source, action => action(), value => frame = value,
-            reads, recognitionElapsed);
+            observation);
         return frame;
     }
 
     public bool TryApply(AdaptivePlanningInputSource source, Action<Action> schedule,
         Action<AdaptivePlanningReplayFrame> applied) => TryApply(source, schedule, applied,
-        AdaptivePlanningReadCounters.Empty, TimeSpan.Zero);
+        AdaptivePlanningRecognitionObservation.Empty);
 
     private bool TryApply(AdaptivePlanningInputSource source, Action<Action> schedule,
-        Action<AdaptivePlanningReplayFrame> applied, AdaptivePlanningReadCounters reads,
-        TimeSpan recognitionElapsed)
+        Action<AdaptivePlanningReplayFrame> applied,
+        AdaptivePlanningRecognitionObservation observation)
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(schedule);
         ArgumentNullException.ThrowIfNull(applied);
-        ArgumentNullException.ThrowIfNull(reads);
-        if (recognitionElapsed < TimeSpan.Zero)
-            throw new ArgumentOutOfRangeException(nameof(recognitionElapsed));
+        ArgumentNullException.ThrowIfNull(observation);
         var input = _composition.CreateInput(source);
         var work = _composition.TryBegin(input);
         if (work is null) return false;
-        var started = System.Diagnostics.Stopwatch.GetTimestamp();
-        var computed = AdaptivePlanningCompositionRoot.Evaluate(work);
-        var scoringElapsed = System.Diagnostics.Stopwatch.GetElapsedTime(started);
-        var settleElapsed = LatestBackgroundWorkCoordinator.DefaultSettleDelay;
-        var performance = new AdaptivePlanningPerformanceSample(reads,
-            recognitionElapsed, settleElapsed, scoringElapsed,
-            recognitionElapsed + settleElapsed + scoringElapsed);
-        _composition.ScheduleApply(computed, schedule, value => applied(new(
+        var evaluation = AdaptivePlanningCompositionRoot.EvaluateObserved(work, observation);
+        _composition.ScheduleApply(evaluation.Computed, schedule, value => applied(new(
             input.Fingerprint, input.CanonicalInput.ProfileHash,
             input.CanonicalInput.DataHash,
             input.NavigationRequest.Options.Select(option => option.OptionId)
-                .ToImmutableArray(), value,
+                .ToImmutableArray(), input.BuildSnapshot, value,
             PlannerEvidenceProjector.Project(source.Round, value, false, null),
-            performance)));
+            evaluation.Performance)));
         return true;
     }
 
@@ -156,4 +182,5 @@ public sealed class AdaptivePlanningReplayHost
         _composition.LatchManualNavigationOverride();
     public void ConfirmReset(long matchGeneration) =>
         _composition.ConfirmReset(matchGeneration);
+
 }

@@ -15,6 +15,8 @@ namespace OrandOverlay;
 public partial class MainWindow : Window
 {
     internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromMilliseconds(250);
+    internal AdaptivePlanningPerformanceSample? LastAdaptivePlanningPerformance =>
+        _lastAdaptivePlanningPerformance;
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
@@ -59,6 +61,9 @@ public partial class MainWindow : Window
     private bool _autoStartApplied;
     private MapSignals _mapSignals = MapSignals.Empty;
     private AdaptivePlanningApplied? _adaptivePlanningApplied;
+    private AdaptivePlanningRecognitionObservation _latestRecognitionObservation =
+        AdaptivePlanningRecognitionObservation.Empty;
+    private AdaptivePlanningPerformanceSample? _lastAdaptivePlanningPerformance;
     private readonly HashSet<string> _observedLegendIds =
         new(StringComparer.OrdinalIgnoreCase);
     private string? _pendingAdaptiveFingerprint;
@@ -83,7 +88,7 @@ public partial class MainWindow : Window
     private sealed record RefreshComputation(
         RecommendationEngine Engine,
         IReadOnlyList<Recommendation> Recommendations,
-        AdaptivePlanningComputed? AdaptivePlanning);
+        AdaptivePlanningEvaluation? AdaptivePlanning);
 
     public MainWindow()
     {
@@ -747,6 +752,7 @@ public partial class MainWindow : Window
         nextEngine.SetLiveStats(_liveStats);
         var adaptiveWork = _adaptivePlanning.TryBegin(BuildAdaptivePlanningInput(
             recommendationInventory, goal, navigation, gorosei));
+        var recognitionObservation = _latestRecognitionObservation;
         var computation = await _recommendationWork.RunAsync(() =>
             new RefreshComputation(nextEngine,
                 nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
@@ -755,15 +761,19 @@ public partial class MainWindow : Window
                 suppressSeraphim: suppressSeraphim,
                 prioritizeTargetRare: prioritizeTargetRare,
                 suppressFirstRareShip: !firstRareQuestWindow),
-                adaptiveWork is null ? null : AdaptivePlanningCompositionRoot.Evaluate(adaptiveWork)));
+                adaptiveWork is null ? null : AdaptivePlanningCompositionRoot.EvaluateObserved(
+                    adaptiveWork, recognitionObservation)));
         if (computation is null) return;
         if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
         _engine = computation.Engine;
         var recommendations = computation.Recommendations;
         if (computation.AdaptivePlanning is { } adaptive)
-            _adaptivePlanning.ScheduleApply(adaptive,
+        {
+            _lastAdaptivePlanningPerformance = adaptive.Performance;
+            _adaptivePlanning.ScheduleApply(adaptive.Computed,
                 action => Dispatcher.BeginInvoke(new Action(action)),
                 ApplyAdaptivePlanning);
+        }
         _telemetrySession.ObserveTopRecommendations(
             recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();
@@ -952,6 +962,7 @@ public partial class MainWindow : Window
             if (RecognitionStatus.Text == "수동 모드") RecognitionStatus.Text = "메모리 구조 탐색 중…";
             var result = await recognizer.RecognizeAsync(_settings, cancellation.Token);
             if (generation != _scanGeneration || !ReferenceEquals(recognizer, _recognizer)) return;
+            _latestRecognitionObservation = result.Diagnostics.AdaptivePlanningObservation;
             LogUnknownRawcodes(result);
             if (!string.IsNullOrWhiteSpace(result.Diagnostics.ProcessVersion))
                 _lastWarcraftVersion = result.Diagnostics.ProcessVersion;
@@ -1072,6 +1083,8 @@ public partial class MainWindow : Window
         _autoStartApplied = false;
         _mapSignals = MapSignals.Empty;
         _adaptivePlanningApplied = null;
+        _latestRecognitionObservation = AdaptivePlanningRecognitionObservation.Empty;
+        _lastAdaptivePlanningPerformance = null;
         _observedLegendIds.Clear();
         _pendingAdaptiveFingerprint = null;
         _pendingAdaptiveLegendIds = [];

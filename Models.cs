@@ -262,6 +262,8 @@ public sealed class RecognitionDiagnostics
 
     /// <summary>메모리에서 읽은 맵 상태(라운드·정산 사본 수). 비용 때문에 가끔만 갱신된다.</summary>
     public MapStateSample? MapState { get; init; }
+    public AdaptivePlanningRecognitionObservation AdaptivePlanningObservation { get; init; } =
+        AdaptivePlanningRecognitionObservation.Empty;
     public List<string> UnknownRawcodes { get; init; } = [];
     public List<string> GrowthUnitIds { get; init; } = [];
     public string Detail { get; init; } = "";
