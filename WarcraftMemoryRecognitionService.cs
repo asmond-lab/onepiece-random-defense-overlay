@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
@@ -13,6 +14,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     // SetUnitOwner(..., false) 뒤에도 원 소유 플레이어 색상이 남아 멀티 성장형을 구분한다.
     internal const int UnitPlayerColorOffset = 0x16C;
     private readonly RawcodeUnitMap _unitMap;
+    private readonly MapSignalRecognitionProfile? _mapSignalProfile;
+    private readonly MapSignalSnapshotTracker? _mapSignalTracker;
+    private readonly string? _mapSignalProfileError;
     private readonly GrowthUnitPointerTracker _growthPointers = new();
     private long _growthCacheProcessStarted = long.MinValue;
     private int _savedGrowthRevision = -1;
@@ -34,7 +38,20 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private bool _sessionBoundaryCachesCleared;
     private DateTimeOffset _nextWaitingLocatorRescanAt = DateTimeOffset.MinValue;
 
-    public WarcraftMemoryRecognitionService(DataCatalog catalog) => _unitMap = new RawcodeUnitMap(catalog);
+    public WarcraftMemoryRecognitionService(DataCatalog catalog)
+    {
+        _unitMap = new RawcodeUnitMap(catalog);
+        try
+        {
+            _mapSignalProfile = MapSignalRecognitionProfile.FromStory(
+                MapStoryProfileLoader.LoadFromDirectory(Path.Combine(AppContext.BaseDirectory, "Data")));
+            _mapSignalTracker = new MapSignalSnapshotTracker(_mapSignalProfile);
+        }
+        catch (InvalidDataException exception)
+        {
+            _mapSignalProfileError = exception.Message;
+        }
+    }
 
     public Task<RecognitionResult> RecognizeAsync(AppSettings settings, CancellationToken cancellationToken) =>
         Task.Run(() =>
@@ -64,6 +81,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                     profileSource: loaded.Source);
             if (_unitMap.Error is not null)
                 return Failure(RecognitionState.ConfigurationError, "rawcode 데이터 오류 · 기존 패 유지", _unitMap.Error);
+            if (_mapSignalProfileError is not null || _mapSignalProfile is null || _mapSignalTracker is null)
+                return Failure(RecognitionState.ConfigurationError, "맵 신호 프로필 오류 · 기존 패 유지",
+                    _mapSignalProfileError ?? "맵 신호 프로필을 불러오지 못했습니다.");
 
             using var process = FindNewestProcess("Warcraft III");
             if (process is null)
@@ -138,14 +158,14 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             try
             {
                 snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot,
-                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), token);
+                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), _mapSignalProfile, token);
             }
             catch (SnapshotChangedException)
             {
                 token.ThrowIfCancellationRequested();
                 listAddress = FollowPointerPath(memory, locatorAddress, profile.PointerOffsets);
                 snapshot = ReadConsistentSnapshot(memory, listAddress, profile, localSlot,
-                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), token);
+                    _unitMap.IsGrowthUnit, _growthPointers.Snapshot(), _mapSignalProfile, token);
             }
 
             _growthPointers.Commit(snapshot.LocallyObservedGrowth, snapshot.SeenTrackedGrowthPointers);
@@ -249,10 +269,12 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                     }
                 };
             var suffix = mapped.UnknownCount > 0 ? $" · 미등록 {mapped.UnknownCount}" : "";
+            var mapSignals = _mapSignalTracker.Observe(snapshot.MapSignalSnapshot);
             MarkSessionReady();
             return new RecognitionResult
             {
                 Entries = mapped.Entries,
+                MapSignals = mapSignals,
                 State = RecognitionState.Ready,
                 Status = $"워크 메모리 {mapped.Entries.Sum(x => x.Count)}장{suffix}" +
                          (profile.Verified ? "" : " · 검증 세션(임시 활성)") + $" · {DateTime.Now:HH:mm:ss}",
@@ -266,7 +288,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             // 재구성될 수 있다. 이 한 틱을 Waiting으로 보내면 정상 패를 지우므로
             // transient로 유지하고 다음 틱에 locator를 다시 찾는다.
             var state = PoolNotReadyState(localPlayerConfirmed);
-            ResetSessionCaches(allowPeriodicRescan: true);
+            ResetSessionCaches(allowPeriodicRescan: true,
+                clearMapSignals: state == RecognitionState.Waiting);
             return Failure(state,
                 state == RecognitionState.Waiting
                     ? "대전 준비 중 · 기존 패 유지"
@@ -298,9 +321,11 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     /// 확정된 대기/세션 경계에서는 반드시 둘 다 비운다.
     /// </summary>
 
-    private void ResetSessionCaches(bool allowPeriodicRescan = false, bool force = false)
+    private void ResetSessionCaches(bool allowPeriodicRescan = false, bool force = false,
+        bool clearMapSignals = true)
     {
         var now = DateTimeOffset.UtcNow;
+        if (clearMapSignals) _mapSignalTracker?.Reset();
         if (!force && _sessionBoundaryCachesCleared &&
             (!allowPeriodicRescan || now < _nextWaitingLocatorRescanAt))
             return;
@@ -399,7 +424,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
     private static MemoryUnitSnapshot ReadConsistentSnapshot(ReadOnlyProcessMemory memory, ulong listAddress,
         MemoryProfile profile, byte localPlayerSlot, Func<uint, bool> isGrowthUnit,
-        IReadOnlyDictionary<ulong, uint> trackedGrowthPointers, CancellationToken token)
+        IReadOnlyDictionary<ulong, uint> trackedGrowthPointers,
+        MapSignalRecognitionProfile mapSignalProfile, CancellationToken token)
     {
         var countAddress = AddressMath.Add(listAddress, profile.CountOffset);
         var entriesAddress = AddressMath.Add(listAddress, profile.EntriesPointerOffset);
@@ -420,6 +446,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         var seenPointers = new HashSet<ulong>();
         var duplicatePointers = 0;
         var ownedObjects = 0;
+        var objectiveRawcodes = new List<uint>();
+        var rewardWispRawcodes = new List<uint>();
         byte[]? entryPointers = null;
         ulong firstEntry = 0;
         if (countBefore > 0 && profile.EntriesContainPointers)
@@ -443,19 +471,36 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var ownerAddress = FollowObjectFieldPath(memory, unit, profile.OwnerPointerOffsets, profile.OwnerOffset);
             var owner = memory.ReadByte(ownerAddress);
             var neutral = owner == profile.NeutralPlayerSlot;
-            if (owner != localPlayerSlot) foreignObjects++;
             var trackedGrowth = trackedGrowthPointers.TryGetValue(unit, out var trackedRawcode);
             uint rawcode = 0;
             var rawcodeRead = false;
-            if (owner == 7)
+            if (MapSignalReadPolicy.ShouldReadRawcode(
+                    owner, localPlayerSlot, profile.NeutralPlayerSlot, trackedGrowth))
             {
                 var markerAddress = FollowObjectFieldPath(
                     memory, unit, profile.RawcodePointerOffsets, profile.RawcodeOffset);
                 rawcode = memory.ReadUInt32(markerAddress);
                 rawcodeRead = true;
-                var detected = GoroseiMemoryDetector.FromRawcode(rawcode);
-                if (detected != GoroseiMode.None) gorosei = detected;
+                if (owner == 7)
+                {
+                    var detected = GoroseiMemoryDetector.FromRawcode(rawcode);
+                    if (detected != GoroseiMode.None) gorosei = detected;
+                }
             }
+            var signalKind = rawcodeRead
+                ? mapSignalProfile.Classify(owner, localPlayerSlot, rawcode)
+                : MapSignalKind.None;
+            if (signalKind == MapSignalKind.StoryObjective)
+            {
+                objectiveRawcodes.Add(rawcode);
+                continue;
+            }
+            if (signalKind == MapSignalKind.RewardWisp)
+            {
+                rewardWispRawcodes.Add(rawcode);
+                continue;
+            }
+            if (owner != localPlayerSlot) foreignObjects++;
             if (owner != localPlayerSlot && !neutral && !trackedGrowth) continue;
             if (!rawcodeRead)
             {
@@ -508,7 +553,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             throw new SnapshotChangedException();
         return new MemoryUnitSnapshot(countBefore, ownedObjects, duplicatePointers, counts, neutralGrowth,
             foreignObjects, locallyObservedGrowth, seenTrackedGrowthPointers, retainedGrowthObjects,
-            gorosei);
+            gorosei, new MapSignalRawSnapshot(
+                objectiveRawcodes.ToImmutableArray(), rewardWispRawcodes.ToImmutableArray()));
     }
 
     private static ulong FollowObjectFieldPath(ReadOnlyProcessMemory memory, ulong objectAddress,
@@ -568,7 +614,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         return _lastMapState;
     }
 
-    private static RecognitionResult Failure(RecognitionState state, string status, string detail,
+    private RecognitionResult Failure(RecognitionState state, string status, string detail,
         RecognitionDiagnostics? diagnostics = null, string profileSource = "") => new()
     {
         State = state,
@@ -576,6 +622,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
         // 로비·워크 종료·맵 로딩(Waiting)은 이전 판이 끝난 것이다. 안 켜면 징베 초월
         // 같은 자동시작 목표가 다음 판까지 남고, 희귀함 추천이 다시 안 열린다.
         ConfirmsSessionBoundary = state == RecognitionState.Waiting,
+        MapSignals = _mapSignalTracker?.RetainOnTransient() ?? MapSignals.Empty,
         Diagnostics = diagnostics is null
             ? new RecognitionDiagnostics { Source = "WarcraftMemory", ProfileSource = profileSource, Detail = detail }
             : new RecognitionDiagnostics
@@ -624,7 +671,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private sealed record MemoryUnitSnapshot(int ListCount, int OwnedObjects, int DuplicatePointers,
         Dictionary<uint, int> RawcodeCounts, Dictionary<uint, int> NeutralGrowthCounts, int ForeignObjects,
         Dictionary<ulong, uint> LocallyObservedGrowth, HashSet<ulong> SeenTrackedGrowthPointers,
-        int RetainedGrowthObjects, GoroseiMode Gorosei);
+        int RetainedGrowthObjects, GoroseiMode Gorosei, MapSignalRawSnapshot MapSignalSnapshot);
     internal sealed class SnapshotChangedException : InvalidOperationException;
 }
 

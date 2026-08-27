@@ -1,8 +1,133 @@
+using System.Collections.Immutable;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace OrandOverlay;
+
+internal enum MapSignalKind
+{
+    None,
+    StoryObjective,
+    RewardWisp
+}
+
+internal sealed class MapSignalRecognitionProfile
+{
+    internal const byte StoryObjectiveOwner = 5;
+    private readonly ImmutableDictionary<uint, StoryStage> _objectives;
+    private readonly ImmutableHashSet<uint> _rewardWisps;
+
+    private MapSignalRecognitionProfile(
+        ImmutableDictionary<uint, StoryStage> objectives,
+        ImmutableHashSet<uint> rewardWisps)
+    {
+        _objectives = objectives;
+        _rewardWisps = rewardWisps;
+    }
+
+    public static MapSignalRecognitionProfile FromStory(StoryProgressionProfile story)
+    {
+        ArgumentNullException.ThrowIfNull(story);
+        var objectives = ImmutableDictionary.CreateBuilder<uint, StoryStage>();
+        var rewards = ImmutableHashSet.CreateBuilder<uint>();
+        foreach (var stage in story.Stages)
+        {
+            if (stage.OwnerId != StoryObjectiveOwner ||
+                !RawcodeCodec.TryParse(stage.ObjectiveRawcode, out var objective))
+                throw new InvalidDataException("Story objective recognition profile is invalid.");
+            objectives.Add(objective, stage);
+            foreach (var reward in stage.RewardSources)
+            {
+                if (!RawcodeCodec.TryParse(reward.Rawcode, out var rewardRawcode))
+                    throw new InvalidDataException("Story reward recognition profile is invalid.");
+                rewards.Add(rewardRawcode);
+            }
+        }
+        return new MapSignalRecognitionProfile(objectives.ToImmutable(), rewards.ToImmutable());
+    }
+
+    public MapSignalKind Classify(byte owner, byte localOwner, uint rawcode)
+    {
+        if (owner == StoryObjectiveOwner && _objectives.ContainsKey(rawcode))
+            return MapSignalKind.StoryObjective;
+        if (owner == localOwner && _rewardWisps.Contains(rawcode))
+            return MapSignalKind.RewardWisp;
+        return MapSignalKind.None;
+    }
+
+    public bool IsSignal(byte owner, byte localOwner, uint rawcode) =>
+        Classify(owner, localOwner, rawcode) != MapSignalKind.None;
+
+    public StoryStage? Objective(uint rawcode) =>
+        _objectives.GetValueOrDefault(rawcode);
+}
+
+internal sealed record MapSignalRawSnapshot(
+    ImmutableArray<uint> ObjectiveRawcodes,
+    ImmutableArray<uint> RewardWispRawcodes);
+
+internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profile)
+{
+    private int? _candidateOrdinal;
+    private int _candidateStreak;
+    public MapSignals LastGood { get; private set; } = MapSignals.Empty;
+
+    public MapSignals Observe(MapSignalRawSnapshot snapshot)
+    {
+        var objectiveRawcodes = snapshot.ObjectiveRawcodes.Distinct().ToArray();
+        var stage = objectiveRawcodes.Length == 1
+            ? profile.Objective(objectiveRawcodes[0])
+            : null;
+        if (stage is null)
+        {
+            _candidateOrdinal = null;
+            _candidateStreak = 0;
+        }
+        else if (_candidateOrdinal == stage.Ordinal)
+        {
+            _candidateStreak++;
+        }
+        else
+        {
+            _candidateOrdinal = stage.Ordinal;
+            _candidateStreak = 1;
+        }
+
+        var activeOrdinal = LastGood.ActiveObjectiveOrdinal;
+        var activeRawcode = LastGood.ActiveObjectiveRawcode;
+        var completed = LastGood.CompletedStoryStageOrdinal;
+        if (stage is not null && _candidateStreak >= 2 && stage.Ordinal > completed)
+        {
+            activeOrdinal = stage.Ordinal;
+            activeRawcode = stage.ObjectiveRawcode;
+            completed = Math.Max(completed, stage.Ordinal - 1);
+        }
+
+        var rewards = snapshot.RewardWispRawcodes
+            .GroupBy(RawcodeCodec.Format, StringComparer.Ordinal)
+            .ToImmutableDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+        LastGood = new MapSignals(activeOrdinal, activeRawcode, completed, rewards);
+        return LastGood;
+    }
+
+    public MapSignals RetainOnTransient() => LastGood;
+
+    public void Reset()
+    {
+        _candidateOrdinal = null;
+        _candidateStreak = 0;
+        LastGood = MapSignals.Empty;
+    }
+}
+
+internal static class MapSignalReadPolicy
+{
+    public static bool ShouldReadRawcode(byte owner, byte localOwner, byte neutralOwner,
+        bool trackedGrowth) =>
+        owner == localOwner || owner == neutralOwner ||
+        owner == MapSignalRecognitionProfile.StoryObjectiveOwner || owner == 7 || trackedGrowth;
+}
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum MemoryLocatorKind

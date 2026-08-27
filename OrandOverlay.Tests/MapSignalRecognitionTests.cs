@@ -1,0 +1,141 @@
+using System.Collections.Immutable;
+using OrandOverlay;
+using Xunit;
+
+namespace OrandOverlay.Tests;
+
+public sealed class MapSignalRecognitionTests
+{
+    private static readonly StoryProgressionProfile Story = MapStoryProfileLoader.LoadFromDirectory(
+        Path.Combine(AppContext.BaseDirectory, "Data"));
+    private static readonly MapSignalRecognitionProfile Profile = MapSignalRecognitionProfile.FromStory(Story);
+
+    [Theory]
+    [InlineData(5, 0, "n006", 1)]
+    [InlineData(5, 0, "xxxx", 0)]
+    [InlineData(7, 0, "n006", 0)]
+    [InlineData(3, 0, "n006", 0)]
+    [InlineData(15, 0, "n006", 0)]
+    [InlineData(0, 0, "e016", 2)]
+    [InlineData(15, 0, "e016", 0)]
+    [InlineData(3, 0, "e016", 0)]
+    [InlineData(0, 0, "help", 0)]
+    public void Classify_UsesExactOwnerAndRawcodeWhitelists(
+        byte owner, byte localOwner, string rawcode, int expected)
+    {
+        Assert.True(RawcodeCodec.TryParse(rawcode, out var code));
+
+        Assert.Equal(expected, (int)Profile.Classify(owner, localOwner, code));
+    }
+
+    [Fact]
+    public void Tracker_RequiresTwoConsistentSnapshotsAndAdvancesMonotonically()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+
+        Assert.Equal(0, tracker.Observe(Snapshot("n006")).CompletedStoryStageOrdinal);
+        var stage6 = tracker.Observe(Snapshot("n006"));
+        Assert.Equal(6, stage6.ActiveObjectiveOrdinal);
+        Assert.Equal(5, stage6.CompletedStoryStageOrdinal);
+        Assert.True(stage6.Stage5Complete);
+
+        Assert.Equal(5, tracker.Observe(Snapshot("n007")).CompletedStoryStageOrdinal);
+        var stage7 = tracker.Observe(Snapshot("n007"));
+        Assert.Equal(6, stage7.CompletedStoryStageOrdinal);
+        Assert.True(stage7.Stage6Complete);
+
+        tracker.Observe(Snapshot("n00A"));
+        var marineford = tracker.Observe(Snapshot("n00A"));
+        Assert.Equal(8, marineford.CompletedStoryStageOrdinal);
+        Assert.True(marineford.MarinefordReady);
+
+        tracker.Observe(Snapshot("n006"));
+        Assert.Equal(8, tracker.Observe(Snapshot("n006")).CompletedStoryStageOrdinal);
+    }
+
+    [Fact]
+    public void Tracker_RejectsOneFrameImpostorMutationAndAmbiguousDuplicates()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+
+        tracker.Observe(Snapshot("n006"));
+        tracker.Observe(Snapshot("xxxx"));
+        Assert.Equal(0, tracker.Observe(Snapshot("n006")).CompletedStoryStageOrdinal);
+
+        tracker.Observe(Snapshot("n006"));
+        var duplicate = tracker.Observe(Snapshot("n006", "n006"));
+        Assert.Equal(5, duplicate.CompletedStoryStageOrdinal);
+
+        tracker.Reset();
+        tracker.Observe(Snapshot("n006", "n007"));
+        Assert.Equal(0, tracker.Observe(Snapshot("n006", "n007")).CompletedStoryStageOrdinal);
+    }
+
+    [Fact]
+    public void Tracker_RetainsLastGoodAcrossDisappearanceTransientAndClearsOnlyOnReset()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+        tracker.Observe(Snapshot("n007", rewards: ["e016", "e016", "e017"]));
+        var confirmed = tracker.Observe(Snapshot("n007", rewards: ["e016", "e016", "e017"]));
+
+        Assert.Same(confirmed, tracker.LastGood);
+        Assert.Same(confirmed, tracker.RetainOnTransient());
+        Assert.Equal(2, confirmed.RewardWisps["e016"]);
+        Assert.Equal(1, confirmed.RewardWisps["e017"]);
+        Assert.Equal(6, tracker.Observe(Snapshot()).CompletedStoryStageOrdinal);
+
+        tracker.Reset();
+        Assert.Equal(MapSignals.Empty, tracker.LastGood);
+    }
+
+    [Fact]
+    public void SignalObjects_AreExcludedFromInventoryAndCatalogRatioAccounting()
+    {
+        Assert.True(Profile.IsSignal(owner: 5, localOwner: 0, Code("n006")));
+        Assert.True(Profile.IsSignal(owner: 0, localOwner: 0, Code("e016")));
+        Assert.False(Profile.IsSignal(owner: 0, localOwner: 0, Code("help")));
+
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var unitMap = new RawcodeUnitMap(catalog);
+        Assert.False(unitMap.IsRecognizedCard(Code("n006")));
+        Assert.False(unitMap.IsRecognizedCard(Code("e016")));
+
+        var mapped = unitMap.Map(new Dictionary<uint, int>
+        {
+            [Code("100h")] = 1,
+            [Code("help")] = 1
+        });
+        Assert.Equal(1, mapped.KnownCount + mapped.CatalogNamedCount);
+        Assert.Equal(1, mapped.UnknownCount);
+        Assert.Equal(0.5, (mapped.KnownCount + mapped.CatalogNamedCount) / 2d);
+    }
+
+    [Fact]
+    public void SamePassReadPlan_IsBoundedByOwnerCandidates()
+    {
+        byte[] owners = [0, 5, 7, 3, 15, 5];
+        var reads = owners.Count(owner => MapSignalReadPolicy.ShouldReadRawcode(
+            owner, localOwner: 0, neutralOwner: 15, trackedGrowth: false));
+
+        Assert.Equal(5, reads);
+        Assert.Equal(2, owners.Count(owner => owner == MapSignalRecognitionProfile.StoryObjectiveOwner));
+    }
+
+    private static MapSignalRawSnapshot Snapshot(
+        params string[] objectives) => Snapshot(objectives, []);
+
+    private static MapSignalRawSnapshot Snapshot(
+        string objective, string[] rewards) => Snapshot([objective], rewards);
+
+    private static MapSignalRawSnapshot Snapshot(
+        string[] objectives, string[] rewards) => new(
+            objectives.Select(Code).ToImmutableArray(),
+            rewards.Select(Code).ToImmutableArray());
+
+    private static uint Code(string value)
+    {
+        Assert.True(RawcodeCodec.TryParse(value, out var code));
+        return code;
+    }
+}

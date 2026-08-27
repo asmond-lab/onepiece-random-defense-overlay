@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
 namespace OrandOverlay;
@@ -208,6 +209,7 @@ public sealed class RecognitionResult
     public string Status { get; init; } = "대기";
     public RecognitionState State { get; init; } = RecognitionState.Ready;
     public RecognitionDiagnostics Diagnostics { get; init; } = new();
+    public MapSignals MapSignals { get; init; } = MapSignals.Empty;
     // True only when the reader has positive evidence that the current match context ended
     // (Warcraft exited, GameUI disappeared, or WorldFrame disappeared). A TMO reconnect or
     // wrapper-discovery delay is merely disconnected and must not erase manual corrections.
@@ -216,6 +218,20 @@ public sealed class RecognitionResult
     // A failed or transient read must never erase the last known-good inventory.
     [JsonIgnore] public bool ShouldReplaceInventory => State == RecognitionState.Ready;
     [JsonIgnore] public bool ShouldClearAutomaticInventory => State == RecognitionState.Waiting;
+}
+
+public sealed record MapSignals(
+    int? ActiveObjectiveOrdinal,
+    string? ActiveObjectiveRawcode,
+    int CompletedStoryStageOrdinal,
+    ImmutableDictionary<string, int> RewardWisps)
+{
+    public static MapSignals Empty { get; } = new(
+        null, null, 0, ImmutableDictionary<string, int>.Empty.WithComparers(StringComparer.Ordinal));
+
+    [JsonIgnore] public bool Stage5Complete => CompletedStoryStageOrdinal >= 5;
+    [JsonIgnore] public bool Stage6Complete => CompletedStoryStageOrdinal >= 6;
+    [JsonIgnore] public bool MarinefordReady => CompletedStoryStageOrdinal >= 8;
 }
 
 public enum RecognitionState
