@@ -27,7 +27,9 @@
           <TextBlock x:Name="GoalText" Text="야마토 초월" Foreground="#FFF0C75E"
                      FontSize="15" FontWeight="Bold" TextWrapping="Wrap"/>
           <TextBlock x:Name="PhaseHintText" Foreground="#FFB4BBC6" FontSize="11"
-                     TextWrapping="Wrap" Margin="0,2,0,0" Visibility="Collapsed"/>
+                     TextWrapping="Wrap" Margin="0,2,0,0" Visibility="Collapsed"
+                     AutomationProperties.AutomationId="planner-phase"
+                     AutomationProperties.Name="판단 단계"/>
           <TextBlock x:Name="CarryModeText" Foreground="#FF74C0FC" FontSize="10.5"
                      FontWeight="SemiBold" Margin="0,3,0,0" Visibility="Collapsed"/>
           <TextBlock x:Name="ReadinessText" Foreground="#FFF0C75E" FontSize="10.5"
@@ -58,7 +60,10 @@
         </ScrollViewer>
       </Border>
       <Border x:Name="BoardWell" Grid.Row="3" Background="#FF0C0E14" CornerRadius="12" Margin="10,6,10,0" Padding="8,6">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer x:Name="BoardScrollViewer" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      AutomationProperties.AutomationId="candidate-board-scroll"
+                      AutomationProperties.Name="후보 보드와 판단 근거">
           <StackPanel>
             <TextBlock Text="후보 보드  ·  눌러서 흐름 전환" Foreground="#FF8B93A7" FontSize="10"
                        FontWeight="SemiBold" Margin="0,0,0,8"/>
@@ -71,9 +76,11 @@
           <ColumnDefinition/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="StatusText" Foreground="#FF8B93A7" FontSize="11" TextWrapping="Wrap"/>
+        <TextBlock x:Name="StatusText" Foreground="#FF8B93A7" FontSize="11" TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="overlay-status"/>
         <TextBlock Grid.Column="1" x:Name="OverlayVersionText" Foreground="#FF6B7384" FontSize="10.5"
-                   VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                   VerticalAlignment="Bottom" Margin="10,0,0,0"
+                   AutomationProperties.AutomationId="overlay-version"/>
       </Grid>
     </Grid>
   </Border>

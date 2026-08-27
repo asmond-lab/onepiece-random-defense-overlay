@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -16,6 +17,7 @@ public partial class OverlayWindow : OverlayWindowBase
     private string? _clusterHeadRouteId;
     private Func<Recommendation, IReadOnlyList<Recommendation>>? _storyChildren;
     private Func<IReadOnlyList<Recommendation>, string?, IReadOnlyList<Recommendation>>? _recascade;
+    private PlannerEvidenceView? _plannerEvidence;
 
     public OverlayWindow()
     {
@@ -64,6 +66,15 @@ public partial class OverlayWindow : OverlayWindowBase
 
     public void UpdateStatus(string status) => StatusText.Text = status;
 
+    public void RenderPlannerEvidence(int round, AdaptivePlanningApplied? applied,
+        bool signalsUnknown = false, string? unknownReason = null)
+    {
+        _plannerEvidence = RecommendationPresentation.PlannerEvidence(
+            round, applied, signalsUnknown, unknownReason);
+        ApplyPhaseBanner();
+        FillBoard();
+    }
+
     public void Render(string goalName, IReadOnlyList<Recommendation> recommendations,
         InventoryStatSummary stats, IReadOnlyList<RareRerollAdvice> rareRerolls,
         IReadOnlyList<GreenBloodAdvice> greenBloodAdvice, bool greenBloodOwned,
@@ -106,10 +117,7 @@ public partial class OverlayWindow : OverlayWindowBase
             ReadinessText.Visibility = Visibility.Collapsed;
             Stats.SetReadiness(null, ready: false);
         }
-        PhaseHintText.Text = phaseHint ?? "";
-        PhaseHintText.Visibility = phaseHint is { Length: > 0 }
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        ApplyPhaseBanner(phaseHint);
         StatusText.Text = status;
         RenderCurrentStats(stats, magicGoal, gorosei, stunTarget, stunCap);
         RenderRareRerolls(rareRerolls, recommendations.Count > 0);
@@ -140,7 +148,20 @@ public partial class OverlayWindow : OverlayWindowBase
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _recommendations, _combinePlan,
             _selectedRouteId, SelectRoute, PhaseHintText.Visibility == Visibility.Visible
                 ? PhaseHintText.Text
-                : null, children, head?.Route.Id);
+                : null, children, head?.Route.Id, _plannerEvidence);
+    }
+
+    private void ApplyPhaseBanner(string? fallback = null)
+    {
+        var field = _plannerEvidence?[PlannerEvidenceFieldKind.Phase];
+        PhaseHintText.Text = field?.DisplayValue ?? fallback ?? "";
+        PhaseHintText.Visibility = PhaseHintText.Text.Length > 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        AutomationProperties.SetName(PhaseHintText,
+            field?.AccessibilityName ?? "안내");
+        AutomationProperties.SetItemStatus(PhaseHintText,
+            field?.AccessibilityValue ?? PhaseHintText.Text);
     }
 
     private void SelectRoute(string routeId)

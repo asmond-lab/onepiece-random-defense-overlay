@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Text;
 
 namespace OrandOverlay;
 
@@ -25,11 +26,15 @@ internal static class RecommendationBoard
         Action<string> onSelect,
         string? banner = null,
         IReadOnlyList<Recommendation>? selectedChildren = null,
-        string? clusterHeadId = null)
+        string? clusterHeadId = null,
+        PlannerEvidenceView? plannerEvidence = null)
     {
         nowPanel.Children.Clear();
         flowPanel.Children.Clear();
         boardPanel.Children.Clear();
+
+        if (plannerEvidence is not null)
+            boardPanel.Children.Add(PlannerEvidenceBlock(plannerEvidence));
 
         if (recs.Count == 0)
         {
@@ -106,6 +111,97 @@ internal static class RecommendationBoard
         }
         boardPanel.Children.Add(tiles);
     }
+
+    internal static FrameworkElement PlannerEvidenceBlock(PlannerEvidenceView evidence)
+    {
+        var stack = new StackPanel();
+        var title = new Grid { Margin = OverlayTheme.PlannerHeaderMargin };
+        title.ColumnDefinitions.Add(new ColumnDefinition());
+        title.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        title.Children.Add(new TextBlock
+        {
+            Text = "적응형 판단 근거",
+            Foreground = OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerTitleTypeSize,
+            FontWeight = FontWeights.Bold
+        });
+        var state = new TextBlock
+        {
+            Text = evidence[PlannerEvidenceFieldKind.Phase].DisplayValue,
+            Foreground = OverlayTheme.GoldBrush,
+            FontFamily = new FontFamily("Consolas, Malgun Gothic"),
+            FontSize = OverlayTheme.PlannerStateTypeSize,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(state, 1);
+        title.Children.Add(state);
+        stack.Children.Add(title);
+
+        foreach (var field in evidence.Fields.Where(item =>
+                     item.Kind != PlannerEvidenceFieldKind.Phase))
+            stack.Children.Add(PlannerEvidenceRow(field));
+
+        return new Border
+        {
+            Background = OverlayTheme.RowAltBrush,
+            BorderBrush = OverlayTheme.HairlineBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(OverlayTheme.TileRadius),
+            Padding = OverlayTheme.PlannerBlockPadding,
+            Margin = OverlayTheme.PlannerBlockMargin,
+            Child = stack
+        };
+    }
+
+    private static FrameworkElement PlannerEvidenceRow(PlannerEvidenceField field)
+    {
+        var row = new Grid { Margin = OverlayTheme.PlannerRowMargin };
+        row.ColumnDefinitions.Add(new ColumnDefinition
+        {
+            Width = new GridLength(OverlayTheme.PlannerLabelColumnWidth)
+        });
+        row.ColumnDefinitions.Add(new ColumnDefinition());
+        row.Children.Add(new TextBlock
+        {
+            Text = field.Label,
+            Foreground = OverlayTheme.MutedBrush,
+            FontSize = OverlayTheme.PlannerLabelTypeSize,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap
+        });
+        var value = new TextBlock
+        {
+            Text = KeepKoreanWordsTogether(field.DisplayValue),
+            Foreground = field.IsWarning ? OverlayTheme.WarnBrush : OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerValueTypeSize,
+            TextWrapping = TextWrapping.WrapWithOverflow
+        };
+        Grid.SetColumn(value, 1);
+        row.Children.Add(value);
+        AutomationProperties.SetAutomationId(row, field.AutomationId);
+        AutomationProperties.SetName(row, field.AccessibilityName);
+        AutomationProperties.SetItemStatus(row, field.AccessibilityValue);
+        return row;
+    }
+
+    internal static string KeepKoreanWordsTogether(string value)
+    {
+        var semanticValue = value.Replace(
+            "회복 가능성을 다시 계산합니다.",
+            "회복\u00A0가능성을\u00A0다시\u00A0계산합니다.",
+            StringComparison.Ordinal);
+        var result = new StringBuilder(semanticValue.Length);
+        for (var index = 0; index < semanticValue.Length; index++)
+        {
+            if (index > 0 && IsHangulSyllable(semanticValue[index - 1]) &&
+                IsHangulSyllable(semanticValue[index]))
+                result.Append('\u2060');
+            result.Append(semanticValue[index]);
+        }
+        return result.ToString();
+    }
+
+    private static bool IsHangulSyllable(char value) => value is >= '\uAC00' and <= '\uD7A3';
 
     public readonly record struct BoardCluster(Recommendation Head, IReadOnlyList<Recommendation> Children);
 

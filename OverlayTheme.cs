@@ -37,6 +37,16 @@ internal static class OverlayTheme
     public const double ImageRadius = 8;
     public const double ChipRadius = 6;
 
+    public static Thickness PlannerBlockMargin { get; } = new(0, 0, 0, 8);
+    public static Thickness PlannerHeaderMargin { get; } = new(0, 0, 0, 6);
+    public static Thickness PlannerRowMargin { get; } = new(0, 0, 0, 4);
+    public static Thickness PlannerBlockPadding { get; } = new(8);
+    public const double PlannerLabelColumnWidth = 88;
+    public const double PlannerTitleTypeSize = 12;
+    public const double PlannerStateTypeSize = 9.5;
+    public const double PlannerLabelTypeSize = 10;
+    public const double PlannerValueTypeSize = 10.5;
+
     public static void AttachRoundClip(FrameworkElement element, double radius)
     {
         void Apply()

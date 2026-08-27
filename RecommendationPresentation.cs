@@ -1,7 +1,15 @@
+using System.Collections.Immutable;
+using System.Globalization;
+
 namespace OrandOverlay;
 
 public static class RecommendationPresentation
 {
+    public static PlannerEvidenceView PlannerEvidence(int round,
+        AdaptivePlanningApplied? applied, bool signalsUnknown,
+        string? unknownReason = null) => PlannerEvidenceProjector.Project(
+            round, applied, signalsUnknown, unknownReason);
+
     public static string CarryModeLabel(GoalCarryMode mode) => mode switch
     {
         GoalCarryMode.SoloPreferred => "1상위 권장",
@@ -234,4 +242,317 @@ public static class RecommendationPresentation
         return name;
     }
 
+}
+
+public enum PlannerEvidenceState
+{
+    Waiting,
+    Blocked,
+    Round20Preview,
+    Round21Actionable,
+    Committed,
+    ManualOverride,
+    Round24Forced,
+    Unknown
+}
+
+public enum PlannerEvidenceFieldKind
+{
+    Phase,
+    Action,
+    Blocker,
+    LaneComparison,
+    PhysicalRoute,
+    MagicRoute,
+    Package,
+    FirstLegend,
+    Navigation,
+    NavigationOption,
+    Recovery,
+    Interval,
+    Confidence,
+    UnknownSignals,
+    Restrictions,
+    ForcedManual
+}
+
+public sealed record PlannerEvidenceField(
+    PlannerEvidenceFieldKind Kind,
+    string AutomationId,
+    string Label,
+    string DisplayValue,
+    string MachineValue,
+    string AccessibilityName,
+    string AccessibilityValue,
+    bool IsWarning);
+
+public sealed record PlannerEvidenceView(
+    PlannerEvidenceState State,
+    ImmutableArray<PlannerEvidenceField> Fields)
+{
+    public bool IsRecommendationOnly => true;
+    public bool ClaimsRuntimeSelection => false;
+    public PlannerEvidenceField this[PlannerEvidenceFieldKind kind] =>
+        Fields.Single(field => field.Kind == kind);
+}
+
+internal static class PlannerEvidenceProjector
+{
+    private const string Empty = "확인 전";
+
+    public static PlannerEvidenceView Project(int round, AdaptivePlanningApplied? applied,
+        bool signalsUnknown, string? unknownReason)
+    {
+        var state = State(round, applied, signalsUnknown);
+        var trace = applied?.Trace;
+        var navigation = applied?.Navigation;
+        var physical = Best(trace, DamageLane.Physical);
+        var magic = Best(trace, DamageLane.Magic);
+        var option = navigation?.Options.FirstOrDefault(item =>
+                         item.OptionId.Equals(navigation.RecommendedOptionId,
+                             StringComparison.Ordinal))
+                     ?? navigation?.Options.FirstOrDefault();
+        var blockers = Blockers(applied);
+        var unknowns = navigation?.MissingSignalIds ?? [];
+        var fields = ImmutableArray.Create(
+            Field(PlannerEvidenceFieldKind.Phase, "planner-phase", "판단 단계",
+                StateLabel(state), trace?.Phase.ToString() ?? state.ToString(),
+                state is PlannerEvidenceState.Blocked or PlannerEvidenceState.Unknown),
+            Field(PlannerEvidenceFieldKind.Action, "planner-action", "지금 할 일",
+                ActionLabel(state, applied), $"{state}|{trace?.Phase}"),
+            Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "멈춘 이유",
+                blockers.Display, blockers.Machine, blockers.IsWarning),
+            Field(PlannerEvidenceFieldKind.LaneComparison, "planner-lane-comparison", "딜 경로 비교",
+                $"물리 {Score(physical)} · 마법 {Score(magic)}",
+                $"physical={RawScore(physical)};magic={RawScore(magic)}"),
+            Field(PlannerEvidenceFieldKind.PhysicalRoute, "planner-physical-route", "물리 경로",
+                RouteDisplay(physical), RouteMachine(physical)),
+            Field(PlannerEvidenceFieldKind.MagicRoute, "planner-magic-route", "마법 경로",
+                RouteDisplay(magic), RouteMachine(magic)),
+            Field(PlannerEvidenceFieldKind.Package, "planner-package", "목표·패키지 완성",
+                PackageDisplay(applied, physical, magic), PackageMachine(applied, physical, magic)),
+            Field(PlannerEvidenceFieldKind.FirstLegend, "planner-first-legend", "첫 전설 적합",
+                FirstLegendDisplay(applied), FirstLegendMachine(applied)),
+            Field(PlannerEvidenceFieldKind.Navigation, "planner-navigation", "항법 판단",
+                NavigationDisplay(navigation, option),
+                $"regime={navigation?.Regime};posture={option?.Posture}"),
+            Field(PlannerEvidenceFieldKind.NavigationOption, "planner-navigation-option", "추천 항법",
+                navigation?.RecommendedOptionId is { } optionId
+                    ? NavigationProfiles.Find(optionId).Name
+                    : Empty,
+                navigation?.RecommendedOptionId ?? "unknown"),
+            Field(PlannerEvidenceFieldKind.Recovery, "planner-recovery", "회복 가능성",
+                RecoveryDisplay(option), RecoveryMachine(option)),
+            Field(PlannerEvidenceFieldKind.Interval, "planner-interval", "하한·평균·상한",
+                IntervalDisplay(option), IntervalMachine(option)),
+            Field(PlannerEvidenceFieldKind.Confidence, "planner-confidence", "신뢰도",
+                ConfidenceDisplay(trace, option), ConfidenceMachine(trace, option),
+                (trace?.ConfidenceBp ?? 0) < NavigationIntervalScorer.MinimumRecommendationConfidenceBp),
+            Field(PlannerEvidenceFieldKind.UnknownSignals, "planner-unknown-signals", "미확인 신호",
+                UnknownDisplay(unknowns, unknownReason), UnknownMachine(unknowns, unknownReason),
+                signalsUnknown || unknowns.Length > 0),
+            Field(PlannerEvidenceFieldKind.Restrictions, "planner-restrictions", "제한",
+                "추천만 제공 · 게임 내 선택 없음",
+                "recommendation-only=true;runtime-selection=false"),
+            Field(PlannerEvidenceFieldKind.ForcedManual, "planner-forced-manual", "강제·수동 상태",
+                ForcedManualDisplay(trace, navigation), ForcedManualMachine(trace, navigation),
+                state == PlannerEvidenceState.ManualOverride));
+        return new PlannerEvidenceView(state, fields);
+    }
+
+    private static PlannerEvidenceState State(int round, AdaptivePlanningApplied? applied,
+        bool signalsUnknown)
+    {
+        if (signalsUnknown) return PlannerEvidenceState.Unknown;
+        if (applied is null) return PlannerEvidenceState.Waiting;
+        if (applied.State.ManualLatches.GoalOverride ||
+            applied.State.ManualLatches.NavigationOverride ||
+            applied.Navigation.State == NavigationRecommendationState.ManualOverride)
+            return PlannerEvidenceState.ManualOverride;
+        if (round >= 24 && (applied.Navigation.State == NavigationRecommendationState.SourceExpectedForced ||
+                            applied.Trace.SourceDefinedForcedExpectationId is not null))
+            return PlannerEvidenceState.Round24Forced;
+        if (round == 20) return PlannerEvidenceState.Round20Preview;
+        if (applied.Navigation.State == NavigationRecommendationState.Locked)
+            return PlannerEvidenceState.Committed;
+        if (round is >= 21 and <= 23 &&
+            applied.Navigation.State == NavigationRecommendationState.Actionable)
+            return PlannerEvidenceState.Round21Actionable;
+        if (applied.Blockers.Length > 0 || applied.Navigation.Blockers.Length > 0 ||
+            applied.Navigation.State == NavigationRecommendationState.NoSafeRecommendation)
+            return PlannerEvidenceState.Blocked;
+        return applied.State.Phase == PlannerPhase.Committed
+            ? PlannerEvidenceState.Committed
+            : PlannerEvidenceState.Waiting;
+    }
+
+    private static AdaptiveRouteComponent? Best(AdaptiveDecisionEvent? trace, DamageLane lane) =>
+        trace?.RouteComponents.Where(item => item.Lane == lane)
+            .OrderByDescending(item => item.RouteScoreBp).FirstOrDefault();
+
+    private static PlannerEvidenceField Field(PlannerEvidenceFieldKind kind, string id,
+        string label, string display, string machine, bool warning = false) =>
+        new(kind, id, label, display, machine, label, display, warning);
+
+    private static string StateLabel(PlannerEvidenceState state) => state switch
+    {
+        PlannerEvidenceState.Waiting => "판단 입력 대기",
+        PlannerEvidenceState.Blocked => "판단 보류",
+        PlannerEvidenceState.Round20Preview => "20라운드 미리보기",
+        PlannerEvidenceState.Round21Actionable => "21~23라운드 추천 가능",
+        PlannerEvidenceState.Committed => "추천 고정",
+        PlannerEvidenceState.ManualOverride => "수동 설정 유지",
+        PlannerEvidenceState.Round24Forced => "24라운드 원본 규칙 기대값",
+        _ => "입력 확인 필요"
+    };
+
+    private static string ActionLabel(PlannerEvidenceState state, AdaptivePlanningApplied? applied) =>
+        state switch
+        {
+            PlannerEvidenceState.Waiting => "게임 신호를 확인하는 중입니다.",
+            PlannerEvidenceState.Blocked => "차단 사유를 확인하고 기존 추천을 유지합니다.",
+            PlannerEvidenceState.Round20Preview => "두 딜 경로와 항법 후보를 비교합니다.",
+            PlannerEvidenceState.Round21Actionable => "표시된 항법을 참고해 직접 선택하세요.",
+            PlannerEvidenceState.Committed => "고정된 빌드와 항법 추천을 유지합니다.",
+            PlannerEvidenceState.ManualOverride => "사용자가 고른 오버레이 설정을 유지합니다.",
+            PlannerEvidenceState.Round24Forced => "맵 원본 규칙의 24라운드 기대값을 안내합니다.",
+            _ => applied?.State.Phase == PlannerPhase.ChooseLegend
+                ? "표시된 첫 전설 후보를 확인하세요."
+                : "미확인 신호가 안정될 때까지 마지막 추천을 유지합니다."
+        };
+
+    private static (string Display, string Machine, bool IsWarning) Blockers(
+        AdaptivePlanningApplied? applied)
+    {
+        var build = applied?.Blockers.Select(item => item.ToString()) ?? [];
+        var navigation = applied?.Navigation.Blockers.Select(item => item.ToString()) ?? [];
+        var values = build.Concat(navigation).Distinct(StringComparer.Ordinal).ToArray();
+        return values.Length == 0
+            ? ("없음", "none", false)
+            : ($"{values.Length}개 입력을 더 확인해야 합니다.", string.Join(',', values), true);
+    }
+
+    private static string Score(AdaptiveRouteComponent? route) =>
+        route is null ? Empty : Bp(route.RouteScoreBp);
+    private static string RawScore(AdaptiveRouteComponent? route) =>
+        route?.RouteScoreBp.ToString(CultureInfo.InvariantCulture) ?? "unknown";
+    private static string RouteDisplay(AdaptiveRouteComponent? route) => route is null
+        ? Empty
+        : $"{(route.Lane == DamageLane.Physical ? "물리" : "마법")} 1순위 · {Bp(route.RouteScoreBp)}";
+    private static string RouteMachine(AdaptiveRouteComponent? route) => route is null
+        ? "unknown"
+        : $"{route.CandidateId}|{route.RouteScoreBp}|{route.GoalProgressBp}|{route.PackageProgressBp}";
+
+    private static AdaptiveRouteComponent? SelectedRoute(AdaptivePlanningApplied? applied,
+        AdaptiveRouteComponent? physical, AdaptiveRouteComponent? magic) =>
+        applied?.State.RouteLock?.Lane == DamageLane.Magic ? magic : physical ?? magic;
+
+    private static string PackageDisplay(AdaptivePlanningApplied? applied,
+        AdaptiveRouteComponent? physical, AdaptiveRouteComponent? magic)
+    {
+        var route = SelectedRoute(applied, physical, magic);
+        return route is null ? Empty
+            : $"선택 목표 {Bp(route.GoalProgressBp)} · 지원 패키지 {Bp(route.PackageProgressBp)}";
+    }
+
+    private static string PackageMachine(AdaptivePlanningApplied? applied,
+        AdaptiveRouteComponent? physical, AdaptiveRouteComponent? magic)
+    {
+        var route = SelectedRoute(applied, physical, magic);
+        return route is null ? "unknown"
+            : $"{applied?.State.RouteLock?.PackageId}|goal={route.GoalProgressBp}|package={route.PackageProgressBp}";
+    }
+
+    private static string FirstLegendDisplay(AdaptivePlanningApplied? applied) =>
+        applied?.State.LockedFirstLegendId is not null
+            ? "첫 전설 확정 · 선택 경로에 반영"
+            : applied?.State.PossibleFirstLegendIds.Length > 0
+                ? $"후보 {applied.State.PossibleFirstLegendIds.Length}개"
+                : Empty;
+    private static string FirstLegendMachine(AdaptivePlanningApplied? applied) =>
+        applied?.State.LockedFirstLegendId ??
+        (applied?.State.PossibleFirstLegendIds.Length > 0
+            ? string.Join(',', applied.State.PossibleFirstLegendIds) : "unknown");
+
+    private static string NavigationDisplay(NavigationIntervalScoringResult? navigation,
+        NavigationIntervalOptionScore? option) => navigation is null
+        ? Empty
+        : $"{RegimeLabel(navigation.Regime)} · {PostureLabel(option?.Posture)}";
+    private static string RegimeLabel(NavigationScoringRegime regime) => regime switch
+    {
+        NavigationScoringRegime.SecureCore => "핵심 완성 우선",
+        NavigationScoringRegime.GuaranteedRecovery => "확정 회복 우선",
+        NavigationScoringRegime.DesperationRecovery => "회복 가능성 우선",
+        _ => "판단 대기"
+    };
+    private static string PostureLabel(NavigationRiskPosture? posture) => posture switch
+    {
+        NavigationRiskPosture.FloorDefense => "하한 방어",
+        NavigationRiskPosture.HighCeiling => "상한 추구",
+        NavigationRiskPosture.Balanced => "균형",
+        _ => "성향 확인 전"
+    };
+
+    private static string RecoveryDisplay(NavigationIntervalOptionScore? option)
+    {
+        var probability = Recovery(option);
+        return probability is null ? Empty : RatioPercent(probability.Value);
+    }
+    private static string RecoveryMachine(NavigationIntervalOptionScore? option) =>
+        Recovery(option)?.ToString() ?? "unknown";
+    private static Rational? Recovery(NavigationIntervalOptionScore? option) =>
+        option?.Scenarios.Length > 0
+            ? option.Scenarios.Select(item => item.RecoveryProbability)
+                .OrderBy(value => (double)value.Numerator / (double)value.Denominator).First()
+            : null;
+
+    private static string IntervalDisplay(NavigationIntervalOptionScore? option)
+    {
+        if (option is null) return Empty;
+        var mean = (option.Value.Lower + option.Value.Upper) / 2;
+        return $"{Bp(option.Floor.Lower)} · {Bp(mean)} · {Bp(option.Upper.Upper)}";
+    }
+    private static string IntervalMachine(NavigationIntervalOptionScore? option)
+    {
+        if (option is null) return "unknown";
+        var mean = (option.Value.Lower + option.Value.Upper) / 2;
+        return $"floor={option.Floor.Lower};mean={mean};ceiling={option.Upper.Upper}";
+    }
+
+    private static string ConfidenceDisplay(AdaptiveDecisionEvent? trace,
+        NavigationIntervalOptionScore? option) => trace is null && option is null
+        ? Empty
+        : $"판단 {Bp(trace?.ConfidenceBp ?? 0)} · 항법 {Bp(option?.ConfidenceBp ?? 0)}";
+    private static string ConfidenceMachine(AdaptiveDecisionEvent? trace,
+        NavigationIntervalOptionScore? option) =>
+        $"decision={trace?.ConfidenceBp.ToString(CultureInfo.InvariantCulture) ?? "unknown"};" +
+        $"navigation={option?.ConfidenceBp.ToString(CultureInfo.InvariantCulture) ?? "unknown"}";
+
+    private static string UnknownDisplay(ImmutableArray<string> unknowns, string? reason) =>
+        !string.IsNullOrWhiteSpace(reason) ? reason : unknowns.Length == 0
+            ? "없음" : $"미확인 입력 {unknowns.Length}개";
+    private static string UnknownMachine(ImmutableArray<string> unknowns, string? reason) =>
+        string.Join('|', unknowns.Append(reason).Where(value => !string.IsNullOrWhiteSpace(value))!);
+
+    private static string ForcedManualDisplay(AdaptiveDecisionEvent? trace,
+        NavigationIntervalScoringResult? navigation)
+    {
+        if (trace?.ManualLatches.GoalOverride == true ||
+            trace?.ManualLatches.NavigationOverride == true ||
+            navigation?.State == NavigationRecommendationState.ManualOverride)
+            return "수동 설정 우선";
+        return trace?.SourceDefinedForcedExpectationId is { } forced
+            ? $"원본 규칙 기대값 · {NavigationProfiles.Find(forced).Name}"
+            : "자동 추천";
+    }
+    private static string ForcedManualMachine(AdaptiveDecisionEvent? trace,
+        NavigationIntervalScoringResult? navigation) =>
+        $"goal-manual={trace?.ManualLatches.GoalOverride == true};" +
+        $"navigation-manual={trace?.ManualLatches.NavigationOverride == true};" +
+        $"state={navigation?.State};source-forced={trace?.SourceDefinedForcedExpectationId ?? "none"}";
+
+    private static string Bp(int value) => (value / 100d).ToString("0.#", CultureInfo.InvariantCulture) + "%";
+    private static string RatioPercent(Rational value) =>
+        (100d * (double)value.Numerator / (double)value.Denominator)
+        .ToString("0.#", CultureInfo.InvariantCulture) + "%";
 }

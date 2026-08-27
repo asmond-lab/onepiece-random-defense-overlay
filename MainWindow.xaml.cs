@@ -700,6 +700,7 @@ public partial class MainWindow : Window
     private void ApplyAdaptivePlanning(AdaptivePlanningApplied applied)
     {
         _adaptivePlanningApplied = applied;
+        DispatchPlannerEvidence(_overlay.RenderPlannerEvidence, _lastRound, applied);
         if (_pendingAdaptiveFingerprint == applied.InputFingerprint)
             _observedLegendIds.UnionWith(_pendingAdaptiveLegendIds);
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
@@ -712,6 +713,11 @@ public partial class MainWindow : Window
         _adaptivePlanning.NoteProgrammaticSelection();
         SelectNavigation(NavigationProfiles.Find(optionId));
     }
+
+    internal static void DispatchPlannerEvidence(
+        Action<int, AdaptivePlanningApplied?, bool, string?> render,
+        int round,
+        AdaptivePlanningApplied applied) => render(round, applied, false, null);
 
     private async void RefreshAll(string? message = null)
     {
