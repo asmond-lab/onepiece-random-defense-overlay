@@ -595,7 +595,7 @@ public static class NavigationMechanicsProfileLoader
     private const string ExpectedJassHash =
         "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028";
     private const string ExpectedProfileHash =
-        "e37461b83cf90e82a571043a2222460293502432e606e9be0d36354663190ee2";
+        "b0b0825700c5c4d39aed9a91a42c2b2782490eca88b470a9c1aaf3340833a7f3";
 
     private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
 
@@ -721,7 +721,8 @@ public static class NavigationMechanicsProfileLoader
             var profile = JsonSerializer.Deserialize<NavigationMechanicsProfile>(bytes, JsonOptions)
                 ?? throw new InvalidDataException("navigation profile is empty");
             Validate(profile);
-            var hash = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
+            var hash = Convert.ToHexString(
+                SHA256.HashData(CanonicalizeLineEndings(bytes))).ToLowerInvariant();
             if (!hash.Equals(ExpectedProfileHash, StringComparison.Ordinal))
                 throw new InvalidDataException("navigation profile bytes are not approved");
             return profile;
@@ -736,6 +737,32 @@ public static class NavigationMechanicsProfileLoader
         {
             throw new InvalidDataException("navigation profile is invalid", exception);
         }
+    }
+
+    private static byte[] CanonicalizeLineEndings(byte[] bytes)
+    {
+        var firstCarriageReturn = Array.IndexOf(bytes, (byte)'\r');
+        if (firstCarriageReturn < 0)
+            return bytes;
+
+        var canonical = new byte[bytes.Length];
+        Buffer.BlockCopy(bytes, 0, canonical, 0, firstCarriageReturn);
+        var written = firstCarriageReturn;
+        for (var index = firstCarriageReturn; index < bytes.Length; index++)
+        {
+            if (bytes[index] == (byte)'\r')
+            {
+                canonical[written++] = (byte)'\n';
+                if (index + 1 < bytes.Length && bytes[index + 1] == (byte)'\n')
+                    index++;
+            }
+            else
+            {
+                canonical[written++] = bytes[index];
+            }
+        }
+
+        return canonical[..written];
     }
 
     private static JsonSerializerOptions CreateJsonOptions()

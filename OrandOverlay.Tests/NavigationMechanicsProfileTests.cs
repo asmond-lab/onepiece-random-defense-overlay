@@ -697,6 +697,18 @@ public sealed class NavigationMechanicsProfileTests
     }
 
     [Fact]
+    public void ApprovedProfileLoadsWithCanonicalOrWindowsCheckoutLineEndings()
+    {
+        var source = File.ReadAllText(ProfilePath());
+        var canonical = source.Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n');
+        var windowsCheckout = canonical.Replace("\n", "\r\n", StringComparison.Ordinal);
+
+        AssertApprovedProfileText(canonical);
+        AssertApprovedProfileText(windowsCheckout);
+    }
+
+    [Fact]
     public void DuplicateJsonPropertyAndAnyUnapprovedByteFailClosed()
     {
         var original = File.ReadAllText(ProfilePath());
@@ -877,6 +889,22 @@ public sealed class NavigationMechanicsProfileTests
             var exception = Assert.Throws<InvalidDataException>(() =>
                 NavigationMechanicsProfileLoader.LoadFromDirectory(directory));
             inspect?.Invoke(exception);
+        }
+        finally
+        {
+            Directory.Delete(directory, true);
+        }
+    }
+
+    private static void AssertApprovedProfileText(string text)
+    {
+        var directory = Directory.CreateDirectory(
+            Path.Combine(Path.GetTempPath(), "orand-navigation-" + Guid.NewGuid())).FullName;
+        try
+        {
+            File.WriteAllText(Path.Combine(directory, "navigation-mechanics-2314.json"), text);
+            var profile = NavigationMechanicsProfileLoader.LoadFromDirectory(directory);
+            Assert.Equal(15, profile.Options.Length);
         }
         finally
         {
