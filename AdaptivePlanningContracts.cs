@@ -148,17 +148,29 @@ public sealed record AdaptiveRouteResult
 
 public sealed record NavigationStateSnapshot
 {
-    public int CurrentTopCount { get; }
-    public int? SelectedOptionOrdinal { get; }
+    public long MatchGeneration { get; }
+    public long RecognitionRevision { get; }
+    public RuntimeRecommendationSnapshotState State { get; }
+    public bool IsPlannerReady { get; }
+    public ImmutableArray<RuntimeRecommendationField> Fields { get; }
     public ImmutableArray<PlanningValue> Values { get; }
 
-    public NavigationStateSnapshot(int currentTopCount, int? selectedOptionOrdinal, ImmutableArray<PlanningValue> values)
+    public NavigationStateSnapshot(long matchGeneration, long recognitionRevision,
+        RuntimeRecommendationSnapshotState state, bool isPlannerReady,
+        ImmutableArray<RuntimeRecommendationField> fields)
     {
-        if (currentTopCount < 0) throw new ArgumentOutOfRangeException(nameof(currentTopCount));
-        if (selectedOptionOrdinal is < 0) throw new ArgumentOutOfRangeException(nameof(selectedOptionOrdinal));
-        CurrentTopCount = currentTopCount; SelectedOptionOrdinal = selectedOptionOrdinal;
-        Values = values.IsDefault ? ImmutableArray<PlanningValue>.Empty : values;
+        if (matchGeneration < 0) throw new ArgumentOutOfRangeException(nameof(matchGeneration));
+        if (recognitionRevision < 0) throw new ArgumentOutOfRangeException(nameof(recognitionRevision));
+        MatchGeneration = matchGeneration;
+        RecognitionRevision = recognitionRevision;
+        State = state;
+        IsPlannerReady = isPlannerReady;
+        Fields = fields.IsDefault ? ImmutableArray<RuntimeRecommendationField>.Empty : fields;
+        Values = Fields.Select(field => field.Value).ToImmutableArray();
     }
+
+    public RuntimeRecommendationField Field(string name) => Fields.Single(field =>
+        field.Value.Name.Equals(name, StringComparison.Ordinal));
 }
 
 public readonly record struct RationalInterval
