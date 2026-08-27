@@ -1,5 +1,82 @@
 namespace OrandOverlay;
 
+public sealed class ResourceRequirements : IReadOnlyDictionary<string, long>
+{
+    private readonly IReadOnlyDictionary<string, long> _values;
+
+    internal ResourceRequirements(IReadOnlyDictionary<string, long> values) =>
+        _values = new System.Collections.ObjectModel.ReadOnlyDictionary<string, long>(
+            new Dictionary<string, long>(values, StringComparer.OrdinalIgnoreCase));
+
+    public long Gold => this["GOLD"];
+    public long Lumber => this["LUMBER"];
+    public long Point => this["POINT"];
+    public long Random => this["RANDOM"];
+    public long this[string key] => _values.TryGetValue(key, out var value) ? value : 0;
+    public IEnumerable<string> Keys => _values.Keys;
+    public IEnumerable<long> Values => _values.Values;
+    public int Count => _values.Count;
+    public bool ContainsKey(string key) => _values.ContainsKey(key);
+    public bool TryGetValue(string key, out long value) => _values.TryGetValue(key, out value);
+    public IEnumerator<KeyValuePair<string, long>> GetEnumerator() => _values.GetEnumerator();
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+public sealed class RecipeCompletionAllocation
+{
+    internal RecipeCompletionAllocation(RecipeAllocationProgress progress,
+        IReadOnlyDictionary<string, long> consumedByUnitId,
+        IReadOnlyDictionary<string, long> remainingInventory,
+        ResourceRequirements resourceRequirements)
+    {
+        Progress = progress;
+        ConsumedByUnitId = new System.Collections.ObjectModel.ReadOnlyDictionary<string, long>(
+            new Dictionary<string, long>(consumedByUnitId, StringComparer.OrdinalIgnoreCase));
+        RemainingInventory = new System.Collections.ObjectModel.ReadOnlyDictionary<string, long>(
+            new Dictionary<string, long>(remainingInventory, StringComparer.OrdinalIgnoreCase));
+        ResourceRequirements = resourceRequirements;
+    }
+
+    public RecipeAllocationProgress Progress { get; }
+    public IReadOnlyDictionary<string, long> ConsumedByUnitId { get; }
+    public IReadOnlyDictionary<string, long> RemainingInventory { get; }
+    public ResourceRequirements ResourceRequirements { get; }
+}
+
+public sealed class RecipeAllocationProgress
+{
+    internal RecipeAllocationProgress(long requiredLeafCount, long ownedLeafCount,
+        IEnumerable<RecipeLeafProgress> leaves)
+    {
+        RequiredLeafCount = requiredLeafCount;
+        OwnedLeafCount = ownedLeafCount;
+        Leaves = new System.Collections.ObjectModel.ReadOnlyCollection<RecipeLeafProgress>(
+            leaves.ToList());
+    }
+
+    public long RequiredLeafCount { get; }
+    public long OwnedLeafCount { get; }
+    public IReadOnlyList<RecipeLeafProgress> Leaves { get; }
+
+    public double CompletionRatio => RequiredLeafCount <= 0
+        ? 1
+        : Math.Clamp((double)OwnedLeafCount / RequiredLeafCount, 0, 1);
+
+    public IReadOnlyList<RecipeLeafProgress> MissingLeaves => Leaves
+        .Where(x => x.MissingCount > 0)
+        .OrderByDescending(x => x.MissingCount)
+        .ThenBy(x => x.Name, StringComparer.CurrentCulture)
+        .ToList()
+        .AsReadOnly();
+
+    internal RecipeProgress ToRecipeProgress() => new()
+    {
+        RequiredLeafCount = RequiredLeafCount,
+        OwnedLeafCount = OwnedLeafCount,
+        Leaves = Leaves.ToList()
+    };
+}
+
 /// <summary>
 /// Expands a composition into its lowest non-resource cards and allocates the current inventory
 /// top-down. Owning a completed upper/intermediate unit replaces its whole subtree, while the
@@ -13,6 +90,10 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
         new(StringComparer.OrdinalIgnoreCase);
 
     public RecipeProgress Calculate(IEnumerable<string> requiredUnitIds,
+        IReadOnlyDictionary<string, int> inventory) =>
+        CalculateAllocation(requiredUnitIds, inventory).Progress.ToRecipeProgress();
+
+    public RecipeCompletionAllocation CalculateAllocation(IEnumerable<string> requiredUnitIds,
         IReadOnlyDictionary<string, int> inventory)
     {
         var requirements = requiredUnitIds
@@ -20,8 +101,10 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
             .GroupBy(id => id, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => (long)group.Count(), StringComparer.OrdinalIgnoreCase);
         var availability = inventory
-            .Where(pair => pair.Value > 0)
-            .ToDictionary(pair => pair.Key, pair => (long)pair.Value, StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(pair => pair.Key, pair => Math.Max(0, (long)pair.Value),
+                StringComparer.OrdinalIgnoreCase);
+        var originalAvailability = new Dictionary<string, long>(availability,
+            StringComparer.OrdinalIgnoreCase);
         var seraphimCount = availability
             .Where(pair => RecipeWildcards.IsSeraphim(resolveUnit(pair.Key)))
             .Sum(pair => pair.Value);
@@ -29,12 +112,18 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
             availability[RecipeWildcards.AnySeraphim] = seraphimCount;
         var requiredLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         var ownedLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+        var resources = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (unitId, count) in requirements)
+        foreach (var (unitId, count) in requirements.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
             foreach (var (leafId, leafCount) in ExpandLeaves(unitId, new HashSet<string>(StringComparer.OrdinalIgnoreCase)))
                 Add(requiredLeaves, leafId, Multiply(leafCount, count));
+            foreach (var (resourceId, resourceCount) in ExpandResources(unitId,
+                         new HashSet<string>(StringComparer.OrdinalIgnoreCase)))
+                Add(resources, resourceId, Multiply(resourceCount, count));
+        }
 
-        foreach (var (unitId, count) in requirements)
+        foreach (var (unitId, count) in requirements.OrderBy(pair => pair.Key, StringComparer.Ordinal))
             Allocate(unitId, count, availability, ownedLeaves,
                 new HashSet<string>(StringComparer.OrdinalIgnoreCase));
 
@@ -55,12 +144,37 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
             })
             .OrderBy(x => x.Name, StringComparer.CurrentCulture)
             .ToList();
-        return new RecipeProgress
-        {
-            RequiredLeafCount = Sum(leaves.Select(x => x.RequiredCount)),
-            OwnedLeafCount = Sum(leaves.Select(x => x.OwnedCount)),
-            Leaves = leaves
-        };
+        var progress = new RecipeAllocationProgress(
+            Sum(leaves.Select(x => x.RequiredCount)),
+            Sum(leaves.Select(x => x.OwnedCount)),
+            leaves);
+        var consumed = originalAvailability
+            .Select(pair => new KeyValuePair<string, long>(pair.Key,
+                pair.Value - availability.GetValueOrDefault(pair.Key)))
+            .Where(pair => pair.Value > 0)
+            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+        var remaining = originalAvailability
+            .ToDictionary(pair => pair.Key,
+                pair => pair.Value - consumed.GetValueOrDefault(pair.Key),
+                StringComparer.OrdinalIgnoreCase);
+        return new RecipeCompletionAllocation(progress, consumed, remaining,
+            new ResourceRequirements(resources));
+    }
+
+    private IReadOnlyDictionary<string, long> ExpandResources(string unitId, HashSet<string> visiting)
+    {
+        if (!visiting.Add(unitId))
+            return new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+        var unit = resolveUnit(unitId);
+        var result = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+        if (IsResourcePseudo(unit))
+            result[CanonicalResourceId(unit)] = 1;
+        else
+            foreach (var (childId, childCount) in RecipeChildren(unit, includeResources: true))
+                foreach (var (resourceId, resourceCount) in ExpandResources(childId, visiting))
+                    Add(result, resourceId, Multiply(resourceCount, childCount));
+        visiting.Remove(unitId);
+        return result;
     }
 
     private IReadOnlyDictionary<string, long> ExpandLeaves(string unitId, HashSet<string> visiting)
@@ -71,11 +185,12 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
         if (!visiting.Add(unitId))
             return new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase) { [unitId] = 1 };
 
+        var allChildren = unit.Recipe.Where(pair => pair.Value > 0).ToList();
         var children = RecipeChildren(unit).ToList();
         var result = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
-        if (children.Count == 0)
+        if (allChildren.Count == 0)
             result[unitId] = 1;
-        else
+        else if (children.Count > 0)
             foreach (var (childId, childCount) in children)
                 foreach (var (leafId, leafCount) in ExpandLeaves(childId, visiting))
                     Add(result, leafId, Multiply(leafCount, childCount));
@@ -107,8 +222,19 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
         visiting.Remove(unitId);
     }
 
-    private IEnumerable<KeyValuePair<string, int>> RecipeChildren(UnitDefinition unit) => unit.Recipe
-        .Where(pair => pair.Value > 0 && !IsResourcePseudo(resolveUnit(pair.Key)));
+    private IEnumerable<KeyValuePair<string, int>> RecipeChildren(UnitDefinition unit,
+        bool includeResources = false) => unit.Recipe
+        .Where(pair => pair.Value > 0 &&
+            (includeResources || !IsResourcePseudo(resolveUnit(pair.Key))));
+
+    private static string CanonicalResourceId(UnitDefinition unit)
+    {
+        const string prefix = "rawcode:";
+        var rawcode = unit.Rawcodes.FirstOrDefault() ?? unit.Id;
+        if (rawcode.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            rawcode = rawcode[prefix.Length..];
+        return rawcode.ToUpperInvariant();
+    }
 
     private static bool IsResourcePseudo(UnitDefinition unit)
     {
