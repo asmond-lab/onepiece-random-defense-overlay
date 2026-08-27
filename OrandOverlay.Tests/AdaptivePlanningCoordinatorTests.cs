@@ -79,7 +79,7 @@ public sealed class AdaptivePlanningCoordinatorTests
     }
 
     [Fact]
-    public void ManualLatchesAreIndependentAndOnlyConfirmedResetClearsThem()
+    public void ManualLatchesAreIndependentAndNavigationAutomationClearsOnlyItsOverride()
     {
         var coordinator = new AdaptivePlanningCoordinator();
 
@@ -89,6 +89,9 @@ public sealed class AdaptivePlanningCoordinatorTests
         Assert.Equal(new ManualLatches(true, false), coordinator.ManualLatches);
         coordinator.LatchManualNavigationOverride();
         Assert.Equal(new ManualLatches(true, true), coordinator.ManualLatches);
+        coordinator.ClearManualNavigationOverride();
+        Assert.Equal(new ManualLatches(true, false), coordinator.ManualLatches);
+        coordinator.LatchManualNavigationOverride();
 
         coordinator.ConfirmReset(1);
 

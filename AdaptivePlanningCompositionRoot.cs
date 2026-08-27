@@ -58,6 +58,8 @@ public sealed class AdaptivePlanningCompositionRoot
     public void LatchManualGoalOverride() => _coordinator.LatchManualGoalOverride();
     public void LatchManualNavigationOverride() =>
         _coordinator.LatchManualNavigationOverride();
+    public void ClearManualNavigationOverride() =>
+        _coordinator.ClearManualNavigationOverride();
     public void NoteProgrammaticSelection() => _coordinator.NoteProgrammaticSelection();
     public void ConfirmReset(long matchGeneration) =>
         _coordinator.ConfirmReset(matchGeneration);

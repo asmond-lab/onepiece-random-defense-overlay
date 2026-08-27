@@ -18,13 +18,19 @@ public sealed class SettingsStoreTests : IDisposable
     {
         var path = PathFor("settings.json");
         Directory.CreateDirectory(_dir);
-        var settings = new AppSettings { GoalUnitId = "yamato_transcendent", TelemetryAnonId = "anon-123" };
+        var settings = new AppSettings
+        {
+            GoalUnitId = "yamato_transcendent",
+            TelemetryAnonId = "anon-123",
+            AutoRecommendNavigation = false
+        };
 
         SettingsStore.Save(settings, path);
         var loaded = SettingsStore.Load(path);
 
         Assert.Equal("yamato_transcendent", loaded.GoalUnitId);
         Assert.Equal("anon-123", loaded.TelemetryAnonId);
+        Assert.False(loaded.AutoRecommendNavigation);
     }
 
     [Fact]
@@ -50,6 +56,7 @@ public sealed class SettingsStoreTests : IDisposable
 
         // 기본값은 빈 문자열이 아니라 앱 기본 목표(yamato_transcendent)다.
         Assert.Equal(new AppSettings().GoalUnitId, loaded.GoalUnitId);
+        Assert.True(loaded.AutoRecommendNavigation);
         Assert.False(File.Exists(path), "손상 원본은 그 자리에 남지 않아야 한다(격리됨)");
         var quarantined = Directory.GetFiles(_dir, "settings.json.corrupt-*");
         Assert.Single(quarantined);

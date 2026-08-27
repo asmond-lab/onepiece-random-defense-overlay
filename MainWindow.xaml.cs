@@ -144,6 +144,9 @@ public partial class MainWindow : Window
         ClearDataRefreshCheck.IsChecked = _settings.ClearDataAutoRefresh;
         _ = _telemetry.FlushPendingAsync();
         AutoStartCheck.IsChecked = _settings.AutoStartGoal;
+        AutoNavigationCheck.IsChecked = _settings.AutoRecommendNavigation;
+        if (!_settings.AutoRecommendNavigation)
+            _adaptivePlanning.LatchManualNavigationOverride();
         DataVersionText.Text = $"데이터 {_catalog.Data.DataVersion} · {_catalog.Data.Disclaimer}" +
                                ClearStatsSummary();
         var appVersion = UpdateService.CurrentVersion;
@@ -475,6 +478,23 @@ public partial class MainWindow : Window
             : "유닛 자동 추천을 껐습니다. 목표 상위를 직접 선택하세요.");
     }
 
+    private void AutoNavigation_OnChanged(object sender, RoutedEventArgs e)
+    {
+        if (!_initialized || _updatingSelections) return;
+        var enabled = AutoNavigationCheck.IsChecked == true;
+        _settings.AutoRecommendNavigation = enabled;
+        if (enabled)
+            _adaptivePlanning.ClearManualNavigationOverride();
+        else
+            _adaptivePlanning.LatchManualNavigationOverride();
+        if (NavigationCombo.SelectedItem is NavigationOption selected)
+            NavigationSummaryText.Text = NavigationSummary(selected);
+        SettingsStore.Save(_settings);
+        RefreshAll(enabled
+            ? "항법 자동 추천을 켰습니다. 추천은 설정에만 반영되며 게임에서는 직접 선택하세요."
+            : "항법 자동 추천을 껐습니다. 항법을 직접 설정하세요.");
+    }
+
     private string ApplyGoalAdvice(UnitDefinition goal, string prefix)
     {
         _autoStartApplied = true;
@@ -542,8 +562,10 @@ public partial class MainWindow : Window
         menu.IsOpen = true;
     }
 
-    private void SelectNavigation(NavigationOption option)
+    private bool SelectNavigation(NavigationOption option)
     {
+        var previousId = (NavigationCombo.SelectedItem as NavigationOption)?.Id ??
+                         _settings.NavigationMode;
         _updatingSelections = true;
         try
         {
@@ -551,17 +573,26 @@ public partial class MainWindow : Window
                 .Where(category => VisibleNavigations(category.Id).Count > 0)
                 .ToList();
             if (categories.Count == 0) categories = NavigationProfiles.Categories.ToList();
+            if (categories.All(category => !category.Id.Equals(option.CategoryId,
+                    StringComparison.OrdinalIgnoreCase)))
+                categories.Add(NavigationProfiles.FindCategory(option.CategoryId));
+            categories = NavigationProfiles.Categories
+                .Where(category => categories.Any(item => item.Id.Equals(category.Id,
+                    StringComparison.OrdinalIgnoreCase)))
+                .ToList();
             NavigationCategoryCombo.ItemsSource = categories;
             NavigationCategoryCombo.SelectedItem = categories.FirstOrDefault(category =>
                 category.Id.Equals(option.CategoryId, StringComparison.OrdinalIgnoreCase)) ?? categories[0];
             var options = VisibleNavigations(option.CategoryId);
-            if (options.Count == 0) options = NavigationProfiles.ForCategory(option.CategoryId).ToList();
+            if (options.All(item => !item.Id.Equals(option.Id, StringComparison.OrdinalIgnoreCase)))
+                options = NavigationProfiles.ForCategory(option.CategoryId).ToList();
             NavigationCombo.ItemsSource = options;
             NavigationCombo.SelectedItem = options.FirstOrDefault(item => item.Id == option.Id)
                                            ?? options[0];
             if (NavigationCombo.SelectedItem is NavigationOption selected)
-                NavigationSummaryText.Text = selected.Summary;
+                NavigationSummaryText.Text = NavigationSummary(selected);
             _settings.NavigationMode = option.Id;
+            return !string.Equals(previousId, option.Id, StringComparison.OrdinalIgnoreCase);
         }
         finally
         {
@@ -613,7 +644,7 @@ public partial class MainWindow : Window
             NavigationCombo.SelectedItem =
                 options.FirstOrDefault(option => option.Id == currentOption.Id) ?? options[0];
             if (NavigationCombo.SelectedItem is NavigationOption selected)
-                NavigationSummaryText.Text = selected.Summary;
+                NavigationSummaryText.Text = NavigationSummary(selected);
         }
         finally
         {
@@ -708,14 +739,15 @@ public partial class MainWindow : Window
         if (_pendingAdaptiveFingerprint == applied.InputFingerprint)
             _observedLegendIds.UnionWith(_pendingAdaptiveLegendIds);
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
-        if (_adaptivePlanning.ManualLatches.NavigationOverride ||
-            applied.Navigation.RecommendedOptionId is not { } optionId ||
-            applied.Navigation.State is NavigationRecommendationState.Provisional or
-                NavigationRecommendationState.Waiting or
-                NavigationRecommendationState.NoSafeRecommendation)
+        if (!NavigationAutomaticRecommendationPolicy.ShouldApply(
+                _settings.AutoRecommendNavigation, _adaptivePlanning.ManualLatches,
+                applied.Navigation.State, applied.Navigation.RecommendedOptionId))
             return;
+        var optionId = applied.Navigation.RecommendedOptionId!;
         _adaptivePlanning.NoteProgrammaticSelection();
-        SelectNavigation(NavigationProfiles.Find(optionId));
+        var option = NavigationProfiles.Find(optionId);
+        if (SelectNavigation(option))
+            RefreshAll($"항법 자동 추천: {option.Name}. 게임 안에서는 직접 선택하세요.");
     }
 
     internal static void DispatchPlannerEvidence(
@@ -1089,6 +1121,8 @@ public partial class MainWindow : Window
         _pendingAdaptiveFingerprint = null;
         _pendingAdaptiveLegendIds = [];
         _adaptivePlanning.ConfirmReset(_adaptivePlanning.MatchGeneration + 1);
+        if (!_settings.AutoRecommendNavigation)
+            _adaptivePlanning.LatchManualNavigationOverride();
         _adaptiveDecisionTrace.ConfirmedMatchReset();
         _completedTopUnits.Reset();
         _firstRareRecommendationGate.Reset();
@@ -1155,6 +1189,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         if (_updatingSelections) return;
         if (NavigationCategoryCombo.SelectedItem is not NavigationCategory category) return;
+        UseManualNavigationMode();
 
         var current = NavigationCombo.SelectedItem as NavigationOption;
         var options = VisibleNavigations(category.Id);
@@ -1169,10 +1204,44 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     private void NavigationCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_updatingSelections) return;
-        if (_initialized) _adaptivePlanning.LatchManualNavigationOverride();
+        UseManualNavigationMode();
         if (NavigationCombo.SelectedItem is NavigationOption navigation)
-            NavigationSummaryText.Text = navigation.Summary;
+            NavigationSummaryText.Text = NavigationSummary(navigation);
         RefreshAll();
+    }
+
+    private void UseManualNavigationMode()
+    {
+        if (!_initialized) return;
+        var wasAutomatic = _settings.AutoRecommendNavigation;
+        _settings.AutoRecommendNavigation = false;
+        _adaptivePlanning.LatchManualNavigationOverride();
+        _updatingSelections = true;
+        try { AutoNavigationCheck.IsChecked = false; }
+        finally { _updatingSelections = false; }
+        if (wasAutomatic) SettingsStore.Save(_settings);
+    }
+
+    private string NavigationSummary(NavigationOption navigation)
+    {
+        var details = WrapNavigationSummary(navigation.Summary);
+        return _settings.AutoRecommendNavigation
+            ? $"자동 추천 사용\n{details}\n20라운드는 미리보기\n21~23라운드는 설정 자동 반영\n게임 항법은 직접 선택하세요."
+            : $"수동 설정\n{details}";
+    }
+
+    private static string WrapNavigationSummary(string summary)
+    {
+        const int maxLineLength = 22;
+        var lines = new List<string>();
+        foreach (var word in summary.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (lines.Count == 0 || lines[^1].Length + word.Length + 1 > maxLineLength)
+                lines.Add(word);
+            else
+                lines[^1] += " " + word;
+        }
+        return string.Join('\n', lines);
     }
 
     private void GoroseiCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -54,6 +54,10 @@
             <ComboBox Grid.Column="1" x:Name="NavigationCombo" DisplayMemberPath="Name"
                       SelectionChanged="NavigationCombo_OnSelectionChanged" Margin="3,0,0,0"/>
           </Grid>
+          <CheckBox x:Name="AutoNavigationCheck" Content="항법 자동 추천" Margin="3,8,0,0"
+                    Checked="AutoNavigation_OnChanged" Unchecked="AutoNavigation_OnChanged"
+                    AutomationProperties.Name="항법 자동 추천"
+                    ToolTip="라운드 20에는 후보를 미리 보여주고, 21~23에는 안전한 추천을 설정에 자동 반영합니다. 워크래프트 안의 항법 선택은 직접 해야 합니다."/>
           <TextBlock x:Name="NavigationSummaryText" Style="{StaticResource FieldHint}" Margin="3,5,3,0"/>
           <TextBlock Text="오로성 (신 이상 판별 효과)" Style="{StaticResource FieldLabel}" Margin="0,12,0,0"/>
           <ComboBox x:Name="GoroseiCombo" DisplayMemberPath="Name"

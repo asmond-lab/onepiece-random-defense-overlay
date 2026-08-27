@@ -36,6 +36,19 @@ public sealed class AdaptivePlanningSystemBaselineTests
             presentation[PlannerEvidenceFieldKind.Restrictions].MachineValue);
     }
 
+    [Fact]
+    public void CompositionRootCanResumeNavigationAutomationWithoutClearingGoalOverride()
+    {
+        var fixture = Fixture();
+        var root = new AdaptivePlanningCompositionRoot(fixture.DataDirectory);
+        root.LatchManualGoalOverride();
+        root.LatchManualNavigationOverride();
+
+        root.ClearManualNavigationOverride();
+
+        Assert.Equal(new ManualLatches(true, false), root.ManualLatches);
+    }
+
     internal static SystemFixture Fixture()
     {
         var catalog = new DataCatalog();

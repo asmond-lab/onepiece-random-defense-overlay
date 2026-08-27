@@ -323,6 +323,7 @@ public sealed class AppSettings
     public string GoalUnitId { get; set; } = "yamato_transcendent";
     // 첫 희귀함이 잡히면 그 희귀함이 들어가는 학습 상위로 목표를 자동 전환(자동 시작).
     public bool AutoStartGoal { get; set; } = true;
+    public bool AutoRecommendNavigation { get; set; } = true;
     public string NavigationMode { get; set; } = "PathOfKings.BountyHunter";
     public OverlayDisplayMode OverlayDisplayMode { get; set; } =
         OverlayDisplayMode.Full;
