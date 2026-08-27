@@ -42,10 +42,61 @@ public sealed class StoryProgressionProfileTests
     {
         Assert.Equal(
             "2d262ff929fcae3d70a94c6c76969708f37f28a62b9dd06b52b0af80d4c10c82",
-            Sha256(DataPath("map-source-metadata-2314.json")));
+            Sha256Canonical(DataPath("map-source-metadata-2314.json")));
         Assert.Equal(
             "8c24aff6b74ebc6a4117c9aa57bfc236cbd286d12ad85faf802c6453dc58ae0b",
-            Sha256(DataPath("story-progression-2314.json")));
+            Sha256Canonical(DataPath("story-progression-2314.json")));
+    }
+
+    [Fact]
+    public void LoaderAcceptsLfAndCrlfProfilesButRejectsByteAndSemanticMutations()
+    {
+        var lfDirectory = CopyProfiles();
+        try
+        {
+            RewriteLineEndings(lfDirectory, "\n");
+            Assert.Equal(14,
+                MapStoryProfileLoader.LoadFromDirectory(lfDirectory).Stages.Length);
+        }
+        finally
+        {
+            Directory.Delete(lfDirectory, true);
+        }
+
+        var crlfDirectory = CopyProfiles();
+        try
+        {
+            RewriteLineEndings(crlfDirectory, "\r\n");
+            Assert.Equal(14,
+                MapStoryProfileLoader.LoadFromDirectory(crlfDirectory).Stages.Length);
+
+            File.AppendAllText(
+                Path.Combine(crlfDirectory, "map-source-metadata-2314.json"),
+                " ");
+            Assert.Throws<InvalidDataException>(() =>
+                MapStoryProfileLoader.LoadFromDirectory(crlfDirectory));
+        }
+        finally
+        {
+            Directory.Delete(crlfDirectory, true);
+        }
+
+        var semanticDirectory = CopyProfiles();
+        try
+        {
+            var storyPath = Path.Combine(semanticDirectory,
+                "story-progression-2314.json");
+            var document = JsonNode.Parse(File.ReadAllText(storyPath))!;
+            document["Stages"]![0]!["Ordinal"] = 99;
+            File.WriteAllText(storyPath, document.ToJsonString());
+
+            Assert.Throws<InvalidDataException>(() =>
+                MapStoryProfileLoader.LoadFromDirectory(semanticDirectory));
+        }
+        finally
+        {
+            Directory.Delete(semanticDirectory, true);
+        }
     }
 
     [Fact]
@@ -545,9 +596,34 @@ public sealed class StoryProgressionProfileTests
     private static string DataPath(string fileName) =>
         Path.Combine(AppContext.BaseDirectory, "Data", fileName);
 
-    private static string Sha256(string path) =>
-        Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(path)))
+    private static string Sha256Canonical(string path) =>
+        Convert.ToHexString(SHA256.HashData(
+            CanonicalizeLineEndings(File.ReadAllBytes(path))))
             .ToLowerInvariant();
+
+    private static byte[] CanonicalizeLineEndings(byte[] bytes)
+    {
+        var text = System.Text.Encoding.UTF8.GetString(bytes);
+        return System.Text.Encoding.UTF8.GetBytes(
+            text.Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Replace('\r', '\n'));
+    }
+
+    private static void RewriteLineEndings(string directory, string lineEnding)
+    {
+        foreach (var name in new[]
+        {
+            "map-source-metadata-2314.json",
+            "story-progression-2314.json"
+        })
+        {
+            var path = Path.Combine(directory, name);
+            var canonical = CanonicalizeLineEndings(File.ReadAllBytes(path));
+            var text = System.Text.Encoding.UTF8.GetString(canonical)
+                .Replace("\n", lineEnding, StringComparison.Ordinal);
+            File.WriteAllBytes(path, System.Text.Encoding.UTF8.GetBytes(text));
+        }
+    }
 
     private static string CopyProfiles()
     {

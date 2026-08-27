@@ -280,11 +280,37 @@ public static class MapStoryProfileLoader
 
     private static byte[] ReadVerifiedBytes(string path, string expectedSha256)
     {
-        var bytes = File.ReadAllBytes(path);
+        var bytes = CanonicalizeLineEndings(File.ReadAllBytes(path));
         var actual = Convert.ToHexString(SHA256.HashData(bytes));
         if (!actual.Equals(expectedSha256, StringComparison.OrdinalIgnoreCase))
             throw new InvalidDataException($"Unapproved story data bytes: {path}");
         return bytes;
+    }
+
+    private static byte[] CanonicalizeLineEndings(byte[] bytes)
+    {
+        var firstCarriageReturn = Array.IndexOf(bytes, (byte)'\r');
+        if (firstCarriageReturn < 0)
+            return bytes;
+
+        var canonical = new byte[bytes.Length];
+        Buffer.BlockCopy(bytes, 0, canonical, 0, firstCarriageReturn);
+        var written = firstCarriageReturn;
+        for (var index = firstCarriageReturn; index < bytes.Length; index++)
+        {
+            if (bytes[index] == (byte)'\r')
+            {
+                canonical[written++] = (byte)'\n';
+                if (index + 1 < bytes.Length && bytes[index + 1] == (byte)'\n')
+                    index++;
+            }
+            else
+            {
+                canonical[written++] = bytes[index];
+            }
+        }
+
+        return canonical[..written];
     }
 
     private static T Deserialize<T>(byte[] bytes, string fileName) =>
