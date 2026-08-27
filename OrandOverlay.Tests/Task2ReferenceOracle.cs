@@ -239,7 +239,8 @@ internal static class Task2ReferenceOracle
                     transform.MinimumTotalAttackSpeedPoints ||
                 input.MaximumAttackSpeedPoints !=
                     transform.MaximumTotalAttackSpeedPoints ||
-                input.AddedAttackSpeedPoints != royal.AttackSpeedPoints)
+                input.AddedAttackSpeedPoints != royal.AttackSpeedPoints ||
+                input.TargetsWithin400 < 0)
                 throw new InvalidDataException("Royal attack-speed operands disagree");
             var baseWeaponCooldown = OracleRational.Parse(input.BaseWeaponCooldown);
             var horizon = OracleRational.Parse(input.EngagedHorizon);
@@ -266,6 +267,8 @@ internal static class Task2ReferenceOracle
             var cooldownProduct = baseWeaponCooldown * cooldownCoefficient;
             var productMinimum = candidate.CompareTo(cooldownProduct) > 0;
             var damage = productMinimum ? cooldownProduct : candidate;
+            var procDelta = new OracleRational(attacksAfter, 1) * procProbability *
+                damage * new OracleRational(input.TargetsWithin400, 1);
             return new NavigationRoyalBranchExpected(
                 productMinimum
                     ? NavigationRoyalPiecewiseBranch.CooldownProductMinimum
@@ -274,7 +277,8 @@ internal static class Task2ReferenceOracle
                 royal.ProcCooldownInput, AsProbability(baseWeaponCooldown),
                 AsProbability(cooldownBefore), AsProbability(cooldownAfter),
                 AsProbability(horizon), attacksBefore, attacksAfter,
-                checked(attacksAfter - attacksBefore), royal.AttackDamage, royal.Radius);
+                checked(attacksAfter - attacksBefore), input.TargetsWithin400,
+                AsProbability(procDelta), royal.AttackDamage, royal.Radius);
         }).ToImmutableArray();
         return SemanticSuccess(profile, fixture,
             new NavigationSemanticExpected([], [], [], branches));
@@ -305,7 +309,7 @@ internal static class Task2ReferenceOracle
         return new(fixture.Input, ArithmeticDisposition.Allowed,
             WaveDisposition.SafeRecommendation, mass, Zero, Zero,
             0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, semantics);
+            0, 0, 0, fixture.Input.CoupledScenarios, 0, 0, semantics);
     }
 
     private static NavigationRewardQuantity ParseReward(string value)

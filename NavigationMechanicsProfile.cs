@@ -473,7 +473,8 @@ public sealed record NavigationRoyalAttackInput(
     int MinimumAttackSpeedPoints,
     int MaximumAttackSpeedPoints,
     int AddedAttackSpeedPoints,
-    NavigationProbability EngagedHorizon);
+    NavigationProbability EngagedHorizon,
+    int TargetsWithin400);
 
 public sealed record NavigationRoyalBranchExpected(
     NavigationRoyalPiecewiseBranch Branch,
@@ -487,6 +488,8 @@ public sealed record NavigationRoyalBranchExpected(
     int AttacksBefore,
     int AttacksAfter,
     int AttackCountDelta,
+    int TargetsWithin400,
+    NavigationProbability ProcDelta,
     int AttackDamage,
     int Radius);
 
@@ -592,7 +595,7 @@ public static class NavigationMechanicsProfileLoader
     private const string ExpectedJassHash =
         "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028";
     private const string ExpectedProfileHash =
-        "dca013211e43e17984354194641e0c5265a59709308f593121b9c30bc01cf9c6";
+        "e37461b83cf90e82a571043a2222460293502432e606e9be0d36354663190ee2";
 
     private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
 
@@ -1370,6 +1373,12 @@ public static class NavigationMechanicsProfileLoader
         };
         var expectedAttacksBefore = new[] { 50, 39, 122, 8 };
         var expectedAttacksAfter = new[] { 62, 46, 125, 10 };
+        var expectedTargets = new[] { 0, 1, 0, 1 };
+        var expectedProcDeltas = new[]
+        {
+            new Rational(0, 1), new Rational(2_345_999_977, 2_500),
+            new Rational(0, 1), new Rational(335_526_306, 625)
+        };
         var expectedDamage = new[]
         {
             new Rational(5_368_421, 40), new Rational(101_999_999, 400),
@@ -1390,6 +1399,8 @@ public static class NavigationMechanicsProfileLoader
             !fixture.SourceRangeIds.SequenceEqual(
                 ["royal-attack-speed-application", "warcraft-attack-speed-constants",
                     "royal-proc"]) ||
+            fixture.Input.CoupledScenarios != expectedTargets.Length ||
+            fixture.Expected.ObservedScenarioCount != expectedTargets.Length ||
             fixture.SemanticInput.RoyalAttackScenarios.Length !=
                 expectedBaseCooldowns.Length ||
             fixture.SemanticExpected.RoyalBranches.Length != expectedBranches.Length)
@@ -1408,12 +1419,14 @@ public static class NavigationMechanicsProfileLoader
             ValidateProbability(actual.CooldownBefore, allowZero: false);
             ValidateProbability(actual.CooldownAfter, allowZero: false);
             ValidateProbability(actual.EngagedHorizon, allowZero: false);
+            ValidateProbability(actual.ProcDelta, allowZero: true);
             if (input.BaseWeaponCooldown.Value != expectedBaseCooldowns[index] ||
                 input.ExistingAttackSpeedPoints != expectedExistingPoints[index] ||
                 input.MinimumAttackSpeedPoints != -80 ||
                 input.MaximumAttackSpeedPoints != 400 ||
                 input.AddedAttackSpeedPoints != 25 ||
                 input.EngagedHorizon.Value != new Rational(10, 1) ||
+                input.TargetsWithin400 != expectedTargets[index] ||
                 actual.Branch != expectedBranches[index] ||
                 actual.ProcDamage.Value != expectedDamage[index] ||
                 actual.ProcProbability.Value != new Rational(2, 25) ||
@@ -1426,6 +1439,8 @@ public static class NavigationMechanicsProfileLoader
                 actual.AttacksAfter != expectedAttacksAfter[index] ||
                 actual.AttackCountDelta !=
                     expectedAttacksAfter[index] - expectedAttacksBefore[index] ||
+                actual.TargetsWithin400 != expectedTargets[index] ||
+                actual.ProcDelta.Value != expectedProcDeltas[index] ||
                 actual.AttackDamage != 25_000 || actual.Radius != 400)
                 throw new InvalidDataException("Royal branch fixture mismatch");
         }

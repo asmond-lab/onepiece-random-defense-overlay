@@ -4950,7 +4950,7 @@
         "GambleActions": 0,
         "FutureKills": 0,
         "AggregatedStates": 0,
-        "CoupledScenarios": 0,
+        "CoupledScenarios": 4,
         "RationalBits": 0,
         "InitialDryStreak": 0,
         "CoreFloorBp": 0,
@@ -4987,7 +4987,7 @@
         "ExecutedActions": 0,
         "ExecutedKills": 0,
         "TerminalStateCount": 0,
-        "ObservedScenarioCount": 0,
+        "ObservedScenarioCount": 4,
         "TransitionCount": 0,
         "MaxObservedRationalBits": 0
       },
@@ -5004,7 +5004,8 @@
             "MinimumAttackSpeedPoints": -80,
             "MaximumAttackSpeedPoints": 400,
             "AddedAttackSpeedPoints": 25,
-            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" }
+            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" },
+            "TargetsWithin400": 0
           },
           {
             "BaseWeaponCooldown": { "Numerator": "19", "Denominator": "50" },
@@ -5012,7 +5013,8 @@
             "MinimumAttackSpeedPoints": -80,
             "MaximumAttackSpeedPoints": 400,
             "AddedAttackSpeedPoints": 25,
-            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" }
+            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" },
+            "TargetsWithin400": 1
           },
           {
             "BaseWeaponCooldown": { "Numerator": "2", "Denominator": "5" },
@@ -5020,7 +5022,8 @@
             "MinimumAttackSpeedPoints": -80,
             "MaximumAttackSpeedPoints": 400,
             "AddedAttackSpeedPoints": 25,
-            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" }
+            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" },
+            "TargetsWithin400": 0
           },
           {
             "BaseWeaponCooldown": { "Numerator": "1", "Denominator": "1" },
@@ -5028,7 +5031,8 @@
             "MinimumAttackSpeedPoints": -80,
             "MaximumAttackSpeedPoints": 400,
             "AddedAttackSpeedPoints": 25,
-            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" }
+            "EngagedHorizon": { "Numerator": "10", "Denominator": "1" },
+            "TargetsWithin400": 1
           }
         ]
       },
@@ -5055,6 +5059,8 @@
             "AttacksBefore": 50,
             "AttacksAfter": 62,
             "AttackCountDelta": 12,
+            "TargetsWithin400": 0,
+            "ProcDelta": { "Numerator": "0", "Denominator": "1" },
             "AttackDamage": 25000,
             "Radius": 400
           },
@@ -5076,6 +5082,8 @@
             "AttacksBefore": 39,
             "AttacksAfter": 46,
             "AttackCountDelta": 7,
+            "TargetsWithin400": 1,
+            "ProcDelta": { "Numerator": "2345999977", "Denominator": "2500" },
             "AttackDamage": 25000,
             "Radius": 400
           },
@@ -5097,6 +5105,8 @@
             "AttacksBefore": 122,
             "AttacksAfter": 125,
             "AttackCountDelta": 3,
+            "TargetsWithin400": 0,
+            "ProcDelta": { "Numerator": "0", "Denominator": "1" },
             "AttackDamage": 25000,
             "Radius": 400
           },
@@ -5118,6 +5128,8 @@
             "AttacksBefore": 8,
             "AttacksAfter": 10,
             "AttackCountDelta": 2,
+            "TargetsWithin400": 1,
+            "ProcDelta": { "Numerator": "335526306", "Denominator": "625" },
             "AttackDamage": 25000,
             "Radius": 400
           }

@@ -438,6 +438,9 @@ public sealed class NavigationMechanicsProfileTests
         var scenarios = jsonFixture["SemanticInput"]!["RoyalAttackScenarios"]?.AsArray();
         Assert.NotNull(scenarios);
         Assert.Equal(4, scenarios!.Count);
+        Assert.Equal([0, 1, 0, 1], scenarios
+            .Select(scenario => scenario!["TargetsWithin400"]!.GetValue<int>())
+            .ToArray());
         var expected = jsonFixture["SemanticExpected"]!["RoyalBranches"]!.AsArray();
         Assert.All(expected, branch =>
         {
@@ -447,6 +450,8 @@ public sealed class NavigationMechanicsProfileTests
             Assert.NotNull(branch["AttacksBefore"]);
             Assert.NotNull(branch["AttacksAfter"]);
             Assert.NotNull(branch["AttackCountDelta"]);
+            Assert.NotNull(branch["TargetsWithin400"]);
+            Assert.NotNull(branch["ProcDelta"]);
             Assert.Null(branch["AttackSpeedPoints"]);
         });
 
@@ -460,6 +465,15 @@ public sealed class NavigationMechanicsProfileTests
             .Select(branch => branch.AttacksAfter).ToArray());
         Assert.Equal([12, 7, 3, 2], actual.SemanticExpected.RoyalBranches
             .Select(branch => branch.AttackCountDelta).ToArray());
+        Assert.Equal([0, 1, 0, 1], actual.SemanticExpected.RoyalBranches
+            .Select(branch => branch.TargetsWithin400).ToArray());
+        Assert.Equal([
+                new Rational(0, 1), new Rational(2_345_999_977, 2_500),
+                new Rational(0, 1), new Rational(335_526_306, 625)
+            ],
+            actual.SemanticExpected.RoyalBranches
+                .Select(branch => branch.ProcDelta.Value).ToArray());
+        Assert.Equal(4, actual.ObservedScenarioCount);
         for (var index = 0; index < fixture.SemanticInput.RoyalAttackScenarios.Length;
              index++)
         {
@@ -550,6 +564,9 @@ public sealed class NavigationMechanicsProfileTests
     [InlineData("base-cooldown")]
     [InlineData("horizon")]
     [InlineData("expected-attacks")]
+    [InlineData("scenario-removal")]
+    [InlineData("scenario-collapse")]
+    [InlineData("scenario-cross-coupling")]
     public void RoyalTransformMutationFailsBeforeBytePin(string mutation)
     {
         WithMutatedProfile(root =>
@@ -576,6 +593,24 @@ public sealed class NavigationMechanicsProfileTests
                     break;
                 case "expected-attacks":
                     fixture["SemanticExpected"]!["RoyalBranches"]![0]!["AttacksAfter"] = 61;
+                    break;
+                case "scenario-removal":
+                    scenarios!.RemoveAt(3);
+                    fixture["SemanticExpected"]!["RoyalBranches"]!.AsArray().RemoveAt(3);
+                    fixture["Input"]!["CoupledScenarios"] = 3;
+                    fixture["Expected"]!["ObservedScenarioCount"] = 3;
+                    break;
+                case "scenario-collapse":
+                    scenarios![1]!["TargetsWithin400"] = 0;
+                    fixture["SemanticExpected"]!["RoyalBranches"]![1]!["TargetsWithin400"] = 0;
+                    fixture["SemanticExpected"]!["RoyalBranches"]![1]!["ProcDelta"] =
+                        new JsonObject { ["Numerator"] = "0", ["Denominator"] = "1" };
+                    break;
+                case "scenario-cross-coupling":
+                    var branches = fixture["SemanticExpected"]!["RoyalBranches"]!.AsArray();
+                    var second = branches[1]!["ProcDelta"]!.DeepClone();
+                    branches[1]!["ProcDelta"] = branches[3]!["ProcDelta"]!.DeepClone();
+                    branches[3]!["ProcDelta"] = second;
                     break;
             }
         }, exception =>
@@ -788,6 +823,8 @@ public sealed class NavigationMechanicsProfileTests
             Assert.Equal(expectedBranch.AttacksBefore, actualBranch.AttacksBefore);
             Assert.Equal(expectedBranch.AttacksAfter, actualBranch.AttacksAfter);
             Assert.Equal(expectedBranch.AttackCountDelta, actualBranch.AttackCountDelta);
+            Assert.Equal(expectedBranch.TargetsWithin400, actualBranch.TargetsWithin400);
+            Assert.Equal(expectedBranch.ProcDelta.Value, actualBranch.ProcDelta.Value);
             Assert.Equal(expectedBranch.AttackDamage, actualBranch.AttackDamage);
             Assert.Equal(expectedBranch.Radius, actualBranch.Radius);
         }
