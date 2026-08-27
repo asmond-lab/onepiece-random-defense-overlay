@@ -1,0 +1,35 @@
+{
+  "MapVersion": "2.314",
+  "Members": [
+    {
+      "Identifier": "source-metadata",
+      "Path": "Data/map-source-metadata-2314.json",
+      "Purpose": "Pins the 2.314 map archive and extracted source members.",
+      "Sha256": "2d262ff929fcae3d70a94c6c76969708f37f28a62b9dd06b52b0af80d4c10c82"
+    },
+    {
+      "Identifier": "story",
+      "Path": "Data/story-progression-2314.json",
+      "Purpose": "Defines source-pinned story stages, owners, and rewards.",
+      "Sha256": "8c24aff6b74ebc6a4117c9aa57bfc236cbd286d12ad85faf802c6453dc58ae0b"
+    },
+    {
+      "Identifier": "navigation",
+      "Path": "Data/navigation-mechanics-2314.json",
+      "Purpose": "Defines source-pinned navigation mechanics and bounded scenarios.",
+      "Sha256": "b0b0825700c5c4d39aed9a91a42c2b2782490eca88b470a9c1aaf3340833a7f3"
+    },
+    {
+      "Identifier": "recipe-overrides",
+      "Path": "Data/map-recipe-overrides-2314.txt",
+      "Purpose": "Pins map-authored recipe overrides used by route allocation.",
+      "Sha256": "7f738b496d0e361c4e742dea80e20b523a29d5681c6c428e38d9bdfda947a406"
+    },
+    {
+      "Identifier": "combine-commands",
+      "Path": "Data/map-combine-commands-2314.txt",
+      "Purpose": "Pins map-authored combine commands used by route allocation.",
+      "Sha256": "0af03328afd3c1bbb59bd49dc1ed0651e94568b87de3486ab265533ded2a6d7d"
+    }
+  ]
+}

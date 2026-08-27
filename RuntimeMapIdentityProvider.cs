@@ -1,0 +1,249 @@
+using System.Globalization;
+using System.Security;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace OrandOverlay;
+public enum RuntimeMapIdentityState { Unknown, Proven }
+public enum RuntimeMapIdentityFailure
+{
+    None,
+    LogMissing,
+    LogReadFailed,
+    LogRotated,
+    PartialOpeningRecord,
+    NoPostStartOpeningRecord,
+    AmbiguousLatestOpeningRecord,
+    OpeningMapPathNotAbsolute,
+    ArchiveMissing,
+    ArchiveLengthMismatch,
+    ArchiveHashMismatch
+}
+public sealed record RuntimeMapIdentityResult(
+    RuntimeMapIdentityState State,
+    RuntimeMapIdentityFailure Failure,
+    string Reason,
+    DateTimeOffset? RecordTimestamp,
+    string RuntimePathField,
+    string ActualArchivePath,
+    long ArchiveLengthBytes,
+    string ActualArchiveSha256,
+    long LogBytesRead,
+    int LogReadCalls,
+    long ArchiveBytesRead,
+    int ArchiveReadCalls);
+
+public static class RuntimeMapIdentityProvider
+{
+    public const int MaximumLogTailBytes = 4 * 1024 * 1024;
+    public const string PathField =
+        "War3Log.txt latest complete Opening map record after session start";
+
+    private static readonly Regex OpeningMapPattern = new(
+        "^(?<month>[0-9]{1,2})/(?<day>[0-9]{1,2}) " +
+        "(?<clock>[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3})  " +
+        "Opening map - (?<path>.+)$",
+        RegexOptions.CultureInvariant);
+
+    public static RuntimeMapIdentityResult Probe(
+        DateTimeOffset sessionStartedAt,
+        string war3LogPath,
+        MapArchivePin expected)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(war3LogPath);
+        ArgumentNullException.ThrowIfNull(expected);
+        if (!File.Exists(war3LogPath))
+            return Unknown(RuntimeMapIdentityFailure.LogMissing,
+                "War3Log source is missing.");
+
+        var log = ReadTail(war3LogPath);
+        if (log.Failure != RuntimeMapIdentityFailure.None)
+            return Unknown(log.Failure, log.Reason, log.BytesRead, log.ReadCalls);
+        if (log.HasPartialOpeningRecord)
+            return Unknown(RuntimeMapIdentityFailure.PartialOpeningRecord,
+                "War3Log ends with a partial Opening map record.",
+                log.BytesRead, log.ReadCalls);
+
+        var records = ParseRecords(log.Text, sessionStartedAt);
+        if (records.Count == 0)
+            return Unknown(RuntimeMapIdentityFailure.NoPostStartOpeningRecord,
+                "No complete Opening map record is strictly after the session start.",
+                log.BytesRead, log.ReadCalls);
+
+        var latestTimestamp = records.Max(record => record.Timestamp);
+        var latest = records.Where(record => record.Timestamp == latestTimestamp).ToArray();
+        var paths = latest.Select(record => record.Path.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        if (paths.Length != 1)
+            return Unknown(RuntimeMapIdentityFailure.AmbiguousLatestOpeningRecord,
+                "The latest Opening map timestamp names multiple paths.",
+                log.BytesRead, log.ReadCalls);
+
+        var loggedPath = paths[0].Replace('/', Path.DirectorySeparatorChar);
+        if (!Path.IsPathFullyQualified(loggedPath))
+            return Unknown(RuntimeMapIdentityFailure.OpeningMapPathNotAbsolute,
+                "The latest Opening map value is not an absolute archive path.",
+                log.BytesRead, log.ReadCalls);
+
+        string archivePath;
+        try { archivePath = Path.GetFullPath(loggedPath); }
+        catch (Exception exception) when (exception is ArgumentException or
+            NotSupportedException or PathTooLongException)
+        {
+            return Unknown(RuntimeMapIdentityFailure.OpeningMapPathNotAbsolute,
+                "The latest Opening map path cannot be resolved.",
+                log.BytesRead, log.ReadCalls);
+        }
+        if (!File.Exists(archivePath))
+            return Unknown(RuntimeMapIdentityFailure.ArchiveMissing,
+                "The archive named by the latest Opening map record is missing.",
+                log.BytesRead, log.ReadCalls, latestTimestamp, archivePath);
+
+        try
+        {
+            var length = new FileInfo(archivePath).Length;
+            if (length != expected.LengthBytes)
+                return Unknown(RuntimeMapIdentityFailure.ArchiveLengthMismatch,
+                    $"Archive length {length} does not match pinned length {expected.LengthBytes}.",
+                    log.BytesRead, log.ReadCalls, latestTimestamp, archivePath,
+                    length);
+
+            using var archive = new FileStream(archivePath, FileMode.Open, FileAccess.Read,
+                FileShare.Read);
+            var actualSha = Convert.ToHexString(SHA256.HashData(archive)).ToLowerInvariant();
+            if (!actualSha.Equals(expected.Sha256, StringComparison.OrdinalIgnoreCase))
+                return Unknown(RuntimeMapIdentityFailure.ArchiveHashMismatch,
+                    "Archive SHA-256 does not match the pinned map archive.",
+                    log.BytesRead, log.ReadCalls, latestTimestamp, archivePath,
+                    length, actualSha, length, 1);
+
+            return new RuntimeMapIdentityResult(
+                RuntimeMapIdentityState.Proven, RuntimeMapIdentityFailure.None,
+                "Latest post-start Opening map path resolves to the pinned archive bytes.",
+                latestTimestamp, PathField, archivePath, length, actualSha,
+                log.BytesRead, log.ReadCalls, length, 1);
+        }
+        catch (Exception exception) when (exception is IOException or
+            UnauthorizedAccessException or SecurityException)
+        {
+            return Unknown(RuntimeMapIdentityFailure.ArchiveMissing,
+                "The archive could not be read.", log.BytesRead, log.ReadCalls,
+                latestTimestamp, archivePath);
+        }
+    }
+
+    private static LogTail ReadTail(string path)
+    {
+        try
+        {
+            var before = new FileInfo(path);
+            before.Refresh();
+            var creation = before.CreationTimeUtc;
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read,
+                FileShare.ReadWrite | FileShare.Delete);
+            var length = stream.Length;
+            var count = (int)Math.Min(length, MaximumLogTailBytes);
+            var start = length - count;
+            stream.Position = start;
+            var bytes = new byte[count];
+            stream.ReadExactly(bytes);
+
+            var after = new FileInfo(path);
+            after.Refresh();
+            var continuity = ValidateLogContinuity(
+                creation, length, after.CreationTimeUtc, after.Length);
+            if (!after.Exists || continuity != RuntimeMapIdentityFailure.None)
+                return LogTail.Failed(RuntimeMapIdentityFailure.LogRotated,
+                    "War3Log rotated or shrank during the read.", count);
+
+            var text = new UTF8Encoding(false, true).GetString(bytes);
+            if (start > 0)
+            {
+                var firstNewline = text.IndexOf('\n');
+                text = firstNewline < 0 ? "" : text[(firstNewline + 1)..];
+            }
+            var partial = text.Length > 0 && text[^1] != '\n' &&
+                text[(text.LastIndexOf('\n') + 1)..].Contains(
+                    "Opening map - ", StringComparison.Ordinal);
+            return new LogTail(text, partial, RuntimeMapIdentityFailure.None,
+                "", count, 1);
+        }
+        catch (Exception exception) when (exception is IOException or
+            UnauthorizedAccessException or DecoderFallbackException)
+        {
+            return LogTail.Failed(RuntimeMapIdentityFailure.LogReadFailed,
+                "War3Log could not be read consistently.", 0);
+        }
+    }
+
+    private static List<OpeningRecord> ParseRecords(
+        string text, DateTimeOffset sessionStartedAt)
+    {
+        var result = new List<OpeningRecord>();
+        foreach (var rawLine in text.Split('\n'))
+        {
+            var match = OpeningMapPattern.Match(rawLine.TrimEnd('\r'));
+            if (!match.Success) continue;
+            if (!TryTimestamp(match, sessionStartedAt, out var timestamp) ||
+                timestamp <= sessionStartedAt) continue;
+            result.Add(new OpeningRecord(timestamp, match.Groups["path"].Value));
+        }
+        return result;
+    }
+
+    internal static RuntimeMapIdentityFailure ValidateLogContinuity(
+        DateTime creationBefore, long lengthBefore,
+        DateTime creationAfter, long lengthAfter) =>
+        creationAfter != creationBefore || lengthAfter < lengthBefore
+            ? RuntimeMapIdentityFailure.LogRotated
+            : RuntimeMapIdentityFailure.None;
+
+    private static bool TryTimestamp(
+        Match match, DateTimeOffset boundary, out DateTimeOffset timestamp)
+    {
+        var source = $"{boundary.Year}/{match.Groups["month"].Value}/" +
+                     $"{match.Groups["day"].Value} {match.Groups["clock"].Value}";
+        if (!DateTime.TryParseExact(source, "yyyy/M/d HH:mm:ss.fff",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+        {
+            timestamp = default;
+            return false;
+        }
+        timestamp = new DateTimeOffset(parsed, boundary.Offset);
+        if (timestamp < boundary.AddMonths(-6)) timestamp = timestamp.AddYears(1);
+        else if (timestamp > boundary.AddMonths(6)) timestamp = timestamp.AddYears(-1);
+        return true;
+    }
+
+    private static RuntimeMapIdentityResult Unknown(
+        RuntimeMapIdentityFailure failure, string reason,
+        long logBytes = 0, int logCalls = 0,
+        DateTimeOffset? timestamp = null, string archivePath = "",
+        long archiveLength = 0, string archiveSha = "",
+        long archiveBytes = 0, int archiveCalls = 0) =>
+        new(RuntimeMapIdentityState.Unknown, failure, reason, timestamp,
+            PathField, archivePath, archiveLength, archiveSha,
+            logBytes, logCalls, archiveBytes, archiveCalls);
+
+    private sealed record OpeningRecord(DateTimeOffset Timestamp, string Path);
+    private sealed record LogTail(
+        string Text, bool HasPartialOpeningRecord,
+        RuntimeMapIdentityFailure Failure, string Reason,
+        long BytesRead, int ReadCalls)
+    {
+        public static LogTail Failed(
+            RuntimeMapIdentityFailure failure, string reason, long bytes) =>
+            new("", false, failure, reason, bytes, 1);
+    }
+}
+
+public static class RuntimeAdaptivePlanningReadiness
+{
+    public static bool IsReady(
+        RuntimeSignalFeasibilityProfile profile,
+        RuntimeMapIdentityResult currentIdentity) =>
+        profile.AdaptivePlanningCapable &&
+        profile.LiveReadinessRequiresCurrentMapIdentityProof &&
+        currentIdentity.State == RuntimeMapIdentityState.Proven;
+}

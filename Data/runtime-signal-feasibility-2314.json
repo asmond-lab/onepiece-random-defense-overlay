@@ -1,0 +1,76 @@
+{
+  "MapVersion": "2.314",
+  "AdaptivePlanningCapable": true,
+  "LiveReadinessRequiresCurrentMapIdentityProof": true,
+  "PrimarySliceBytes": 4194304,
+  "SideChannelCountersSeparateFromPrimarySlice": true,
+  "MandatorySignals": [
+    {
+      "Identifier": "actual-map-archive-sha256",
+      "Status": "Unproven",
+      "Disposition": "DisableAdaptivePlanning",
+      "FiniteScenarios": [],
+      "Evidence": {
+        "Derivation": "A process-bound live capture resolved a fresh War3Log Opening map path after Warcraft PID 49508 started and hashed 134758580 archive bytes to the pinned SHA-256. RuntimeMapIdentityProvider now repeats this bounded log/path/hash proof for each supplied process or match-reset boundary. The static profile intentionally remains Unproven because current-session readiness comes only from a Proven provider result, without persisting a machine-specific absolute path.",
+        "WidthBits": 0,
+        "BeforeValue": "Unknown",
+        "AfterValue": "f9ddd3af7c0fbfd39b7a6df2ca0f5f295675bba5e8b91a5322dcec93d7ca8a83",
+        "VisibleTrigger": "Warcraft III loading the pinned 2.314 map archive",
+        "RuntimePathField": "War3Log.txt fresh Opening map record correlated after the current Warcraft process start",
+        "ActualArchivePath": "",
+        "ActualArchiveSha256": "f9ddd3af7c0fbfd39b7a6df2ca0f5f295675bba5e8b91a5322dcec93d7ca8a83",
+        "BytesRead": 134758580,
+        "Calls": 1,
+        "ResetBehavior": "Re-probe after a confirmed process or match reset.",
+        "Confidence": "RuntimeProviderRequiredPerSession"
+      }
+    }
+  ],
+  "OptionalSignals": [
+    {
+      "Identifier": "resources", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Known signed 32-bit nonnegative value"],
+      "Evidence": { "Derivation": "PLAYER_STATE resource APIs are 32-bit integers in the pinned JASS source; no runtime field is proven.", "WidthBits": 32, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Gold or lumber changes visibly", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "random-wisp", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Absent", "Present", "Redeemed"],
+      "Evidence": { "Derivation": "Navigation profile pins the random-wisp redemption transition and counter without a runtime address.", "WidthBits": 2, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Random wisp appears or is redeemed", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "helper", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Absent", "Present with unknown mana", "Present with known nonnegative mana"],
+      "Evidence": { "Derivation": "Pinned helper mechanics provide a finite presence/mana scenario set; no runtime field is proven.", "WidthBits": 33, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Helper appears or spends mana", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "exact-top-count", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "0", "1", "2", "3 or more"],
+      "Evidence": { "Derivation": "Pinned navigation eligibility distinguishes zero, one, two, and over-limit top scenarios.", "WidthBits": 3, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "A top unit appears or disappears", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "isekai", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Inactive", "Active"],
+      "Evidence": { "Derivation": "Pinned gamble mechanics have exactly normal and Isekai branches; runtime activation is unproven.", "WidthBits": 1, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Isekai branch becomes visible", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "rerolls-gamble-bounty-boss-item", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Known nonnegative 32-bit counters and finite pinned state enums"],
+      "Evidence": { "Derivation": "Pinned navigation transitions bound these counters and state branches, but no runtime address is proven.", "WidthBits": 32, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "A reroll, gamble, bounty kill, boss, or item state changes", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "selected-top-cooldown", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Known positive IEEE-754 single value"],
+      "Evidence": { "Derivation": "Pinned Royal fixtures bound base cooldown use; the selected runtime unit and field are unproven.", "WidthBits": 32, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Selected top attack cooldown changes", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "current-wave", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "0 through 200"],
+      "Evidence": { "Derivation": "MapStateReader bounds its source-authored round marker to 0..200; it does not prove navigation state.", "WidthBits": 8, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Current round timer text changes", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Zero or Unknown on reset", "Confidence": "SourceBound" }
+    },
+    {
+      "Identifier": "remaining-combat-horizon", "Status": "SourceBound", "Disposition": "UnknownRouted",
+      "FiniteScenarios": ["Unknown", "Pinned Bounty 1/9/17 remaining-wave scenarios", "Pinned Royal radius-400 target-count scenarios"],
+      "Evidence": { "Derivation": "Navigation profile preserves finite Bounty and Royal source scenarios without claiming a live wave roster.", "WidthBits": 8, "BeforeValue": "Unknown", "AfterValue": "Unknown", "VisibleTrigger": "Wave or nearby target scenario changes", "RuntimePathField": "", "ActualArchivePath": "", "ActualArchiveSha256": "", "BytesRead": 0, "Calls": 0, "ResetBehavior": "Unknown on reset", "Confidence": "SourceBound" }
+    }
+  ]
+}
