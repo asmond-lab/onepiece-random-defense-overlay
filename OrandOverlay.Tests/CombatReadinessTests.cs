@@ -26,6 +26,45 @@ public sealed class CombatReadinessTests
     }
 
     [Theory]
+    [InlineData("신", 200.9, 201, false)]
+    [InlineData("신", 201, 201, true)]
+    [InlineData("악몽", 210.9, 211, false)]
+    [InlineData("악몽", 211, 211, true)]
+    [InlineData("unknown", 201, 211, false)]
+    public void PhysicalArmorTargetUsesRecognizedDifficulty(
+        string difficulty, double armor, double expectedTarget, bool expectedReady)
+    {
+        var readiness = CombatReadinessCalculator.FromMetrics(
+            TestUnit("physical", "초월 [물딜]"),
+            new GoalStrategyProfile(0, 0),
+            new StrategyMetrics(Slow: 102, Stun: 1.4,
+                ArmorReduction: armor),
+            magicSourceCount: 0,
+            difficulty: difficulty);
+
+        Assert.Equal(expectedTarget, readiness.RequiredArmorReduction);
+        Assert.Equal(expectedReady, readiness.IsReady);
+    }
+
+    [Fact]
+    public void RecommendationEngineCarriesRecognizedDifficultyIntoReadiness()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var engine = new RecommendationEngine(catalog);
+
+        var divine = engine.RecommendNearestCrafts(
+            "yamato_transcendent", [], take: 1, difficulty: "신");
+        var nightmare = engine.RecommendNearestCrafts(
+            "yamato_transcendent", [], take: 1, difficulty: "악몽");
+
+        Assert.All(divine, recommendation =>
+            Assert.Equal(201d, recommendation.CombatReadiness!.RequiredArmorReduction));
+        Assert.All(nightmare, recommendation =>
+            Assert.Equal(211d, recommendation.CombatReadiness!.RequiredArmorReduction));
+    }
+
+    [Theory]
     [InlineData(0, 102, 1.4, false)]
     [InlineData(1, 101.9, 1.4, false)]
     [InlineData(1, 102, 1.39, false)]

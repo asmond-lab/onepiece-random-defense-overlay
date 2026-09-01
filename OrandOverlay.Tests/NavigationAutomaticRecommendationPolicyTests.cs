@@ -13,7 +13,8 @@ public sealed class NavigationAutomaticRecommendationPolicyTests
         NavigationRecommendationState state)
     {
         Assert.True(NavigationAutomaticRecommendationPolicy.ShouldApply(
-            true, ManualLatches.None, state, "PathOfKings.BountyHunter"));
+            true, ManualLatches.None, PlannerPhase.Committed,
+            state, "PathOfKings.BountyHunter"));
     }
 
     [Theory]
@@ -24,19 +25,37 @@ public sealed class NavigationAutomaticRecommendationPolicyTests
     public void DoesNotApplyNonActionableStates(NavigationRecommendationState state)
     {
         Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(
-            true, ManualLatches.None, state, "PathOfKings.BountyHunter"));
+            true, ManualLatches.None, PlannerPhase.Committed,
+            state, "PathOfKings.BountyHunter"));
     }
 
     [Fact]
     public void DisabledOrManualModeNeverChangesTheOverlaySetting()
     {
         Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(
-            false, ManualLatches.None, NavigationRecommendationState.Actionable,
+            false, ManualLatches.None, PlannerPhase.Committed,
+            NavigationRecommendationState.Actionable,
             "PathOfKings.BountyHunter"));
         Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(
-            true, new ManualLatches(false, true), NavigationRecommendationState.Actionable,
+            true, new ManualLatches(false, true), PlannerPhase.Committed,
+            NavigationRecommendationState.Actionable,
             "PathOfKings.BountyHunter"));
         Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(
-            true, ManualLatches.None, NavigationRecommendationState.Actionable, null));
+            true, ManualLatches.None, PlannerPhase.Committed,
+            NavigationRecommendationState.Actionable, null));
+    }
+
+    [Theory]
+    [InlineData(PlannerPhase.AccumulateSpecialUncommon)]
+    [InlineData(PlannerPhase.ChooseLegend)]
+    [InlineData(PlannerPhase.AwaitMarineford)]
+    [InlineData(PlannerPhase.SpendRares)]
+    [InlineData(PlannerPhase.CommitRound20)]
+    public void DoesNotApplyBeforeStoryRewardSequenceCommits(PlannerPhase phase)
+    {
+        Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(
+            true, ManualLatches.None, phase,
+            NavigationRecommendationState.Actionable,
+            "PathOfKings.BountyHunter"));
     }
 }

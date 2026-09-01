@@ -18,6 +18,18 @@ public sealed class AdaptiveBuildStateMachineTests
     }
 
     [Fact]
+    public void EarlyStoryLegendIsObservedWithoutWaitingForStageSix()
+    {
+        var result = AdaptiveBuildStateMachine.Advance(AdvanceToAccumulation(),
+            Snapshot(stage: 4, specialUncommonWisps: 0,
+                observedLegends: ["story-speed-legend"]));
+
+        Assert.Equal(PlannerPhase.AwaitMarineford, result.State.Phase);
+        Assert.Equal("story-speed-legend", result.State.LockedFirstLegendId);
+        Assert.Equal(FirstLegendHistory.Observed, result.State.FirstLegendHistory);
+    }
+
+    [Fact]
     public void ActiveSixRequiresSpentWispsCardsAndSeparatelyKnownResources()
     {
         var state = AdvanceToAccumulation();

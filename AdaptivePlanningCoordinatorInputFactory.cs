@@ -117,7 +117,8 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         var resources = source.IsTransient ? ResourceCompletion.Unknown :
             source.RewardWisps.Values.Any(value => value > 0)
                 ? ResourceCompletion.Incomplete : ResourceCompletion.Complete;
-        return source.Units.Values.Where(unit => BaseTier(unit.Tier) == "전설")
+        return FirstLegendRecommendationPolicy.Candidates(
+                source.Units.Values, source.Units, inventory)
             .Select(unit =>
             {
                 var progress = calculator.CalculateAllocation([unit.Id], inventory).Progress;
@@ -165,7 +166,7 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
 
     private static int? Wisp(AdaptivePlanningInputSource source, string id) =>
         source.IsTransient ? null : source.RewardWisps.TryGetValue(id, out var value)
-            ? value : null;
+            ? value : 0;
 
     private static string BaseTier(string tier) => tier.Split('[', 2)[0].Trim();
 

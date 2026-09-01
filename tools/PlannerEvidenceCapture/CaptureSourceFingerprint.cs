@@ -12,6 +12,9 @@ internal static class CaptureSourceFingerprint
     internal static IReadOnlyList<string> CanonicalPaths { get; } =
     [
         "DESIGN.md",
+        "BulletOperatingBoard.cs",
+        "Data/bullet-strategy-2314.json",
+        "FirstRareTargetPolicy.cs",
         "MainWindow.xaml.cs",
         "OverlayTheme.cs",
         "OverlayWindow.xaml",

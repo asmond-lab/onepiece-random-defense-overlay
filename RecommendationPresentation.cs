@@ -7,8 +7,10 @@ public static class RecommendationPresentation
 {
     public static PlannerEvidenceView PlannerEvidence(int round,
         AdaptivePlanningApplied? applied, bool signalsUnknown,
-        string? unknownReason = null) => PlannerEvidenceProjector.Project(
-            round, applied, signalsUnknown, unknownReason);
+        string? unknownReason = null,
+        StoryRewardSequenceDecision? storySequence = null) =>
+        PlannerEvidenceProjector.Project(
+            round, applied, signalsUnknown, unknownReason, storySequence);
 
     public static string CarryModeLabel(GoalCarryMode mode) => mode switch
     {
@@ -246,6 +248,11 @@ public static class RecommendationPresentation
 
 public enum PlannerEvidenceState
 {
+    SequenceFirstRare,
+    SequenceStoryReward,
+    SequenceFirstLegend,
+    SequenceRareReward,
+    SequenceTopNavigation,
     Waiting,
     Blocked,
     Round20Preview,
@@ -259,6 +266,11 @@ public enum PlannerEvidenceState
 public enum PlannerEvidenceFieldKind
 {
     Phase,
+    Sequence,
+    StoryStage,
+    StoryReward,
+    RewardValue,
+    StoryDecision,
     Action,
     Blocker,
     LaneComparison,
@@ -301,9 +313,10 @@ internal static class PlannerEvidenceProjector
     private const string Empty = "확인 전";
 
     public static PlannerEvidenceView Project(int round, AdaptivePlanningApplied? applied,
-        bool signalsUnknown, string? unknownReason)
+        bool signalsUnknown, string? unknownReason,
+        StoryRewardSequenceDecision? storySequence = null)
     {
-        var state = State(round, applied, signalsUnknown);
+        var state = State(round, applied, signalsUnknown, storySequence);
         var trace = applied?.Trace;
         var navigation = applied?.Navigation;
         var physical = Best(trace, DamageLane.Physical);
@@ -314,40 +327,70 @@ internal static class PlannerEvidenceProjector
                      ?? navigation?.Options.FirstOrDefault();
         var blockers = Blockers(applied);
         var unknowns = navigation?.MissingSignalIds ?? [];
+        var locked = storySequence is { TopNavigationUnlocked: false };
         var fields = ImmutableArray.Create(
             Field(PlannerEvidenceFieldKind.Phase, "planner-phase", "판단 단계",
                 StateLabel(state), trace?.Phase.ToString() ?? state.ToString(),
                 state is PlannerEvidenceState.Blocked or PlannerEvidenceState.Unknown),
+            Field(PlannerEvidenceFieldKind.Sequence, "planner-sequence", "추천 순서",
+                storySequence?.StepSummary ?? Empty,
+                storySequence is null
+                    ? "unknown"
+                    : $"{storySequence.Stage}|{storySequence.Action}"),
+            Field(PlannerEvidenceFieldKind.StoryStage, "planner-story-stage", "현재 스토리",
+                storySequence?.CurrentStoryLabel ?? Empty,
+                storySequence?.CurrentStoryLabel ?? "unknown"),
+            Field(PlannerEvidenceFieldKind.StoryReward, "planner-story-reward", "클리어 보상",
+                storySequence?.ClearRewardSummary ?? Empty,
+                storySequence?.ClearRewardSummary ?? "unknown"),
+            Field(PlannerEvidenceFieldKind.RewardValue, "planner-reward-value", "보상 기대값",
+                storySequence?.OutcomeValueSummary ?? Empty,
+                storySequence?.ExpectedUsefulUnitBp.ToString(CultureInfo.InvariantCulture) ??
+                "unknown"),
+            Field(PlannerEvidenceFieldKind.StoryDecision, "planner-story-decision", "조합 판단",
+                storySequence?.ActionSummary ?? Empty,
+                storySequence?.Action.ToString() ?? "unknown"),
             Field(PlannerEvidenceFieldKind.Action, "planner-action", "지금 할 일",
-                ActionLabel(state, applied), $"{state}|{trace?.Phase}"),
+                ActionLabel(state, applied, storySequence), $"{state}|{trace?.Phase}"),
             Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "멈춘 이유",
                 blockers.Display, blockers.Machine, blockers.IsWarning),
             Field(PlannerEvidenceFieldKind.LaneComparison, "planner-lane-comparison", "딜 경로 비교",
-                $"물리 {Score(physical)} · 마법 {Score(magic)}",
-                $"physical={RawScore(physical)};magic={RawScore(magic)}"),
+                LockedDisplay(locked, $"물리 {Score(physical)} · 마법 {Score(magic)}"),
+                LockedMachine(locked,
+                    $"physical={RawScore(physical)};magic={RawScore(magic)}")),
             Field(PlannerEvidenceFieldKind.PhysicalRoute, "planner-physical-route", "물리 경로",
-                RouteDisplay(physical), RouteMachine(physical)),
+                LockedDisplay(locked, RouteDisplay(physical)),
+                LockedMachine(locked, RouteMachine(physical))),
             Field(PlannerEvidenceFieldKind.MagicRoute, "planner-magic-route", "마법 경로",
-                RouteDisplay(magic), RouteMachine(magic)),
+                LockedDisplay(locked, RouteDisplay(magic)),
+                LockedMachine(locked, RouteMachine(magic))),
             Field(PlannerEvidenceFieldKind.Package, "planner-package", "목표·패키지 완성",
-                PackageDisplay(applied, physical, magic), PackageMachine(applied, physical, magic)),
+                LockedDisplay(locked, PackageDisplay(applied, physical, magic)),
+                LockedMachine(locked, PackageMachine(applied, physical, magic))),
             Field(PlannerEvidenceFieldKind.FirstLegend, "planner-first-legend", "첫 전설 적합",
-                FirstLegendDisplay(applied), FirstLegendMachine(applied)),
+                FirstLegendDisplay(applied, storySequence),
+                FirstLegendMachine(applied, storySequence)),
             Field(PlannerEvidenceFieldKind.Navigation, "planner-navigation", "항법 판단",
-                NavigationDisplay(navigation, option),
-                $"regime={navigation?.Regime};posture={option?.Posture}"),
+                LockedDisplay(locked, NavigationDisplay(navigation, option)),
+                LockedMachine(locked,
+                    $"regime={navigation?.Regime};posture={option?.Posture}")),
             Field(PlannerEvidenceFieldKind.NavigationOption, "planner-navigation-option", "추천 항법",
+                locked ? "마지막 단계에서 공개" :
                 navigation?.RecommendedOptionId is { } optionId
                     ? NavigationProfiles.Find(optionId).Name
                     : Empty,
-                navigation?.RecommendedOptionId ?? "unknown"),
+                LockedMachine(locked, navigation?.RecommendedOptionId ?? "unknown")),
             Field(PlannerEvidenceFieldKind.Recovery, "planner-recovery", "회복 가능성",
-                RecoveryDisplay(option), RecoveryMachine(option)),
+                LockedDisplay(locked, RecoveryDisplay(option)),
+                LockedMachine(locked, RecoveryMachine(option))),
             Field(PlannerEvidenceFieldKind.Interval, "planner-interval", "하한·평균·상한",
-                IntervalDisplay(option), IntervalMachine(option)),
+                LockedDisplay(locked, IntervalDisplay(option)),
+                LockedMachine(locked, IntervalMachine(option))),
             Field(PlannerEvidenceFieldKind.Confidence, "planner-confidence", "신뢰도",
-                ConfidenceDisplay(trace, option), ConfidenceMachine(trace, option),
-                (trace?.ConfidenceBp ?? 0) < NavigationIntervalScorer.MinimumRecommendationConfidenceBp),
+                LockedDisplay(locked, ConfidenceDisplay(trace, option)),
+                LockedMachine(locked, ConfidenceMachine(trace, option)),
+                !locked && (trace?.ConfidenceBp ?? 0) <
+                NavigationIntervalScorer.MinimumRecommendationConfidenceBp),
             Field(PlannerEvidenceFieldKind.UnknownSignals, "planner-unknown-signals", "미확인 신호",
                 UnknownDisplay(unknowns, unknownReason), UnknownMachine(unknowns, unknownReason),
                 signalsUnknown || unknowns.Length > 0),
@@ -361,9 +404,18 @@ internal static class PlannerEvidenceProjector
     }
 
     private static PlannerEvidenceState State(int round, AdaptivePlanningApplied? applied,
-        bool signalsUnknown)
+        bool signalsUnknown, StoryRewardSequenceDecision? storySequence)
     {
         if (signalsUnknown) return PlannerEvidenceState.Unknown;
+        if (storySequence is { TopNavigationUnlocked: false })
+            return storySequence.Stage switch
+            {
+                RecommendationSequenceStage.FirstRare => PlannerEvidenceState.SequenceFirstRare,
+                RecommendationSequenceStage.StoryReward => PlannerEvidenceState.SequenceStoryReward,
+                RecommendationSequenceStage.FirstLegend => PlannerEvidenceState.SequenceFirstLegend,
+                RecommendationSequenceStage.RareReward => PlannerEvidenceState.SequenceRareReward,
+                _ => PlannerEvidenceState.SequenceTopNavigation
+            };
         if (applied is null) return PlannerEvidenceState.Waiting;
         if (applied.State.ManualLatches.GoalOverride ||
             applied.State.ManualLatches.NavigationOverride ||
@@ -396,6 +448,11 @@ internal static class PlannerEvidenceProjector
 
     private static string StateLabel(PlannerEvidenceState state) => state switch
     {
+        PlannerEvidenceState.SequenceFirstRare => "1단계 · 첫 희귀함",
+        PlannerEvidenceState.SequenceStoryReward => "2단계 · 스토리 보상",
+        PlannerEvidenceState.SequenceFirstLegend => "3단계 · 첫 전설",
+        PlannerEvidenceState.SequenceRareReward => "4단계 · 희귀 보상",
+        PlannerEvidenceState.SequenceTopNavigation => "5단계 · 상위·항법 대기",
         PlannerEvidenceState.Waiting => "판단 입력 대기",
         PlannerEvidenceState.Blocked => "판단 보류",
         PlannerEvidenceState.Round20Preview => "20라운드 미리보기",
@@ -406,7 +463,11 @@ internal static class PlannerEvidenceProjector
         _ => "입력 확인 필요"
     };
 
-    private static string ActionLabel(PlannerEvidenceState state, AdaptivePlanningApplied? applied) =>
+    private static string ActionLabel(PlannerEvidenceState state, AdaptivePlanningApplied? applied,
+        StoryRewardSequenceDecision? storySequence) =>
+        storySequence is { TopNavigationUnlocked: false }
+            ? storySequence.ActionSummary
+            :
         state switch
         {
             PlannerEvidenceState.Waiting => "게임 신호를 확인하는 중입니다.",
@@ -463,13 +524,19 @@ internal static class PlannerEvidenceProjector
             : $"{applied?.State.RouteLock?.PackageId}|goal={route.GoalProgressBp}|package={route.PackageProgressBp}";
     }
 
-    private static string FirstLegendDisplay(AdaptivePlanningApplied? applied) =>
+    private static string FirstLegendDisplay(AdaptivePlanningApplied? applied,
+        StoryRewardSequenceDecision? storySequence) =>
+        storySequence?.RecommendedLegendName is { Length: > 0 } name
+            ? $"{name} · {storySequence.ActionSummary}"
+            :
         applied?.State.LockedFirstLegendId is not null
             ? "첫 전설 확정 · 선택 경로에 반영"
             : applied?.State.PossibleFirstLegendIds.Length > 0
                 ? $"후보 {applied.State.PossibleFirstLegendIds.Length}개"
                 : Empty;
-    private static string FirstLegendMachine(AdaptivePlanningApplied? applied) =>
+    private static string FirstLegendMachine(AdaptivePlanningApplied? applied,
+        StoryRewardSequenceDecision? storySequence) =>
+        storySequence?.RecommendedLegendId ??
         applied?.State.LockedFirstLegendId ??
         (applied?.State.PossibleFirstLegendIds.Length > 0
             ? string.Join(',', applied.State.PossibleFirstLegendIds) : "unknown");
@@ -550,6 +617,12 @@ internal static class PlannerEvidenceProjector
         $"goal-manual={trace?.ManualLatches.GoalOverride == true};" +
         $"navigation-manual={trace?.ManualLatches.NavigationOverride == true};" +
         $"state={navigation?.State};source-forced={trace?.SourceDefinedForcedExpectationId ?? "none"}";
+
+    private static string LockedDisplay(bool locked, string value) =>
+        locked ? "마지막 단계에서 공개" : value;
+
+    private static string LockedMachine(bool locked, string value) =>
+        locked ? "locked-by-sequence" : value;
 
     private static string Bp(int value) => (value / 100d).ToString("0.#", CultureInfo.InvariantCulture) + "%";
     private static string RatioPercent(Rational value) =>

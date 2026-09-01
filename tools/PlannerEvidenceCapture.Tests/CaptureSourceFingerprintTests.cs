@@ -9,7 +9,7 @@ public sealed class CaptureSourceFingerprintTests
     [Fact]
     public void CanonicalInputsBindOverlayThemeExactlyOnce()
     {
-        Assert.Equal(7, CaptureSourceFingerprint.CanonicalPaths.Count);
+        Assert.Equal(10, CaptureSourceFingerprint.CanonicalPaths.Count);
         Assert.Single(CaptureSourceFingerprint.CanonicalPaths,
             path => path.Equals("OverlayTheme.cs", StringComparison.Ordinal));
     }

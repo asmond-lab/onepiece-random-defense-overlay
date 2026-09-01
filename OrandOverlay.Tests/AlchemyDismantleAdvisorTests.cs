@@ -9,6 +9,22 @@ public sealed class AlchemyDismantleAdvisorTests
     private const string Alchemy = "BestHelp.Alchemy";
 
     [Fact]
+    public void OverlayShowsOnlyActionableDismantleAdvice()
+    {
+        var advice = new[]
+        {
+            new SpecialDismantleAdvice("keep", "로브 루치", false, "핵심 재료"),
+            new SpecialDismantleAdvice("break", "마가렛", true, "경로 밖")
+        };
+
+        var visible = OverlayWindow.DismantleOnly(advice);
+
+        var item = Assert.Single(visible);
+        Assert.Equal("break", item.UnitId);
+        Assert.True(item.Dismantle);
+    }
+
+    [Fact]
     public void ViviAlchemyKeepsGoalSpecialsAndDismantlesOffPathSpecials()
     {
         var catalog = Catalog();
@@ -21,6 +37,21 @@ public sealed class AlchemyDismantleAdvisorTests
 
         Assert.False(Advice(advice, "rawcode:S00h").Dismantle);
         Assert.True(Advice(advice, "rawcode:R00h").Dismantle);
+    }
+
+    [Fact]
+    public void UnfinishedViviDismantlesFutureExpertSpecials()
+    {
+        var catalog = Catalog();
+        var inventory = Hand("rawcode:S00h", "rawcode:310h");
+        var recommendations = Engine(catalog).RecommendNearestCrafts(
+            Vivi, inventory, take: 12, navigationMode: Alchemy);
+
+        var advice = new AlchemyDismantleAdvisor(catalog).Evaluate(
+            inventory, recommendations, catalog.Unit(Vivi), Alchemy, []);
+
+        Assert.False(Advice(advice, "rawcode:S00h").Dismantle);
+        Assert.True(Advice(advice, "rawcode:310h").Dismantle);
     }
 
     [Fact]
@@ -37,6 +68,26 @@ public sealed class AlchemyDismantleAdvisorTests
 
         Assert.False(Advice(advice, "rawcode:E10h").Dismantle);
         Assert.True(Advice(advice, "rawcode:P00h").Dismantle);
+    }
+
+    [Fact]
+    public void CompletedViviProtectsOnlyImmediateExpertSpecialsAndTheirNeededCount()
+    {
+        var catalog = Catalog();
+        var inventory = Hand(Vivi, "rawcode:310h", "rawcode:310h", "rawcode:B00h");
+        var recommendations = Engine(catalog).RecommendNearestCrafts(
+            Vivi, inventory, take: 12, navigationMode: Alchemy);
+
+        var immediateExpert = recommendations.First(item =>
+            item.Route.GoalUnitId is "rawcode:H90H" or "rawcode:4B0H" or
+                "rawcode:780h" or "rawcode:640h" or "mobydick");
+        var advice = new AlchemyDismantleAdvisor(catalog).Evaluate(
+            inventory, recommendations, catalog.Unit(Vivi), Alchemy, []);
+
+        Assert.Equal("rawcode:H90H", immediateExpert.Route.GoalUnitId);
+        Assert.True(Advice(advice, "rawcode:310h").Dismantle);
+        Assert.Contains("초과 1기", Advice(advice, "rawcode:310h").Reason);
+        Assert.True(Advice(advice, "rawcode:B00h").Dismantle);
     }
 
     [Fact]

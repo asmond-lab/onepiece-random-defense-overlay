@@ -2,7 +2,8 @@ namespace OrandOverlay;
 
 /// <summary>
 /// 연금술 대깨 비영에서 현재 제작 경로에 쓰지 않는 특별함만 분해 대상으로 고른다.
-/// 비영·선택한 상디/키드 분기·토키·키쿠·모비딕의 재료와 성장형은 보존한다.
+/// 비영 완성 전에는 비영 재료만, 완성 후에는 추천 선두 핵심 경로 하나의 재료만 보존한다.
+/// 성장형 특별함은 제작 단계와 관계없이 보존한다.
 /// </summary>
 public sealed class AlchemyDismantleAdvisor(DataCatalog catalog)
 {
@@ -35,13 +36,17 @@ public sealed class AlchemyDismantleAdvisor(DataCatalog catalog)
                 StringComparer.OrdinalIgnoreCase);
         var requiredSpecials = new Dictionary<string, int>(
             StringComparer.OrdinalIgnoreCase);
-        if (owned.GetValueOrDefault(goal.Id) <= 0)
+        var goalOwned = owned.GetValueOrDefault(goal.Id) > 0;
+        if (!goalOwned)
             CollectRequiredSpecials(goal.Id, 1, owned, requiredSpecials);
-        foreach (var rootId in recommendations
-                     .Select(item => item.Route.GoalUnitId)
-                     .Where(ExpertRoots.Contains)
-                     .Distinct(StringComparer.OrdinalIgnoreCase))
-            CollectRequiredSpecials(rootId, 1, owned, requiredSpecials);
+        else
+        {
+            var immediateRootId = recommendations
+                .Select(item => item.Route.GoalUnitId)
+                .FirstOrDefault(ExpertRoots.Contains);
+            if (immediateRootId is not null)
+                CollectRequiredSpecials(immediateRootId, 1, owned, requiredSpecials);
+        }
 
         var growth = growthUnitIds.ToHashSet(StringComparer.OrdinalIgnoreCase);
         var result = new List<SpecialDismantleAdvice>();

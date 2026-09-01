@@ -79,7 +79,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         bool suppressSeraphim = false,
         bool prioritizeTargetRare = false,
         bool suppressFirstRareShip = false,
-        bool suppressSecondaryTopCandidates = false)
+        bool suppressSecondaryTopCandidates = false,
+        string difficulty = "unknown")
     {
         var inventoryList = inventory.ToList();
         var counts = inventoryList
@@ -93,6 +94,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var initialCandidateEvaluations = new Dictionary<string, Recommendation>(
             StringComparer.OrdinalIgnoreCase);
         var goal = catalog.Unit(goalUnitId);
+        var legendOnly = BaseTier(goal.Tier) == "전설";
+        if (legendOnly) take = 1;
         var goalSuggestion = EvaluateCraft(goal, counts, calculator);
         // 니카 루초/뱀초처럼 인게임 rawcode를 공유하는 목표는 어느 쪽으로 인식돼도
         // 보유로 판정한다.
@@ -148,7 +151,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                    !counts.Any(pair =>
                                        pair.Value > 0 && BaseTier(catalog.Unit(pair.Key).Tier) == "희귀함");
 
-        var showGoal = navigation.CanCraftTopUnits && !goalOwned;
+        var showGoal = (navigation.CanCraftTopUnits || legendOnly) && !goalOwned;
         var viviPartnerId = SelectViviExpertPartner(
             goal, counts, calculator, navigation.AllowsMultipleTopUnits);
         // 목표 자체 스턴 + 패에 쌓인 스턴으로 빌드 방향(니카 이감/노이감)을 판정한다.
@@ -213,6 +216,30 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 EvaluateInitialCandidate(candidate.Unit), candidate.Metrics))
             .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
             .ToList();
+        var projectedStun = AggregateStrategyMetrics(counts).Stun +
+                            (showGoal ? GoalStrategyCalculator.StrategyMetricsFor(goal).Stun : 0);
+        var nearestStunCraft = OrderByCraftDistance(candidates
+                .Where(candidate => candidate.Metrics.Stun > 0))
+            .FirstOrDefault();
+        var hasTacticalStunRoute = nearestStunCraft is not null &&
+            (nearestStunCraft.Recommendation.RecipeProgress.CompletionRatio >= 0.9999 ||
+             nearestStunCraft.Unit.Recipe.Any(material => material.Value > 0 &&
+                 counts.GetValueOrDefault(material.Key) >= material.Value &&
+                 catalog.Unit(material.Key).Recipe.Count == 0 &&
+                 BaseTier(catalog.Unit(material.Key).Tier) == "기타"));
+        if (strategy is { PrioritizeStunRecommendations: true, StunTarget: <= 0 } tacticalStrategy &&
+            projectedStun + 0.0001 < StableStunTarget &&
+            hasTacticalStunRoute)
+        {
+            strategy = tacticalStrategy with
+            {
+                StunTarget = StableStunTarget,
+                StunCap = MaximumUsefulStun,
+                StunBeforeSlow = true
+            };
+            ActiveStunTarget = strategy.Value.StunTarget;
+            ActiveStunCap = strategy.Value.StunCap;
+        }
 
         var missingLegendaryIds = pinnedRecipeLegendaryIds
             .Where(id => counts.GetValueOrDefault(id) <= 0)
@@ -458,7 +485,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             Count = pair.Value
         });
         var readiness = CombatReadinessCalculator.Calculate(
-            catalog, goal, readinessInventory);
+            catalog, goal, readinessInventory, difficulty);
         var carryMode = catalog.CarryPolicy.ForGoal(goal.Id).Mode;
         var requiredTopSupportIds = results
             .Where(item =>
@@ -494,7 +521,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 suppressSeraphim,
                 prioritizeTargetRare,
                 suppressFirstRareShip,
-                suppressSecondaryTopCandidates: true);
+                suppressSecondaryTopCandidates: true,
+                difficulty: difficulty);
             foreach (var recommendation in safe)
             {
                 recommendation.DeferredSecondaryTopCount =
@@ -1378,7 +1406,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var bestSize = int.MaxValue;
         var bestUsefulMetrics = -1;
         var bestOvershoot = true;
-        var bestCraftScore = double.MinValue;
+        var bestCraftScore = (Completion: double.MinValue, MissingLeaves: long.MinValue,
+            CommunityPriority: int.MinValue);
         var current = new List<CraftCandidate>();
 
         Search(0);
@@ -1403,10 +1432,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     var usefulMetrics = current.Sum(candidate =>
                         RemainingUsefulMetricCount(candidate.Metrics, projected, strategy));
                     var overshoot = totalStun > strategy.StunTarget + 0.0001;
-                    var craftScore = current.Sum(candidate =>
-                        CommunityPriorityScore(goal, candidate.Unit) * 10000 +
-                        candidate.Recommendation.RecipeProgress.CompletionRatio * 1000 -
-                        candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(leaf => leaf.MissingCount));
+                    var craftScore = (
+                        Completion: current.Sum(candidate =>
+                            candidate.Recommendation.RecipeProgress.CompletionRatio),
+                        MissingLeaves: -current.Sum(candidate =>
+                            (long)candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(
+                                leaf => leaf.MissingCount)),
+                        CommunityPriority: current.Sum(candidate =>
+                            CommunityPriorityScore(goal, candidate.Unit)));
                     var sameDistance = Math.Abs(distance - bestDistance) < 0.0001;
                     var sameCore = coreCoverage == bestCoreCoverage;
                     if (best is null ||
@@ -1419,9 +1452,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                          usefulMetrics > bestUsefulMetrics ||
                          sameDistance && sameCore && size == bestSize &&
                          usefulMetrics == bestUsefulMetrics && bestOvershoot && !overshoot ||
-                         sameDistance && sameCore && size == bestSize &&
-                         usefulMetrics == bestUsefulMetrics && bestOvershoot == overshoot &&
-                         craftScore > bestCraftScore))
+                          sameDistance && sameCore && size == bestSize &&
+                          usefulMetrics == bestUsefulMetrics && bestOvershoot == overshoot &&
+                          craftScore.CompareTo(bestCraftScore) > 0))
                     {
                         best = current.ToList();
                         bestReachesTarget = reachesTarget;

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "goalUnitId": "rawcode:180h",
+  "goalRawcode": "180h",
+  "referenceSha256": "ef69ae6ed92ab0c44085604878c7fdb3612e6c23adf6a76174946d6188596412",
+  "firstLegendPriorityUnitIds": [
+    "rawcode:530h", "rawcode:HA0h", "rawcode:U20h", "rawcode:MC0h",
+    "rawcode:M30h", "rawcode:B30h", "rawcode:630h", "rawcode:E30h",
+    "rawcode:V20h", "rawcode:Z20h", "rawcode:I70h", "rawcode:930h",
+    "rawcode:K30h", "rawcode:S30h", "rawcode:830h", "rawcode:W20h",
+    "rawcode:O20h", "rawcode:X20h", "rawcode:G30h"
+  ],
+  "flyingCapableLegendUnitIds": ["rawcode:K30h", "rawcode:U20h", "rawcode:V20h"],
+  "bossKillUnitIds": ["rawcode:B90H", "rawcode:V90h", "rawcode:S20h"],
+  "stunUnitIds": ["rawcode:W20h", "rawcode:930h", "rawcode:Z20h"],
+  "flyingTarget": 2,
+  "flyingStoryBoundary": 12,
+  "flyingRoundBoundary": 50,
+  "bossKillTarget": 2,
+  "externalSlowTarget": 82,
+  "bulletSlowContribution": 20,
+  "auraArmorReductionTarget": 100,
+  "bulletArmorReductionContribution": 40,
+  "greenBloodStunContribution": 0.3,
+  "round50CraftRound": 50,
+  "enhancementPriority": ["armor-reduction", "attack-speed", "attack-power"],
+  "defaultNavigationId": "PathOfKings.BountyHunter",
+  "fallbackNavigationId": "EmergencyCall",
+  "recommendationOnly": true,
+  "rejectedEarlyDeadEnds": [
+    "fourth-legend-before-story-10-rare-reward",
+    "spend-story-rare-reward-before-air-foundation"
+  ],
+  "constraints": [
+    "preserve-ship-materials-until-required-craft",
+    "preserve-rare-reward-until-locked-legend-step"
+  ]
+}

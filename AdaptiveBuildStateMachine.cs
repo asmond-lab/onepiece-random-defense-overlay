@@ -57,6 +57,16 @@ public static class AdaptiveBuildStateMachine
                     break;
 
                 case PlannerPhase.AccumulateSpecialUncommon:
+                    if (snapshot.NewlyObservedLegendIds.Length > 0)
+                    {
+                        state = ObserveFirstLegends(state, snapshot.NewlyObservedLegendIds) with
+                        {
+                            PendingLegendId = null,
+                            Phase = PlannerPhase.AwaitMarineford
+                        };
+                        continueTransitions = true;
+                        break;
+                    }
                     if (snapshot.ActiveStoryStage is null)
                     {
                         blockers.Add(AdaptiveBuildBlocker.UnknownStoryStage);

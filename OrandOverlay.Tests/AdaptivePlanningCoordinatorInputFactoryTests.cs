@@ -7,6 +7,28 @@ namespace OrandOverlay.Tests;
 public sealed class AdaptivePlanningCoordinatorInputFactoryTests
 {
     [Fact]
+    public void CompleteSnapshotTreatsMissingRewardWispsAsZero()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load(loadCarryPolicy: false);
+        var factory = new AdaptivePlanningCoordinatorInputFactory(
+            Path.Combine(ProjectDirectory(), "Data"));
+        var goal = catalog.AllUnits.First(unit => TopTier(unit.Tier) &&
+            AdaptiveRouteEvaluator.ClassifyDamage(unit) != DamageLane.Unknown);
+        var legend = catalog.AllUnits.First(unit => BaseTier(unit.Tier) == "전설");
+        var rare = catalog.AllUnits.First(unit => BaseTier(unit.Tier) == "희귀함");
+
+        var input = factory.Create(Source(catalog, goal, legend, rare, round: 20) with
+        {
+            Phase = PlannerPhase.SpendRares,
+            RewardWisps = ImmutableDictionary<string, int>.Empty
+        });
+
+        Assert.Equal(0, input.BuildSnapshot.SpecialUncommonWispCount);
+        Assert.Equal(0, input.BuildSnapshot.RareWispCount);
+    }
+
+    [Fact]
     public void RealProductionFactoryFeedsAllSimulatorsAndRoundLifecycle()
     {
         var catalog = new DataCatalog();

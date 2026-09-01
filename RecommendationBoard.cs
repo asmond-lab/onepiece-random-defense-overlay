@@ -27,20 +27,35 @@ internal static class RecommendationBoard
         string? banner = null,
         IReadOnlyList<Recommendation>? selectedChildren = null,
         string? clusterHeadId = null,
-        PlannerEvidenceView? plannerEvidence = null)
+        PlannerEvidenceView? plannerEvidence = null,
+        BulletOperatingBoard? bulletOperatingBoard = null,
+        bool showRouteRootAsCurrentCraft = false)
     {
         nowPanel.Children.Clear();
         flowPanel.Children.Clear();
         boardPanel.Children.Clear();
 
-        if (plannerEvidence is not null)
+        if (bulletOperatingBoard is not null)
+            boardPanel.Children.Add(BulletOperatingBoardBlock(bulletOperatingBoard));
+        else if (plannerEvidence is not null)
             boardPanel.Children.Add(PlannerEvidenceBlock(plannerEvidence));
 
         if (recs.Count == 0)
         {
+            var progressMessage = !string.IsNullOrWhiteSpace(banner)
+                ? banner
+                : plannerEvidence is null
+                    ? null
+                    : plannerEvidence[PlannerEvidenceFieldKind.Action].DisplayValue;
+            var storyProgress = !string.IsNullOrWhiteSpace(progressMessage) &&
+                                (banner is not null || plannerEvidence?.State is
+                                    PlannerEvidenceState.SequenceStoryReward or
+                                    PlannerEvidenceState.SequenceFirstLegend or
+                                    PlannerEvidenceState.SequenceRareReward or
+                                    PlannerEvidenceState.SequenceTopNavigation);
             nowPanel.Children.Add(new TextBlock
             {
-                Text = "패 인식 대기 중",
+                Text = storyProgress ? "현재 단계 진행 중" : "패 인식 대기 중",
                 Foreground = OverlayTheme.MutedBrush,
                 FontSize = 15,
                 FontWeight = FontWeights.SemiBold,
@@ -48,7 +63,9 @@ internal static class RecommendationBoard
             });
             nowPanel.Children.Add(new TextBlock
             {
-                Text = "게임이 잡히면 지금 할 일과 후보 보드가 여기에 뜹니다.",
+                Text = storyProgress
+                    ? progressMessage!
+                    : "게임이 잡히면 지금 할 일과 후보 보드가 여기에 뜹니다.",
                 Foreground = OverlayTheme.MutedBrush,
                 FontSize = 12,
                 TextWrapping = TextWrapping.Wrap,
@@ -57,7 +74,12 @@ internal static class RecommendationBoard
             return;
         }
 
-        var children = selectedChildren ?? [];
+        var hideIngredientCards = plannerEvidence?.State is
+            PlannerEvidenceState.SequenceStoryReward or
+            PlannerEvidenceState.SequenceFirstLegend or
+            PlannerEvidenceState.SequenceRareReward or
+            PlannerEvidenceState.SequenceTopNavigation;
+        var children = hideIngredientCards ? [] : selectedChildren ?? [];
         var selected = BoardSelection.Resolve(recs, children, selectedId) ?? recs[0];
         var viewingChild = BoardSelection.Contains(children, selected.Route.Id);
         var clusterHead = BoardSelection.Find(recs,
@@ -75,7 +97,7 @@ internal static class RecommendationBoard
                 Margin = new Thickness(0, 0, 0, 6)
             });
 
-        nowPanel.Children.Add(NowBlock(selected, nowPlan));
+        nowPanel.Children.Add(NowBlock(selected, nowPlan, showRouteRootAsCurrentCraft));
         flowPanel.Children.Add(FlowBlock(selected));
         var missingLeaves = RecommendationPresentation.BoardMissingLeaves(
             selected.RecipeProgress, viewingChild);
@@ -153,6 +175,109 @@ internal static class RecommendationBoard
         };
     }
 
+    internal static FrameworkElement BulletOperatingBoardBlock(BulletOperatingBoard board)
+    {
+        var stack = new StackPanel();
+        var header = new Grid { Margin = OverlayTheme.PlannerHeaderMargin };
+        header.ColumnDefinitions.Add(new ColumnDefinition());
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        var title = new TextBlock
+        {
+            Text = "Bullet",
+            Foreground = OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerTitleTypeSize,
+            FontWeight = FontWeights.Bold
+        };
+        AutomationProperties.SetAutomationId(title, "bullet-board-title");
+        AutomationProperties.SetName(title, "Bullet");
+        AutomationProperties.SetItemStatus(title, "Bullet");
+        header.Children.Add(title);
+        var phase = new TextBlock
+        {
+            Text = board.Phase,
+            Foreground = OverlayTheme.GoldBrush,
+            FontFamily = new FontFamily("Consolas, Malgun Gothic"),
+            FontSize = OverlayTheme.PlannerStateTypeSize,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        AutomationProperties.SetAutomationId(phase, "bullet-board-phase");
+        AutomationProperties.SetName(phase, "운영 단계");
+        AutomationProperties.SetItemStatus(phase, board.Phase);
+        Grid.SetColumn(phase, 1);
+        header.Children.Add(phase);
+        stack.Children.Add(header);
+        stack.Children.Add(BulletRow("bullet-board-round", "현재 라운드",
+            board.Round.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+        stack.Children.Add(BulletRow("bullet-board-confidence", "추천 신뢰도",
+            board.Confidence));
+        stack.Children.Add(BulletRow("bullet-board-action", "즉시 할 일", board.Action,
+            OverlayTheme.GoldBrush));
+        stack.Children.Add(BulletRow("bullet-board-objective", "목표", board.Objective));
+        for (var index = 0; index < board.Routes.Length; index++)
+            stack.Children.Add(BulletRow($"bullet-board-route-{index + 1}",
+                $"실행 경로 {index + 1}", board.Routes[index]));
+        stack.Children.Add(BulletRow("bullet-board-focus", "능력/장비", board.Focus));
+        stack.Children.Add(BulletRow("bullet-board-gate", "다음 관문", board.Gate));
+        if (board.CheckNeeded is { Length: > 0 } checkNeeded)
+            stack.Children.Add(BulletRow("bullet-board-check-needed", "확인 필요", checkNeeded,
+                OverlayTheme.WarnBrush));
+        if (board.Recovery is { Length: > 0 } recovery)
+            stack.Children.Add(BulletRow("bullet-board-recovery", "회복 행동", recovery,
+                OverlayTheme.WarnBrush));
+        foreach (var field in board.Fields)
+            stack.Children.Add(BulletRow(field.AutomationId, field.Label, field.DisplayValue,
+                field.IsWarning ? OverlayTheme.WarnBrush : OverlayTheme.WhiteBrush));
+
+        var root = new Border
+        {
+            Background = OverlayTheme.RowAltBrush,
+            BorderBrush = OverlayTheme.HairlineBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(OverlayTheme.TileRadius),
+            Padding = OverlayTheme.PlannerBlockPadding,
+            Margin = OverlayTheme.PlannerBlockMargin,
+            Child = stack
+        };
+        AutomationProperties.SetAutomationId(root, "bullet-operating-board");
+        AutomationProperties.SetName(root, "Bullet 운영 보드");
+        AutomationProperties.SetItemStatus(root,
+            $"라운드 {board.Round}, {board.Phase}, {board.Confidence}");
+        return root;
+    }
+
+    private static FrameworkElement BulletRow(string automationId, string label, string value,
+        Brush? valueBrush = null)
+    {
+        var row = new Grid { Margin = OverlayTheme.PlannerRowMargin };
+        row.ColumnDefinitions.Add(new ColumnDefinition
+        {
+            Width = new GridLength(OverlayTheme.PlannerLabelColumnWidth)
+        });
+        row.ColumnDefinitions.Add(new ColumnDefinition());
+        row.Children.Add(new TextBlock
+        {
+            Text = label,
+            Foreground = OverlayTheme.MutedBrush,
+            FontSize = OverlayTheme.PlannerLabelTypeSize,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.NoWrap
+        });
+        var displayedValue = KeepKoreanWordsTogether(value);
+        var text = new TextBlock
+        {
+            Text = displayedValue,
+            Foreground = valueBrush ?? OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerValueTypeSize,
+            TextWrapping = TextWrapping.Wrap
+        };
+        Grid.SetColumn(text, 1);
+        row.Children.Add(text);
+        AutomationProperties.SetAutomationId(row, automationId);
+        AutomationProperties.SetName(row, label);
+        AutomationProperties.SetItemStatus(row, value);
+        return row;
+    }
+
     private static FrameworkElement PlannerEvidenceRow(PlannerEvidenceField field)
     {
         var row = new Grid { Margin = OverlayTheme.PlannerRowMargin };
@@ -172,7 +297,11 @@ internal static class RecommendationBoard
         var value = new TextBlock
         {
             Text = KeepKoreanWordsTogether(field.DisplayValue),
-            Foreground = field.IsWarning ? OverlayTheme.WarnBrush : OverlayTheme.WhiteBrush,
+            Foreground = field.IsWarning
+                ? OverlayTheme.WarnBrush
+                : field.Kind == PlannerEvidenceFieldKind.Sequence
+                    ? OverlayTheme.GoldBrush
+                    : OverlayTheme.WhiteBrush,
             FontSize = OverlayTheme.PlannerValueTypeSize,
             TextWrapping = TextWrapping.WrapWithOverflow
         };
@@ -229,30 +358,51 @@ internal static class RecommendationBoard
         return clusters;
     }
 
-    private static UIElement NowBlock(Recommendation selected, IReadOnlyList<AutoCombineStep> plan)
+    private static UIElement NowBlock(Recommendation selected, IReadOnlyList<AutoCombineStep> plan,
+        bool showRouteRootAsCurrentCraft)
     {
         var unit = selected.CompositionUnits[0];
-        var icon = UnitImageFactory.Create(unit.Image, unit.Name, 48, unit.UnitId);
+        var currentStep = plan.Count > 0 && !showRouteRootAsCurrentCraft
+            ? selected.RemainingCraftSteps.FirstOrDefault(step =>
+                step.UnitId.Equals(plan[0].TargetUnitId, StringComparison.OrdinalIgnoreCase))
+            : null;
+        var currentCraftName = plan.Count > 0 && !showRouteRootAsCurrentCraft
+            ? plan[0].TargetName
+            : RecommendationPresentation.CraftUnitName(unit);
+        var currentCraftProgress = currentStep is null || showRouteRootAsCurrentCraft
+            ? RecommendationPresentation.CompletionPercent(selected.RecipeProgress)
+            : $"{Math.Round(currentStep.CompletionRatio * 100,
+                MidpointRounding.AwayFromZero):0}%";
+        var icon = UnitImageFactory.Create(currentStep?.Image ?? unit.Image,
+            currentStep?.Name ?? unit.Name, 48, currentStep?.UnitId ?? unit.UnitId);
         icon.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetAutomationId(icon, "current-craft-icon");
+        AutomationProperties.SetName(icon, currentCraftName);
 
         var text = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
         text.Children.Add(new TextBlock
         {
-            Text = plan.Count > 0 ? "지금 조합" : "다음 행동",
+            Text = showRouteRootAsCurrentCraft
+                ? "첫 희귀함 목표"
+                : plan.Count > 0 ? "지금 조합" : "다음 행동",
             Foreground = OverlayTheme.GoldBrush,
             FontSize = 11,
             FontWeight = FontWeights.SemiBold
         });
-        text.Children.Add(new TextBlock
+        var craftTitle = new TextBlock
         {
-            Text = RecommendationPresentation.CraftUnitName(unit),
+            Text = currentCraftName,
             Foreground = OverlayTheme.WhiteBrush,
             FontSize = 16,
             FontWeight = FontWeights.Bold,
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxHeight = 42
-        });
+        };
+        AutomationProperties.SetAutomationId(craftTitle, "current-craft-title");
+        AutomationProperties.SetName(craftTitle, "현재 추천 이름");
+        AutomationProperties.SetItemStatus(craftTitle, currentCraftName);
+        text.Children.Add(craftTitle);
         var hostLine = RecommendationPresentation.GreenBloodHostLine(selected, compact: false);
         if (hostLine is not null)
             text.Children.Add(new TextBlock
@@ -314,15 +464,21 @@ internal static class RecommendationBoard
             MinWidth = 72,
             MaxWidth = 132
         };
-        meta.Children.Add(new TextBlock
+        var progress = new TextBlock
         {
-            Text = RecommendationPresentation.CompletionPercent(selected.RecipeProgress),
+            Text = currentCraftProgress,
             Foreground = OverlayTheme.GoldBrush,
             FontSize = 24,
             FontWeight = FontWeights.Bold,
             TextAlignment = TextAlignment.Right
-        });
-        foreach (var line in RecommendationPresentation.NowAbilityLines(unit))
+        };
+        AutomationProperties.SetAutomationId(progress, "current-craft-progress");
+        AutomationProperties.SetName(progress, "현재 추천 진행률");
+        AutomationProperties.SetItemStatus(progress, currentCraftProgress);
+        meta.Children.Add(progress);
+        foreach (var line in currentStep is null
+                     ? RecommendationPresentation.NowAbilityLines(unit)
+                     : Array.Empty<string>())
             meta.Children.Add(new TextBlock
             {
                 Text = line,
@@ -344,6 +500,10 @@ internal static class RecommendationBoard
         row.Children.Add(text);
         Grid.SetColumn(meta, 2);
         row.Children.Add(meta);
+        AutomationProperties.SetAutomationId(row, "current-craft");
+        AutomationProperties.SetName(row, "현재 추천");
+        AutomationProperties.SetItemStatus(row,
+            $"{currentCraftName} · 진행률 {currentCraftProgress}");
         return row;
     }
 

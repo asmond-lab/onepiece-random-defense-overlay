@@ -34,7 +34,8 @@ public sealed record CombatReadiness(
 public static class CombatReadinessCalculator
 {
     public static CombatReadiness Calculate(DataCatalog catalog,
-        UnitDefinition goal, IEnumerable<InventoryEntry> inventory)
+        UnitDefinition goal, IEnumerable<InventoryEntry> inventory,
+        string? difficulty = null)
     {
         var counts = inventory
             .Where(entry => entry.Count > 0)
@@ -55,14 +56,20 @@ public static class CombatReadinessCalculator
             .Count();
         var strategy = GoalStrategyCalculator.StrategyProfileFor(goal) ??
                        new GoalStrategyProfile(0, 0);
-        return FromMetrics(goal, strategy, metrics, magicSourceCount);
+        return FromMetrics(goal, strategy, metrics, magicSourceCount, difficulty);
     }
 
     internal static CombatReadiness FromMetrics(UnitDefinition goal,
         GoalStrategyProfile strategy, StrategyMetrics metrics,
-        int magicSourceCount)
+        int magicSourceCount, string? difficulty = null)
     {
         var magic = GoalStrategyCalculator.IsMagicDamageTier(goal.Tier);
+        var armorTarget = !magic &&
+                          difficulty?.Equals("신", StringComparison.Ordinal) == true &&
+                          strategy.ArmorReductionTarget >=
+                          GoalStrategyCalculator.FullArmorReductionTarget
+            ? 201d
+            : strategy.ArmorReductionTarget;
         return new CombatReadiness(
             magic ? ReadinessDamageType.Magic : ReadinessDamageType.Physical,
             metrics.Stun,
@@ -70,7 +77,7 @@ public static class CombatReadinessCalculator
             metrics.Slow,
             strategy.SlowTarget,
             metrics.ArmorReduction,
-            strategy.ArmorReductionTarget,
+            armorTarget,
             magicSourceCount,
             magic ? Math.Max(1, (int)Math.Ceiling(
                 strategy.MagicArmorReductionTarget)) : 0);

@@ -4,6 +4,8 @@ namespace OrandOverlay;
 
 public partial class App : System.Windows.Application
 {
+    internal bool SkipRuntimeStartup { get; init; }
+
     // 중복 실행 방지. 두 인스턴스가 같은 설정 파일과 오버레이 핫키를 두고 다투면
     // 설정이 서로를 덮어쓰고 핫키는 한쪽만 먹는다 — 두 번째 실행은 기존 창을
     // 앞으로 부르고 조용히 끝난다.
@@ -19,6 +21,7 @@ public partial class App : System.Windows.Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        if (SkipRuntimeStartup) return;
         _instanceMutex = new Mutex(initiallyOwned: true, InstanceMutexName, out var createdNew);
         if (!createdNew)
         {

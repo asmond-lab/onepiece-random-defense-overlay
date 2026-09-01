@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     private readonly HashSet<string> _growthUnitIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
     private AdaptivePlanningCompositionRoot _adaptivePlanning = null!;
+    private StoryProgressionProfile _storyProfile = null!;
     private readonly AdaptiveDecisionTraceBuffer _adaptiveDecisionTrace = new();
     private readonly LatestBackgroundWorkCoordinator _recommendationWork = new();
     private readonly DispatcherTimer _timer = new();
@@ -44,6 +45,7 @@ public partial class MainWindow : Window
     private LiveStats _liveStats = new();
     private CompletedTopUnitTracker _completedTopUnits = null!;
     private readonly FirstRareRecommendationGate _firstRareRecommendationGate = new();
+    private readonly FirstRareTargetPolicy _firstRareTargetPolicy = new();
     private readonly TelemetryUploader _telemetry = new();
     private readonly MatchOutcomeDetector _outcome = new();
     // 텔레메트리 세션 상태(버퍼·시작 시각·상위 추천)는 전용 세션이 소유한다.
@@ -61,6 +63,7 @@ public partial class MainWindow : Window
     private bool _autoStartApplied;
     private MapSignals _mapSignals = MapSignals.Empty;
     private AdaptivePlanningApplied? _adaptivePlanningApplied;
+    private StoryRewardSequenceDecision? _storySequence;
     private AdaptivePlanningRecognitionObservation _latestRecognitionObservation =
         AdaptivePlanningRecognitionObservation.Empty;
     private AdaptivePlanningPerformanceSample? _lastAdaptivePlanningPerformance;
@@ -75,6 +78,8 @@ public partial class MainWindow : Window
     private IReadOnlyList<Recommendation> _boardRecs = [];
     private IReadOnlyList<AutoCombineStep> _boardPlan = [];
     private string? _boardBanner;
+    private bool _boardShowsClusterChildren = true;
+    private RecommendationSurface _recommendationSurface = RecommendationSurface.TopAndNavigation;
     private CancellationTokenSource? _scanCancellation;
     private int _scanGeneration;
     private string? _lastScanSignature;
@@ -88,7 +93,9 @@ public partial class MainWindow : Window
     private sealed record RefreshComputation(
         RecommendationEngine Engine,
         IReadOnlyList<Recommendation> Recommendations,
-        AdaptivePlanningEvaluation? AdaptivePlanning);
+        AdaptivePlanningEvaluation? AdaptivePlanning,
+        StoryRewardSequenceDecision? StorySequence,
+        RecommendationSurface Surface);
 
     public MainWindow()
     {
@@ -101,6 +108,8 @@ public partial class MainWindow : Window
         {
             _catalog.Load();
             _adaptivePlanning = new AdaptivePlanningCompositionRoot(
+                Path.Combine(AppContext.BaseDirectory, "Data"));
+            _storyProfile = MapStoryProfileLoader.LoadFromDirectory(
                 Path.Combine(AppContext.BaseDirectory, "Data"));
             _clearStats = ClearBuildStats.Load(ClearSamplePaths());
             _liveStats = LiveStats.Load(Path.Combine(AppContext.BaseDirectory, "Data", "orand-live-stats.json"));
@@ -673,7 +682,8 @@ public partial class MainWindow : Window
 
     private AdaptivePlanningRefreshInput BuildAdaptivePlanningInput(
         IReadOnlyList<InventoryEntry> inventory, UnitDefinition goal,
-        NavigationOption navigation, GoroseiMode gorosei)
+        NavigationOption navigation, GoroseiMode gorosei,
+        IReadOnlyDictionary<string, UnitDefinition> allUnits)
     {
         var transient = _automaticStale || _automaticDisconnected || !_liveSessionActive;
         var latches = _adaptivePlanning.ManualLatches;
@@ -689,10 +699,6 @@ public partial class MainWindow : Window
                                      _mapSignals.CompletedStoryStageOrdinal + 1, 0, 14);
         var milestones = Enumerable.Range(1, _mapSignals.CompletedStoryStageOrdinal)
             .Select(stage => $"stage-{stage}").ToImmutableArray();
-        var allUnits = _catalog.AllUnits.GroupBy(unit => unit.Id,
-                StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First(),
-                StringComparer.OrdinalIgnoreCase);
         var input = _adaptivePlanning.CreateInput(new AdaptivePlanningInputSource
         {
             MatchGeneration = _adaptivePlanning.MatchGeneration,
@@ -728,28 +734,71 @@ public partial class MainWindow : Window
         return input;
     }
 
+    private StoryRewardSequenceInput BuildStoryRewardSequenceInput(
+        IReadOnlyList<InventoryEntry> inventory,
+        IReadOnlyDictionary<string, UnitDefinition> allUnits,
+        AdaptiveBuildState state)
+    {
+        var transient = _automaticStale || _automaticDisconnected || !_liveSessionActive;
+        var activeStage = Math.Clamp(_mapSignals.ActiveObjectiveOrdinal ??
+                                     _mapSignals.CompletedStoryStageOrdinal + 1, 0, 14);
+        return new StoryRewardSequenceInput
+        {
+            Phase = state.Phase,
+            Round = _lastRound,
+            ActiveStoryStage = transient ? null : activeStage,
+            CompletedStoryStage = Math.Clamp(
+                _mapSignals.CompletedStoryStageOrdinal, 0, 14),
+            RewardWisps = _mapSignals.RewardWisps.ToImmutableDictionary(
+                StringComparer.OrdinalIgnoreCase),
+            Inventory = inventory,
+            Units = allUnits,
+            StoryStages = _storyProfile.Stages,
+            PendingLegendId = state.PendingLegendId
+        };
+    }
+
     private void ApplyAdaptivePlanning(AdaptivePlanningApplied applied)
     {
+        var previousPhase = _adaptivePlanningApplied?.State.Phase;
+        var previousLegend = _adaptivePlanningApplied?.SuggestedLegendId;
         _adaptivePlanningApplied = applied;
-        DispatchPlannerEvidence(_overlay.RenderPlannerEvidence, _lastRound, applied);
+        DispatchPlannerEvidence(_overlay.RenderPlannerEvidence, _lastRound, applied,
+            _storySequence);
         if (_pendingAdaptiveFingerprint == applied.InputFingerprint)
             _observedLegendIds.UnionWith(_pendingAdaptiveLegendIds);
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
         if (!NavigationAutomaticRecommendationPolicy.ShouldApply(
                 _settings.AutoRecommendNavigation, _adaptivePlanning.ManualLatches,
-                applied.Navigation.State, applied.Navigation.RecommendedOptionId))
+                applied.State.Phase, applied.Navigation.State,
+                applied.Navigation.RecommendedOptionId))
+        {
+            if (previousPhase != applied.State.Phase ||
+                !string.Equals(previousLegend, applied.SuggestedLegendId,
+                    StringComparison.OrdinalIgnoreCase))
+                RefreshAll();
             return;
-        var optionId = applied.Navigation.RecommendedOptionId!;
+        }
+        var option = NavigationProfiles.Find(applied.Navigation.RecommendedOptionId!);
         _adaptivePlanning.NoteProgrammaticSelection();
-        var option = NavigationProfiles.Find(optionId);
         if (SelectNavigation(option))
+        {
             RefreshAll($"항법 자동 추천: {option.Name}. 게임 안에서는 직접 선택하세요.");
+            return;
+        }
+        if (previousPhase != applied.State.Phase ||
+            !string.Equals(previousLegend, applied.SuggestedLegendId,
+                StringComparison.OrdinalIgnoreCase))
+            RefreshAll();
     }
 
     internal static void DispatchPlannerEvidence(
-        Action<int, AdaptivePlanningApplied?, bool, string?> render,
+        Action<int, AdaptivePlanningApplied?, bool, string?,
+            StoryRewardSequenceDecision?> render,
         int round,
-        AdaptivePlanningApplied applied) => render(round, applied, false, null);
+        AdaptivePlanningApplied applied,
+        StoryRewardSequenceDecision? storySequence = null) =>
+        render(round, applied, false, null, storySequence);
 
     private async void RefreshAll(string? message = null)
     {
@@ -778,23 +827,64 @@ public partial class MainWindow : Window
         var nextEngine = new RecommendationEngine(
             _catalog, _clearStats.HasData ? _clearStats : null, _combineHotkeys);
         nextEngine.SetLiveStats(_liveStats);
+        var planningState = _adaptivePlanning.State;
+        var latches = _adaptivePlanning.ManualLatches;
+        var allUnits = _catalog.AllUnits.GroupBy(unit => unit.Id,
+                StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(),
+                StringComparer.OrdinalIgnoreCase);
+        var surface = RecommendationSequencePolicy.Surface(
+            _settings.AutoStartGoal, planningState.Phase, latches);
+        var storyInput = _settings.AutoStartGoal && !latches.GoalOverride
+            ? BuildStoryRewardSequenceInput(
+                recommendationInventory, allUnits, planningState)
+            : null;
         var adaptiveWork = _adaptivePlanning.TryBegin(BuildAdaptivePlanningInput(
-            recommendationInventory, goal, navigation, gorosei));
+            recommendationInventory, goal, navigation, gorosei, allUnits));
         var recognitionObservation = _latestRecognitionObservation;
         var computation = await _recommendationWork.RunAsync(() =>
-            new RefreshComputation(nextEngine,
-                nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
-                navigationMode: navigation.Id, gorosei: gorosei,
-                buildVariant: BuildVariants.AutoId,
-                suppressSeraphim: suppressSeraphim,
-                prioritizeTargetRare: prioritizeTargetRare,
-                suppressFirstRareShip: !firstRareQuestWindow),
-                adaptiveWork is null ? null : AdaptivePlanningCompositionRoot.EvaluateObserved(
-                    adaptiveWork, recognitionObservation)));
+        {
+            var storySequence = storyInput is null
+                ? null
+                : StoryRewardSequencePlanner.Evaluate(storyInput);
+            var nextSurface = storySequence is null
+                ? surface
+                : RecommendationSequencePolicy.Surface(storySequence);
+            IReadOnlyList<Recommendation> nextRecommendations = nextSurface switch
+            {
+                RecommendationSurface.FastRare =>
+                    nextEngine.RecommendFastRares(recommendationInventory, 500),
+                RecommendationSurface.StoryLegend
+                    when storySequence?.RecommendedLegendId is { } legendId =>
+                    nextEngine.RecommendNearestCrafts(legendId, recommendationInventory,
+                        navigationMode: navigation.Id, gorosei: gorosei,
+                        buildVariant: BuildVariants.AutoId,
+                        suppressSeraphim: suppressSeraphim,
+                        difficulty: _matchDifficulty),
+                RecommendationSurface.StoryLegend => [],
+                _ => nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
+                    navigationMode: navigation.Id, gorosei: gorosei,
+                    buildVariant: BuildVariants.AutoId,
+                    suppressSeraphim: suppressSeraphim,
+                    prioritizeTargetRare: prioritizeTargetRare,
+                    suppressFirstRareShip: !firstRareQuestWindow,
+                    difficulty: _matchDifficulty)
+            };
+            return new RefreshComputation(nextEngine, nextRecommendations,
+                adaptiveWork is null
+                    ? null
+                    : AdaptivePlanningCompositionRoot.EvaluateObserved(
+                        adaptiveWork, recognitionObservation),
+                storySequence, nextSurface);
+        });
         if (computation is null) return;
         if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
         _engine = computation.Engine;
         var recommendations = computation.Recommendations;
+        _storySequence = computation.StorySequence;
+        surface = computation.Surface;
+        recommendations = _firstRareTargetPolicy.Apply(surface, recommendations);
+        _recommendationSurface = surface;
         if (computation.AdaptivePlanning is { } adaptive)
         {
             _lastAdaptivePlanningPerformance = adaptive.Performance;
@@ -802,20 +892,25 @@ public partial class MainWindow : Window
                 action => Dispatcher.BeginInvoke(new Action(action)),
                 ApplyAdaptivePlanning);
         }
-        _telemetrySession.ObserveTopRecommendations(
-            recommendations.Take(5).Select(x => x.Route.GoalUnitId));
+        if (surface == RecommendationSurface.TopAndNavigation)
+            _telemetrySession.ObserveTopRecommendations(
+                recommendations.Take(5).Select(x => x.Route.GoalUnitId));
         CaptureMatchTelemetry();
         GoalSelectLabel.Text = "목표 상위 유닛 · 학습된 유닛만" +
             (_liveStats.TryGetGoal(goal.Id, out var liveGoal)
                 ? $" · 실사용 {liveGoal.Plays}판{(liveGoal.ClearRateText.Length == 0 ? "" : " · " + liveGoal.ClearRateText)}"
                 : "");
+        var displayGoal = _storySequence?.RecommendedLegendId is { } storyLegendId &&
+                          allUnits.TryGetValue(storyLegendId, out var storyLegend)
+            ? storyLegend
+            : goal;
         var inventoryStats = _statsCalculator.Calculate(recommendationInventory);
         var rareRerolls = _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
-            goal, _clearStats.HasData ? _clearStats : null, _lastRound);
+            displayGoal, _clearStats.HasData ? _clearStats : null, _lastRound);
         IReadOnlyList<GreenBloodAdvice> greenBloodAdvice = _greenBloodUsage.Used ||
             !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty)
             ? Array.Empty<GreenBloodAdvice>()
-            : _greenBloodAdvisor.Evaluate(goal, recommendationInventory,
+            : _greenBloodAdvisor.Evaluate(displayGoal, recommendationInventory,
                 recommendations, _clearStats.HasData ? _clearStats : null, _matchDifficulty);
 
         InventoryList.Items.Clear();
@@ -824,30 +919,31 @@ public partial class MainWindow : Window
                                     (_automaticStale ? "   이전 스냅샷" : ""));
         if (inventory.Count == 0) InventoryList.Items.Add("보유 패 없음");
 
-        // 자동 시작 단계(첫 희귀함 전): 상위 카드 대신, 현재 패로 가장 빨리 완성되는
-        // 희귀함 순위를 보여준다(패스트 유니크). 첫 희귀함이 잡히면 상위 추천으로 전환.
-        // 그 외에는, 패가 하나도 없으면 지원(2순위 이하) 근거가 없어 목표 카드만 남긴다.
-        var rarePhase = _settings.AutoStartGoal &&
-                        _adaptivePlanning.State.Phase == PlannerPhase.AwaitFirstRare;
-        // 자동 추천 단계에서는 목표가 아직 없으므로 상위 선택 칸 자체를 숨긴다(유저 요청).
-        // 첫 희귀함으로 목표가 정해지면 다시 나타나 선택된 상위를 보여준다.
         GoalSelectLabel.Visibility = GoalSelectRow.Visibility =
-            rarePhase ? Visibility.Collapsed : Visibility.Visible;
-        IReadOnlyList<Recommendation> visibleRecommendations = rarePhase
-            ? _engine.RecommendFastRares(recommendationInventory)
-            : RecommendationResultPolicy.ForEmptyInventory(
+            surface == RecommendationSurface.TopAndNavigation
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        IReadOnlyList<Recommendation> visibleRecommendations =
+            surface == RecommendationSurface.TopAndNavigation
+                ? RecommendationResultPolicy.ForEmptyInventory(
                 recommendations, recommendationInventory.Count,
                 recommendation => _catalog.Unit(recommendation.Route.GoalUnitId)
-                    .Tier.Split('[', 2)[0].Trim() == "희귀함");
-        var phaseHint = rarePhase
-            ? "7라운드까지 희귀함이 안 나오면 선택 위습 1~2개 사용 권장"
-            : null;
+                    .Tier.Split('[', 2)[0].Trim() == "희귀함")
+                : recommendations;
+        var phaseHint = surface switch
+        {
+            RecommendationSurface.FastRare =>
+                "7라운드까지 희귀함이 안 나오면 선택 위습 1~2개 사용 권장",
+            RecommendationSurface.StoryLegend => _storySequence?.ActionSummary,
+            _ => null
+        };
 
         var headId = BoardSelection.ClusterHeadId(
             visibleRecommendations, [], _selectedRouteId, _clusterHeadRouteId);
         var head = BoardSelection.Find(visibleRecommendations, headId)
                    ?? visibleRecommendations.FirstOrDefault();
-        var previewChildren = head is null
+        var showClusterChildren = surface != RecommendationSurface.StoryLegend;
+        var previewChildren = !showClusterChildren || head is null
             ? []
             : _engine.StoryClusterChildren(head.Route.GoalUnitId, recommendationInventory);
         if (_selectedRouteId is null ||
@@ -860,31 +956,61 @@ public partial class MainWindow : Window
             recommendationInventory, _completedTopUnits.CompletedUnitIds);
         _boardRecs = visibleRecommendations;
         _boardPlan = combinePlan;
-        _boardBanner = rarePhase ? $"첫 희귀함 찾기 · 빠른 완성 순 — {phaseHint}" : null;
+        _boardShowsClusterChildren = showClusterChildren;
+        _boardBanner = surface switch
+        {
+            RecommendationSurface.FastRare =>
+                $"첫 희귀함 찾기 · 빠른 완성 순 — {phaseHint}",
+            RecommendationSurface.StoryLegend =>
+                $"{_storySequence?.CurrentStoryLabel} · {_storySequence?.ActionSummary}",
+            _ => null
+        };
         FillMainBoard();
-        var emergencySummons = navigation.Id.Equals("AlliedForces.EmergencyCall",
+        var emergencySummons = surface == RecommendationSurface.TopAndNavigation &&
+                               navigation.Id.Equals("AlliedForces.EmergencyCall",
             StringComparison.OrdinalIgnoreCase)
             ? _engine.RecommendEmergencySummons(recommendations, recommendationInventory)
             : Array.Empty<EmergencySummonAdvice>();
+        var header = surface switch
+        {
+            RecommendationSurface.FastRare => "첫 희귀함 찾기 · 빠른 완성 순",
+            RecommendationSurface.StoryLegend =>
+                $"{_storySequence?.CurrentStoryLabel} · " +
+                $"{_storySequence?.RecommendedLegendName ?? "첫 전설 계산"}",
+            _ => $"{goal.Name} · {navigation.Name}"
+        };
+        Func<Recommendation, IReadOnlyList<Recommendation>>? storyChildren =
+            showClusterChildren
+                ? rec => _engine.StoryClusterChildren(
+                    rec.Route.GoalUnitId, recommendationInventory)
+                : null;
         _overlay.Render(
-            rarePhase ? "첫 희귀함 찾기 · 빠른 완성 순" : $"{goal.Name} · {navigation.Name}",
+            header,
             visibleRecommendations, inventoryStats, rareRerolls,
             greenBloodAdvice,
             !_greenBloodUsage.Used &&
             GreenBloodAdvisor.HasUnusedGreenBlood(_catalog, recommendationInventory),
-            combinePlan, RecognitionStatus.Text, DamageTiers.IsMagic(goal.Tier), emergencySummons,
+            combinePlan, RecognitionStatus.Text, DamageTiers.IsMagic(displayGoal.Tier),
+            emergencySummons,
             gorosei, _greenBloodUsage.Used,
-            _specialAdvisor.Evaluate(recommendationInventory, recommendations, goal,
+            _specialAdvisor.Evaluate(recommendationInventory, recommendations, displayGoal,
                     _clearStats.HasData ? _clearStats : null)
                 .Concat(_alchemyAdvisor.Evaluate(
-                    recommendationInventory, recommendations, goal,
+                    recommendationInventory, recommendations, displayGoal,
                     navigation.Id, _growthUnitIds))
                 .ToList(),
             _engine.ActiveStunTarget, _engine.ActiveStunCap,
-            phaseHint,
-            rec => _engine.StoryClusterChildren(rec.Route.GoalUnitId, recommendationInventory),
+            phaseHint, storyChildren,
             (recs, selectedId) => _engine.Recascade(
-                recs, RecommendationInventory(), selectedId));
+                recs, RecommendationInventory(), selectedId),
+            inventory: recommendationInventory,
+            showRouteRootAsCurrentCraft: surface == RecommendationSurface.FastRare,
+            onRouteSelected: SelectOverlayRoute);
+        var evidenceUnknown = _automaticStale || _automaticDisconnected;
+        _overlay.RenderPlannerEvidence(_lastRound, _adaptivePlanningApplied,
+            evidenceUnknown,
+            evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
+            _storySequence);
         if (message is not null) FooterStatus.Text = message;
     }
 
@@ -952,28 +1078,45 @@ public partial class MainWindow : Window
             _boardRecs = _engine.Recascade(_boardRecs, RecommendationInventory(), headId);
         var head = BoardSelection.Find(_boardRecs, headId) ?? _boardRecs.FirstOrDefault();
         _clusterHeadRouteId = head?.Route.Id;
-        var children = head is null
+        var children = !_boardShowsClusterChildren || head is null
             ? []
             : _engine.StoryClusterChildren(head.Route.GoalUnitId, RecommendationInventory());
         if (!BoardSelection.IsKnown(_boardRecs, children, _selectedRouteId))
             _selectedRouteId = head?.Route.Id;
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _boardRecs, _boardPlan,
-            _selectedRouteId, SelectMainRoute, _boardBanner, children, head?.Route.Id);
+            _selectedRouteId, SelectMainRoute, _boardBanner, children, head?.Route.Id,
+            showRouteRootAsCurrentCraft:
+                _recommendationSurface == RecommendationSurface.FastRare);
     }
 
     private void SelectMainRoute(string routeId)
     {
         _selectedRouteId = routeId;
+        if (_recommendationSurface == RecommendationSurface.FastRare)
+        {
+            _firstRareTargetPolicy.Select(routeId, _boardRecs);
+            RefreshAll();
+            return;
+        }
         var headId = BoardSelection.ClusterHeadId(
             _boardRecs, [], _selectedRouteId, _clusterHeadRouteId);
         var head = BoardSelection.Find(_boardRecs, headId);
-        var currentChildren = head is null
+        var currentChildren = !_boardShowsClusterChildren || head is null
             ? []
             : _engine.StoryClusterChildren(head.Route.GoalUnitId, RecommendationInventory());
         if (BoardSelection.Contains(_boardRecs, routeId) &&
             !BoardSelection.Contains(currentChildren, routeId))
             _clusterHeadRouteId = BoardSelection.Find(_boardRecs, routeId)!.Route.Id;
         FillMainBoard();
+    }
+
+    private void SelectOverlayRoute(string routeId)
+    {
+        if (_recommendationSurface != RecommendationSurface.FastRare) return;
+        _firstRareTargetPolicy.Select(routeId, _boardRecs);
+        _selectedRouteId = routeId;
+        _clusterHeadRouteId = routeId;
+        RefreshAll();
     }
 
     private async Task ScanAsync()
@@ -1122,12 +1265,14 @@ public partial class MainWindow : Window
         _adaptiveDecisionTrace.ConfirmedMatchReset();
         _completedTopUnits.Reset();
         _firstRareRecommendationGate.Reset();
+        _firstRareTargetPolicy.Reset();
         _greenBloodUsage.Reset();
         _selectedRouteId = null;
         _clusterHeadRouteId = null;
         _boardRecs = [];
         _boardPlan = [];
         _boardBanner = null;
+        _boardShowsClusterChildren = true;
         _lastScanSignature = null;
         _confirmedWaitingScans = 0;
         _overlayVisibility = default;

@@ -6,6 +6,22 @@ namespace OrandOverlay.Tests;
 public sealed class RecommendationInventoryPolicyTests
 {
     [Fact]
+    public void GreenBloodUsedOnUnitAddsPointThreeStunToRecommendationStats()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var inventory = RecommendationInventoryPolicy.Build(
+            [], preserveCompleted: false, new CompletedTopUnitTracker(catalog),
+            includeGreenBloodBuff: true);
+
+        var stats = new InventoryStatsCalculator(catalog).Calculate(inventory);
+
+        Assert.Contains(inventory, entry =>
+            entry.UnitId == "greenblood_buff" && entry.Count == 1);
+        Assert.Equal(0.3, stats.Stun, precision: 3);
+    }
+
+    [Fact]
     public void CompletedZoroLegendRemainsOwnedDuringBoardInteraction()
     {
         var catalog = new DataCatalog();

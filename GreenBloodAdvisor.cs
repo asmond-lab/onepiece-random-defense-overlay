@@ -133,7 +133,7 @@ public sealed class GreenBloodAdvisor(DataCatalog catalog)
 
         /// <summary>
         /// 세라핌 제작이 아니라 유닛에 직접 부여한 경우. 부여 시 진력해방
-        /// (스턴 1.2 · 공속 30, 맵 실측)이 패 수치에 합산돼야 한다.
+        /// (스턴 0.3 환산 · 공속 30, 맵 실측)이 패 수치에 합산돼야 한다.
         /// 세라핌 제작이면 새 세라핌 유닛이 인식에 나타나므로 구분할 수 있다.
         /// </summary>
         public bool UsedOnUnit { get; private set; }

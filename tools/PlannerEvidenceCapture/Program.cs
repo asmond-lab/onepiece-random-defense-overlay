@@ -26,16 +26,37 @@ internal static class Program
         Directory.CreateDirectory(output);
         var buildSha = Argument(args, "--build-sha") ?? GitHead();
         var sourceFingerprint = SourceFingerprint();
-        var app = new App();
+        var app = new App { SkipRuntimeStartup = true };
         app.InitializeComponent();
+        app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         var rows = new List<EvidenceRow>();
+        var bulletRows = new List<BulletEvidenceRow>();
+        var currentCraftRows = new List<CurrentCraftEvidenceRow>();
         var captures = Cases().Select(item => (item, scale: 1.0))
             .Concat(new[] { 0.75, 1.25, 1.5 }.Select(scale =>
                 (Cases().Single(item => item.State == PlannerEvidenceState.Round21Actionable), scale)))
             .ToList();
-
         foreach (var (fixture, scale) in captures)
             Capture(output, buildSha, sourceFingerprint, fixture, scale, rows);
+        var bulletCaptures = BulletCases().Select(item => (item, scale: 1.0))
+            .Concat([
+                (BulletCases().Single(item => item.State == BulletOperatingBoardState.ControlArmor), 1.25),
+                (BulletCases().Single(item => item.State == BulletOperatingBoardState.Ready), 1.5)
+            ])
+            .ToList();
+        foreach (var (fixture, scale) in bulletCaptures)
+            CaptureBullet(output, buildSha, sourceFingerprint, fixture, scale, bulletRows);
+        var currentCraftCaptures = new[] { 0.75, 1.0, 1.25, 1.5 };
+        foreach (var scale in currentCraftCaptures)
+        {
+            CaptureCurrentCraft(output, buildSha, sourceFingerprint, scale, currentCraftRows,
+                redForce: false);
+            CaptureCurrentCraft(output, buildSha, sourceFingerprint, scale, currentCraftRows,
+                redForce: true);
+            CaptureCurrentCraft(output, buildSha, sourceFingerprint, scale, currentCraftRows,
+                redForce: false, firstRare: true);
+        }
+        var statsAdvice = CaptureSpecialAdvice(output, buildSha, sourceFingerprint);
 
         var matrixPath = Path.Combine(output, "planner-ui-evidence-matrix.json");
         File.WriteAllText(matrixPath, JsonSerializer.Serialize(new
@@ -45,10 +66,358 @@ internal static class Program
             sourceFingerprint,
             shell = new { designWidth = 540, designHeight = 740, soleVerticalScrollOwner = "candidate-board-scroll" },
             fixtures = captures.Count,
-            rows
+            bulletFixtures = bulletCaptures.Count,
+            currentCraftFixtures = currentCraftCaptures.Length * 3,
+            statsAdvice,
+            rows,
+            bulletRows,
+            currentCraftRows
         }, new JsonSerializerOptions { WriteIndented = true }));
-        Console.WriteLine($"WPF_PLANNER_EVIDENCE PASS captures={captures.Count * 2} rows={rows.Count} matrix={matrixPath}");
+        Console.WriteLine($"WPF_PLANNER_EVIDENCE PASS captures={(captures.Count + bulletCaptures.Count + currentCraftCaptures.Length * 3) * 2} rows={rows.Count} bulletRows={bulletRows.Count} currentCraftRows={currentCraftRows.Count} matrix={matrixPath}");
+        app.Shutdown();
         return 0;
+    }
+
+    private static void CaptureCurrentCraft(string output, string buildSha,
+        string sourceFingerprint, double scale, List<CurrentCraftEvidenceRow> rows,
+        bool redForce, bool firstRare = false)
+    {
+        var scaleName = (scale * 100).ToString("0", CultureInfo.InvariantCulture);
+        var fixtureName = firstRare
+            ? "first-rare-vander-ace-step"
+            : redForce ? "red-force-missing-shanks" : "jinbe-zero";
+        var topPath = Path.Combine(output, $"current-craft-{fixtureName}-{scaleName}-top.png");
+        var bottomPath = Path.Combine(output, $"current-craft-{fixtureName}-{scaleName}-bottom.png");
+        var (recommendation, plan) = firstRare
+            ? FirstRareVanderWithAcePlan()
+            : redForce ? RedForceWithMissingShanksPlan() : MagellanWithMissingJinbePlan();
+        var expected = firstRare
+            ? RecommendationPresentation.CraftUnitName(recommendation.CompositionUnits[0])
+            : plan[0].TargetName;
+        var expectedProgress = firstRare ? "93%" : "100%";
+        var finalGoal = RecommendationPresentation.CraftUnitName(
+            recommendation.CompositionUnits[0]);
+        var window = new OverlayWindow
+        {
+            Topmost = false,
+            ShowActivated = false,
+            Opacity = 0,
+            Left = SystemParameters.VirtualScreenLeft,
+            Top = SystemParameters.VirtualScreenTop
+        };
+        window.SetClickThrough(true);
+        window.Render(recommendation.CompositionUnits[0].Name, [recommendation], EmptyStats(),
+            [], [], false, plan, redForce
+                ? "인식 정상 · 샹크스 직접 보유 0 · 재귀 재료 충족"
+                : firstRare
+                    ? "인식 정상 · 첫 희귀함 반 더 데켄 진행 유지"
+                    : "인식 정상 · 징베 직접 보유 0 · 재귀 재료 충족",
+            showRouteRootAsCurrentCraft: firstRare);
+        if (firstRare)
+            window.RenderPlannerEvidence(1, null, storySequence: new StoryRewardSequenceDecision(
+                RecommendationSequenceStage.FirstRare, StorySequenceAction.FindFirstRare,
+                "1단계", "첫 희귀함", "빠른 완성", "반 더 데켄을 완성하세요.",
+                "1 첫 희귀함 [현재]", null, null, 0, false));
+        window.UpdateStatus("인식 정상 · 현재 추천은 첫 실행 가능 조합");
+        window.Show();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        window.Left = SystemParameters.VirtualScreenLeft - 1024;
+        window.Opacity = 1;
+        ApplyScale(window, scale);
+        var scroll = (ScrollViewer?)window.FindName("BoardScrollViewer")
+                     ?? throw new InvalidOperationException("candidate board scroll owner missing");
+        scroll.ScrollToHome();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        CapturePng(window, topPath, scale);
+        scroll.ScrollToEnd();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        CapturePng(window, bottomPath, scale);
+        ValidateCapture(topPath, 540 * scale, 740 * scale);
+        ValidateCapture(bottomPath, 540 * scale, 740 * scale);
+        ValidateFooter(window);
+
+        var elements = Descendants(window).OfType<FrameworkElement>().ToArray();
+        if (elements.Count(element => AutomationProperties.GetAutomationId(element) ==
+                                      "candidate-board-scroll") != 1)
+            throw new InvalidOperationException(
+                "Current-craft fixture must retain one candidate-board scroller.");
+        var currentCraft = elements.Single(element =>
+            AutomationProperties.GetAutomationId(element) == "current-craft");
+        var title = elements.OfType<TextBlock>().Single(element =>
+            AutomationProperties.GetAutomationId(element) == "current-craft-title");
+        var icon = elements.Single(element =>
+            AutomationProperties.GetAutomationId(element) == "current-craft-icon");
+        var progress = elements.OfType<TextBlock>().Single(element =>
+            AutomationProperties.GetAutomationId(element) == "current-craft-progress");
+        var finalGoalVisible = elements.Any(element =>
+            AutomationProperties.GetName(element).Contains(
+                finalGoal, StringComparison.Ordinal));
+        var visibleText = Descendants(currentCraft).OfType<TextBlock>()
+            .Select(text => text.Text).ToArray();
+        var leakedFinalAbility = RecommendationPresentation.NowAbilityLines(
+                recommendation.CompositionUnits[0])
+            .Any(visibleText.Contains);
+        var flowPanel = (Panel?)window.FindName("FlowPanel")
+                        ?? throw new InvalidOperationException("craft flow panel missing");
+        var flowText = string.Join(' ', Descendants(flowPanel).OfType<TextBlock>()
+            .Select(text => text.Text));
+        if (title.Text != expected || !firstRare && title.Text.Contains(finalGoal, StringComparison.Ordinal) ||
+            title.TextWrapping != TextWrapping.Wrap ||
+            AutomationProperties.GetName(currentCraft) != "현재 추천" ||
+            AutomationProperties.GetItemStatus(currentCraft) != $"{expected} · 진행률 {expectedProgress}" ||
+            AutomationProperties.GetName(icon) != expected || progress.Text != expectedProgress ||
+            AutomationProperties.GetItemStatus(progress) != expectedProgress ||
+            !finalGoalVisible || !firstRare && leakedFinalAbility ||
+            firstRare && !flowText.Contains("에이스", StringComparison.Ordinal) ||
+            title.ActualHeight <= 0 ||
+            title.ActualHeight > title.MaxHeight + 0.5)
+            throw new InvalidOperationException(
+                "Current-craft visible/accessibility/final-goal/CJK contract mismatch.");
+        rows.Add(new CurrentCraftEvidenceRow(firstRare
+                ? "first-rare-vander-93-ace-step"
+                : redForce
+                    ? "red-force-missing-shanks-all-leaves-present"
+                    : "jinbe-zero-all-leaves-present", expected,
+            AutomationProperties.GetName(currentCraft),
+            AutomationProperties.GetItemStatus(currentCraft), finalGoal,
+            firstRare ? 93 : 100,
+            96 * scale, scale, topPath, bottomPath, buildSha, sourceFingerprint,
+            "PASS"));
+        window.Stats.CloseForApplication();
+        window.CloseForApplication();
+    }
+
+    private static (Recommendation Recommendation, IReadOnlyList<AutoCombineStep> Plan)
+        FirstRareVanderWithAcePlan()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var vander = catalog.Unit("rawcode:T10h");
+        var ace = catalog.Unit("rawcode:K00h");
+        var recommendation = new Recommendation
+        {
+            Route = new RouteDefinition
+            {
+                Id = "craft:" + vander.Id,
+                GoalUnitId = vander.Id,
+                Name = vander.Name
+            },
+            RecipeProgress = new RecipeProgress
+            {
+                OwnedLeafCount = 14,
+                RequiredLeafCount = 15,
+                Leaves =
+                [
+                    new RecipeLeafProgress
+                    {
+                        UnitId = "rawcode:H00h",
+                        Name = "몽키.D.루피",
+                        Tier = "흔함",
+                        OwnedCount = 14,
+                        RequiredCount = 15
+                    }
+                ]
+            },
+            CompositionUnits =
+            [
+                new CompositionUnitDetail
+                {
+                    UnitId = vander.Id,
+                    Name = vander.Name,
+                    Tier = vander.Tier,
+                    Image = vander.Image
+                }
+            ],
+            RemainingCraftSteps =
+            [
+                new RecipeCraftStep
+                {
+                    UnitId = ace.Id,
+                    Name = ace.Name,
+                    Tier = ace.Tier,
+                    Image = ace.Image,
+                    RequiredCount = 1,
+                    OwnedCount = 1,
+                    CompletionRatio = 1
+                }
+            ]
+        };
+        IReadOnlyList<AutoCombineStep> plan =
+        [
+            new(ace.Id, RecommendationPresentation.CraftUnitName(ace.Name, ace.Tier),
+                "rawcode:H00h", "몽키.D.루피", "H00h", "Z", ["Z"])
+        ];
+        return (recommendation, plan);
+    }
+
+    private static (Recommendation Recommendation, IReadOnlyList<AutoCombineStep> Plan)
+        MagellanWithMissingJinbePlan()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var hotkeys = CombineHotkeyCatalog.Load(Path.Combine(
+            AppContext.BaseDirectory, "Data", "tmo-combine-hotkeys.json"));
+        var inventory = new[] { "K00h", "A00h", "500h", "510h", "J10h" }
+            .Select(rawcode => new InventoryEntry
+            {
+                UnitId = "rawcode:" + rawcode,
+                Count = 1
+            })
+            .ToList();
+        var recommendation = new RecommendationEngine(catalog, combineHotkeys: hotkeys)
+            .RecommendFastRares(inventory, 500)
+            .Single(item => item.Route.GoalUnitId.Equals(
+                "rawcode:Z10h", StringComparison.OrdinalIgnoreCase));
+        var plan = new AutoCombinePlanner(catalog, hotkeys).Plan([recommendation], inventory);
+        if (recommendation.RecipeProgress.CompletionRatio != 1 || plan.Count == 0 ||
+            !plan[0].TargetUnitId.Equals("rawcode:810h", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException(
+                "Jinbe-zero fixture no longer resolves the intended planner state.");
+        return (recommendation, plan);
+    }
+
+    private static (Recommendation Recommendation, IReadOnlyList<AutoCombineStep> Plan)
+        RedForceWithMissingShanksPlan()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        var hotkeys = CombineHotkeyCatalog.Load(Path.Combine(
+            AppContext.BaseDirectory, "Data", "tmo-combine-hotkeys.json"));
+        var inventory = new[]
+        {
+            new InventoryEntry { UnitId = "rawcode:500h", Count = 6 },
+            new InventoryEntry { UnitId = "rawcode:U00h", Count = 1 },
+            new InventoryEntry { UnitId = "rawcode:Z00h", Count = 1 },
+            new InventoryEntry { UnitId = "rawcode:S10h", Count = 1 },
+            new InventoryEntry { UnitId = "rawcode:I20h", Count = 1 },
+            new InventoryEntry { UnitId = "rawcode:060h", Count = 1 }
+        };
+        var recommendation = new RecommendationEngine(catalog, combineHotkeys: hotkeys)
+            .RecommendNearestCrafts("rawcode:U30h", inventory, 32)
+            .Single(item => item.Route.GoalUnitId.Equals(
+                "rawcode:U30h", StringComparison.OrdinalIgnoreCase));
+        var plan = new AutoCombinePlanner(catalog, hotkeys).Plan([recommendation], inventory);
+        if (recommendation.RecipeProgress.CompletionRatio != 1 || plan.Count == 0 ||
+            !plan[0].TargetUnitId.Equals("rawcode:510h", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException(
+                "Red Force fixture no longer resolves the intended planner state.");
+        return (recommendation, plan);
+    }
+
+    private static void CaptureBullet(string output, string buildSha, string sourceFingerprint,
+        BulletFixture fixture, double scale, List<BulletEvidenceRow> rows)
+    {
+        var scaleName = (scale * 100).ToString("0", CultureInfo.InvariantCulture);
+        var stateName = fixture.State.ToString()
+            .Replace("EarlyFoundation", "early-foundation", StringComparison.Ordinal)
+            .Replace("AirMobility", "air-mobility", StringComparison.Ordinal)
+            .Replace("BossKill", "boss-kill", StringComparison.Ordinal)
+            .Replace("ControlArmor", "control-armor", StringComparison.Ordinal)
+            .Replace("Round50", "round50", StringComparison.Ordinal)
+            .ToLowerInvariant();
+        var stem = $"bullet-{stateName}-{scaleName}";
+        var topPath = Path.Combine(output, stem + "-top.png");
+        var bottomPath = Path.Combine(output, stem + "-bottom.png");
+        var profile = BulletStrategyProfileLoader.LoadFromDirectory(
+            Path.Combine(AppContext.BaseDirectory, "Data"));
+        var expected = BulletOperatingBoardPolicy.Evaluate(profile, fixture.Input)
+                       ?? throw new InvalidOperationException("Bullet fixture did not resolve.");
+        if (expected.State != fixture.State)
+            throw new InvalidOperationException($"Bullet fixture mismatch: {fixture.State} != {expected.State}");
+
+        var window = new OverlayWindow
+        {
+            Topmost = false,
+            ShowActivated = false,
+            Opacity = 0,
+            Left = SystemParameters.VirtualScreenLeft,
+            Top = SystemParameters.VirtualScreenTop
+        };
+        window.SetClickThrough(true);
+        window.Render("Bullet", [BulletCard(fixture)], fixture.Stats, [], [],
+            fixture.Input.GreenBloodKnown == true, [], "인식 정상",
+            greenBloodUsed: fixture.Input.GreenBloodKnown == true,
+            stunTarget: fixture.Input.StunTarget,
+            inventory: BulletInventory(fixture));
+        window.RenderPlannerEvidence(fixture.Input.Round, null);
+        window.UpdateStatus("인식 정상 · Bullet 운영 보드 표시 중");
+        window.Show();
+        window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        window.Left = SystemParameters.VirtualScreenLeft - 1024;
+        window.Opacity = 1;
+        ApplyScale(window, scale);
+        var scroll = (ScrollViewer?)window.FindName("BoardScrollViewer")
+                     ?? throw new InvalidOperationException("candidate board scroll owner missing");
+        scroll.ScrollToHome();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        CapturePng(window, topPath, scale);
+        scroll.ScrollToEnd();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        CapturePng(window, bottomPath, scale);
+        ValidateCapture(topPath, 540 * scale, 740 * scale);
+        ValidateCapture(bottomPath, 540 * scale, 740 * scale);
+        ValidateFooter(window);
+        ValidateBulletAutomationTree(window, expected);
+        foreach (var field in expected.Fields)
+            rows.Add(new BulletEvidenceRow(stateName, field.AutomationId, field.Kind.ToString(),
+                field.DisplayValue, field.AccessibilityName, field.AccessibilityValue,
+                96 * scale, scale, topPath, bottomPath, buildSha, sourceFingerprint, "PASS"));
+        window.Stats.CloseForApplication();
+        window.CloseForApplication();
+    }
+
+    private static IReadOnlyList<StatsAdviceEvidence> CaptureSpecialAdvice(
+        string output, string buildSha, string sourceFingerprint)
+    {
+        var fixtures = new[]
+        {
+            (Name: "none", Advice: (IReadOnlyList<SpecialDismantleAdvice>)
+                [new("keep", "로브 루치", false, "핵심 재료")], Expected: (string?)null),
+            (Name: "dismantle", Advice: (IReadOnlyList<SpecialDismantleAdvice>)
+                [new("keep", "로브 루치", false, "핵심 재료"),
+                 new("break", "마가렛", true, "경로 밖")], Expected: "마가렛 분해")
+        };
+        var evidence = new List<StatsAdviceEvidence>();
+        foreach (var fixture in fixtures)
+        {
+            var path = Path.Combine(output, $"stats-special-{fixture.Name}.png");
+            var owner = new OverlayWindow();
+            owner.Render("비비 영원 · 연금술", [], EmptyStats(), [], [], false, [],
+                "인식 정상", specialAdvice: fixture.Advice);
+            var stats = owner.Stats;
+            stats.Topmost = false;
+            stats.ShowActivated = false;
+            stats.Opacity = 0;
+            stats.Left = SystemParameters.VirtualScreenLeft;
+            stats.Top = SystemParameters.VirtualScreenTop;
+            stats.Show();
+            stats.Dispatcher.Invoke(() => { },
+                System.Windows.Threading.DispatcherPriority.Render);
+            stats.Left = SystemParameters.VirtualScreenLeft - 1024;
+            stats.Opacity = 1;
+            stats.Width = 228;
+            stats.Height = 700;
+            var scroll = Descendants(stats).OfType<ScrollViewer>().Single();
+            scroll.ScrollToEnd();
+            stats.UpdateLayout();
+            stats.Dispatcher.Invoke(() => { },
+                System.Windows.Threading.DispatcherPriority.Render);
+            CaptureStatsPng(stats, path);
+            ValidateCapture(path, 228, 700);
+            ValidateDismantleOnly(stats, fixture.Expected);
+            evidence.Add(new StatsAdviceEvidence(fixture.Name, fixture.Expected, path,
+                buildSha, sourceFingerprint, "PASS"));
+            stats.CloseForApplication();
+            owner.CloseForApplication();
+        }
+        return evidence;
     }
 
     private static void Capture(string output, string buildSha, string sourceFingerprint,
@@ -59,21 +428,40 @@ internal static class Program
         var topPath = Path.Combine(output, stem + "-top.png");
         var bottomPath = Path.Combine(output, stem + "-bottom.png");
         var view = RecommendationPresentation.PlannerEvidence(fixture.Round, fixture.Applied,
-            fixture.Unknown, fixture.Unknown ? LongUnknownReason : null);
+            fixture.Unknown, fixture.Unknown ? LongUnknownReason : null,
+            fixture.Sequence);
         if (view.State != fixture.State)
             throw new InvalidOperationException($"Fixture state mismatch: {fixture.State} != {view.State}");
 
-        var window = new OverlayWindow { Topmost = false, Left = 0, Top = 0 };
+        var window = new OverlayWindow
+        {
+            Topmost = false,
+            ShowActivated = false,
+            Opacity = 0,
+            Left = SystemParameters.VirtualScreenLeft,
+            Top = SystemParameters.VirtualScreenTop
+        };
+        window.SetClickThrough(true);
+        window.Render("플래너 검증", [], EmptyStats(), [], [], false, [], "인식 정상");
+        if (fixture.State == PlannerEvidenceState.SequenceFirstLegend)
+            window.Render("쿠마 전설", [Card("legend", "쿠마 전설", "전설")],
+                EmptyStats(), [], [], false, [], "인식 정상",
+                storyChildren: _ => [Card("rare", "희귀 재료", "희귀함")]);
         window.RenderPlannerEvidence(fixture.Round, fixture.Applied, fixture.Unknown,
-            fixture.Unknown ? LongUnknownReason : null);
+            fixture.Unknown ? LongUnknownReason : null, fixture.Sequence);
         window.UpdateStatus("인식 정상 · 플래너 근거 표시 중");
         window.Show();
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        window.Left = SystemParameters.VirtualScreenLeft - 1024;
+        window.Opacity = 1;
         ApplyScale(window, scale);
-        CapturePng(window, topPath, scale);
-
         var scroll = (ScrollViewer?)window.FindName("BoardScrollViewer")
                      ?? throw new InvalidOperationException("candidate board scroll owner missing");
+        scroll.ScrollToHome();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        CapturePng(window, topPath, scale);
+
         scroll.ScrollToEnd();
         window.UpdateLayout();
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
@@ -82,6 +470,11 @@ internal static class Program
         ValidateCapture(bottomPath, 540 * scale, 740 * scale);
         ValidateFooter(window);
         ValidateAutomationTree(window, view);
+        if (fixture.State == PlannerEvidenceState.SequenceFirstLegend)
+            ValidateFirstLegendCards(window);
+        if (fixture.State is PlannerEvidenceState.SequenceRareReward or
+            PlannerEvidenceState.SequenceTopNavigation)
+            ValidateStoryProgressEmptyState(window);
         if (fixture.State == PlannerEvidenceState.Unknown)
             ValidateKoreanWrap(window);
 
@@ -122,6 +515,17 @@ internal static class Program
         encoder.Save(stream);
     }
 
+    private static void CaptureStatsPng(StatsOverlayWindow window, string path)
+    {
+        var root = (FrameworkElement)window.Content;
+        var bitmap = new RenderTargetBitmap(228, 700, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(root);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = File.Create(path);
+        encoder.Save(stream);
+    }
+
     private static void ValidateCapture(string path, double expectedWidth, double expectedHeight)
     {
         var bytes = File.ReadAllBytes(path);
@@ -146,7 +550,9 @@ internal static class Program
                           ?? throw new InvalidOperationException($"Missing footer element {name}");
             var bounds = element.TransformToAncestor(root)
                 .TransformBounds(new Rect(0, 0, element.ActualWidth, element.ActualHeight));
-            if (!element.IsVisible || bounds.Bottom > root.ActualHeight + 0.5 || bounds.Top < -0.5)
+            if (element.Visibility != Visibility.Visible ||
+                element.ActualWidth <= 0 || element.ActualHeight <= 0 ||
+                bounds.Bottom > root.ActualHeight + 0.5 || bounds.Top < -0.5)
                 throw new InvalidOperationException($"Footer escaped shell: {name} {bounds}");
         }
     }
@@ -162,6 +568,41 @@ internal static class Program
                 throw new InvalidOperationException($"Missing AutomationId {field.AutomationId}");
         if (ids.Count(id => id == "candidate-board-scroll") != 1)
             throw new InvalidOperationException("Candidate board must own one vertical scroll surface.");
+    }
+
+    private static void ValidateBulletAutomationTree(DependencyObject root,
+        BulletOperatingBoard board)
+    {
+        var elements = Descendants(root).OfType<FrameworkElement>().ToArray();
+        var ids = elements.Select(AutomationProperties.GetAutomationId)
+            .Where(value => !string.IsNullOrWhiteSpace(value)).ToArray();
+        if (ids.Count(id => id == "candidate-board-scroll") != 1 ||
+            ids.Count(id => id == "bullet-operating-board") != 1)
+            throw new InvalidOperationException(
+                "Bullet board must remain inside the sole candidate-board scroll surface.");
+        var required = new[]
+        {
+            "bullet-board-title", "bullet-board-phase", "bullet-board-round",
+            "bullet-board-confidence", "bullet-board-action", "bullet-board-objective",
+            "bullet-board-route-1", "bullet-board-focus", "bullet-board-gate"
+        }.Concat(board.Fields.Select(field => field.AutomationId));
+        foreach (var id in required)
+            if (!ids.Contains(id, StringComparer.Ordinal))
+                throw new InvalidOperationException($"Missing Bullet AutomationId {id}");
+        foreach (var field in board.Fields)
+        {
+            var row = elements.Single(element =>
+                AutomationProperties.GetAutomationId(element) == field.AutomationId);
+            var visible = Descendants(row).OfType<TextBlock>().Last();
+            var visibleValue = visible.Text.Replace("\u2060", "", StringComparison.Ordinal);
+            if (visibleValue != field.DisplayValue ||
+                AutomationProperties.GetName(row) != field.AccessibilityName ||
+                AutomationProperties.GetItemStatus(row) != field.AccessibilityValue ||
+                visible.TextWrapping != TextWrapping.Wrap ||
+                visible.TextTrimming != TextTrimming.None)
+                throw new InvalidOperationException(
+                    $"Bullet visible/accessibility value mismatch for {field.AutomationId}");
+        }
     }
 
     private static void ValidateKoreanWrap(DependencyObject root)
@@ -180,6 +621,125 @@ internal static class Program
             throw new InvalidOperationException("Long Korean unknown reason did not wrap safely.");
     }
 
+    private static void ValidateFirstLegendCards(DependencyObject root)
+    {
+        var names = Descendants(root).OfType<FrameworkElement>()
+            .Select(AutomationProperties.GetName)
+            .Where(value => !string.IsNullOrWhiteSpace(value)).ToArray();
+        if (!names.Any(value => value.Contains("쿠마 - 전설", StringComparison.Ordinal)) ||
+            names.Any(value => value.Contains("희귀 재료", StringComparison.Ordinal)))
+            throw new InvalidOperationException(
+                "First-legend surface must render only the target legendary card.");
+    }
+
+    private static void ValidateStoryProgressEmptyState(DependencyObject root)
+    {
+        var text = string.Join('\n', Descendants(root).OfType<TextBlock>()
+            .Select(item => item.Text.Replace("\u2060", "", StringComparison.Ordinal)));
+        if (!text.Contains("현재 단계 진행 중", StringComparison.Ordinal) ||
+            text.Contains("패 인식 대기 중", StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "Story progress must not be presented as hand-recognition waiting.");
+    }
+
+    private static void ValidateDismantleOnly(StatsOverlayWindow window, string? expected)
+    {
+        var visibleText = Descendants(window).OfType<TextBlock>()
+            .Where(item => item.IsVisible)
+            .Select(item => item.Text)
+            .ToArray();
+        if (visibleText.Any(text => text.Contains("유지", StringComparison.Ordinal)))
+            throw new InvalidOperationException("Keep advice must not be rendered.");
+        if (expected is null)
+        {
+            if (window.SpecialHeader.Visibility != Visibility.Collapsed ||
+                window.SpecialPanel.Visibility != Visibility.Collapsed)
+                throw new InvalidOperationException(
+                    "The special section must collapse when no dismantle action exists.");
+            return;
+        }
+        if (window.SpecialHeader.Visibility != Visibility.Visible ||
+            window.SpecialPanel.Visibility != Visibility.Visible ||
+            !visibleText.Contains(expected, StringComparer.Ordinal))
+            throw new InvalidOperationException(
+                "Only the actionable dismantle chip must remain visible.");
+    }
+
+    private static Recommendation Card(string id, string name, string tier) => new()
+    {
+        Route = new RouteDefinition
+        {
+            Id = "craft:" + id,
+            GoalUnitId = id,
+            Name = name
+        },
+        RecipeProgress = new RecipeProgress(),
+        CompositionUnits =
+        [
+            new CompositionUnitDetail
+            {
+                UnitId = id,
+                Name = name,
+                Tier = tier
+            }
+        ]
+    };
+
+    private static Recommendation BulletCard(BulletFixture fixture)
+    {
+        var units = new List<CompositionUnitDetail>
+        {
+            new()
+            {
+                UnitId = "rawcode:180h", Name = "불릿", Tier = "불멸 [물딜]",
+                IsGoal = true, IsRequired = true,
+                RequiredCount = 1, SuggestedCount = 1,
+                OwnedCount = fixture.Input.BulletCrafted == true ? 1 : 0
+            }
+        };
+        if (fixture.Input.FirstLegendFoundationKnown == true)
+            units.Add(new CompositionUnitDetail
+            {
+                UnitId = "rawcode:530h", Name = "샹크스", Tier = "전설 [스턴]",
+                SuggestedCount = 1, OwnedCount = 1
+            });
+        var flyingIds = new[] { "rawcode:K30h", "rawcode:U20h" };
+        for (var index = 0; index < fixture.Input.FlyingCapableLegendCount.GetValueOrDefault(); index++)
+            units.Add(new CompositionUnitDetail
+            {
+                UnitId = flyingIds[index], Name = index == 0 ? "쵸파 유력강화" : "검은수염",
+                Tier = "전설 [마딜]", SuggestedCount = 1, OwnedCount = 1
+            });
+        return new Recommendation
+        {
+            Route = new RouteDefinition
+            {
+                Id = "craft:rawcode:180h", GoalUnitId = "rawcode:180h", Name = "Bullet"
+            },
+            RecipeProgress = new RecipeProgress { RequiredLeafCount = 1 },
+            CompositionUnits = units
+        };
+    }
+
+    private static IReadOnlyList<InventoryEntry> BulletInventory(BulletFixture fixture)
+    {
+        var entries = new List<InventoryEntry>();
+        if (fixture.Input.FirstLegendFoundationKnown == true)
+            entries.Add(new InventoryEntry { UnitId = "rawcode:530h", Count = 1 });
+        var flyingIds = new[] { "rawcode:K30h", "rawcode:U20h" };
+        for (var index = 0; index < fixture.Input.FlyingCapableLegendCount.GetValueOrDefault(); index++)
+            entries.Add(new InventoryEntry { UnitId = flyingIds[index], Count = 1 });
+        var bossIds = new[] { "rawcode:B90H", "rawcode:V90h" };
+        for (var index = 0; index < fixture.Input.BossKillUnitCount.GetValueOrDefault(); index++)
+            entries.Add(new InventoryEntry { UnitId = bossIds[index], Count = 1 });
+        if (fixture.Input.BulletCrafted == true)
+            entries.Add(new InventoryEntry { UnitId = "rawcode:180h", Count = 1 });
+        return entries;
+    }
+
+    private static InventoryStatSummary EmptyStats() => new(
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
     private static IEnumerable<DependencyObject> Descendants(DependencyObject root)
     {
         yield return root;
@@ -190,6 +750,43 @@ internal static class Program
 
     private static IReadOnlyList<Fixture> Cases() =>
     [
+        new(PlannerEvidenceState.SequenceFirstRare, 4, null, false,
+            "첫 희귀함 빠른 완성",
+            Sequence(RecommendationSequenceStage.FirstRare,
+                StorySequenceAction.FindFirstRare,
+                "스토리 2", "골드 800 · 흔함선택위습 3",
+                "첫 희귀함을 가장 빠른 완성 순으로 계산합니다.",
+                "가장 가까운 희귀함부터 완성하세요.")),
+        new(PlannerEvidenceState.SequenceStoryReward, 8, null, false,
+            "현재 보상을 확인한 뒤 다시 계산",
+            Sequence(RecommendationSequenceStage.StoryReward,
+                StorySequenceAction.WaitForStoryReward,
+                "스토리 4", "골드 2,000 · 목재 1 · 특별위습 2 · 안흔위습 1",
+                "쿠마 전설 결손 기대 31.4% 감소 · 특별 유효 4/33 · 안흔 유효 2/13",
+                "현재 스토리 클리어 보상을 확인한 뒤 전설 조합을 다시 계산하세요.",
+                "rawcode:fixture-legend", "쿠마 전설", 3140)),
+        new(PlannerEvidenceState.SequenceFirstLegend, 10, null, false,
+            "첫 전설로 스토리 속도 확보",
+            Sequence(RecommendationSequenceStage.FirstLegend,
+                StorySequenceAction.CraftLegendNow,
+                "스토리 5", "골드 3,000 · 목재 1 · 특별위습 2 · 안흔위습 2",
+                "즉시 완성 가능 · 보상보다 스토리 속도 우선",
+                "쿠마 전설을 지금 조합해 스토리 속도를 확보하세요.",
+                "rawcode:fixture-legend", "쿠마 전설", 10000)),
+        new(PlannerEvidenceState.SequenceRareReward, 14, null, false,
+            "희귀위습 실제 결과 대기",
+            Sequence(RecommendationSequenceStage.RareReward,
+                StorySequenceAction.PushStoryForRareReward,
+                "스토리 7", "골드 6,000 · 목재 4 · 희귀위습 2",
+                "남은 희귀위습은 실제 결과를 본 뒤 상위 가치로 계산합니다.",
+                "스토리를 밀어 희귀위습 보상을 받은 뒤 상위 확정을 진행하세요.")),
+        new(PlannerEvidenceState.SequenceTopNavigation, 19, null, false,
+            "20라운드 최종 추천 대기",
+            Sequence(RecommendationSequenceStage.TopAndNavigation,
+                StorySequenceAction.WaitForRound20,
+                "어인섬 · 스토리 9", "클리어 보상 확인 중",
+                "스토리 희귀 보상 사용 결과가 현재 패에 반영됐습니다.",
+                "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다.")),
         new(PlannerEvidenceState.Waiting, 10, null, false, "입력 대기 중"),
         new(PlannerEvidenceState.Blocked, 10,
             Applied(NavigationRecommendationState.NoSafeRecommendation,
@@ -212,6 +809,58 @@ internal static class Program
                 forced: "AlliedForces.DoubleBenefit"), false, "원본 규칙 기대값"),
         new(PlannerEvidenceState.Unknown, 20, null, true, LongUnknownReason)
     ];
+
+    private static IReadOnlyList<BulletFixture> BulletCases()
+    {
+        const string unknownReason = "현재 인식 입력에 강화 단계 신호가 없습니다.";
+        BulletFixture Case(BulletOperatingBoardState state, int round, bool foundation,
+            int flying, int boss, double slow, double armor, double stun, bool crafted = false)
+        {
+            var input = new BulletOperatingBoardInput(round, "rawcode:180h", null,
+                foundation, flying, boss, slow, armor, stun, 1.4, true, crafted, null,
+                unknownReason);
+            var stats = EmptyStats() with
+            {
+                Stun = stun,
+                Slow = slow,
+                ArmorReduction = armor,
+                AirMovementProviders = flying,
+                SingleDamageProviders = boss
+            };
+            return new BulletFixture(state, input, stats);
+        }
+
+        return
+        [
+            Case(BulletOperatingBoardState.EarlyFoundation, 8, false, 0, 0, 0, 0, 0),
+            Case(BulletOperatingBoardState.AirMobility, 20, true, 1, 0, 20, 30, 0.3),
+            Case(BulletOperatingBoardState.BossKill, 30, true, 2, 1, 40, 60, 0.6),
+            Case(BulletOperatingBoardState.ControlArmor, 40, true, 2, 2, 40, 60, 0.6),
+            Case(BulletOperatingBoardState.Ready, 49, true, 2, 2, 82, 100, 1.4),
+            Case(BulletOperatingBoardState.Round50, 50, true, 2, 2, 82, 100, 1.4, true)
+        ];
+    }
+
+    private static StoryRewardSequenceDecision Sequence(
+        RecommendationSequenceStage stage,
+        StorySequenceAction action,
+        string story,
+        string reward,
+        string value,
+        string decision,
+        string? legendId = null,
+        string? legendName = null,
+        int expectedBp = 0)
+    {
+        var labels = new[]
+        {
+            "첫 희귀함", "스토리 보상", "첫 전설", "희귀 보상", "상위+항법"
+        };
+        var steps = string.Join('\n', labels.Select((label, index) =>
+            $"{index + 1} {label} [{(index < (int)stage ? "완료" : index == (int)stage ? "현재" : "대기")}]"));
+        return new StoryRewardSequenceDecision(stage, action, story, reward, value,
+            decision, steps, legendId, legendName, expectedBp, false);
+    }
 
     private static AdaptivePlanningApplied Applied(NavigationRecommendationState navigationState,
         PlannerPhase phase, ImmutableArray<AdaptiveBuildBlocker> blockers = default,
@@ -274,6 +923,11 @@ internal static class Program
 
     private static string StateName(PlannerEvidenceState state) =>
         state.ToString().Replace("Round", "round-", StringComparison.Ordinal)
+            .Replace("SequenceFirstRare", "sequence-first-rare", StringComparison.Ordinal)
+            .Replace("SequenceStoryReward", "sequence-story-reward", StringComparison.Ordinal)
+            .Replace("SequenceFirstLegend", "sequence-first-legend", StringComparison.Ordinal)
+            .Replace("SequenceRareReward", "sequence-rare-reward", StringComparison.Ordinal)
+            .Replace("SequenceTopNavigation", "sequence-top-navigation", StringComparison.Ordinal)
             .Replace("ManualOverride", "manual-override", StringComparison.Ordinal)
             .Replace("Preview", "-preview", StringComparison.Ordinal)
             .Replace("Actionable", "-actionable", StringComparison.Ordinal)
@@ -281,11 +935,28 @@ internal static class Program
             .ToLowerInvariant();
 
     private sealed record Fixture(PlannerEvidenceState State, int Round,
-        AdaptivePlanningApplied? Applied, bool Unknown, string KoreanFixture);
+        AdaptivePlanningApplied? Applied, bool Unknown, string KoreanFixture,
+        StoryRewardSequenceDecision? Sequence = null);
 
     private sealed record EvidenceRow(string State, string ControlId, string Field,
         string DisplayedValue, string MachineValue, string AccessibilityName,
         string AccessibilityValue, double Dpi, double Scale, string KoreanFixture,
         string ScreenshotTop, string ScreenshotBottom, string BuildSha,
         string SourceFingerprint, string Verdict);
+
+    private sealed record BulletFixture(BulletOperatingBoardState State,
+        BulletOperatingBoardInput Input, InventoryStatSummary Stats);
+
+    private sealed record BulletEvidenceRow(string State, string ControlId, string Field,
+        string DisplayedValue, string AccessibilityName, string AccessibilityValue,
+        double Dpi, double Scale, string ScreenshotTop, string ScreenshotBottom,
+        string BuildSha, string SourceFingerprint, string Verdict);
+
+    private sealed record CurrentCraftEvidenceRow(string State, string DisplayedTarget,
+        string AccessibilityName, string AccessibilityValue, string FinalGoal,
+        int ProgressPercent, double Dpi, double Scale, string ScreenshotTop,
+        string ScreenshotBottom, string BuildSha, string SourceFingerprint, string Verdict);
+
+    private sealed record StatsAdviceEvidence(string State, string? ExpectedText,
+        string Screenshot, string BuildSha, string SourceFingerprint, string Verdict);
 }

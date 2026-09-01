@@ -35,7 +35,7 @@ public sealed class PlannerEvidencePresentationTests
 
     [Theory]
     [MemberData(nameof(StateCases))]
-    public void EightStatesExposeTheSameMachineFieldMatrix(int round,
+    public void PlannerStatesExposeTheSameMachineFieldMatrix(int round,
         AdaptivePlanningApplied? applied, bool signalsUnknown, PlannerEvidenceState expected)
     {
         var view = RecommendationPresentation.PlannerEvidence(round, applied, signalsUnknown);
@@ -113,19 +113,22 @@ public sealed class PlannerEvidencePresentationTests
         AdaptivePlanningApplied? rendered = null;
         bool? renderedUnknown = null;
         string? renderedReason = "not-called";
+        StoryRewardSequenceDecision? renderedSequence = null;
 
-        MainWindow.DispatchPlannerEvidence((round, applied, unknown, reason) =>
+        MainWindow.DispatchPlannerEvidence((round, applied, unknown, reason, sequence) =>
         {
             renderedRound = round;
             rendered = applied;
             renderedUnknown = unknown;
             renderedReason = reason;
+            renderedSequence = sequence;
         }, 21, expected);
 
         Assert.Equal(21, renderedRound);
         Assert.Same(expected, rendered);
         Assert.False(renderedUnknown);
         Assert.Null(renderedReason);
+        Assert.Null(renderedSequence);
     }
 
     [Fact]

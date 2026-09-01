@@ -18,10 +18,29 @@ public partial class OverlayWindow : OverlayWindowBase
     private Func<Recommendation, IReadOnlyList<Recommendation>>? _storyChildren;
     private Func<IReadOnlyList<Recommendation>, string?, IReadOnlyList<Recommendation>>? _recascade;
     private PlannerEvidenceView? _plannerEvidence;
+    private readonly BulletStrategyProfile? _bulletProfile;
+    private int _plannerRound;
+    private AdaptivePlanningApplied? _plannerApplied;
+    private InventoryStatSummary? _inventoryStats;
+    private bool _greenBloodKnown;
+    private bool _greenBloodUsed;
+    private double _stunTarget = 1.4;
+    private IReadOnlyDictionary<string, int>? _recognizedInventory;
+    private bool _showRouteRootAsCurrentCraft;
+    private Action<string>? _onRouteSelected;
 
     public OverlayWindow()
     {
         InitializeComponent();
+        try
+        {
+            _bulletProfile = BulletStrategyProfileLoader.LoadFromDirectory(
+                Path.Combine(AppContext.BaseDirectory, "Data"));
+        }
+        catch (InvalidDataException)
+        {
+            _bulletProfile = null;
+        }
         var appVersion = UpdateService.CurrentVersion;
         OverlayVersionText.Text = $"v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}";
         Loaded += (_, _) =>
@@ -67,10 +86,13 @@ public partial class OverlayWindow : OverlayWindowBase
     public void UpdateStatus(string status) => StatusText.Text = status;
 
     public void RenderPlannerEvidence(int round, AdaptivePlanningApplied? applied,
-        bool signalsUnknown = false, string? unknownReason = null)
+        bool signalsUnknown = false, string? unknownReason = null,
+        StoryRewardSequenceDecision? storySequence = null)
     {
+        _plannerRound = round;
+        _plannerApplied = applied;
         _plannerEvidence = RecommendationPresentation.PlannerEvidence(
-            round, applied, signalsUnknown, unknownReason);
+            round, applied, signalsUnknown, unknownReason, storySequence);
         ApplyPhaseBanner();
         FillBoard();
     }
@@ -87,8 +109,21 @@ public partial class OverlayWindow : OverlayWindowBase
         double stunCap = 1.5,
         string? phaseHint = null,
         Func<Recommendation, IReadOnlyList<Recommendation>>? storyChildren = null,
-        Func<IReadOnlyList<Recommendation>, string?, IReadOnlyList<Recommendation>>? recascade = null)
+        Func<IReadOnlyList<Recommendation>, string?, IReadOnlyList<Recommendation>>? recascade = null,
+        IReadOnlyList<InventoryEntry>? inventory = null,
+        bool showRouteRootAsCurrentCraft = false,
+        Action<string>? onRouteSelected = null)
     {
+        _showRouteRootAsCurrentCraft = showRouteRootAsCurrentCraft;
+        _onRouteSelected = onRouteSelected;
+        _inventoryStats = stats;
+        _greenBloodKnown = greenBloodOwned || greenBloodUsed;
+        _greenBloodUsed = greenBloodUsed;
+        _stunTarget = stunTarget;
+        _recognizedInventory = inventory?.Where(entry => entry.Count > 0)
+            .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
+                StringComparer.OrdinalIgnoreCase);
         _storyChildren = storyChildren;
         _recascade = recascade;
         GoalText.Text = goalName;
@@ -126,6 +161,8 @@ public partial class OverlayWindow : OverlayWindowBase
         RenderEmergencySummons(emergencySummons ?? []);
 
         var signature = RecommendationSignature(recommendations) + "|" +
+                        BulletSignalSignature() + "|" +
+                        showRouteRootAsCurrentCraft + "|" +
                         string.Join("|", combinePlan.Select(step =>
                             $"{step.TargetUnitId}:{step.TriggerUnitId}:{step.Key}:{string.Join(",", step.Commands)}"));
         if (signature == _lastRecommendationSignature) return;
@@ -145,11 +182,52 @@ public partial class OverlayWindow : OverlayWindowBase
             : _storyChildren?.Invoke(head) ?? [];
         if (!BoardSelection.IsKnown(_recommendations, children, _selectedRouteId))
             _selectedRouteId = head?.Route.Id;
+        var selected = BoardSelection.Resolve(_recommendations, children, _selectedRouteId);
+        var bulletBoard = BuildBulletOperatingBoard(selected);
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _recommendations, _combinePlan,
             _selectedRouteId, SelectRoute, PhaseHintText.Visibility == Visibility.Visible
                 ? PhaseHintText.Text
-                : null, children, head?.Route.Id, _plannerEvidence);
+                : null, children, head?.Route.Id, _plannerEvidence, bulletBoard,
+            _showRouteRootAsCurrentCraft);
     }
+
+    private BulletOperatingBoard? BuildBulletOperatingBoard(Recommendation? selected)
+    {
+        if (_bulletProfile is null) return null;
+        var selectedGoalId = selected?.Route.GoalUnitId;
+        var committedGoalId = _plannerApplied?.State.RouteLock?.GoalUnitId;
+        var isBullet = selectedGoalId == _bulletProfile.GoalUnitId ||
+                       committedGoalId == _bulletProfile.GoalUnitId;
+        if (!isBullet) return null;
+        if (_recognizedInventory is null || _inventoryStats is null)
+            return BulletOperatingBoardPolicy.Evaluate(_bulletProfile,
+                BulletOperatingBoardInput.Unknown(_plannerRound, selectedGoalId, committedGoalId,
+                    "현재 인벤토리 구성 또는 능력 수치 신호가 없습니다."));
+
+        var firstLegendKnown = Count(_bulletProfile.FirstLegendPriorityUnitIds) > 0;
+        var flying = Count(_bulletProfile.FlyingCapableLegendUnitIds);
+        var bossKill = Count(_bulletProfile.BossKillUnitIds);
+        var bulletCrafted = _recognizedInventory.GetValueOrDefault(_bulletProfile.GoalUnitId) > 0;
+        return BulletOperatingBoardPolicy.Evaluate(_bulletProfile,
+            new BulletOperatingBoardInput(_plannerRound, selectedGoalId, committedGoalId,
+                firstLegendKnown, flying, bossKill, _inventoryStats.TotalSlow,
+                _inventoryStats.TotalArmorReduction, _inventoryStats.Stun, _stunTarget,
+                _greenBloodKnown, bulletCrafted, null,
+                "현재 인식 입력에 강화 단계 신호가 없습니다."));
+
+        int Count(IEnumerable<string> unitIds) => unitIds.Sum(id =>
+            _recognizedInventory.GetValueOrDefault(id));
+    }
+
+    private string BulletSignalSignature() => _inventoryStats is null
+        ? "bullet-signals:none"
+        : string.Join(':', _plannerRound, _inventoryStats.TotalSlow,
+            _inventoryStats.TotalArmorReduction, _inventoryStats.Stun,
+            _inventoryStats.AirMovementProviders, _inventoryStats.SingleDamageProviders,
+            _inventoryStats.FinisherDamageProviders, _greenBloodKnown, _greenBloodUsed,
+            _stunTarget, _recognizedInventory is null ? "inventory:none" : string.Join(',',
+                _recognizedInventory.OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => $"{pair.Key}={pair.Value}")));
 
     private void ApplyPhaseBanner(string? fallback = null)
     {
@@ -167,6 +245,7 @@ public partial class OverlayWindow : OverlayWindowBase
     private void SelectRoute(string routeId)
     {
         _selectedRouteId = routeId;
+        _onRouteSelected?.Invoke(routeId);
         var head = ClusterHead();
         var currentChildren = head is null
             ? []
@@ -207,20 +286,24 @@ public partial class OverlayWindow : OverlayWindowBase
 
     private string? _lastSpecialSignature;
 
+    internal static IReadOnlyList<SpecialDismantleAdvice> DismantleOnly(
+        IReadOnlyList<SpecialDismantleAdvice> advice) =>
+        advice.Where(item => item.Dismantle).ToList();
+
     private void RenderSpecialAdvice(IReadOnlyList<SpecialDismantleAdvice> advice)
     {
-        var signature = string.Join("|", advice.Select(item =>
+        var dismantles = DismantleOnly(advice);
+        var signature = string.Join("|", dismantles.Select(item =>
             $"{item.UnitId}:{item.Dismantle}:{item.Reason}"));
         if (signature == _lastSpecialSignature) return;
         _lastSpecialSignature = signature;
         SpecialPanel.Children.Clear();
-        var visible = advice.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        var visible = dismantles.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         SpecialHeader.Visibility = visible;
         SpecialPanel.Visibility = visible;
-        foreach (var item in advice)
+        foreach (var item in dismantles)
             SpecialPanel.Children.Add(AdviceChip(
-                item.Dismantle ? $"{item.Name} 분해" : $"{item.Name} 유지",
-                item.Dismantle ? OverlayTheme.WarnBrush : OverlayTheme.MutedBrush));
+                $"{item.Name} 분해", OverlayTheme.WarnBrush));
     }
 
     private string? _lastEmergencySignature;
