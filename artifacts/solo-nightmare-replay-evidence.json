@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "kind": "algorithm-boundary-test-report",
+  "scope": "ORDB S2 2.314 솔로 악몽 gameplay model evidence",
+  "epistemicPolicy": {
+    "mapBacked": "고정된 .w3x member와 war3map.j/w3u/w3a/w3q/wts에서 직접 추출되거나 해당 hash에 고정된 테스트만 mechanics로 인정",
+    "fieldObserved": "실제 클리어 snapshot/legacy aggregate는 상관관계 증거이며 인과·필수 조건으로 승격하지 않음",
+    "simulated": "부분 fidelity의 결정적 반례·회귀 증거이며 실제 클리어율로 해석하지 않음",
+    "unknown": "근거가 불완전하면 수치나 유닛 예외를 만들지 않고 unknown 유지"
+  },
+  "sourcePins": [
+    {"path":"Data/story-progression-2314.json","sha256":"f1b25973114789ab0ebb10a62d182f368669355ca2039fb207ac6605af5e315b"},
+    {"path":"Data/navigation-mechanics-2314.json","sha256":"10eef5056b75103f1b56c90b65225c2d517b97c9e4f6353a476bf31f4980a75a"},
+    {"path":"Data/tmo-clear-samples.json","sha256":"abe0c04ff03028b04fc30b2b9c04d81854ddbe9ec9851bcd013ce9bff4fca57a"},
+    {"path":"Data/orand-live-stats.json","sha256":"3b0c2b9e237c8b3c3a06139a522f79d109453d27a934cdbc15d1bbc41d401baa"},
+    {"path":"D:/OrandOverlay/local-tools/OrandSimulator/MapSource/war3map.j","sha256":"0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028"},
+    {"path":"D:/OrandOverlay/local-tools/OrandSimulator/MapSource/war3map.w3u","sha256":"a9aa2cb9c08130c3bee970aecb05b62fdc3db867685f4997dd2533735d2ea278"}
+  ],
+  "mapReplay": {
+    "roundTimers": {"preparationSeconds":21,"baseRoundSeconds":35,"newWorldTransitionSeconds":70,"postTransitionRoundSeconds":32,"bossRoundsThrough50":[10,20,30,40,50],"bossLimitSecondsThrough50":60,"post50BossRounds":[55,60,65],"post50DedicatedBossLimitSeconds":null,"evidence":"war3map.j:13476,82180,67845,67852,63997,20468; MapRoundTimerTests"},
+    "spawns": {"normalTicks":35,"tickSeconds":0.5,"through50BossRoundsSuppressNormalWave":true,"post50BossRoundsAlsoSpawnNormalWave":true,"evidence":"MapRoundTopology.cs + pinned war3map.j schedule checks"},
+    "nightmare": {"difficultyId":6,"unitCapRounds1To40":70,"unitCapFrom41":50,"bossHpBonusPercent":200,"magicResistanceBonusPercent":10,"movementSpeedBonusPercent":50,"normalLineHpAdjustmentPercent":null,"storyHpAdjustmentPercent":null,"storyDeadline":{"round":35,"requiredCompletedStage":13,"label":"와노쿠니"},"evidence":"MapData/DifficultyProfiles.cs, war3map.j:68416-68420"},
+    "storySideEffects": {"source":"Data/story-progression-2314.json HiddenOrSideEffect with per-row JASS provenance","stages":{"5":["Technology R01N chance 1/1","RandomItem AI03 if missing chance 1/20"],"6":["RandomItem AI00 if missing chance 1/20"],"8":["Technology R01O chance 1/1","H0AW stock max +1 up to 8","RandomItem AI02 if missing chance 1/20"],"9":["Technology R01P chance 1/1","H0AW stock max +1 up to 8"],"10":["Technology R01Q chance 1/1","H0AW stock max +1 up to 8"],"11":["H0AW stock max +1 up to 8"],"12":["Technology R01S chance 1/1","H0AW stock max +1 up to 8","MoriaKill mission activation always"],"13":["H0AW stock max +1 up to 8","EggheadAppearance after 120 seconds when difficulty>=5"]},"nightmareInterpretation":"difficulty 6 satisfies stage13 timer condition; it is a timed spawn event, not a proven defeat deadline"},
+    "bosses": [
+      {"round":10,"rawcode":"o01V","name":"아론","baseHpPerLane":14500,"sourceLine":40666},
+      {"round":20,"rawcode":"o01W","name":"크로커다일","baseHpPerLane":85000,"sourceLine":40667},
+      {"round":30,"rawcode":"o01X","name":"에넬","baseHpPerLane":750000,"sourceLine":40668},
+      {"round":40,"rawcode":"o01Y","name":"루치","baseHpPerLane":2900000,"sourceLine":40669},
+      {"round":50,"rawcode":"o01Z","name":"센고쿠","baseHpPerLane":20800000,"sourceLine":40670},
+      {"round":55,"rawcode":"o001","name":"도플라밍고","baseHpPerLane":12297000,"sourceLine":40671},
+      {"round":60,"rawcode":"o02C","name":"빅 맘","baseHpPerLane":12750000,"sourceLine":40672},
+      {"round":65,"rawcode":"o02B","name":"카이도","baseHpPerLane":13595000,"sourceLine":40673}
+    ],
+    "bossAbilityCoverage": {"perBoss":{"total":8,"modeled":5,"partiallyModeled":1,"unmodeled":2},"sharedAbilities":["A11S","A04M","A04O","A04N","A04P","A11P","A04R","A04Q"],"unknownAbilities":["A04R","A04Q"],"partiallyModeledAbilities":["A11S"],"conclusion":"보스별 exact 제어·방어·딜 요구는 현재 simulator가 완전 증명하지 못함"},
+    "growth": {"xpGainPerMappedDeathEvent":1,"activationThreshold":152,"scopeUnknown":"어떤 실전 사망 이벤트가 wH 증가 루틴을 통과하는지는 추가 trace 필요","evidence":"war3map.j wH increment/threshold; MapRuntimeRuleExtractor.ParseEvolutionXp"},
+    "leak": {"initialLives":20,"capRounds1To40":70,"capFrom41":50,"evidence":"FamilyEngineReadsExtractedLeakGoldAndXpTables live test output"}
+  },
+  "fieldEvidence": {
+    "clearSnapshots": {"allSamples":40026,"nightmareSuccessfulSnapshots":15990,"nightmareEffectiveUnitCount":{"q1":12,"median":19,"q3":26},"topCountDistribution":{"0":535,"1":9372,"2":4762,"3":1169,"4":126,"5plus":26},"damageLaneDistribution":{"physical":6374,"magic":7610,"mixed":212,"unlabeledOrNoTop":1794},"recordsWithStunGrade":3005,"recordsWithChangedGrade":1487,"recordsWithShipGrade":2128,"limitation":"성공 final snapshot뿐이며 제작 순서·라운드·실패 원인·항법·솔로 여부를 직접 증명하지 않음"},
+    "legacyOutcomeAggregate": {"totalRecords":2179,"labeledRecords":794,"clearLabels":85,"difficultyCounts":{"nightmare":401},"limitation":"목표별 승패와 난이도는 cross-tab되지 않고 adherenceMean은 모든 목표에서 0.0이라 악몽 추천 준수 효과를 계산할 수 없음"},
+    "telemetryV2Remote": {"queriedAt":"2026-09-03","query":"SELECT difficulty, surface, urgency, outcome, SUM(match_count) ... GROUP BY difficulty, surface, urgency, outcome","rows":0,"limitation":"신규 aggregate-only v2에는 현재 field outcome 표본이 없고 라운드·스토리·행동 준수 필드도 없음"},
+    "directUserFeedback": {"observation":"현재 결과물은 맵 규칙 기반 추천기이며 사용자가 실제 행동 순서·부족 재료·포기 조건·카운트다운·복기를 따라가기 어렵다는 실사용 실패 피드백","source":"현재 세션 사용자 요구와 이전 실전 실패 피드백","use":"구체적 행동 계약 부재를 product gap으로 인정","limitation":"정량 표본이 아닌 직접 질적 증거"}
+  },
+  "simulatorEvidence": {
+    "coverage":{"sourceInventory":"complete","jassFunctions":"2694/2694","runtimeSimulation":"partial","abilityDefinitions":{"modeled":403,"partial":145,"unmodeled":1096},"playerAbilityOccurrences":{"total":992,"modeled":229,"partial":57,"unmodeled":706}},
+    "existingDeterministicRuns":{"seedRange1To24":{"baselineVictories":5,"candidateVictories":5,"runs":24},"representative":{"seed8":"65R Victory","seed42":"65R Victory","seed16":"35R story12 defeat"},"interpretation":"정책 회귀와 반례 탐색에만 사용하며 실제 승률로 표기하지 않음"}
+  },
+  "verification": [
+    {"command":"dotnet test OrandSimulator.Tests/OrandSimulator.Tests.csproj --configuration Release --no-restore --filter FullyQualifiedName~MapRoundTimerTests|...|FullyQualifiedName~CombatSimulationTests","passed":53,"failed":0},
+    {"command":"dotnet test OrandOverlay.Tests/OrandOverlay.Tests.csproj --configuration Release --no-restore --filter FullyQualifiedName~RecommendationPipelineTests|...|FullyQualifiedName~NavigationIntervalScorerTests","passed":25,"failed":0},
+    {"command":"dotnet test ... --filter FullyQualifiedName~FamilyEngineReadsExtractedLeakGoldAndXpTables --logger console;verbosity=detailed","passed":1,"failed":0,"observed":"lives=20 cap1=70 cap41=50 xpThreshold=152"}
+  ]
+}
