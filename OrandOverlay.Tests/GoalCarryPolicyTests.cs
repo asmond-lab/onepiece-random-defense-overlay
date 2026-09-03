@@ -25,7 +25,9 @@ public sealed class GoalCarryPolicyTests
         var path = Path.Combine(AppContext.BaseDirectory, "Data",
             "goal-carry-policy.json");
 
-        Assert.Equal(File.ReadAllText(path), generated);
+        Assert.Equal(
+            File.ReadAllText(path).ReplaceLineEndings("\n"),
+            generated.ReplaceLineEndings("\n"));
         Assert.Equal(generated, GoalCarryPolicy.GenerateCanonical(catalog,
             AppContext.BaseDirectory));
         _ = GoalCarryPolicy.Load(path, catalog);

@@ -121,13 +121,23 @@ public sealed class NavigationMechanicsProfileTests
     }
 
     [Fact]
-    public void ActualArchiveMembersAreReadInMemoryAndMatchEveryPinnedValue()
+    public void PinnedArchiveEvidenceIsValidAndMatchesAvailableSourceArchive()
     {
+        var profile = Load();
+        Assert.All(profile.Source.Members, expected =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(expected.Name));
+            Assert.True(expected.Length > 0);
+            Assert.Matches("^[0-9a-f]{64}$", expected.Sha256);
+        });
+        const string archivePath =
+            @"C:\Users\123\Documents\Warcraft III\Maps\Download\ORDR_S2_2.314[R].w3x";
+        if (!File.Exists(archivePath)) return;
+
         var actual = Task2MpqMemberEvidence.Read(
-            @"C:\Users\123\Documents\Warcraft III\Maps\Download\ORDR_S2_2.314[R].w3x",
+            archivePath,
             ["war3map.w3a", "war3map.w3u", "war3map.wts", "war3map.j",
                 "war3mapMisc.txt"]);
-        var profile = Load();
 
         Assert.Equal(profile.Source.Members.Length, actual.Count);
         foreach (var expected in profile.Source.Members)
