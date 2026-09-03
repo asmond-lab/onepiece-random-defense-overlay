@@ -213,6 +213,99 @@ public sealed class BoardSelectionTests
         if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
+    [Theory]
+    [InlineData(RecommendationSequenceStage.StoryReward,
+        StorySequenceAction.WaitForStoryReward)]
+    [InlineData(RecommendationSequenceStage.RareReward,
+        StorySequenceAction.PushStoryForRareReward)]
+    [InlineData(RecommendationSequenceStage.TopAndNavigation,
+        StorySequenceAction.WaitForRound20)]
+    public void EmptyPostLegendSequenceShowsPendingRecommendationCard(
+        RecommendationSequenceStage stage, StorySequenceAction action)
+    {
+        Exception? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                const string nextAction = "현재 스토리 행동을 이어가세요.";
+                var decision = new StoryRewardSequenceDecision(
+                    stage, action, "첫 전설 이후", "희귀위습 2",
+                    "희귀 보상 결과 확인 중", nextAction, "후속 추천 대기",
+                    null, null, 0, false);
+                var evidence = RecommendationPresentation.PlannerEvidence(
+                    14, null, false, storySequence: decision);
+                var now = new StackPanel();
+
+                RecommendationBoard.Fill(
+                    now, new StackPanel(), new StackPanel(), [], [], null, _ => { },
+                    plannerEvidence: evidence);
+
+                var elements = Descendants(now).OfType<FrameworkElement>().ToArray();
+                var root = elements.Single(element =>
+                    AutomationProperties.GetAutomationId(element) ==
+                    "pending-recommendation-card");
+                var rows = elements.Where(element =>
+                        AutomationProperties.GetAutomationId(element)
+                            .StartsWith("pending-recommendation-", StringComparison.Ordinal))
+                    .ToDictionary(AutomationProperties.GetAutomationId,
+                        StringComparer.Ordinal);
+                Assert.Equal("추천은 계속됩니다", AutomationProperties.GetName(root));
+                Assert.Equal("상위 추천 준비 중",
+                    AutomationProperties.GetItemStatus(
+                        rows["pending-recommendation-status"]));
+                Assert.Equal(nextAction,
+                    AutomationProperties.GetItemStatus(
+                        rows["pending-recommendation-action"]));
+                Assert.Equal(
+                    "희귀 보상 결과가 상위 경로를 바꿀 수 있어 결과를 먼저 반영합니다.",
+                    AutomationProperties.GetItemStatus(
+                        rows["pending-recommendation-reason"]));
+                Assert.Equal(
+                    "희귀위습 결과가 반영되면 상위·항법 추천이 자동으로 다시 표시됩니다.",
+                    AutomationProperties.GetItemStatus(
+                        rows["pending-recommendation-resume"]));
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+        });
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+        if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
+    }
+
+    [Fact]
+    public void EmptyRecognitionWaitingDoesNotShowPendingRecommendationCard()
+    {
+        Exception? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                var now = new StackPanel();
+
+                RecommendationBoard.Fill(
+                    now, new StackPanel(), new StackPanel(), [], [], null, _ => { });
+
+                var ids = Descendants(now).OfType<FrameworkElement>()
+                    .Select(AutomationProperties.GetAutomationId).ToArray();
+                Assert.DoesNotContain("pending-recommendation-card", ids);
+                Assert.Contains("recognition-waiting-state", ids);
+            }
+            catch (Exception exception)
+            {
+                failure = exception;
+            }
+        });
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+        if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
+    }
+
     private static IReadOnlyList<string> Texts(DependencyObject root)
     {
         var result = new List<string>();

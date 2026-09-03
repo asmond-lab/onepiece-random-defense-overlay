@@ -1,6 +1,7 @@
 <Application x:Class="OrandOverlay.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OrandOverlay"
              StartupUri="MainWindow.xaml">
   <Application.Resources>
     <!-- ===== 디자인 토큰: 두 창이 공유하는 단일 시각 시스템 ===== -->
@@ -16,6 +17,19 @@
     <SolidColorBrush x:Key="ThumbBrush" Color="#663A404C"/>
     <SolidColorBrush x:Key="ThumbSolidBrush" Color="#FF3A404C"/>
     <SolidColorBrush x:Key="ThumbHoverBrush" Color="#FF4A5160"/>
+
+    <Style x:Key="CurrentCraftWell" TargetType="Border">
+      <Setter Property="Background"
+              Value="{x:Static local:OverlayTheme.FeaturedBrush}"/>
+      <Setter Property="BorderBrush"
+              Value="{x:Static local:OverlayTheme.GoldBrush}"/>
+      <Setter Property="BorderThickness"
+              Value="{x:Static local:OverlayTheme.WellBorderThickness}"/>
+      <Setter Property="CornerRadius"
+              Value="{x:Static local:OverlayTheme.WellCornerRadius}"/>
+      <Setter Property="Padding"
+              Value="{x:Static local:OverlayTheme.PlannerBlockPadding}"/>
+    </Style>
 
     <!-- ===== 스크롤바: 트랙 없는 슬림 썸(8px) ===== -->
     <Style x:Key="SlimThumb" TargetType="Thumb">

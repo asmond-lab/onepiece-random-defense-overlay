@@ -11,16 +11,20 @@ internal static class CaptureSourceFingerprint
 {
     internal static IReadOnlyList<string> CanonicalPaths { get; } =
     [
+        "App.xaml",
         "DESIGN.md",
         "BulletOperatingBoard.cs",
         "Data/bullet-strategy-2314.json",
         "FirstRareTargetPolicy.cs",
+        "MainWindow.xaml",
         "MainWindow.xaml.cs",
         "OverlayTheme.cs",
         "OverlayWindow.xaml",
         "OverlayWindow.xaml.cs",
         "RecommendationBoard.cs",
-        "RecommendationPresentation.cs"
+        "RecommendationPresentation.cs",
+        "tools/PlannerEvidenceCapture/CapturePixelContract.cs",
+        "tools/PlannerEvidenceCapture/Program.cs"
     ];
 
     internal static string FromCanonicalFiles() => Compute(CanonicalPaths.Select(path =>

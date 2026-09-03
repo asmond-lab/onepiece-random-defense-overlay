@@ -37,6 +37,8 @@ internal static class OverlayTheme
     public const double ImageRadius = 8;
     public const double ChipRadius = 6;
 
+    public static CornerRadius WellCornerRadius { get; } = new(WellRadius);
+    public static Thickness WellBorderThickness { get; } = new(1);
     public static Thickness PlannerBlockMargin { get; } = new(0, 0, 0, 8);
     public static Thickness PlannerHeaderMargin { get; } = new(0, 0, 0, 6);
     public static Thickness PlannerRowMargin { get; } = new(0, 0, 0, 4);

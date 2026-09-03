@@ -48,8 +48,8 @@
           </Border>
         </StackPanel>
       </Grid>
-      <Border x:Name="NowWell" Grid.Row="1" Background="#FF12151C" BorderBrush="#66F0C75E"
-              BorderThickness="1" CornerRadius="12" Margin="10,8,10,0" Padding="10,8">
+      <Border x:Name="NowWell" Grid.Row="1" Style="{StaticResource CurrentCraftWell}"
+              Margin="10,8,10,0">
         <StackPanel x:Name="NowPanel"/>
       </Border>
       <Border x:Name="FlowWell" Grid.Row="2" Background="#FF0C0E14" CornerRadius="12"

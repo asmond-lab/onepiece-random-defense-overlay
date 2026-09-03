@@ -1107,8 +1107,14 @@ public partial class MainWindow : Window
             : _engine.StoryClusterChildren(head.Route.GoalUnitId, RecommendationInventory());
         if (!BoardSelection.IsKnown(_boardRecs, children, _selectedRouteId))
             _selectedRouteId = head?.Route.Id;
+        var evidenceUnknown = _automaticStale || _automaticDisconnected;
+        var plannerEvidence = RecommendationPresentation.PlannerEvidence(
+            _lastRound, _adaptivePlanningApplied, evidenceUnknown,
+            evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
+            _storySequence);
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _boardRecs, _boardPlan,
             _selectedRouteId, SelectMainRoute, _boardBanner, children, head?.Route.Id,
+            plannerEvidence,
             showRouteRootAsCurrentCraft:
                 _recommendationSurface == RecommendationSurface.FastRare);
     }

@@ -42,6 +42,20 @@ internal static class RecommendationBoard
 
         if (recs.Count == 0)
         {
+            if (plannerEvidence is
+                {
+                    State: PlannerEvidenceState.SequenceStoryReward or
+                    PlannerEvidenceState.SequenceRareReward or
+                    PlannerEvidenceState.SequenceTopNavigation
+                })
+            {
+                var nextAction = plannerEvidence[PlannerEvidenceFieldKind.Action].DisplayValue;
+                if (string.IsNullOrWhiteSpace(nextAction))
+                    nextAction = banner ?? "현재 스토리 행동을 이어가세요.";
+                nowPanel.Children.Add(PendingRecommendationCard(nextAction));
+                return;
+            }
+
             var progressMessage = !string.IsNullOrWhiteSpace(banner)
                 ? banner
                 : plannerEvidence is null
@@ -53,14 +67,19 @@ internal static class RecommendationBoard
                                     PlannerEvidenceState.SequenceFirstLegend or
                                     PlannerEvidenceState.SequenceRareReward or
                                     PlannerEvidenceState.SequenceTopNavigation);
-            nowPanel.Children.Add(new TextBlock
+            var emptyState = new TextBlock
             {
                 Text = storyProgress ? "현재 단계 진행 중" : "패 인식 대기 중",
                 Foreground = OverlayTheme.MutedBrush,
                 FontSize = 15,
                 FontWeight = FontWeights.SemiBold,
                 Margin = new Thickness(4, 10, 0, 10)
-            });
+            };
+            AutomationProperties.SetAutomationId(
+                emptyState, storyProgress
+                    ? "story-progress-state"
+                    : "recognition-waiting-state");
+            nowPanel.Children.Add(emptyState);
             nowPanel.Children.Add(new TextBlock
             {
                 Text = storyProgress
@@ -132,6 +151,83 @@ internal static class RecommendationBoard
                 : BoardTile(rec, BoardSelection.Matches(rec, selected.Route.Id), onSelect));
         }
         boardPanel.Children.Add(tiles);
+    }
+
+    private static FrameworkElement PendingRecommendationCard(string nextAction)
+    {
+        var stack = new StackPanel();
+        var header = new Grid { Margin = OverlayTheme.PlannerHeaderMargin };
+        header.ColumnDefinitions.Add(new ColumnDefinition());
+        header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        header.Children.Add(new TextBlock
+        {
+            Text = "추천은 계속됩니다",
+            Foreground = OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerTitleTypeSize,
+            FontWeight = FontWeights.Bold,
+            TextWrapping = TextWrapping.Wrap
+        });
+        var status = new TextBlock
+        {
+            Text = "상위 추천 준비 중",
+            Foreground = OverlayTheme.GoldBrush,
+            FontSize = OverlayTheme.PlannerStateTypeSize,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        AutomationProperties.SetAutomationId(status, "pending-recommendation-status");
+        AutomationProperties.SetName(status, "상태");
+        AutomationProperties.SetItemStatus(status, "상위 추천 준비 중");
+        Grid.SetColumn(status, 1);
+        header.Children.Add(status);
+        stack.Children.Add(header);
+        stack.Children.Add(PendingRecommendationRow(
+            "pending-recommendation-action", "다음 행동", nextAction,
+            OverlayTheme.GoldBrush));
+        stack.Children.Add(PendingRecommendationRow(
+            "pending-recommendation-reason", "이유",
+            "희귀 보상 결과가 상위 경로를 바꿀 수 있어 결과를 먼저 반영합니다."));
+        stack.Children.Add(PendingRecommendationRow(
+            "pending-recommendation-resume", "자동 재개",
+            "희귀위습 결과가 반영되면 상위·항법 추천이 자동으로 다시 표시됩니다."));
+
+        AutomationProperties.SetAutomationId(stack, "pending-recommendation-card");
+        AutomationProperties.SetName(stack, "추천은 계속됩니다");
+        AutomationProperties.SetItemStatus(stack, "상위 추천 준비 중");
+        return stack;
+    }
+
+    private static FrameworkElement PendingRecommendationRow(
+        string automationId, string label, string value, Brush? valueBrush = null)
+    {
+        var row = new Grid { Margin = OverlayTheme.PlannerRowMargin };
+        row.ColumnDefinitions.Add(new ColumnDefinition
+        {
+            Width = new GridLength(OverlayTheme.PlannerLabelColumnWidth)
+        });
+        row.ColumnDefinitions.Add(new ColumnDefinition());
+        row.Children.Add(new TextBlock
+        {
+            Text = label,
+            Foreground = OverlayTheme.MutedBrush,
+            FontSize = OverlayTheme.PlannerLabelTypeSize,
+            FontWeight = FontWeights.SemiBold,
+            TextWrapping = TextWrapping.NoWrap
+        });
+        var text = new TextBlock
+        {
+            Text = KeepKoreanWordsTogether(value),
+            Foreground = valueBrush ?? OverlayTheme.WhiteBrush,
+            FontSize = OverlayTheme.PlannerValueTypeSize,
+            TextWrapping = TextWrapping.Wrap
+        };
+        Grid.SetColumn(text, 1);
+        row.Children.Add(text);
+        AutomationProperties.SetAutomationId(row, automationId);
+        AutomationProperties.SetName(row, label);
+        AutomationProperties.SetItemStatus(row, value);
+        return row;
     }
 
     internal static FrameworkElement PlannerEvidenceBlock(PlannerEvidenceView evidence)

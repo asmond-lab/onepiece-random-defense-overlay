@@ -32,12 +32,15 @@ internal static class Program
         var rows = new List<EvidenceRow>();
         var bulletRows = new List<BulletEvidenceRow>();
         var currentCraftRows = new List<CurrentCraftEvidenceRow>();
-        var captures = Cases().Select(item => (item, scale: 1.0))
-            .Concat(new[] { 0.75, 1.25, 1.5 }.Select(scale =>
-                (Cases().Single(item => item.State == PlannerEvidenceState.Round21Actionable), scale)))
+        var captureValidationRows = new List<CaptureValidationRow>();
+        var cases = Cases();
+        var captures = CaptureVariants()
+            .Select(variant =>
+                (cases.Single(item => item.State == variant.State), variant.Scale))
             .ToList();
         foreach (var (fixture, scale) in captures)
-            Capture(output, buildSha, sourceFingerprint, fixture, scale, rows);
+            Capture(output, buildSha, sourceFingerprint, fixture, scale, rows,
+                captureValidationRows);
         var bulletCaptures = BulletCases().Select(item => (item, scale: 1.0))
             .Concat([
                 (BulletCases().Single(item => item.State == BulletOperatingBoardState.ControlArmor), 1.25),
@@ -58,6 +61,8 @@ internal static class Program
         }
         var statsAdvice = CaptureSpecialAdvice(output, buildSha, sourceFingerprint);
         var telemetrySettings = CaptureTelemetrySettings(
+            output, buildSha, sourceFingerprint);
+        var mainPendingRecommendation = CaptureMainPendingRecommendation(
             output, buildSha, sourceFingerprint);
 
         var matrixPath = Path.Combine(output, "planner-ui-evidence-matrix.json");
@@ -109,6 +114,8 @@ internal static class Program
             currentCraftFixtures = currentCraftCaptures.Length * 3,
             statsAdvice,
             telemetrySettings,
+            mainPendingRecommendation,
+            pendingCaptureValidation = captureValidationRows,
             rows,
             bulletRows,
             currentCraftRows
@@ -399,8 +406,7 @@ internal static class Program
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
         CapturePng(window, topPath, scale);
         scroll.ScrollToEnd();
-        window.UpdateLayout();
-        window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
+        FlushRender(window);
         CapturePng(window, bottomPath, scale);
         ValidateCapture(topPath, 540 * scale, 740 * scale);
         ValidateCapture(bottomPath, 540 * scale, 740 * scale);
@@ -526,8 +532,60 @@ internal static class Program
             "PASS");
     }
 
+    private static MainPendingRecommendationEvidence CaptureMainPendingRecommendation(
+        string output, string buildSha, string sourceFingerprint)
+    {
+        var path = Path.Combine(output, "main-pending-recommendation-100.png");
+        var contextPath = Path.Combine(
+            output, "main-pending-recommendation-context-100.png");
+        var window = new MainWindow(new AppSettings
+        {
+            AutoScanEnabled = false,
+            ClearDataAutoRefresh = false
+        }, startRuntime: false)
+        {
+            ShowActivated = false,
+            Topmost = false,
+            Opacity = 0,
+            Left = SystemParameters.VirtualScreenLeft,
+            Top = SystemParameters.VirtualScreenTop
+        };
+        var sequence = Sequence(RecommendationSequenceStage.RareReward,
+            StorySequenceAction.PushStoryForRareReward,
+            "스토리 7", "골드 6,000 · 목재 4 · 희귀위습 2",
+            "남은 희귀위습은 실제 결과를 본 뒤 상위 가치로 계산합니다.",
+            "스토리를 밀어 희귀위습 보상을 받은 뒤 상위 확정을 진행하세요.");
+        var view = RecommendationPresentation.PlannerEvidence(
+            14, null, false, storySequence: sequence);
+        RecommendationBoard.Fill(window.NowPanel, window.FlowPanel, window.BoardPanel,
+            [], [], null, _ => { }, plannerEvidence: view);
+        window.Show();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        window.Left = SystemParameters.VirtualScreenLeft - 1280;
+        window.Opacity = 1;
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        var root = (FrameworkElement)window.Content;
+        var recommendationSurface = (FrameworkElement?)window.NowPanel.Parent
+                                    ?? throw new InvalidOperationException(
+                                        "Main recommendation surface missing.");
+        CaptureFrameworkElementPng(recommendationSurface, path);
+        CaptureFrameworkElementPng(root, contextPath);
+        ValidateCapture(
+            path, recommendationSurface.ActualWidth, recommendationSurface.ActualHeight);
+        ValidateCapture(contextPath, root.ActualWidth, root.ActualHeight);
+        ValidatePendingRecommendationState(recommendationSurface, view);
+        window.Close();
+        return new MainPendingRecommendationEvidence(
+            path, contextPath, "main-current-craft-well",
+            buildSha, sourceFingerprint, "PASS");
+    }
+
     private static void Capture(string output, string buildSha, string sourceFingerprint,
-        Fixture fixture, double scale, List<EvidenceRow> rows)
+        Fixture fixture, double scale, List<EvidenceRow> rows,
+        List<CaptureValidationRow> captureValidationRows)
     {
         var scaleName = (scale * 100).ToString("0", CultureInfo.InvariantCulture);
         var stem = $"planner-{StateName(fixture.State)}-{scaleName}";
@@ -572,15 +630,29 @@ internal static class Program
         window.UpdateLayout();
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
         CapturePng(window, bottomPath, scale);
-        ValidateCapture(topPath, 540 * scale, 740 * scale);
-        ValidateCapture(bottomPath, 540 * scale, 740 * scale);
+        var isPendingCapture =
+            fixture.State is PlannerEvidenceState.SequenceStoryReward or
+                PlannerEvidenceState.SequenceRareReward or
+                PlannerEvidenceState.SequenceTopNavigation;
+        var topMetrics = ValidateCapture(
+            topPath, 540 * scale, 740 * scale, isPendingCapture);
+        var bottomMetrics = ValidateCapture(
+            bottomPath, 540 * scale, 740 * scale, isPendingCapture);
         ValidateFooter(window);
         ValidateAutomationTree(window, view);
         if (fixture.State == PlannerEvidenceState.SequenceFirstLegend)
             ValidateFirstLegendCards(window);
-        if (fixture.State is PlannerEvidenceState.SequenceRareReward or
-            PlannerEvidenceState.SequenceTopNavigation)
-            ValidateStoryProgressEmptyState(window);
+        if (isPendingCapture)
+        {
+            ValidatePendingRecommendationState(window, view);
+            ValidateKoreanTextLayout((FrameworkElement)window.Content);
+            captureValidationRows.Add(new CaptureValidationRow(
+                fixture.State.ToString(), scale, "top", topPath,
+                topMetrics!.Value, "PASS", "PASS"));
+            captureValidationRows.Add(new CaptureValidationRow(
+                fixture.State.ToString(), scale, "bottom", bottomPath,
+                bottomMetrics!.Value, "PASS", "PASS"));
+        }
         if (fixture.State == PlannerEvidenceState.Unknown)
             ValidateKoreanWrap(window);
 
@@ -615,10 +687,7 @@ internal static class Program
         var height = checked((int)Math.Round(740 * scale));
         var bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
         bitmap.Render(root);
-        var encoder = new PngBitmapEncoder();
-        encoder.Frames.Add(BitmapFrame.Create(bitmap));
-        using var stream = File.Create(path);
-        encoder.Save(stream);
+        SaveEvidencePng(bitmap, path);
     }
 
     private static void CaptureFrameworkElementPng(FrameworkElement root, string path)
@@ -628,10 +697,17 @@ internal static class Program
         var bitmap = new RenderTargetBitmap(
             width, height, 96, 96, PixelFormats.Pbgra32);
         bitmap.Render(root);
-        var encoder = new PngBitmapEncoder();
-        encoder.Frames.Add(BitmapFrame.Create(bitmap));
-        using var stream = File.Create(path);
-        encoder.Save(stream);
+        SaveEvidencePng(bitmap, path);
+    }
+
+    private static void FlushRender(Window window)
+    {
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Loaded);
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        window.UpdateLayout();
     }
 
     private static void CaptureStatsPng(StatsOverlayWindow window, string path)
@@ -639,13 +715,28 @@ internal static class Program
         var root = (FrameworkElement)window.Content;
         var bitmap = new RenderTargetBitmap(228, 700, 96, 96, PixelFormats.Pbgra32);
         bitmap.Render(root);
+        SaveEvidencePng(bitmap, path);
+    }
+
+    private static void SaveEvidencePng(RenderTargetBitmap bitmap, string path)
+    {
+        var stride = checked(bitmap.PixelWidth * 4);
+        var pixels = new byte[checked(stride * bitmap.PixelHeight)];
+        bitmap.CopyPixels(pixels, stride, 0);
+        CapturePixelContract.FlattenOntoEvidenceBackground(
+            pixels, bitmap.PixelWidth, bitmap.PixelHeight, stride);
+        var opaque = BitmapSource.Create(
+            bitmap.PixelWidth, bitmap.PixelHeight, 96, 96,
+            PixelFormats.Bgra32, null, pixels, stride);
         var encoder = new PngBitmapEncoder();
-        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        encoder.Frames.Add(BitmapFrame.Create(opaque));
         using var stream = File.Create(path);
         encoder.Save(stream);
     }
 
-    private static void ValidateCapture(string path, double expectedWidth, double expectedHeight)
+    private static CapturePixelMetrics? ValidateCapture(
+        string path, double expectedWidth, double expectedHeight,
+        bool validatePixels = false)
     {
         var bytes = File.ReadAllBytes(path);
         ReadOnlySpan<byte> signature = [137, 80, 78, 71, 13, 10, 26, 10];
@@ -655,6 +746,22 @@ internal static class Program
         var height = ReadBigEndian(bytes.AsSpan(20, 4));
         if (width != (int)Math.Round(expectedWidth) || height != (int)Math.Round(expectedHeight))
             throw new InvalidDataException($"Unexpected PNG dimensions: {path} {width}x{height}");
+        using var stream = File.OpenRead(path);
+        var decoded = new PngBitmapDecoder(
+            stream, BitmapCreateOptions.PreservePixelFormat,
+            BitmapCacheOption.OnLoad).Frames[0];
+        var frame = new FormatConvertedBitmap(
+            decoded, PixelFormats.Bgra32, null, 0);
+        var stride = checked(frame.PixelWidth * 4);
+        var pixels = new byte[checked(stride * frame.PixelHeight)];
+        frame.CopyPixels(pixels, stride, 0);
+        if (pixels.Where((_, index) => index % 4 == 3)
+            .Any(alpha => alpha != byte.MaxValue))
+            throw new InvalidDataException($"Capture alpha is not opaque: {path}");
+        return validatePixels
+            ? CapturePixelContract.Validate(
+                pixels, frame.PixelWidth, frame.PixelHeight, stride)
+            : null;
     }
 
     private static int ReadBigEndian(ReadOnlySpan<byte> bytes) =>
@@ -780,14 +887,67 @@ internal static class Program
                 "First-legend surface must render only the target legendary card.");
     }
 
-    private static void ValidateStoryProgressEmptyState(DependencyObject root)
+    private static void ValidatePendingRecommendationState(
+        DependencyObject root, PlannerEvidenceView view)
     {
-        var text = string.Join('\n', Descendants(root).OfType<TextBlock>()
-            .Select(item => item.Text.Replace("\u2060", "", StringComparison.Ordinal)));
-        if (!text.Contains("현재 단계 진행 중", StringComparison.Ordinal) ||
-            text.Contains("패 인식 대기 중", StringComparison.Ordinal))
+        var elements = Descendants(root).OfType<FrameworkElement>().ToArray();
+        var card = elements.Single(element =>
+            AutomationProperties.GetAutomationId(element) ==
+            "pending-recommendation-card");
+        var values = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["pending-recommendation-status"] = "상위 추천 준비 중",
+            ["pending-recommendation-action"] =
+                view[PlannerEvidenceFieldKind.Action].DisplayValue,
+            ["pending-recommendation-reason"] =
+                "희귀 보상 결과가 상위 경로를 바꿀 수 있어 결과를 먼저 반영합니다.",
+            ["pending-recommendation-resume"] =
+                "희귀위습 결과가 반영되면 상위·항법 추천이 자동으로 다시 표시됩니다."
+        };
+        foreach (var (id, expected) in values)
+        {
+            var row = elements.Single(element =>
+                AutomationProperties.GetAutomationId(element) == id);
+            var visible = row is TextBlock text
+                ? text
+                : Descendants(row).OfType<TextBlock>().Last();
+            if (visible.Text.Replace("\u2060", "", StringComparison.Ordinal) != expected ||
+                AutomationProperties.GetItemStatus(row) != expected ||
+                visible.TextWrapping != TextWrapping.Wrap ||
+                visible.TextTrimming != TextTrimming.None ||
+                visible.ActualWidth <= 0 || visible.ActualHeight <= 0)
+                throw new InvalidOperationException(
+                    $"Pending recommendation visible/accessibility mismatch for {id}.");
+        }
+        if (AutomationProperties.GetName(card) != "추천은 계속됩니다" ||
+            AutomationProperties.GetItemStatus(card) != "상위 추천 준비 중")
             throw new InvalidOperationException(
-                "Story progress must not be presented as hand-recognition waiting.");
+                "Pending recommendation card hierarchy mismatch.");
+    }
+
+    private static void ValidateKoreanTextLayout(FrameworkElement root)
+    {
+        foreach (var text in Descendants(root).OfType<TextBlock>()
+                     .Where(item => item.IsVisible &&
+                                    item.Text.Any(character =>
+                                        character is >= '\uAC00' and <= '\uD7A3')))
+        {
+            var bounds = text.TransformToAncestor(root).TransformBounds(
+                new Rect(0, 0, text.ActualWidth, text.ActualHeight));
+            var desiredOverflow = text.TextWrapping == TextWrapping.NoWrap &&
+                                  text.DesiredSize.Width >
+                                  text.ActualWidth + 0.5;
+            if (text.TextTrimming != TextTrimming.None ||
+                text.ActualWidth <= 0 || text.ActualHeight < text.FontSize ||
+                bounds.Left < -0.5 || bounds.Right > root.ActualWidth + 0.5 ||
+                desiredOverflow)
+                throw new InvalidOperationException(
+                    $"Korean text is clipped: {text.Text}; " +
+                    $"actual={text.ActualWidth:0.##}x{text.ActualHeight:0.##}; " +
+                    $"desired={text.DesiredSize.Width:0.##}x{text.DesiredSize.Height:0.##}; " +
+                    $"bounds={bounds}; wrapping={text.TextWrapping}; " +
+                    $"trimming={text.TextTrimming}");
+        }
     }
 
     private static void ValidateDismantleOnly(StatsOverlayWindow window, string? expected)
@@ -928,6 +1088,13 @@ internal static class Program
                 "스토리 7", "골드 6,000 · 목재 4 · 희귀위습 2",
                 "남은 희귀위습은 실제 결과를 본 뒤 상위 가치로 계산합니다.",
                 "스토리를 밀어 희귀위습 보상을 받은 뒤 상위 확정을 진행하세요.")),
+        new(PlannerEvidenceState.SequenceTopNavigation, 19, null, false,
+            "상위·항법 추천 준비",
+            Sequence(RecommendationSequenceStage.TopAndNavigation,
+                StorySequenceAction.WaitForRound20,
+                "어인섬 · 스토리 9", "클리어 보상 반영 완료",
+                "희귀 보상 결과를 반영해 상위·항법 후보를 계산합니다.",
+                "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다.")),
         new(PlannerEvidenceState.Round20Preview, 20,
             Applied(NavigationRecommendationState.Provisional, PlannerPhase.CommitRound20),
             false, "20라운드 상위·항법 갱신",
@@ -956,6 +1123,24 @@ internal static class Program
                 forced: "AlliedForces.DoubleBenefit"), false, "원본 규칙 기대값"),
         new(PlannerEvidenceState.Unknown, 20, null, true, LongUnknownReason)
     ];
+
+    internal static IReadOnlyList<(PlannerEvidenceState State, double Scale)>
+        CaptureVariants()
+    {
+        var baseVariants = Cases().Select(item => (item.State, Scale: 1.0));
+        var pendingStates = new[]
+        {
+            PlannerEvidenceState.SequenceStoryReward,
+            PlannerEvidenceState.SequenceRareReward,
+            PlannerEvidenceState.SequenceTopNavigation
+        };
+        var pendingScaleVariants = pendingStates.SelectMany(state =>
+            new[] { 0.75, 1.25, 1.5 }.Select(scale => (state, scale)));
+        var actionableScaleVariants = new[] { 0.75, 1.25, 1.5 }.Select(scale =>
+            (PlannerEvidenceState.Round21Actionable, scale));
+        return baseVariants.Concat(pendingScaleVariants)
+            .Concat(actionableScaleVariants).ToArray();
+    }
 
     private static IReadOnlyList<BulletFixture> BulletCases()
     {
@@ -1109,6 +1294,15 @@ internal static class Program
     private sealed record TelemetrySettingsEvidence(string State,
         string AccessibilityName, string Disclosure, string Screenshot,
         string BuildSha, string SourceFingerprint, string Verdict);
+
+    private sealed record MainPendingRecommendationEvidence(
+        string Screenshot, string ContextScreenshot, string Scope,
+        string BuildSha, string SourceFingerprint, string Verdict);
+
+    private sealed record CaptureValidationRow(
+        string State, double Scale, string Position, string Screenshot,
+        CapturePixelMetrics PixelMetrics, string KoreanTextLayout,
+        string Verdict);
 
     private sealed record CurrentCraftEvidenceRow(string State, string DisplayedTarget,
         string AccessibilityName, string AccessibilityValue, string FinalGoal,

@@ -69,8 +69,29 @@
 
 ### Candidate board well
 - **Structure**: 부족 재료, 후보 카드, 상세 진행.
-- **States**: 선택, 현재 후보, 부족, 완료.
+- **States**: 선택, 현재 후보, 부족, 완료, 상위 추천 준비.
 - **Layout**: 남은 별표 행을 차지하며 세로 스크롤을 단독 소유한다.
+
+### Pending recommendation card
+- **Purpose**: 첫 전설 이후 스토리 보상, 희귀위습 결과, 상위·항법 계산 사이에
+  추천 카드가 잠시 0개가 되어도 추천 흐름이 끝나지 않았음을 명확히 전달한다.
+- **Structure**: `추천은 계속됩니다` 제목, `상위 추천 준비 중` 상태, 현재
+  `storySequence.ActionSummary` 또는 배너를 쓰는 `다음 행동`, 희귀 보상 결과가 상위
+  경로를 바꿀 수 있다는 짧은 이유, 결과 반영 뒤 자동 재개된다는 안내 순서다.
+- **Scope**: `sequence-story-reward`, `sequence-rare-reward`,
+  `sequence-top-navigation`의 빈 추천 상태에만 표시한다. 일반 인식 대기의
+  `패 인식 대기 중` 의미와 첫 전설 후보가 실제로 있는 상태는 바꾸지 않는다.
+- **Token usage**: 바깥 `Current craft well`의 `Featured`/`Gold`/`Hairline` 표면을
+  공유 `CurrentCraftWell` 스타일로 사용한다. 이 스타일은 `Featured`/`Gold`,
+  `WellBorderThickness`, `WellCornerRadius`, `PlannerBlockPadding` 토큰을 적용하며,
+  내부는 `White`, `Muted`,
+  `PlannerHeaderMargin`, `PlannerRowMargin`,
+  `PlannerTitleTypeSize`, `PlannerStateTypeSize`, `PlannerLabelTypeSize`,
+  `PlannerValueTypeSize`만 사용한다. 새 색상, 고정 폭, 글자 크기, 간격을 만들지 않는다.
+- **Hierarchy and accessibility**: 메인 창과 오버레이 모두
+  `제목 → 상태 → 다음 행동 → 이유 → 자동 재개 조건` 순서를 공유한다. 루트와 각
+  의미 행은 안정적인 Automation ID, 보이는 라벨과 같은 Name, 보이는 값과 같은
+  Value를 제공한다. 모든 값은 줄바꿈하며 후보 보드의 기존 단일 세로 스크롤만 쓴다.
 
 ### Planner evidence strip
 - **Structure**: 후보 보드의 첫 블록에 다섯 단계 추천 순서, 현재 스토리와 클리어
