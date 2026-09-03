@@ -1,0 +1,12 @@
+{
+  "name": "orand-clear-dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "render": "node bin/render-payload.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

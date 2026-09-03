@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "status": "ok",
+  "windows": {
+    "1h": { "clearCount": 3 },
+    "24h": { "clearCount": 18 },
+    "7d": { "clearCount": 72 }
+  },
+  "distributions": {
+    "byDifficulty": [
+      { "key": "nightmare", "clearCount": 40 },
+      { "key": "god", "clearCount": 32 }
+    ],
+    "byGoal": [
+      { "key": "불멸", "clearCount": 44 },
+      { "key": "초월", "clearCount": 28 }
+    ]
+  },
+  "recentClearAt": "2026-09-03T13:58:00.000Z",
+  "dataDelaySeconds": 120,
+  "refreshedAt": "2026-09-03T14:00:00.000Z",
+  "error": null
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 2,
+  "appVersion": "0.6.64",
+  "mapVersion": "2.314",
+  "difficulty": "nightmare",
+  "damageLane": "physical",
+  "goalTierFamily": "불멸",
+  "surface": "top-navigation",
+  "urgency": "boss-survival",
+  "outcome": "clear",
+  "matchCount": 1,
+  "observedObjects": "10-24",
+  "completedTops": "2-4",
+  "readyScans": "25+",
+  "waitingScans": "2-4",
+  "transientScans": "1",
+  "unsupportedScans": "0"
+}

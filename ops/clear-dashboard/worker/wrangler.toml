@@ -1,0 +1,14 @@
+name = "orand-telemetry"
+main = "src/index.mjs"
+compatibility_date = "2026-08-01"
+
+[observability]
+enabled = false
+
+[vars]
+TELEMETRY_ENABLED = "true"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "orand-telemetry"
+database_id = "e1198dfe-e33d-41c9-acc3-2501cca69188"

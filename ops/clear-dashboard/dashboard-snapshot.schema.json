@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orand-overlay.local/contracts/dashboard-snapshot-v1.schema.json",
+  "title": "Orand clear dashboard snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "status",
+    "windows",
+    "distributions",
+    "recentClearAt",
+    "dataDelaySeconds",
+    "refreshedAt",
+    "error"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["ok", "empty", "stale", "error"] },
+    "windows": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1h", "24h", "7d"],
+      "properties": {
+        "1h": { "$ref": "#/$defs/window" },
+        "24h": { "$ref": "#/$defs/window" },
+        "7d": { "$ref": "#/$defs/window" }
+      }
+    },
+    "distributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["byDifficulty", "byGoal"],
+      "properties": {
+        "byDifficulty": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/distributionEntry" }
+        },
+        "byGoal": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/distributionEntry" }
+        }
+      }
+    },
+    "recentClearAt": {
+      "oneOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "dataDelaySeconds": {
+      "oneOf": [
+        { "type": "number", "minimum": 0 },
+        { "type": "null" }
+      ]
+    },
+    "refreshedAt": { "type": "string", "format": "date-time" },
+    "error": {
+      "oneOf": [
+        { "$ref": "#/$defs/error" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clearCount"],
+      "properties": {
+        "clearCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "distributionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "clearCount"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "clearCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "enum": ["connection_error", "configuration_error"] },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}
