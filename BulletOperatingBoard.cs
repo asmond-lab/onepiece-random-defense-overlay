@@ -18,6 +18,9 @@ public sealed record BulletStrategyProfile(
     int FlyingStoryBoundary,
     int FlyingRoundBoundary,
     int BossKillTarget,
+    int BossKillRoundBoundary,
+    int StoryDeadlineStage,
+    int StoryDeadlineRound,
     double ExternalSlowTarget,
     double BulletSlowContribution,
     double AuraArmorReductionTarget,
@@ -88,6 +91,8 @@ public static class BulletStrategyProfileLoader
             throw new InvalidDataException("Bullet profile provenance or identity is invalid.");
         if (profile.FlyingTarget != 2 || profile.BossKillTarget != 2 ||
             profile.FlyingStoryBoundary != 12 || profile.FlyingRoundBoundary != 50 ||
+            profile.BossKillRoundBoundary != 30 ||
+            profile.StoryDeadlineStage != 13 || profile.StoryDeadlineRound != 35 ||
             profile.ExternalSlowTarget != 82 || profile.BulletSlowContribution != 20 ||
             profile.AuraArmorReductionTarget != 100 ||
             profile.BulletArmorReductionContribution <= 0 ||
@@ -123,6 +128,7 @@ public enum BulletOperatingBoardState
     EarlyFoundation,
     AirMobility,
     BossKill,
+    StoryDeadline,
     ControlArmor,
     Ready,
     Round50
@@ -175,6 +181,7 @@ public sealed record BulletOperatingBoardInput(
     string? SelectedGoalId,
     string? CommittedGoalId,
     bool? FirstLegendFoundationKnown,
+    int? CompletedStoryStage,
     int? FlyingCapableLegendCount,
     int? BossKillUnitCount,
     double? ExternalSlow,
@@ -188,7 +195,7 @@ public sealed record BulletOperatingBoardInput(
 {
     public static BulletOperatingBoardInput Unknown(int round, string? selectedGoalId,
         string? committedGoalId, string reason) => new(round, selectedGoalId, committedGoalId,
-        null, null, null, null, null, null, 1.4, null, null, null, reason);
+        null, null, null, null, null, null, null, 1.4, null, null, null, reason);
 }
 
 public static class BulletOperatingBoardPolicy
@@ -226,9 +233,18 @@ public static class BulletOperatingBoardPolicy
     {
         if (input.FirstLegendFoundationKnown != true)
             return BulletOperatingBoardState.EarlyFoundation;
-        if (input.FlyingCapableLegendCount is null or < 2)
+        var bossKillIncomplete = input.BossKillUnitCount is null
+                                 || input.BossKillUnitCount < profile.BossKillTarget;
+        if (input.Round >= profile.BossKillRoundBoundary && bossKillIncomplete)
+            return BulletOperatingBoardState.BossKill;
+        if (input.Round >= profile.BossKillRoundBoundary &&
+            (input.CompletedStoryStage is null ||
+             input.CompletedStoryStage < profile.StoryDeadlineStage))
+            return BulletOperatingBoardState.StoryDeadline;
+        if (input.FlyingCapableLegendCount is null ||
+            input.FlyingCapableLegendCount < profile.FlyingTarget)
             return BulletOperatingBoardState.AirMobility;
-        if (input.BossKillUnitCount is null or < 2)
+        if (bossKillIncomplete)
             return BulletOperatingBoardState.BossKill;
         if (input.ExternalSlow is null || input.AuraArmorReduction is null || input.Stun is null ||
             input.ExternalSlow < profile.ExternalSlowTarget ||
@@ -245,6 +261,7 @@ public static class BulletOperatingBoardPolicy
         BulletOperatingBoardState.EarlyFoundation => "첫 전설 기반",
         BulletOperatingBoardState.AirMobility => "공중 전설",
         BulletOperatingBoardState.BossKill => "보스 처치",
+        BulletOperatingBoardState.StoryDeadline => "스토리 마감",
         BulletOperatingBoardState.ControlArmor => "제어·방어",
         BulletOperatingBoardState.Ready => "준비 완료",
         _ => "라운드 50"
@@ -255,6 +272,8 @@ public static class BulletOperatingBoardPolicy
         BulletOperatingBoardState.EarlyFoundation => "초반 첫 전설 기반을 확정하세요.",
         BulletOperatingBoardState.AirMobility => "공중 가능 전설 2/2를 먼저 만드세요.",
         BulletOperatingBoardState.BossKill => "보스 처치 전설을 2/2로 맞추세요.",
+        BulletOperatingBoardState.StoryDeadline =>
+            "35라운드까지 와노쿠니를 파괴할 스토리 화력을 먼저 보강하세요.",
         BulletOperatingBoardState.ControlArmor => "감속·방어력 감소·기절 수치를 충족하세요.",
         BulletOperatingBoardState.Ready => "방어력 감소부터 강화하고 라운드 50 조합을 준비하세요.",
         _ => "라운드 50 Bullet 조합을 즉시 목표로 두세요."
@@ -267,6 +286,8 @@ public static class BulletOperatingBoardPolicy
             BulletOperatingBoardState.AirMobility =>
                 $"스토리 {profile.FlyingStoryBoundary} 또는 라운드 {profile.FlyingRoundBoundary} 전 공중 가능 전설 2/2",
             BulletOperatingBoardState.BossKill => "보스 처치 전설 2/2",
+            BulletOperatingBoardState.StoryDeadline =>
+                $"라운드 {profile.StoryDeadlineRound}까지 스토리 {profile.StoryDeadlineStage}단계 파괴",
             BulletOperatingBoardState.ControlArmor => "외부 감속 82, 오라 방어력 감소 100, 기절 충족",
             BulletOperatingBoardState.Ready => "라운드 50 Bullet 조합 준비",
             _ => "라운드 50 Bullet 조합"
@@ -280,6 +301,9 @@ public static class BulletOperatingBoardPolicy
         BulletOperatingBoardState.AirMobility =>
             ["두 번째 전설까지 공중 가능 여부를 우선합니다.", "부족하면 세 번째 전설이 공중 자리를 채웁니다."],
         BulletOperatingBoardState.BossKill => ["보스 처치 전설만 2/2까지 보강합니다."],
+        BulletOperatingBoardState.StoryDeadline =>
+            ["스토리 예상 피해를 높이는 완성 가능한 조합을 우선합니다.",
+                "보스 처치 2/2를 소비하지 않는 경로를 유지합니다."],
         BulletOperatingBoardState.ControlArmor =>
             ["외부 감속 82를 확보합니다.", "오라 방어력 감소 100을 확보합니다.", "기절 목표를 Green Blood +0.3과 함께 확인합니다."],
         _ => ["방어력 감소 → 공격 속도 → 공격력 순서로 강화합니다.",
@@ -289,6 +313,7 @@ public static class BulletOperatingBoardPolicy
     private static string Focus(BulletOperatingBoardState state) => state switch
     {
         BulletOperatingBoardState.ControlArmor => "Bullet 기여와 Green Blood 기절을 수치로 함께 확인",
+        BulletOperatingBoardState.StoryDeadline => "스토리 진행 단계와 마감 화력",
         BulletOperatingBoardState.Ready or BulletOperatingBoardState.Round50 =>
             "방어력 감소 → 공격 속도 → 공격력",
         _ => "현재 단계의 필수 전설만 우선"
@@ -299,6 +324,7 @@ public static class BulletOperatingBoardPolicy
         BulletOperatingBoardState.EarlyFoundation => "공중 가능 전설 2/2 준비",
         BulletOperatingBoardState.AirMobility => "보스 처치 전설 2/2",
         BulletOperatingBoardState.BossKill => "감속·방어력 감소·기절 제어 수치 확인",
+        BulletOperatingBoardState.StoryDeadline => "와노쿠니 파괴 후 공중·제어 준비 복귀",
         BulletOperatingBoardState.ControlArmor => "라운드 50 Bullet 조합 또는 명시적 차단 사유",
         BulletOperatingBoardState.Ready => "라운드 50 Bullet 조합",
         _ => "조합 결과 확인 또는 명시적 차단 사유"
@@ -310,6 +336,10 @@ public static class BulletOperatingBoardPolicy
         if (input.FirstLegendFoundationKnown is null ||
             state == BulletOperatingBoardState.EarlyFoundation && input.FirstLegendFoundationKnown == false)
             return "첫 전설 기반 확인 불가 — " + unknownReason;
+        if (state == BulletOperatingBoardState.BossKill && input.BossKillUnitCount is null)
+            return "보스 처치 전설 수량 확인 불가 — " + unknownReason;
+        if (state == BulletOperatingBoardState.StoryDeadline && input.CompletedStoryStage is null)
+            return "스토리 진행 단계 확인 불가 — " + unknownReason;
         if (input.FlyingCapableLegendCount is null)
             return "공중 가능 전설 수량 확인 불가 — " + unknownReason;
         if (input.BossKillUnitCount is null)

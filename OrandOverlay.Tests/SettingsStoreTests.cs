@@ -21,7 +21,8 @@ public sealed class SettingsStoreTests : IDisposable
         var settings = new AppSettings
         {
             GoalUnitId = "yamato_transcendent",
-            TelemetryAnonId = "anon-123",
+            TelemetryEnabled = false,
+            TelemetryDisclosureVersion = 2,
             AutoRecommendNavigation = false
         };
 
@@ -29,7 +30,8 @@ public sealed class SettingsStoreTests : IDisposable
         var loaded = SettingsStore.Load(path);
 
         Assert.Equal("yamato_transcendent", loaded.GoalUnitId);
-        Assert.Equal("anon-123", loaded.TelemetryAnonId);
+        Assert.False(loaded.TelemetryEnabled);
+        Assert.Equal(2, loaded.TelemetryDisclosureVersion);
         Assert.False(loaded.AutoRecommendNavigation);
     }
 

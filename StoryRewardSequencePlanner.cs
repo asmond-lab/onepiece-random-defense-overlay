@@ -285,7 +285,8 @@ public static class StoryRewardSequencePlanner
             "스토리 희귀 보상 사용 결과가 현재 패에 반영됐습니다.",
             input.Round < 20
                 ? "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다."
-                : "상위 경로와 항법의 안전한 승자를 계산하는 중입니다.");
+                : "상위 경로와 항법의 안전한 승자를 계산하는 중입니다.",
+            topNavigationUnlocked: true);
     }
 
     private static ImmutableArray<LegendProjection> LegendCandidates(

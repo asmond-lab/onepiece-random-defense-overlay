@@ -10,7 +10,7 @@ namespace OrandOverlay.Tests;
 
 public sealed class AdaptiveDecisionTraceBufferTests
 {
-    private const string GoldenTelemetryJson = "{\"schemaVersion\":1,\"recordId\":\"record-1\",\"anonId\":\"anon-1\",\"capturedAt\":\"2026-01-02T03:04:05.0000000Z\",\"appVersion\":\"0.6.52\",\"mapVersion\":\"2.314\",\"warcraftVersion\":\"2.0.4.23745\",\"goalUnitId\":\"H000\",\"navigationMode\":\"allied\",\"goroseiMode\":\"none\",\"buildVariant\":\"standard\",\"difficulty\":\"normal\",\"finalHand\":[],\"completedTops\":[],\"topRecommendations\":[],\"sessionStartedAt\":\"2026-01-02T03:00:00.0000000Z\",\"sessionEndedAt\":\"2026-01-02T03:04:05.0000000Z\",\"lastObservedUnitCount\":0,\"outcome\":\"unknown\",\"outcomeSource\":\"none\"}";
+    private const string GoldenTelemetryJson = "{\"schemaVersion\":2,\"appVersion\":\"0.6.52\",\"mapVersion\":\"2.314\",\"difficulty\":\"normal\",\"damageLane\":\"physical\",\"goalTierFamily\":\"unknown\",\"surface\":\"top-navigation\",\"urgency\":\"none\",\"outcome\":\"unknown\",\"matchCount\":1,\"observedObjects\":\"0\",\"completedTops\":\"0\",\"readyScans\":\"0\",\"waitingScans\":\"0\",\"transientScans\":\"0\",\"unsupportedScans\":\"0\"}";
 
     [Fact]
     public void EventCanonicalizationIsCultureIndependentAndOrdinallyOrdered()
@@ -128,16 +128,16 @@ public sealed class AdaptiveDecisionTraceBufferTests
     }
 
     [Fact]
-    public void LocalPayloadHasOnlyMachineDecisionFieldsAndTelemetryV1WirePayloadIsUnchanged()
+    public void LocalDecisionTraceAndIdentifierFreeTelemetryRemainSeparate()
     {
-        // Given: a local adaptive event and a fixed v1 telemetry record.
+        // Given: a local adaptive event and a fixed v2 aggregate.
         var localJson = Encoding.UTF8.GetString(Event().SerializedBytes.AsSpan());
         var telemetry = TelemetryFixture();
 
-        // When: the existing recorder payload is serialized.
+        // When: the aggregate is serialized.
         var wireBytes = JsonSerializer.SerializeToUtf8Bytes(telemetry);
 
-        // Then: local trace fields contain no transport/sensitive/in-map selection field and v1 bytes match.
+        // Then: local trace fields stay local and the v2 wire bytes contain no identifiers.
         Assert.DoesNotContain("endpoint", localJson, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("address", localJson, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("secret", localJson, StringComparison.OrdinalIgnoreCase);
@@ -145,36 +145,15 @@ public sealed class AdaptiveDecisionTraceBufferTests
         Assert.Equal(Encoding.UTF8.GetBytes(GoldenTelemetryJson), wireBytes);
         using var document = JsonDocument.Parse(wireBytes);
         Assert.False(document.RootElement.TryGetProperty("adaptiveDecision", out _));
+        Assert.True(TelemetryPrivacyContract.IsSafe(telemetry));
     }
 
     [Fact]
-    public async Task UploaderRequestBytesRemainTelemetryV1Only()
+    public void UploaderContractTargetsOnlyV2Aggregates()
     {
-        var port = ReserveLoopbackPort();
-        using var listener = new HttpListener();
-        listener.Prefixes.Add($"http://127.0.0.1:{port}/");
-        listener.Start();
-        var queueDirectory = Path.Combine(Path.GetTempPath(), $"orand-telemetry-wire-{Guid.NewGuid():N}");
-        try
-        {
-            var uploader = new TelemetryUploader($"http://127.0.0.1:{port}/v1/records", queueDirectory);
-            uploader.Enqueue(TelemetryFixture());
-            var capture = listener.GetContextAsync();
-            var flush = uploader.FlushPendingAsync();
-            var context = await capture.WaitAsync(TimeSpan.FromSeconds(5));
-            using var body = new MemoryStream();
-            await context.Request.InputStream.CopyToAsync(body);
-            context.Response.StatusCode = (int)HttpStatusCode.OK;
-            context.Response.Close();
-            await flush;
-
-            Assert.Equal("/v1/records", context.Request.Url!.AbsolutePath);
-            Assert.Equal(Encoding.UTF8.GetBytes(GoldenTelemetryJson), body.ToArray());
-        }
-        finally
-        {
-            if (Directory.Exists(queueDirectory)) Directory.Delete(queueDirectory, recursive: true);
-        }
+        Assert.EndsWith("/v2/aggregates", TelemetryUploader.DefaultEndpoint,
+            StringComparison.Ordinal);
+        Assert.True(TelemetryPrivacyContract.IsSafe(TelemetryFixture()));
     }
 
     private static AdaptiveDecisionEvent Event(long generation = 0,
@@ -200,19 +179,11 @@ public sealed class AdaptiveDecisionTraceBufferTests
 
     private static TelemetryRecord TelemetryFixture() => new()
     {
-        RecordId = "record-1", AnonId = "anon-1", CapturedAt = "2026-01-02T03:04:05.0000000Z",
-        AppVersion = "0.6.52", MapVersion = "2.314", WarcraftVersion = "2.0.4.23745",
-        GoalUnitId = "H000", NavigationMode = "allied", GoroseiMode = "none",
-        BuildVariant = "standard", Difficulty = "normal", FinalHand = [], CompletedTops = [],
-        TopRecommendations = [], SessionStartedAt = "2026-01-02T03:00:00.0000000Z",
-        SessionEndedAt = "2026-01-02T03:04:05.0000000Z", LastObservedUnitCount = 0,
-        Outcome = "unknown", OutcomeSource = "none"
+        AppVersion = "0.6.52",
+        MapVersion = "2.314",
+        Difficulty = "normal",
+        DamageLane = "physical",
+        GoalTierFamily = "unknown",
+        Surface = "top-navigation"
     };
-
-    private static int ReserveLoopbackPort()
-    {
-        using var listener = new System.Net.Sockets.TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        return ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
-    }
 }

@@ -57,11 +57,50 @@ internal static class Program
                 redForce: false, firstRare: true);
         }
         var statsAdvice = CaptureSpecialAdvice(output, buildSha, sourceFingerprint);
+        var telemetrySettings = CaptureTelemetrySettings(
+            output, buildSha, sourceFingerprint);
 
         var matrixPath = Path.Combine(output, "planner-ui-evidence-matrix.json");
+        var generatedAtUtc = DateTimeOffset.UtcNow;
         File.WriteAllText(matrixPath, JsonSerializer.Serialize(new
         {
-            generatedAtUtc = DateTimeOffset.UtcNow,
+            schemaVersion = 1,
+            kind = "desktop-automation-transcript",
+            surface = "desktop",
+            tool = "PlannerEvidenceCapture",
+            actions = new[]
+            {
+                new
+                {
+                    type = "custom",
+                    timestamp = generatedAtUtc,
+                    selector = "automation-id=candidate-board-scroll",
+                    target = "WPF recommendation fixtures"
+                },
+                new
+                {
+                    type = "custom",
+                    timestamp = generatedAtUtc,
+                    selector = "automation-name=식별자 없는 플레이 집계 전송",
+                    target = "WPF telemetry disclosure settings"
+                }
+            },
+            assertions = new[]
+            {
+                new
+                {
+                    timestamp = generatedAtUtc,
+                    selector = "automation-id=candidate-board-scroll",
+                    status = "passed"
+                },
+                new
+                {
+                    timestamp = generatedAtUtc,
+                    selector = "automation-name=식별자 없는 플레이 집계 전송",
+                    status = "passed"
+                }
+            },
+            generatedAtUtc,
             buildSha,
             sourceFingerprint,
             shell = new { designWidth = 540, designHeight = 740, soleVerticalScrollOwner = "candidate-board-scroll" },
@@ -69,6 +108,7 @@ internal static class Program
             bulletFixtures = bulletCaptures.Count,
             currentCraftFixtures = currentCraftCaptures.Length * 3,
             statsAdvice,
+            telemetrySettings,
             rows,
             bulletRows,
             currentCraftRows
@@ -344,7 +384,8 @@ internal static class Program
             greenBloodUsed: fixture.Input.GreenBloodKnown == true,
             stunTarget: fixture.Input.StunTarget,
             inventory: BulletInventory(fixture));
-        window.RenderPlannerEvidence(fixture.Input.Round, null);
+        window.RenderPlannerEvidence(fixture.Input.Round, null, false, null, null,
+            fixture.Input.CompletedStoryStage);
         window.UpdateStatus("인식 정상 · Bullet 운영 보드 표시 중");
         window.Show();
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
@@ -364,7 +405,11 @@ internal static class Program
         ValidateCapture(topPath, 540 * scale, 740 * scale);
         ValidateCapture(bottomPath, 540 * scale, 740 * scale);
         ValidateFooter(window);
-        ValidateBulletAutomationTree(window, expected);
+        var coreRows = ValidateBulletAutomationTree(window, expected);
+        foreach (var row in coreRows)
+            rows.Add(new BulletEvidenceRow(stateName, row.ControlId, "Core",
+                row.DisplayValue, row.AccessibilityName, row.AccessibilityValue,
+                96 * scale, scale, topPath, bottomPath, buildSha, sourceFingerprint, "PASS"));
         foreach (var field in expected.Fields)
             rows.Add(new BulletEvidenceRow(stateName, field.AutomationId, field.Kind.ToString(),
                 field.DisplayValue, field.AccessibilityName, field.AccessibilityValue,
@@ -418,6 +463,67 @@ internal static class Program
             owner.CloseForApplication();
         }
         return evidence;
+    }
+
+    private static TelemetrySettingsEvidence CaptureTelemetrySettings(
+        string output, string buildSha, string sourceFingerprint)
+    {
+        var path = Path.Combine(output, "telemetry-privacy-settings.png");
+        var queueDirectory = Path.Combine(output, "telemetry-fixture-queue");
+        var window = new MainWindow(new AppSettings
+        {
+            AutoScanEnabled = false,
+            ClearDataAutoRefresh = false,
+            TelemetryEnabled = true,
+            TelemetryDisclosureVersion = 0
+        }, startRuntime: false, telemetryQueueDirectory: queueDirectory)
+        {
+            ShowActivated = false,
+            Topmost = false,
+            Opacity = 0,
+            Left = SystemParameters.VirtualScreenLeft,
+            Top = SystemParameters.VirtualScreenTop
+        };
+        window.Show();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+        var scroll = (ScrollViewer?)window.FindName("SettingsScrollViewer")
+                     ?? throw new InvalidOperationException(
+                         "Settings scroll owner missing.");
+        scroll.ScrollToEnd();
+        window.UpdateLayout();
+        window.Dispatcher.Invoke(() => { },
+            System.Windows.Threading.DispatcherPriority.Render);
+
+        var telemetry = (CheckBox?)window.FindName("TelemetryCheck")
+                        ?? throw new InvalidOperationException(
+                            "Telemetry opt-out control missing.");
+        var disclosure = (Border?)window.FindName("TelemetryDisclosurePanel")
+                         ?? throw new InvalidOperationException(
+                             "Telemetry disclosure panel missing.");
+        var disclosureText = string.Join(' ', Descendants(disclosure)
+            .OfType<TextBlock>().Select(item => item.Text));
+        if (telemetry.IsChecked != true ||
+            disclosure.Visibility != Visibility.Visible ||
+            !disclosureText.Contains("유닛·rawcode·설치/세션 ID", StringComparison.Ordinal) ||
+            !disclosureText.Contains("화면·OCR 원문", StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "Telemetry disclosure or identifier exclusions are not visible.");
+
+        window.Opacity = 1;
+        CaptureFrameworkElementPng(scroll, path);
+        ValidateCapture(path, scroll.ActualWidth, scroll.ActualHeight);
+        window.Close();
+        if (Directory.Exists(queueDirectory))
+            Directory.Delete(queueDirectory, recursive: true);
+        return new TelemetrySettingsEvidence(
+            "automatic-default-disclosure-opt-out",
+            AutomationProperties.GetName(telemetry),
+            disclosureText,
+            path,
+            buildSha,
+            sourceFingerprint,
+            "PASS");
     }
 
     private static void Capture(string output, string buildSha, string sourceFingerprint,
@@ -515,6 +621,19 @@ internal static class Program
         encoder.Save(stream);
     }
 
+    private static void CaptureFrameworkElementPng(FrameworkElement root, string path)
+    {
+        var width = Math.Max(1, checked((int)Math.Round(root.ActualWidth)));
+        var height = Math.Max(1, checked((int)Math.Round(root.ActualHeight)));
+        var bitmap = new RenderTargetBitmap(
+            width, height, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(root);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = File.Create(path);
+        encoder.Save(stream);
+    }
+
     private static void CaptureStatsPng(StatsOverlayWindow window, string path)
     {
         var root = (FrameworkElement)window.Content;
@@ -570,7 +689,8 @@ internal static class Program
             throw new InvalidOperationException("Candidate board must own one vertical scroll surface.");
     }
 
-    private static void ValidateBulletAutomationTree(DependencyObject root,
+    private static IReadOnlyList<BulletCoreEvidence> ValidateBulletAutomationTree(
+        DependencyObject root,
         BulletOperatingBoard board)
     {
         var elements = Descendants(root).OfType<FrameworkElement>().ToArray();
@@ -589,6 +709,33 @@ internal static class Program
         foreach (var id in required)
             if (!ids.Contains(id, StringComparer.Ordinal))
                 throw new InvalidOperationException($"Missing Bullet AutomationId {id}");
+        var coreExpected = new[]
+        {
+            ("bullet-board-phase", board.Phase),
+            ("bullet-board-round", board.Round.ToString(CultureInfo.InvariantCulture)),
+            ("bullet-board-confidence", board.Confidence),
+            ("bullet-board-action", board.Action),
+            ("bullet-board-objective", board.Objective),
+            ("bullet-board-focus", board.Focus),
+            ("bullet-board-gate", board.Gate)
+        }.Concat(board.Routes.Select((route, index) =>
+            ($"bullet-board-route-{index + 1}", route)));
+        var coreEvidence = new List<BulletCoreEvidence>();
+        foreach (var (id, expected) in coreExpected)
+        {
+            var row = elements.Single(element =>
+                AutomationProperties.GetAutomationId(element) == id);
+            var visible = row is TextBlock text
+                ? text
+                : Descendants(row).OfType<TextBlock>().Last();
+            var visibleValue = visible.Text.Replace("\u2060", "", StringComparison.Ordinal);
+            var accessibilityValue = AutomationProperties.GetItemStatus(row);
+            if (visibleValue != expected || accessibilityValue != expected)
+                throw new InvalidOperationException(
+                    $"Bullet core visible/accessibility value mismatch for {id}");
+            coreEvidence.Add(new BulletCoreEvidence(
+                id, visibleValue, AutomationProperties.GetName(row), accessibilityValue));
+        }
         foreach (var field in board.Fields)
         {
             var row = elements.Single(element =>
@@ -603,6 +750,7 @@ internal static class Program
                 throw new InvalidOperationException(
                     $"Bullet visible/accessibility value mismatch for {field.AutomationId}");
         }
+        return coreEvidence;
     }
 
     private static void ValidateKoreanWrap(DependencyObject root)
@@ -780,21 +928,20 @@ internal static class Program
                 "스토리 7", "골드 6,000 · 목재 4 · 희귀위습 2",
                 "남은 희귀위습은 실제 결과를 본 뒤 상위 가치로 계산합니다.",
                 "스토리를 밀어 희귀위습 보상을 받은 뒤 상위 확정을 진행하세요.")),
-        new(PlannerEvidenceState.SequenceTopNavigation, 19, null, false,
-            "20라운드 최종 추천 대기",
+        new(PlannerEvidenceState.Round20Preview, 20,
+            Applied(NavigationRecommendationState.Provisional, PlannerPhase.CommitRound20),
+            false, "20라운드 상위·항법 갱신",
             Sequence(RecommendationSequenceStage.TopAndNavigation,
                 StorySequenceAction.WaitForRound20,
                 "어인섬 · 스토리 9", "클리어 보상 확인 중",
                 "스토리 희귀 보상 사용 결과가 현재 패에 반영됐습니다.",
-                "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다.")),
+                "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다.")
+            with { TopNavigationUnlocked = true }),
         new(PlannerEvidenceState.Waiting, 10, null, false, "입력 대기 중"),
         new(PlannerEvidenceState.Blocked, 10,
             Applied(NavigationRecommendationState.NoSafeRecommendation,
                 PlannerPhase.AwaitMarineford, [AdaptiveBuildBlocker.AwaitingMarineford]),
             false, "마린포드 진행을 기다립니다"),
-        new(PlannerEvidenceState.Round20Preview, 20,
-            Applied(NavigationRecommendationState.Provisional, PlannerPhase.CommitRound20),
-            false, "20라운드 경로 미리보기"),
         new(PlannerEvidenceState.Round21Actionable, 21,
             Applied(NavigationRecommendationState.Actionable, PlannerPhase.Committed),
             false, "직접 항법을 선택하세요"),
@@ -814,10 +961,12 @@ internal static class Program
     {
         const string unknownReason = "현재 인식 입력에 강화 단계 신호가 없습니다.";
         BulletFixture Case(BulletOperatingBoardState state, int round, bool foundation,
-            int flying, int boss, double slow, double armor, double stun, bool crafted = false)
+            int flying, int boss, double slow, double armor, double stun,
+            bool crafted = false, int completedStoryStage = 13)
         {
             var input = new BulletOperatingBoardInput(round, "rawcode:180h", null,
-                foundation, flying, boss, slow, armor, stun, 1.4, true, crafted, null,
+                foundation, completedStoryStage, flying, boss, slow, armor, stun,
+                1.4, true, crafted, null,
                 unknownReason);
             var stats = EmptyStats() with
             {
@@ -835,6 +984,8 @@ internal static class Program
             Case(BulletOperatingBoardState.EarlyFoundation, 8, false, 0, 0, 0, 0, 0),
             Case(BulletOperatingBoardState.AirMobility, 20, true, 1, 0, 20, 30, 0.3),
             Case(BulletOperatingBoardState.BossKill, 30, true, 2, 1, 40, 60, 0.6),
+            Case(BulletOperatingBoardState.StoryDeadline, 30, true, 1, 2, 40, 60,
+                0.6, completedStoryStage: 12),
             Case(BulletOperatingBoardState.ControlArmor, 40, true, 2, 2, 40, 60, 0.6),
             Case(BulletOperatingBoardState.Ready, 49, true, 2, 2, 82, 100, 1.4),
             Case(BulletOperatingBoardState.Round50, 50, true, 2, 2, 82, 100, 1.4, true)
@@ -950,6 +1101,13 @@ internal static class Program
     private sealed record BulletEvidenceRow(string State, string ControlId, string Field,
         string DisplayedValue, string AccessibilityName, string AccessibilityValue,
         double Dpi, double Scale, string ScreenshotTop, string ScreenshotBottom,
+        string BuildSha, string SourceFingerprint, string Verdict);
+
+    private sealed record BulletCoreEvidence(string ControlId, string DisplayValue,
+        string AccessibilityName, string AccessibilityValue);
+
+    private sealed record TelemetrySettingsEvidence(string State,
+        string AccessibilityName, string Disclosure, string Screenshot,
         string BuildSha, string SourceFingerprint, string Verdict);
 
     private sealed record CurrentCraftEvidenceRow(string State, string DisplayedTarget,

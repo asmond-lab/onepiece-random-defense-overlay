@@ -106,6 +106,7 @@ public sealed class BulletOperatingBoardTests
     [Theory]
     [InlineData(8, 0, 0, false, BulletOperatingBoardState.EarlyFoundation)]
     [InlineData(20, 1, 0, false, BulletOperatingBoardState.AirMobility)]
+    [InlineData(30, 1, 1, false, BulletOperatingBoardState.BossKill)]
     [InlineData(30, 2, 1, false, BulletOperatingBoardState.BossKill)]
     [InlineData(40, 2, 2, false, BulletOperatingBoardState.ControlArmor)]
     [InlineData(49, 2, 2, true, BulletOperatingBoardState.Ready)]
@@ -125,6 +126,38 @@ public sealed class BulletOperatingBoardTests
             board.Fields.Select(field => field.Kind));
         Assert.True(board.IsRecommendationOnly);
         Assert.False(board.ClaimsRuntimeNavigationSelection);
+    }
+
+    [Fact]
+    public void Story_deadline_precedes_air_and_control_after_boss_readiness()
+    {
+        var board = Assert.IsType<BulletOperatingBoard>(
+            BulletOperatingBoardPolicy.Evaluate(
+                TestProfile(),
+                KnownInput(30, flying: 1, boss: 2, controlsReady: false,
+                    completedStoryStage: 12)));
+
+        Assert.Equal(BulletOperatingBoardState.StoryDeadline, board.State);
+        Assert.Contains("35라운드", board.Action, StringComparison.Ordinal);
+        Assert.Contains("13단계", board.Objective, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Story_deadline_keeps_unknown_progress_explicit_after_boss_readiness()
+    {
+        var input = KnownInput(30, flying: 1, boss: 2, controlsReady: false) with
+        {
+            CompletedStoryStage = null,
+            UnknownReason = "스토리 단계 인식 신호가 없습니다."
+        };
+
+        var board = Assert.IsType<BulletOperatingBoard>(
+            BulletOperatingBoardPolicy.Evaluate(TestProfile(), input));
+
+        Assert.Equal(BulletOperatingBoardState.StoryDeadline, board.State);
+        Assert.Contains("스토리 진행 단계 확인 불가", board.Blocker, StringComparison.Ordinal);
+        Assert.Contains("스토리 단계 인식 신호가 없습니다.", board.Blocker,
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -232,11 +265,12 @@ public sealed class BulletOperatingBoardTests
         BulletStrategyProfileLoader.LoadFromDirectory(Path.Combine(AppContext.BaseDirectory, "Data"));
 
     private static BulletOperatingBoardInput KnownInput(int round, int flying, int boss,
-        bool controlsReady) => new(
+        bool controlsReady, int completedStoryStage = 13) => new(
             round,
             BulletGoalId,
             null,
             round > 8,
+            completedStoryStage,
             flying,
             boss,
             controlsReady ? 82 : 40,

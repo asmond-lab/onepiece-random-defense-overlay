@@ -29,7 +29,7 @@ public sealed class MapSignalRecognitionTests
     }
 
     [Fact]
-    public void Tracker_RequiresTwoConsistentSnapshotsAndAdvancesMonotonically()
+    public void Tracker_RequiresTwoConsistentSnapshotsAndConfirmsARepeatedLowerNewMatch()
     {
         var tracker = new MapSignalSnapshotTracker(Profile);
 
@@ -49,8 +49,12 @@ public sealed class MapSignalRecognitionTests
         Assert.Equal(8, marineford.CompletedStoryStageOrdinal);
         Assert.True(marineford.MarinefordReady);
 
-        tracker.Observe(Snapshot("n006"));
-        Assert.Equal(8, tracker.Observe(Snapshot("n006")).CompletedStoryStageOrdinal);
+        Assert.Equal(8, tracker.Observe(Snapshot("n000")).CompletedStoryStageOrdinal);
+        Assert.False(tracker.LastObservationConfirmedReset);
+        var nextMatch = tracker.Observe(Snapshot("n000"));
+        Assert.True(tracker.LastObservationConfirmedReset);
+        Assert.Equal(1, nextMatch.ActiveObjectiveOrdinal);
+        Assert.Equal(0, nextMatch.CompletedStoryStageOrdinal);
     }
 
     [Fact]

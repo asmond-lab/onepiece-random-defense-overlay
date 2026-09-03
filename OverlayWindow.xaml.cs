@@ -20,6 +20,7 @@ public partial class OverlayWindow : OverlayWindowBase
     private PlannerEvidenceView? _plannerEvidence;
     private readonly BulletStrategyProfile? _bulletProfile;
     private int _plannerRound;
+    private int? _completedStoryStage;
     private AdaptivePlanningApplied? _plannerApplied;
     private InventoryStatSummary? _inventoryStats;
     private bool _greenBloodKnown;
@@ -89,7 +90,16 @@ public partial class OverlayWindow : OverlayWindowBase
         bool signalsUnknown = false, string? unknownReason = null,
         StoryRewardSequenceDecision? storySequence = null)
     {
+        RenderPlannerEvidence(round, applied, signalsUnknown, unknownReason, storySequence,
+            _completedStoryStage);
+    }
+
+    public void RenderPlannerEvidence(int round, AdaptivePlanningApplied? applied,
+        bool signalsUnknown, string? unknownReason,
+        StoryRewardSequenceDecision? storySequence, int? completedStoryStage)
+    {
         _plannerRound = round;
+        _completedStoryStage = completedStoryStage;
         _plannerApplied = applied;
         _plannerEvidence = RecommendationPresentation.PlannerEvidence(
             round, applied, signalsUnknown, unknownReason, storySequence);
@@ -210,7 +220,7 @@ public partial class OverlayWindow : OverlayWindowBase
         var bulletCrafted = _recognizedInventory.GetValueOrDefault(_bulletProfile.GoalUnitId) > 0;
         return BulletOperatingBoardPolicy.Evaluate(_bulletProfile,
             new BulletOperatingBoardInput(_plannerRound, selectedGoalId, committedGoalId,
-                firstLegendKnown, flying, bossKill, _inventoryStats.TotalSlow,
+                firstLegendKnown, _completedStoryStage, flying, bossKill, _inventoryStats.TotalSlow,
                 _inventoryStats.TotalArmorReduction, _inventoryStats.Stun, _stunTarget,
                 _greenBloodKnown, bulletCrafted, null,
                 "현재 인식 입력에 강화 단계 신호가 없습니다."));

@@ -2114,84 +2114,61 @@ Assert(screenSourceMigration.Changed &&
        screenSourceMigration.Json.Contains("AutoScanEnabled"),
     "RecognitionSource=Screen 레거시 설정이 마이그레이션으로 제거되고 AutoScanEnabled는 보존");
 
-// 텔레메트리 레코드: 판 종료 시 서버로 보내는 익명 플레이 기록.
+// 텔레메트리 v2: 식별자·시각·패 구성 없이 coarse 집계만 만든다.
 {
     var record = MatchTelemetryRecorder.Build(
-        anonId: "11111111-1111-1111-1111-111111111111",
-        appVersion: "0.6.0", mapVersion: "2.314", warcraftVersion: "2.0.4.23745",
-        goalUnitId: "yamato_transcendent", navigationMode: "PathOfKings.BountyHunter",
-        goroseiMode: "Nasjuro", buildVariant: "auto", difficulty: "신",
-        finalHand: new List<InventoryEntry>
-        {
-            new() { UnitId = "luffy_common", Count = 2 },
-            new() { UnitId = "rawcode:200h", Count = 1 },
-        },
-        completedTops: new List<string> { "yamato_transcendent" },
-        topRecommendations: new List<string> { "yamato_transcendent", "rawcode:E90H" },
-        sessionStartedAt: new DateTimeOffset(2026, 8, 19, 10, 0, 0, TimeSpan.Zero),
-        sessionEndedAt: new DateTimeOffset(2026, 8, 19, 10, 40, 0, TimeSpan.Zero),
-        lastObservedUnitCount: 3);
-    Assert(record.SchemaVersion == 1 && record.Outcome == "unknown" && record.OutcomeSource == "none",
-        "텔레메트리: v1 레코드는 라벨 unknown/none으로 생성");
-    Assert(record.Difficulty == "신", "텔레메트리: 난이도를 레코드에 보존");
-    Assert(record.RecordId != Guid.Empty.ToString() && record.AnonId.StartsWith("1111"),
-        "텔레메트리: recordId 생성·anonId 보존");
-    Assert(record.FinalHand.Count == 2 && record.FinalHand[0].Count == 2,
-        "텔레메트리: 최종 패 rawcode+수량 보존");
+        "0.6.0", "2.314", "신", DamageLane.Magic, "초월[마법]",
+        RecommendationSurface.TopAndNavigation, RecommendationUrgency.StoryDeadline,
+        13, 2, new RecognitionTelemetryCounts(12, 3, 1, 0), "clear");
     var telemetryJson = System.Text.Json.JsonSerializer.Serialize(record);
-    Assert(telemetryJson.Contains("\"schemaVersion\":1") && telemetryJson.Contains("\"outcome\":\"unknown\""),
-        "텔레메트리: camelCase JSON 직렬화");
-    Assert(System.Text.Encoding.UTF8.GetByteCount(telemetryJson) < 4096,
-        "텔레메트리: 일반 레코드가 4KB 상한 안");
-    Assert(!telemetryJson.Contains("nickname") && !telemetryJson.Contains("battletag"),
-        "텔레메트리: 개인정보 필드 자체가 없음");
+    Assert(record.SchemaVersion == 2 && record.Difficulty == "god" &&
+           record.GoalTierFamily == "초월" && record.ObservedObjects == "10-24",
+        "텔레메트리 v2: 허용된 범주와 count bucket만 생성");
+    Assert(TelemetryPrivacyContract.IsSafe(record) &&
+           !telemetryJson.Contains("rawcode", StringComparison.OrdinalIgnoreCase) &&
+           !telemetryJson.Contains("anon", StringComparison.OrdinalIgnoreCase) &&
+           !telemetryJson.Contains("timestamp", StringComparison.OrdinalIgnoreCase),
+        "텔레메트리 v2: 식별자·rawcode·정확한 시각이 없음");
 }
 
-// 텔레메트리 업로더: fail-silent 큐. 서버 없이도 게임에 지장이 없어야 한다.
+// 텔레메트리 v2 큐: 서버 schema 승인 전 payload를 보내지 않고 opt-out은 즉시 삭제한다.
 {
     var queueDir = Path.Combine(Path.GetTempPath(), "orand-telemetry-" + Guid.NewGuid().ToString("N"));
-    // 닫힌 로컬 포트 → 즉시 연결 실패 → 큐에 남아야 한다.
-    var uploader = new TelemetryUploader("http://127.0.0.1:9/v1/records", queueDir);
+    var uploader = new TelemetryUploader("http://127.0.0.1:9/v2/aggregates", queueDir);
     var record = MatchTelemetryRecorder.Build(
-        "22222222-2222-2222-2222-222222222222", "0.6.0", "2.314", "2.0.4.23745",
-        "yamato_transcendent", "PathOfKings.BountyHunter", "None", "auto", "악몽",
-        new List<InventoryEntry> { new() { UnitId = "luffy_common", Count = 1 } },
-        new List<string>(), new List<string> { "yamato_transcendent" },
-        DateTimeOffset.UtcNow.AddMinutes(-30), DateTimeOffset.UtcNow, 1);
-    uploader.EnqueueAndFlushAsync(record).GetAwaiter().GetResult();
-    Assert(uploader.PendingCount == 1, "텔레메트리 업로더: 전송 실패 시 큐에 보관");
+        "0.6.0", "2.314", "악몽", DamageLane.Physical, "불멸",
+        RecommendationSurface.TopAndNavigation, RecommendationUrgency.BossSurvival,
+        8, 1, default, "fail");
+    uploader.Enqueue(record);
+    Assert(uploader.PendingCount == 1, "텔레메트리 v2: 원자적 로컬 큐 저장");
     uploader.FlushPendingAsync().GetAwaiter().GetResult();
-    Assert(uploader.PendingCount == 1, "텔레메트리 업로더: 재시도 실패해도 레코드 유지(네트워크 오류)");
-
-    for (var i = 0; i < 55; i++)
-        File.WriteAllText(Path.Combine(queueDir, $"{Guid.NewGuid()}.json"), "{}");
+    Assert(uploader.PendingCount == 1, "텔레메트리 v2: schema preflight 실패 시 큐 유지");
+    File.WriteAllText(Path.Combine(queueDir, "legacy.json"), "{\"schemaVersion\":1}");
     uploader.TrimQueue();
-    Assert(Directory.GetFiles(queueDir, "*.json").Length <= 50, "텔레메트리 업로더: 큐 50판 상한");
+    Assert(!File.Exists(Path.Combine(queueDir, "legacy.json")),
+        "텔레메트리 v2: v1 queue 폐기");
+    uploader.SetEnabled(false, deletePending: true);
+    Assert(uploader.PendingCount == 0, "텔레메트리 v2: opt-out 즉시 queue 삭제");
     Directory.Delete(queueDir, true);
 }
 
-// 텔레메트리: 옵트아웃 없이 항상 전송. 익명 ID는 최초 1회 생성.
 {
-    Assert(typeof(AppSettings).GetProperty("TelemetryEnabled") is null,
-        "텔레메트리: 옵트아웃 설정 필드 없음 — 항상 전송");
+    var freshSettings = new AppSettings();
+    Assert(freshSettings.TelemetryEnabled && freshSettings.TelemetryDisclosureVersion == 0,
+        "텔레메트리 v2: 자동 기본과 first-run disclosure");
+    Assert(typeof(AppSettings).GetProperty("TelemetryAnonId") is null,
+        "텔레메트리 v2: 설치 식별자 제거");
     var overlayRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
     var settingsXaml = File.ReadAllText(Path.Combine(overlayRoot, "MainWindow.xaml"));
-    Assert(!settingsXaml.Contains("TelemetryCheck") && !settingsXaml.Contains("익명 플레이 통계"),
-        "텔레메트리: 설정 창에 보내기 체크박스가 없음");
-    Assert(!settingsXaml.Contains("LiveVerify") && !settingsXaml.Contains("라이브 검증"),
-        "설정 창에 개발자용 라이브 검증 패널이 없음");
-    var freshSettings = new AppSettings();
-    Assert(string.IsNullOrEmpty(freshSettings.TelemetryAnonId), "텔레메트리 설정: ID는 보장 시점에 생성");
-    var ensured = SettingsStore.EnsureTelemetryAnonId(freshSettings);
-    Assert(Guid.TryParse(ensured.TelemetryAnonId, out _), "텔레메트리 설정: 익명 GUID 생성");
-    var again = SettingsStore.EnsureTelemetryAnonId(ensured);
-    Assert(again.TelemetryAnonId == ensured.TelemetryAnonId, "텔레메트리 설정: 이미 있으면 유지");
+    Assert(settingsXaml.Contains("TelemetryCheck") &&
+           settingsXaml.Contains("유닛·rawcode·설치/세션 ID"),
+        "텔레메트리 v2: disclosure와 즉시 opt-out UI 제공");
 }
 
 Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
-       TelemetryUploader.DefaultEndpoint.EndsWith("/v1/records") &&
+       TelemetryUploader.DefaultEndpoint.EndsWith("/v2/aggregates") &&
        !TelemetryUploader.DefaultEndpoint.Contains("tmo.gg"),
-    "텔레메트리: 기본 엔드포인트는 자체 Worker(HTTPS)이며 티모지지가 아님");
+    "텔레메트리 v2: 자체 HTTPS endpoint 사용");
 
 // 라이브 통계 스냅샷: 있으면 표기, 없거나 깨졌으면 조용히 무시(fail-silent).
 {
@@ -2442,81 +2419,35 @@ Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
     Assert(reset.Outcome == "unknown", "클리어 판정: 세션 경계에서 클리어 상태도 초기화");
 }
 
-// 텔레메트리 버퍼: 전멸·세션 종료로 패가 비어도 마지막 패를 남겨 클리어/패배를 보낸다.
-// 예전 경로는 인벤토리를 먼저 지운 뒤 보내서, 완성 상위가 없으면 0건이 되었다.
+// 텔레메트리 v2 버퍼: 개별 패 대신 마지막 coarse count와 상태 집계만 남긴다.
 {
-    var t0 = new DateTimeOffset(2026, 8, 20, 12, 0, 0, TimeSpan.Zero);
-    static TelemetryRecord? Emit(MatchTelemetryBuffer buffer, DateTimeOffset ended,
-        string outcome, string source) =>
-        buffer.TryEmit(
-            "33333333-3333-3333-3333-333333333333", "0.6.7", "2.314", "2.0.4.23745",
-            "yamato_transcendent", "PathOfKings.BountyHunter", "None", "auto", "신",
-            ended, outcome, source);
+    static TelemetryRecord? Emit(MatchTelemetryBuffer buffer, string outcome) =>
+        buffer.TryEmit("0.6.7", "2.314", "신", outcome);
 
-    Assert(Emit(new MatchTelemetryBuffer(), t0, "fail", "unitWipe") is null,
-        "텔레메트리 버퍼: 패를 한 번도 못 본 빈 판은 보내지 않음");
+    Assert(Emit(new MatchTelemetryBuffer(), "fail") is null,
+        "텔레메트리 v2 버퍼: 정상 관측 없는 판은 보내지 않음");
 
-    var failDetector = new MatchOutcomeDetector();
-    var failBuffer = new MatchTelemetryBuffer();
-    var livingHand = new List<InventoryEntry>
-    {
-        new() { UnitId = "luffy_common", Count = 4 },
-        new() { UnitId = "rawcode:200h", Count = 2 },
-    };
-    failBuffer.Capture(livingHand, ["yamato_transcendent"], ["yamato_transcendent"], t0, 6);
-    failDetector.Observe(6, 300, t0);
-    // MainWindow는 Waiting에서 _automatic.Clear() 한다. 빈 관측이 스냅샷을 덮으면 안 된다.
-    failBuffer.Capture([], [], [], t0.AddSeconds(1), 0);
-    failDetector.Observe(0, 300, t0.AddSeconds(1));
-    failDetector.Observe(0, 300, t0.AddSeconds(2));
-    Assert(failDetector.Outcome == "fail" && failDetector.OutcomeSource == "unitWipe",
-        "텔레메트리 버퍼: 전멸 연속 관측은 패배");
-    var failRecord = Emit(failBuffer, t0.AddSeconds(2), failDetector.Outcome, failDetector.OutcomeSource);
-    Assert(failRecord is not null, "텔레메트리 버퍼: 패배 확정 시 레코드를 만든다");
-    Assert(failRecord!.Outcome == "fail" && failRecord.OutcomeSource == "unitWipe",
-        "텔레메트리 버퍼: 패배 라벨·근거(unitWipe)를 붙인다");
-    Assert(failRecord.FinalHand.Count == 2 && failRecord.FinalHand.Sum(x => x.Count) == 6,
-        "텔레메트리 버퍼: 전멸 뒤에도 마지막 패를 보낸다");
-    Assert(failRecord.CompletedTops.SequenceEqual(["yamato_transcendent"]) &&
-           failRecord.LastObservedUnitCount == 6,
-        "텔레메트리 버퍼: 완성 상위·마지막 유닛 수는 전멸 전 값을 유지");
-    Assert(Emit(failBuffer, t0.AddSeconds(10), "unknown", "none") is null,
-        "텔레메트리 버퍼: 패배를 보낸 뒤 세션 종료로 한 판을 두 번 보내지 않음");
+    var buffer = new MatchTelemetryBuffer();
+    buffer.ObserveRecognition(RecognitionState.Ready);
+    buffer.ObserveRecognition(RecognitionState.TransientReadError);
+    buffer.ObserveRecommendation(DamageLane.Physical, "불멸[물리]",
+        RecommendationSurface.TopAndNavigation, RecommendationUrgency.BossSurvival);
+    buffer.Capture(6, 1);
+    buffer.Capture(0, 0);
+    var record = Emit(buffer, "fail");
+    Assert(record is not null && record.Outcome == "fail" &&
+           record.ObservedObjects == "5-9" && record.CompletedTops == "1" &&
+           record.ReadyScans == "1" && record.TransientScans == "1",
+        "텔레메트리 v2 버퍼: 마지막 count와 인식 상태를 coarse bucket으로 보존");
+    Assert(Emit(buffer, "unknown") is null,
+        "텔레메트리 v2 버퍼: 판당 한 번만 emit");
 
-    var clearDetector = new MatchOutcomeDetector();
-    var clearBuffer = new MatchTelemetryBuffer();
-    var clearHand = new List<InventoryEntry> { new() { UnitId = "rawcode:E90H", Count = 8 } };
-    clearBuffer.Capture(clearHand, ["yamato_transcendent"], ["yamato_transcendent"], t0, 8);
-    clearDetector.ObserveRound(1);
-    clearDetector.ObserveSettlement(0, t0);
-    clearDetector.Observe(8, 300, t0);
-    clearDetector.ObserveRound(65);
-    clearDetector.ObserveSettlement(4, t0.AddMinutes(31));
-    clearDetector.Observe(8, 300, t0.AddMinutes(31).AddSeconds(10));
-    clearDetector.Observe(8, 300, t0.AddMinutes(31).AddSeconds(40));
-    Assert(clearDetector.Outcome == "clear" && clearDetector.OutcomeSource == "mapSettlement",
-        "텔레메트리 버퍼: 정산 후 생존 확인은 클리어");
-    var clearRecord = Emit(clearBuffer, t0.AddMinutes(31).AddSeconds(40),
-        clearDetector.Outcome, clearDetector.OutcomeSource);
-    Assert(clearRecord is not null && clearRecord.Outcome == "clear" &&
-           clearRecord.OutcomeSource == "mapSettlement",
-        "텔레메트리 버퍼: 클리어 확정 시 레코드를 만든다");
-    Assert(clearRecord!.FinalHand.Count == 1 && clearRecord.FinalHand[0].Count == 8,
-        "텔레메트리 버퍼: 클리어는 마지막 생존 패를 보낸다");
-
-    var midBuffer = new MatchTelemetryBuffer();
-    midBuffer.Capture(livingHand, [], ["yamato_transcendent"], t0, 6);
-    var unknownRecord = Emit(midBuffer, t0.AddMinutes(5), "unknown", "none");
-    Assert(unknownRecord is not null && unknownRecord.Outcome == "unknown" &&
-           unknownRecord.FinalHand.Sum(x => x.Count) == 6,
-        "텔레메트리 버퍼: 판정 전에 세션이 끝나도 마지막 패는 보낸다");
-
-    failBuffer.Reset();
-    failBuffer.Capture(clearHand, ["yamato_transcendent"], ["yamato_transcendent"], t0.AddHours(1), 8);
-    var nextRecord = Emit(failBuffer, t0.AddHours(1).AddMinutes(40), "clear", "mapSettlement");
-    Assert(nextRecord is not null && nextRecord.Outcome == "clear" &&
-           nextRecord.FinalHand[0].UnitId == "rawcode:E90H",
-        "텔레메트리 버퍼: Reset 후 다음 판은 다시 보낼 수 있다");
+    buffer.Reset();
+    buffer.Capture(8, 2);
+    var next = Emit(buffer, "clear");
+    Assert(next is not null && next.Outcome == "clear" &&
+           next.ObservedObjects == "5-9" && next.CompletedTops == "2-4",
+        "텔레메트리 v2 버퍼: Reset 후 다음 판 집계 가능");
 }
 
 // 업데이트 시점 정책: 유저 클라이언트는 판이 끝난 뒤에 교체한다(재시작이 판을 끊으므로).

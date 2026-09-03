@@ -210,9 +210,9 @@ public sealed class RecognitionResult
     public RecognitionState State { get; init; } = RecognitionState.Ready;
     public RecognitionDiagnostics Diagnostics { get; init; } = new();
     public MapSignals MapSignals { get; init; } = MapSignals.Empty;
-    // True only when the reader has positive evidence that the current match context ended
-    // (Warcraft exited, GameUI disappeared, or WorldFrame disappeared). A TMO reconnect or
-    // wrapper-discovery delay is merely disconnected and must not erase manual corrections.
+    // True only when the reader has positive evidence that the match context changed
+    // (Warcraft exited, GameUI/WorldFrame disappeared, or a lower story objective repeated in
+    // a new ready snapshot). A reconnect or wrapper-discovery delay is merely disconnected.
     [JsonIgnore] public bool ConfirmsSessionBoundary { get; init; }
 
     // A failed or transient read must never erase the last known-good inventory.
@@ -344,8 +344,9 @@ public sealed class AppSettings
     public string GoroseiMode { get; set; } = "None";
     // 자동 업데이트 무한 루프 방지: 같은 태그는 한 번만 시도한다.
     public string LastAttemptedUpdateTag { get; set; } = "";
-    // 익명 플레이 통계용 설치 UUID. 판 종료 요약은 항상 보낸다.
-    public string TelemetryAnonId { get; set; } = "";
+    // 식별자 없는 aggregate v2는 기본 활성이다. 첫 고지 전에는 업로드하지 않는다.
+    public bool TelemetryEnabled { get; set; } = true;
+    public int TelemetryDisclosureVersion { get; set; }
 }
 
 /// <summary>긴급소집 와일드카드(특별함 선택) 사용처 한 건.</summary>
@@ -578,6 +579,11 @@ public static class RecognitionPolicy
         result.ShouldClearAutomaticInventory &&
         result.ConfirmsSessionBoundary &&
         confirmedWaitingScans >= 2;
+
+    public static bool ShouldResetBeforeReadyInventory(RecognitionResult result) =>
+        result.State == RecognitionState.Ready &&
+        result.ShouldReplaceInventory &&
+        result.ConfirmsSessionBoundary;
 
     public static bool ShouldClearAutomaticInventory(RecognitionResult result,
         int confirmedWaitingScans) =>

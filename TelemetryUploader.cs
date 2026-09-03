@@ -6,117 +6,199 @@ using System.Text.Json;
 namespace OrandOverlay;
 
 /// <summary>
-/// 텔레메트리 전송기. 원칙은 fail-silent: 어떤 실패도 예외로 새어 나가지 않고
-/// 로컬 큐(최대 50판/30일)에 남겨 다음 기회에 재시도한다. 서버 400 응답이
-/// 3회 쌓이면 그 레코드는 폐기한다(스키마 불일치 무한 재시도 방지).
+/// 식별자 없는 v2 집계만 큐에 저장한다. 서버가 OPTIONS로 schema v2를 명시적으로
+/// 승인하기 전에는 payload를 전송하지 않으며, 전송 실패는 추천 경로로 전파하지 않는다.
 /// </summary>
 public sealed class TelemetryUploader
 {
-    public const string DefaultEndpoint = "https://orand-telemetry.epic42121.workers.dev/v1/records"; 
+    public const string DefaultEndpoint =
+        "https://orand-telemetry.epic42121.workers.dev/v2/aggregates";
+    public const string SchemaHeader = "X-Orand-Telemetry-Schema";
+    public const string AcceptedHeader = "X-Orand-Telemetry-Accepted";
+    public const string EnabledHeader = "X-Orand-Telemetry-Enabled";
     private const int MaxQueued = 50;
     private const int MaxAgeDays = 30;
-    private const int MaxRejects = 3;
-    private static readonly HttpClient Http = CreateClient();
+    private static readonly HttpClient SharedHttp = CreateClient();
 
-    private static HttpClient CreateClient()
-    {
-        // Cloudflare 봇 차단이 UA 없는 요청을 막을 수 있어 명시한다.
-        var client = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("OrandOverlay/1.0");
-        return client;
-    }
+    private readonly HttpClient _http;
     private readonly string _endpoint;
     private readonly string _queueDirectory;
 
-    public TelemetryUploader(string? endpoint = null, string? queueDirectory = null)
+    public TelemetryUploader(string? endpoint = null, string? queueDirectory = null,
+        HttpClient? httpClient = null, bool enabled = true)
     {
         _endpoint = endpoint ?? DefaultEndpoint;
         _queueDirectory = queueDirectory
                           ?? Path.Combine(AppPaths.UserDataDirectory, "telemetry", "pending");
-        try { Directory.CreateDirectory(_queueDirectory); } catch { /* fail-silent */ }
+        _http = httpClient ?? SharedHttp;
+        Enabled = enabled;
+        try
+        {
+            Directory.CreateDirectory(_queueDirectory);
+            DiscardLegacyAndUnsafeFiles();
+            if (!Enabled) DeletePending();
+        }
+        catch { /* fail-closed */ }
     }
+
+    public bool Enabled { get; private set; }
 
     public int PendingCount
     {
-        get { try { return Directory.GetFiles(_queueDirectory, "*.json").Length; } catch { return 0; } }
+        get
+        {
+            try { return Directory.GetFiles(_queueDirectory, "*.v2.json").Length; }
+            catch { return 0; }
+        }
     }
 
-    public async Task EnqueueAndFlushAsync(TelemetryRecord record)
+    public void SetEnabled(bool enabled, bool deletePending = false)
     {
-        Enqueue(record);
-        await FlushPendingAsync();
+        Enabled = enabled;
+        if (deletePending) DeletePending();
     }
 
-    /// <summary>
-    /// 프로세스가 바로 종료돼도 레코드가 남도록 네트워크 작업 전에 로컬 큐를 동기 기록한다.
-    /// </summary>
     public void Enqueue(TelemetryRecord record)
     {
+        if (!Enabled || !TelemetryPrivacyContract.IsSafe(record)) return;
         try
         {
-            var path = Path.Combine(_queueDirectory, record.RecordId + ".json");
-            File.WriteAllText(path, JsonSerializer.Serialize(record));
+            var name = $"{Guid.NewGuid():N}.v2.json";
+            var path = Path.Combine(_queueDirectory, name);
+            var temp = path + ".tmp";
+            File.WriteAllBytes(temp, JsonSerializer.SerializeToUtf8Bytes(record));
+            File.Move(temp, path);
             TrimQueue();
         }
-        catch { /* fail-silent */ }
+        catch { /* fail-closed */ }
     }
+
 
     public async Task FlushPendingAsync()
     {
+        if (!Enabled) return;
         try
         {
-            foreach (var path in Directory.GetFiles(_queueDirectory, "*.json")
-                         .OrderBy(File.GetCreationTimeUtc))
+            DiscardLegacyAndUnsafeFiles();
+            if (!await EndpointAcceptsV2Async()) return;
+            foreach (var path in Directory.GetFiles(_queueDirectory, "*.v2.json")
+                         .OrderBy(Path.GetFileName, StringComparer.Ordinal))
             {
-                var payload = await File.ReadAllTextAsync(path);
+                if (!TryReadSafePayload(path, out var payload))
+                {
+                    Delete(path);
+                    continue;
+                }
+
                 using var content = new StringContent(payload, Encoding.UTF8, "application/json");
                 HttpResponseMessage response;
-                try { response = await Http.PostAsync(_endpoint, content); }
-                catch { return; } // 네트워크 불가 — 다음 기회에
+                try { response = await _http.PostAsync(_endpoint, content); }
+                catch { return; }
                 using (response)
                 {
-                    if (response.IsSuccessStatusCode) { Delete(path); continue; }
-                    if ((int)response.StatusCode == 400 && CountReject(path) >= MaxRejects) { Delete(path); continue; }
-                    if ((int)response.StatusCode is 429 or >= 500) return; // 서버 사정 — 나중에
+                    if (RemoteDisabled(response)) return;
+                    if (response.IsSuccessStatusCode && ResponseAcceptsV2(response))
+                    {
+                        Delete(path);
+                        continue;
+                    }
+                    if ((int)response.StatusCode is 400 or 404 or 409 or 410 or 422)
+                    {
+                        Delete(path);
+                        continue;
+                    }
+                    return;
                 }
             }
         }
-        catch { /* fail-silent */ }
+        catch { /* fail-closed */ }
     }
 
-    /// <summary>큐 상한 유지: 30일 지난 것과 50판 초과분(오래된 것부터)을 버린다.</summary>
+    public void DeletePending()
+    {
+        try
+        {
+            foreach (var path in Directory.GetFiles(_queueDirectory)) Delete(path);
+        }
+        catch { /* fail-closed */ }
+    }
+
     public void TrimQueue()
     {
         try
         {
-            var files = Directory.GetFiles(_queueDirectory, "*.json")
+            DiscardLegacyAndUnsafeFiles();
+            var files = Directory.GetFiles(_queueDirectory, "*.v2.json")
                 .OrderBy(File.GetCreationTimeUtc).ToList();
-            foreach (var path in files.Where(p =>
-                         DateTime.UtcNow - File.GetCreationTimeUtc(p) > TimeSpan.FromDays(MaxAgeDays)))
+            foreach (var path in files.Where(path =>
+                         DateTime.UtcNow - File.GetCreationTimeUtc(path) >
+                         TimeSpan.FromDays(MaxAgeDays)))
                 Delete(path);
-            files = Directory.GetFiles(_queueDirectory, "*.json").OrderBy(File.GetCreationTimeUtc).ToList();
+            files = Directory.GetFiles(_queueDirectory, "*.v2.json")
+                .OrderBy(File.GetCreationTimeUtc).ToList();
             foreach (var path in files.Take(Math.Max(0, files.Count - MaxQueued)))
                 Delete(path);
         }
-        catch { /* fail-silent */ }
+        catch { /* fail-closed */ }
     }
 
-    private static int CountReject(string path)
+    private async Task<bool> EndpointAcceptsV2Async()
     {
-        var marker = path + ".retry";
-        var count = 1;
+        using var request = new HttpRequestMessage(HttpMethod.Options, _endpoint);
+        HttpResponseMessage response;
+        try { response = await _http.SendAsync(request); }
+        catch { return false; }
+        using (response)
+            return response.IsSuccessStatusCode &&
+                   !RemoteDisabled(response) &&
+                   ResponseAcceptsV2(response);
+    }
+
+    private static bool ResponseAcceptsV2(HttpResponseMessage response) =>
+        HeaderEquals(response, SchemaHeader, "2") &&
+        HeaderEquals(response, AcceptedHeader, "true");
+
+    private static bool RemoteDisabled(HttpResponseMessage response) =>
+        HeaderEquals(response, EnabledHeader, "false");
+
+    private static bool HeaderEquals(HttpResponseMessage response,
+        string name, string expected) =>
+        response.Headers.TryGetValues(name, out var values) &&
+        values.Any(value => value.Equals(expected, StringComparison.OrdinalIgnoreCase));
+
+    private bool TryReadSafePayload(string path, out string payload)
+    {
+        payload = "";
         try
         {
-            if (File.Exists(marker) && int.TryParse(File.ReadAllText(marker), out var prior)) count = prior + 1;
-            File.WriteAllText(marker, count.ToString());
+            payload = File.ReadAllText(path);
+            var record = JsonSerializer.Deserialize<TelemetryRecord>(payload);
+            return record is { SchemaVersion: 2 } &&
+                   TelemetryPrivacyContract.IsSafeJson(payload);
         }
-        catch { /* fail-silent */ }
-        return count;
+        catch { return false; }
+    }
+
+    private void DiscardLegacyAndUnsafeFiles()
+    {
+        foreach (var path in Directory.GetFiles(_queueDirectory, "*.json"))
+            if (!path.EndsWith(".v2.json", StringComparison.OrdinalIgnoreCase) ||
+                !TryReadSafePayload(path, out _))
+                Delete(path);
+        foreach (var path in Directory.GetFiles(_queueDirectory, "*.tmp")) Delete(path);
+        foreach (var path in Directory.GetFiles(_queueDirectory, "*.retry")) Delete(path);
+    }
+
+    private static HttpClient CreateClient()
+    {
+        var client = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("OrandOverlay/2.0");
+        return client;
     }
 
     private static void Delete(string path)
     {
-        try { File.Delete(path); } catch { /* fail-silent */ }
-        try { File.Delete(path + ".retry"); } catch { /* fail-silent */ }
+        try { File.Delete(path); } catch { /* fail-closed */ }
+        try { File.Delete(path + ".retry"); } catch { /* fail-closed */ }
     }
 }

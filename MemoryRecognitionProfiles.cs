@@ -72,9 +72,11 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
     private int? _candidateOrdinal;
     private int _candidateStreak;
     public MapSignals LastGood { get; private set; } = MapSignals.Empty;
+    public bool LastObservationConfirmedReset { get; private set; }
 
     public MapSignals Observe(MapSignalRawSnapshot snapshot)
     {
+        LastObservationConfirmedReset = false;
         var objectiveRawcodes = snapshot.ObjectiveRawcodes.Distinct().ToArray();
         var stage = objectiveRawcodes.Length == 1
             ? profile.Objective(objectiveRawcodes[0])
@@ -92,6 +94,16 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
         {
             _candidateOrdinal = stage.Ordinal;
             _candidateStreak = 1;
+        }
+
+        var previousProgress = Math.Max(
+            LastGood.ActiveObjectiveOrdinal ?? 0,
+            LastGood.CompletedStoryStageOrdinal + 1);
+        if (stage is not null && _candidateStreak >= 2 &&
+            previousProgress > 1 && stage.Ordinal < previousProgress)
+        {
+            LastGood = MapSignals.Empty;
+            LastObservationConfirmedReset = true;
         }
 
         var activeOrdinal = LastGood.ActiveObjectiveOrdinal;
@@ -117,6 +129,7 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
     {
         _candidateOrdinal = null;
         _candidateStreak = 0;
+        LastObservationConfirmedReset = false;
         LastGood = MapSignals.Empty;
     }
 }

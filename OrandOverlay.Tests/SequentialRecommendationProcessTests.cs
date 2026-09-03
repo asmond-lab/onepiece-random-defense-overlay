@@ -266,7 +266,7 @@ public sealed class SequentialRecommendationProcessTests
     }
 
     [Fact]
-    public void OnlyCommittedPhaseShowsTopAndNavigationSurface()
+    public void SpentMarinefordRewardsUnlockTopRecommendationsBeforeCommit()
     {
         Assert.Equal(RecommendationSurface.FastRare,
             RecommendationSequencePolicy.Surface(true, PlannerPhase.AwaitFirstRare,
@@ -277,6 +277,13 @@ public sealed class SequentialRecommendationProcessTests
         Assert.Equal(RecommendationSurface.TopAndNavigation,
             RecommendationSequencePolicy.Surface(true, PlannerPhase.Committed,
                 ManualLatches.None));
+
+        var rewardsSpent = StoryRewardSequencePlanner.Evaluate(Input(
+            PlannerPhase.SpendRares, activeStage: 9));
+        Assert.Equal(RecommendationSequenceStage.TopAndNavigation, rewardsSpent.Stage);
+        Assert.True(rewardsSpent.TopNavigationUnlocked);
+        Assert.Equal(RecommendationSurface.TopAndNavigation,
+            RecommendationSequencePolicy.Surface(rewardsSpent));
 
         var committed = StoryRewardSequencePlanner.Evaluate(Input(
             PlannerPhase.Committed, activeStage: 9));

@@ -75,6 +75,24 @@ public sealed class RecognitionPolicyTests
         Assert.False(RecognitionPolicy.ShouldResetMatch(unconfirmed, confirmedWaitingScans: 2));
     }
 
+    [Fact]
+    public void ConfirmedReadyBoundaryResetsOldMatchBeforeApplyingNewInventory()
+    {
+        var nextMatch = new RecognitionResult
+        {
+            State = RecognitionState.Ready,
+            ConfirmsSessionBoundary = true
+        };
+        var sameMatch = new RecognitionResult
+        {
+            State = RecognitionState.Ready,
+            ConfirmsSessionBoundary = false
+        };
+
+        Assert.True(RecognitionPolicy.ShouldResetBeforeReadyInventory(nextMatch));
+        Assert.False(RecognitionPolicy.ShouldResetBeforeReadyInventory(sameMatch));
+    }
+
     [Theory]
     [InlineData(RecognitionState.TransientReadError, true)]
     [InlineData(RecognitionState.Waiting, false)]

@@ -19,6 +19,7 @@ public partial class MainWindow : Window
         _lastAdaptivePlanningPerformance;
     private readonly DataCatalog _catalog = new();
     private readonly AppSettings _settings;
+    private readonly bool _persistSettings;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _growthUnitIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
@@ -46,12 +47,11 @@ public partial class MainWindow : Window
     private CompletedTopUnitTracker _completedTopUnits = null!;
     private readonly FirstRareRecommendationGate _firstRareRecommendationGate = new();
     private readonly FirstRareTargetPolicy _firstRareTargetPolicy = new();
-    private readonly TelemetryUploader _telemetry = new();
+    private readonly TelemetryUploader _telemetry;
     private readonly MatchOutcomeDetector _outcome = new();
-    // 텔레메트리 세션 상태(버퍼·시작 시각·상위 추천)는 전용 세션이 소유한다.
-    private readonly MatchTelemetrySession _telemetrySession = new(new TelemetryUploader());
+    // 텔레메트리의 coarse count·인식 상태·추천 범주는 전용 세션이 소유한다.
+    private readonly MatchTelemetrySession _telemetrySession;
     private string _matchDifficulty = "unknown";
-    private string _lastWarcraftVersion = "";
     private IInventoryRecognizer _recognizer = null!;
     private OverlayWindow _overlay = null!;
     private bool _initialized;
@@ -97,13 +97,22 @@ public partial class MainWindow : Window
         StoryRewardSequenceDecision? StorySequence,
         RecommendationSurface Surface);
 
-    public MainWindow()
+    public MainWindow() : this(null, startRuntime: true)
+    {
+    }
+
+    internal MainWindow(AppSettings? settingsOverride, bool startRuntime,
+        string? telemetryQueueDirectory = null)
     {
         InitializeComponent();
         Loaded += (_, _) => ApplyResolutionScale();
         DpiChanged += (_, _) => Dispatcher.BeginInvoke(new Action(ApplyResolutionScale));
-        _settings = SettingsStore.Load();
-        SettingsStore.EnsureTelemetryAnonId(_settings);
+        _persistSettings = settingsOverride is null;
+        _settings = settingsOverride ?? SettingsStore.Load();
+        _telemetry = new TelemetryUploader(
+            queueDirectory: telemetryQueueDirectory,
+            enabled: _settings.TelemetryEnabled);
+        _telemetrySession = new MatchTelemetrySession(_telemetry);
         try
         {
             _catalog.Load();
@@ -151,7 +160,14 @@ public partial class MainWindow : Window
         };
         AutoScanCheck.IsChecked = _settings.AutoScanEnabled;
         ClearDataRefreshCheck.IsChecked = _settings.ClearDataAutoRefresh;
-        _ = _telemetry.FlushPendingAsync();
+        TelemetryCheck.IsChecked = _settings.TelemetryEnabled;
+        TelemetryDisclosurePanel.Visibility = _settings.TelemetryDisclosureVersion >= 2
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        UpdateTelemetryQueueStatus();
+        if (startRuntime && _settings.TelemetryEnabled &&
+            _settings.TelemetryDisclosureVersion >= 2)
+            _ = _telemetry.FlushPendingAsync();
         AutoStartCheck.IsChecked = _settings.AutoStartGoal;
         AutoNavigationCheck.IsChecked = _settings.AutoRecommendNavigation;
         UpdateNavigationSelectionVisibility();
@@ -191,9 +207,10 @@ public partial class MainWindow : Window
             SaveOverlayPosition();
             _overlay.Stats.CloseForApplication();
             _overlay.CloseForApplication();
-            SettingsStore.Save(_settings);
+            if (_persistSettings) SettingsStore.Save(_settings);
         };
         _initialized = true;
+        if (!startRuntime) return;
         RefreshAll("워크 메모리 인식을 준비하는 중입니다.");
         if (_settings.AutoScanEnabled)
         {
@@ -847,35 +864,28 @@ public partial class MainWindow : Window
             var storySequence = storyInput is null
                 ? null
                 : StoryRewardSequencePlanner.Evaluate(storyInput);
-            var nextSurface = storySequence is null
-                ? surface
-                : RecommendationSequencePolicy.Surface(storySequence);
-            IReadOnlyList<Recommendation> nextRecommendations = nextSurface switch
-            {
-                RecommendationSurface.FastRare =>
-                    nextEngine.RecommendFastRares(recommendationInventory, 500),
-                RecommendationSurface.StoryLegend
-                    when storySequence?.RecommendedLegendId is { } legendId =>
-                    nextEngine.RecommendNearestCrafts(legendId, recommendationInventory,
-                        navigationMode: navigation.Id, gorosei: gorosei,
-                        buildVariant: BuildVariants.AutoId,
-                        suppressSeraphim: suppressSeraphim,
-                        difficulty: _matchDifficulty),
-                RecommendationSurface.StoryLegend => [],
-                _ => nextEngine.RecommendNearestCrafts(goal.Id, recommendationInventory,
-                    navigationMode: navigation.Id, gorosei: gorosei,
-                    buildVariant: BuildVariants.AutoId,
-                    suppressSeraphim: suppressSeraphim,
-                    prioritizeTargetRare: prioritizeTargetRare,
-                    suppressFirstRareShip: !firstRareQuestWindow,
-                    difficulty: _matchDifficulty)
-            };
-            return new RefreshComputation(nextEngine, nextRecommendations,
+            var pipeline = RecommendationPipeline.ComputeCandidates(
+                new RecommendationPipelineRequest
+                {
+                    Engine = nextEngine,
+                    Goal = goal,
+                    Inventory = recommendationInventory,
+                    InitialSurface = surface,
+                    StorySequence = storySequence,
+                    NavigationMode = navigation.Id,
+                    Gorosei = gorosei,
+                    BuildVariant = BuildVariants.AutoId,
+                    Difficulty = _matchDifficulty,
+                    SuppressSeraphim = suppressSeraphim,
+                    PrioritizeTargetRare = prioritizeTargetRare,
+                    SuppressFirstRareShip = !firstRareQuestWindow
+                });
+            return new RefreshComputation(nextEngine, pipeline.Recommendations,
                 adaptiveWork is null
                     ? null
                     : AdaptivePlanningCompositionRoot.EvaluateObserved(
                         adaptiveWork, recognitionObservation),
-                storySequence, nextSurface);
+                pipeline.StorySequence, pipeline.Surface);
         });
         if (computation is null) return;
         if (!_refreshVersion.IsCurrent(refreshVersion) || Dispatcher.HasShutdownStarted) return;
@@ -883,7 +893,17 @@ public partial class MainWindow : Window
         var recommendations = computation.Recommendations;
         _storySequence = computation.StorySequence;
         surface = computation.Surface;
-        recommendations = _firstRareTargetPolicy.Apply(surface, recommendations);
+        var pipelineResult = RecommendationPipeline.Finalize(
+            new RecommendationPipelineCandidates(surface, recommendations, _storySequence),
+            _catalog,
+            goal,
+            recommendationInventory,
+            _firstRareTargetPolicy,
+            _lastRound,
+            _mapSignals.CompletedStoryStageOrdinal,
+            _matchDifficulty);
+        recommendations = pipelineResult.Recommendations;
+        var recommendationUrgency = pipelineResult.Urgency;
         _recommendationSurface = surface;
         if (computation.AdaptivePlanning is { } adaptive)
         {
@@ -892,10 +912,6 @@ public partial class MainWindow : Window
                 action => Dispatcher.BeginInvoke(new Action(action)),
                 ApplyAdaptivePlanning);
         }
-        if (surface == RecommendationSurface.TopAndNavigation)
-            _telemetrySession.ObserveTopRecommendations(
-                recommendations.Take(5).Select(x => x.Route.GoalUnitId));
-        CaptureMatchTelemetry();
         GoalSelectLabel.Text = "목표 상위 유닛 · 학습된 유닛만" +
             (_liveStats.TryGetGoal(goal.Id, out var liveGoal)
                 ? $" · 실사용 {liveGoal.Plays}판{(liveGoal.ClearRateText.Length == 0 ? "" : " · " + liveGoal.ClearRateText)}"
@@ -904,6 +920,14 @@ public partial class MainWindow : Window
                           allUnits.TryGetValue(storyLegendId, out var storyLegend)
             ? storyLegend
             : goal;
+        _telemetrySession.ObserveRecommendation(
+            GoalStrategyCalculator.IsMagicDamageTier(displayGoal.Tier)
+                ? DamageLane.Magic
+                : DamageLane.Physical,
+            displayGoal.Tier,
+            surface,
+            recommendationUrgency.Urgency);
+        CaptureMatchTelemetry();
         var inventoryStats = _statsCalculator.Calculate(recommendationInventory);
         var rareRerolls = _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
             displayGoal, _clearStats.HasData ? _clearStats : null, _lastRound);
@@ -930,7 +954,7 @@ public partial class MainWindow : Window
                 recommendation => _catalog.Unit(recommendation.Route.GoalUnitId)
                     .Tier.Split('[', 2)[0].Trim() == "희귀함")
                 : recommendations;
-        var phaseHint = surface switch
+        var phaseHint = recommendationUrgency.Reason ?? surface switch
         {
             RecommendationSurface.FastRare =>
                 "7라운드까지 희귀함이 안 나오면 선택 위습 1~2개 사용 권장",
@@ -1010,7 +1034,7 @@ public partial class MainWindow : Window
         _overlay.RenderPlannerEvidence(_lastRound, _adaptivePlanningApplied,
             evidenceUnknown,
             evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
-            _storySequence);
+            _storySequence, _mapSignals.CompletedStoryStageOrdinal);
         if (message is not null) FooterStatus.Text = message;
     }
 
@@ -1135,9 +1159,12 @@ public partial class MainWindow : Window
             if (generation != _scanGeneration || !ReferenceEquals(recognizer, _recognizer)) return;
             _latestRecognitionObservation = result.Diagnostics.AdaptivePlanningObservation;
             LogUnknownRawcodes(result);
-            if (!string.IsNullOrWhiteSpace(result.Diagnostics.ProcessVersion))
-                _lastWarcraftVersion = result.Diagnostics.ProcessVersion;
             ApplyDetectedGorosei(result.Diagnostics.Gorosei);
+            if (RecognitionPolicy.ShouldResetBeforeReadyInventory(result))
+            {
+                ResetMatchSession();
+                _lastRound = 0;
+            }
             _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
                                      result.ConfirmsSessionBoundary
                 ? _confirmedWaitingScans + 1
@@ -1176,6 +1203,7 @@ public partial class MainWindow : Window
                 _automaticDisconnected = !RecognitionPolicy.ShouldUseLastGood(
                     result, _confirmedWaitingScans);
             }
+            _telemetrySession.ObserveRecognition(result.State);
             if (result.ShouldReplaceInventory || result.State == RecognitionState.Waiting)
             {
                 _outcome.Observe(result.Diagnostics.ObservedObjects, result.Diagnostics.ForeignObjects,
@@ -1413,6 +1441,38 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         if (changed && enabled) _ = RefreshClearDataAsync();
     }
 
+    private void Telemetry_OnChanged(object sender, RoutedEventArgs e)
+    {
+        if (!_initialized) return;
+        var enabled = TelemetryCheck.IsChecked == true;
+        _settings.TelemetryEnabled = enabled;
+        _telemetry.SetEnabled(enabled, deletePending: !enabled);
+        SettingsStore.Save(_settings);
+        UpdateTelemetryQueueStatus();
+        if (enabled && _settings.TelemetryDisclosureVersion >= 2)
+            _ = _telemetry.FlushPendingAsync();
+    }
+
+    private void AcknowledgeTelemetryDisclosure_OnClick(
+        object sender, RoutedEventArgs e)
+    {
+        _settings.TelemetryDisclosureVersion = 2;
+        TelemetryDisclosurePanel.Visibility = Visibility.Collapsed;
+        SettingsStore.Save(_settings);
+        if (_settings.TelemetryEnabled) _ = _telemetry.FlushPendingAsync();
+    }
+
+    private void DeleteTelemetryQueue_OnClick(object sender, RoutedEventArgs e)
+    {
+        _telemetry.DeletePending();
+        UpdateTelemetryQueueStatus();
+    }
+
+    private void UpdateTelemetryQueueStatus() =>
+        TelemetryQueueStatus.Text = _settings.TelemetryEnabled
+            ? $"대기 집계 {_telemetry.PendingCount}건"
+            : "전송 꺼짐 · 대기 자료 없음";
+
     private void ClickThrough_OnChanged(object sender, RoutedEventArgs e)
     {
         if (!_initialized) return;
@@ -1433,34 +1493,30 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
             CurrentOverlayDisplayState(), mode), save: true);
     }
 
-    /// <summary>마지막 패 스냅샷으로 익명 레코드를 보낸다. 판당 1회, fail-silent.</summary>
+    /// <summary>식별자 없는 매치 집계를 다음 실행의 전송 큐에 넣는다.</summary>
     private void SendMatchTelemetry()
     {
         try
         {
             if (!_liveSessionActive) return;
             _telemetrySession.Send(
-                _settings.TelemetryAnonId, UpdateService.CurrentVersion.ToString(3),
-                "2.314", string.IsNullOrEmpty(_lastWarcraftVersion) ? "unknown" : _lastWarcraftVersion,
-                string.IsNullOrWhiteSpace(_settings.GoalUnitId) ? "unknown" : _settings.GoalUnitId,
-                string.IsNullOrWhiteSpace(_settings.NavigationMode) ? "unknown" : _settings.NavigationMode,
-                string.IsNullOrWhiteSpace(_settings.GoroseiMode) ? "None" : _settings.GoroseiMode,
-                "auto",
+                UpdateService.CurrentVersion.ToString(3),
+                "2.314",
                 string.IsNullOrWhiteSpace(_matchDifficulty) ? "unknown" : _matchDifficulty,
-                _outcome.Outcome, _outcome.OutcomeSource);
+                _outcome.Outcome);
         }
         catch { /* fail-silent */ }
     }
 
-    /// <summary>패가 있는 스캔만 스냅샷에 남긴다. 전멸·대기 스캔은 마지막 패를 덮지 않는다.</summary>
+    /// <summary>개별 패 대신 coarse count만 마지막 정상 관측으로 남긴다.</summary>
     private void CaptureMatchTelemetry()
     {
         try
         {
             if (!_liveSessionActive) return;
-            var hand = _automatic.Values.Where(x => x.Count > 0).ToList();
-            _telemetrySession.Capture(hand, _completedTopUnits.CompletedUnitIds,
-                hand.Sum(x => x.Count));
+            _telemetrySession.Capture(
+                _automatic.Values.Where(entry => entry.Count > 0).Sum(entry => entry.Count),
+                _completedTopUnits.CompletedUnitIds.Count);
         }
         catch { /* fail-silent */ }
     }

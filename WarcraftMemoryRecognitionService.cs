@@ -276,12 +276,16 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                 };
             var suffix = mapped.UnknownCount > 0 ? $" · 미등록 {mapped.UnknownCount}" : "";
             var mapSignals = _mapSignalTracker.Observe(snapshot.MapSignalSnapshot);
+            var confirmedReadyBoundary = _mapSignalTracker.LastObservationConfirmedReset;
+            if (confirmedReadyBoundary)
+                ResetSessionCaches(force: true, clearMapSignals: false);
             MarkSessionReady();
             return new RecognitionResult
             {
                 Entries = mapped.Entries,
                 MapSignals = mapSignals,
                 State = RecognitionState.Ready,
+                ConfirmsSessionBoundary = confirmedReadyBoundary,
                 Status = $"워크 메모리 {mapped.Entries.Sum(x => x.Count)}장{suffix}" +
                          (profile.Verified ? "" : " · 검증 세션(임시 활성)") + $" · {DateTime.Now:HH:mm:ss}",
                 Diagnostics = diagnostics
