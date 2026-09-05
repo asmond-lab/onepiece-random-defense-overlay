@@ -211,7 +211,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                                 candidate.Metrics.HasAny ||
                                 includeBuffCandidates && IsCheapBuffFiller(candidate.Unit) ||
                                 strategy.Value.FillCommunitySupports &&
-                                CommunityPriorityScore(goal, candidate.Unit) > 0)
+                                (BuffSupportValue(candidate.Unit) > 0 ||
+                                 CommunityPriorityScore(goal, candidate.Unit) > 0))
             .Select(candidate => new CraftCandidate(candidate.Unit,
                 EvaluateInitialCandidate(candidate.Unit), candidate.Metrics))
             .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
@@ -315,11 +316,6 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             }
         }
 
-        // 어떤 유닛을 조합할지는 역할 로직이 고르고, 화면 순서는 신+ 채용률(또는
-        // 수작업 우선도)이 높은 순으로 보여준다. 다만 현재 스턴이 목표치보다 낮으면
-        // 스턴 후보가 채용률 높은 방깎 후보 뒤로 밀리지 않게 먼저 둔다. 사용자는
-        // 화면 순서대로 조합하므로 이 생존 축을 뒤로 보내면 완성 전에 라인이 터진다.
-        // 초월의 하위 전설은 채용률과 스턴보다 스토리 진행이 앞선다.
         var projectedBeforeSupports = AggregateStrategyMetrics(counts) +
                                       (showGoal
                                           ? GoalStrategyCalculator.StrategyMetricsFor(goal)
@@ -368,6 +364,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 ViviExpertPriority(
                     goal, pair.recommendation.Route.GoalUnitId,
                     viviPartnerId, goalOwned))
+            .ThenByDescending(pair => pair.recommendation.RecipeProgress.CompletionRatio)
+            .ThenBy(pair => pair.recommendation.RecipeProgress.MissingLeaves
+                .Sum(leaf => leaf.MissingCount))
+            .ThenByDescending(pair => strategy is { } supportStrategy
+                ? RemainingUsefulMetricCount(GoalStrategyCalculator.StrategyMetricsFor(
+                    catalog.Unit(pair.recommendation.Route.GoalUnitId)),
+                    projectedBeforeSupports, supportStrategy)
+                : 0)
             .ThenByDescending(pair =>
                 CommunityPriorityScore(goal, catalog.Unit(pair.recommendation.Route.GoalUnitId)))
             .ThenBy(pair => pair.index)
@@ -393,40 +397,34 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                               (pinningFirstRareShip || pinningTargetRare ? 1 : 0)))
             .ToList();
 
-        // 세라핌은 역할 지표(스턴·이감·방깎)가 없어 파이프라인이 집지 못한다.
-        // 현재 목표 채용률이 충분한(10%+) 최고 세라핌 1기를, 역할 구성(스턴 페어 등)을
-        // 밀어내지 않도록 목록에 '추가'로 끼워 넣는다(실측: 징베 S-호크 48%,
-        // 상디 S-베어 34% — 목표별로 만드는 세라핌이 갈린다).
-        if (_activeClearProfile is { } seraphimProfile && !seraphimBlocked &&
+        if (!seraphimBlocked &&
             strategy is not { StopAfterCoreTargets: true })
         {
             var bestSeraphim = catalog.AllUnits
                 .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "세라핌")
                 .DistinctBy(unit => unit.Id)
                 .Where(unit => counts.GetValueOrDefault(unit.Id) <= 0)
+                .Where(unit => MeetsOwnedPrerequisites(unit, counts))
+                .Where(unit => GoalStrategyCalculator.IsCompatibleSupportDamageType(goal, unit))
                 .Select(unit => (Unit: unit, Share: unit.Rawcodes
-                    .Select(code => seraphimProfile.SupportShare.GetValueOrDefault(code))
+                    .Select(code => _activeClearProfile?.SupportShare.GetValueOrDefault(code) ?? 0)
                     .DefaultIfEmpty()
-                    .Max()))
-                .Where(pair => pair.Share >= 0.10)
-                .OrderByDescending(pair => pair.Share)
+                    .Max(), Useful: strategy is { } seraphimStrategy
+                        ? RemainingUsefulMetricCount(GoalStrategyCalculator.StrategyMetricsFor(unit),
+                            projectedBeforeSupports, seraphimStrategy)
+                        : 0))
+                .Where(pair => pair.Useful > 0 || BuffSupportValue(pair.Unit) > 0 || pair.Share >= 0.10)
+                .OrderByDescending(pair => EvaluateInitialCandidate(pair.Unit).RecipeProgress.CompletionRatio)
+                .ThenByDescending(pair => pair.Useful)
+                .ThenByDescending(pair => BuffSupportValue(pair.Unit))
+                .ThenByDescending(pair => pair.Share)
                 .FirstOrDefault();
             if (bestSeraphim.Unit is not null &&
                 !results.Any(recommendation =>
                     BaseTier(catalog.Unit(recommendation.Route.GoalUnitId).Tier) ==
                     "세라핌"))
             {
-                var seraphimScore = CommunityPriorityScore(goal, bestSeraphim.Unit);
-                var insertAt = results.Count;
-                for (var i = showGoal ? 1 : 0; i < results.Count; i++)
-                {
-                    var supportId = results[i].Route.GoalUnitId;
-                    if (recipeLegendaryIds.Contains(supportId)) continue;
-                    if (CommunityPriorityScore(goal, catalog.Unit(supportId)) >= seraphimScore) continue;
-                    insertAt = i;
-                    break;
-                }
-                results.Insert(insertAt, EvaluateInitialCandidate(bestSeraphim.Unit));
+                results.Add(EvaluateInitialCandidate(bestSeraphim.Unit));
             }
         }
 
@@ -441,7 +439,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                           !suppressSecondaryTopCandidates &&
                           !GoalStrategyCalculator.IsMagicDamageTier(goal.Tier)
             ? Math.Min(32, effectiveTake + 8)
-            : effectiveTake;
+            : navigation.AllowsMultipleTopUnits ? take : effectiveTake;
         results = LimitRecommendationsPreservingStrategy(
             results, preGateTake,
             goal, counts, strategy, showGoal, protectedUnitIds);
@@ -892,7 +890,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(candidate => candidate.Metrics.HasAny ||
                                 includeBuffFillers && IsCheapBuffFiller(candidate.Unit) ||
                                 strategy.FillCommunitySupports &&
-                                CommunityPriorityScore(goal, candidate.Unit) > 0)
+                                (BuffSupportValue(candidate.Unit) > 0 ||
+                                 CommunityPriorityScore(goal, candidate.Unit) > 0))
             .ToList();
         if (strategy.CommunityCoreTarget > 0)
         {
@@ -963,15 +962,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                strategy.CommunityCoreTarget)
         {
             var core = remaining
-                .Where(candidate => CommunityPriorityScore(goal, candidate.Unit) > 0)
                 .Where(candidate => IsCommunityCore(goal, candidate.Unit, strategy))
                 .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
                     projected, strategy))
                 .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap))
-                .OrderByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
-                .ThenByDescending(candidate => candidate.Recommendation.RecipeProgress.CompletionRatio)
+                .OrderByDescending(candidate => candidate.Recommendation.RecipeProgress.CompletionRatio)
                 .ThenBy(candidate => candidate.Recommendation.RecipeProgress.MissingLeaves
                     .Sum(leaf => leaf.MissingCount))
+                .ThenByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
                 .FirstOrDefault();
             if (core is null) break;
             Add(core);
@@ -1168,29 +1166,28 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .OrderByDescending(candidate =>
                     GoalStrategyCalculator.AbilityTotal(candidate.Unit, "공격력 증가") +
                     GoalStrategyCalculator.AbilityTotal(candidate.Unit, "공격속도 증가"))
-                .ThenByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
                 .ThenByDescending(candidate =>
                     candidate.Recommendation.RecipeProgress.CompletionRatio)
+                .ThenByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
                 .FirstOrDefault();
             if (buff is not null) Add(buff);
         }
 
-        // A researched one-top profile can have mandatory buffers which are not expressible as
-        // slow/stun/armor totals (for example Toki's attack speed for Mihawk eternal). Add those
-        // only after the measurable core, retaining community priority before craft distance.
         while (strategy.FillCommunitySupports && !strategy.StopAfterCoreTargets &&
                selected.Count < take)
         {
             var support = remaining
-                .Where(candidate => CommunityPriorityScore(goal, candidate.Unit) > 0)
+                .Where(candidate => BuffSupportValue(candidate.Unit) > 0 ||
+                                    CommunityPriorityScore(goal, candidate.Unit) > 0)
                 .Where(candidate => IsCompatibleSupport(goal, candidate.Unit, selected, inventory,
                     projected, strategy))
                 .Where(candidate => FitsStunCap(projected, candidate, strategy.StunCap))
-                .OrderByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
-                .ThenByDescending(candidate =>
+                .OrderByDescending(candidate =>
                     candidate.Recommendation.RecipeProgress.CompletionRatio)
                 .ThenBy(candidate => candidate.Recommendation.RecipeProgress.MissingLeaves
                     .Sum(leaf => leaf.MissingCount))
+                .ThenByDescending(candidate => BuffSupportValue(candidate.Unit))
+                .ThenByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
                 .FirstOrDefault();
             if (support is null) break;
             Add(support);
@@ -1644,15 +1641,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         StrategyMetrics projected,
         GoalStrategyProfile strategy,
         UnitDefinition goal) => candidates
-        // 커뮤니티 점수와 상위별 유효 복합 유틸을 먼저 보고, 같은 조건에서
-        // 현재 패 제작 거리와 목표 초과량을 비교한다.
-        .OrderByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
+        .OrderByDescending(candidate => candidate.Recommendation.RecipeProgress.CompletionRatio >= 0.9999)
         .ThenByDescending(candidate => RemainingUsefulMetricCount(candidate.Metrics, projected, strategy))
         .ThenByDescending(candidate => candidate.Recommendation.RecipeProgress.CompletionRatio)
         .ThenBy(candidate => candidate.Recommendation.RecipeProgress.MissingLeaves.Sum(leaf => leaf.MissingCount))
         .ThenBy(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount)
         .ThenBy(candidate => current + contribution(candidate) + 0.0001 < target ? 1 : 0)
         .ThenBy(candidate => Math.Abs(target - current - contribution(candidate)))
+        .ThenByDescending(candidate => CommunityPriorityScore(goal, candidate.Unit))
         .ThenBy(candidate => candidate.Recommendation.Route.Name, StringComparer.CurrentCulture);
 
     // 2026-08-17 유저 검증(야마토+바헌): 비비 변화는 빌드를 다 짜고 패가 남을 때
@@ -1883,19 +1879,12 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     {
         if (goal.Rawcodes.Contains("F90H", StringComparer.Ordinal))
             return candidate.Rawcodes.Any(rawcode => rawcode is "F50h" or "O30h");
-        if (strategy.CommunityCoreTarget <= 0) return false;
-        if (_activeClearProfile is { } profile)
-            return candidate.Rawcodes.Any(profile.CoreRawcodes.Contains);
-        var fallback = RecommendationCommunityPriorities.ForGoal(goal);
-        if (fallback is null) return false;
-        var fallbackCore = fallback
-            .OrderByDescending(pair => pair.Value)
-            .ThenBy(pair => pair.Key, StringComparer.Ordinal)
-            .Take(strategy.CommunityCoreTarget)
-            .Select(pair => pair.Key)
-            .ToHashSet(StringComparer.Ordinal);
-        return candidate.Rawcodes.Any(fallbackCore.Contains);
+        return false;
     }
+
+    private static double BuffSupportValue(UnitDefinition unit) =>
+        GoalStrategyCalculator.AbilityTotal(unit, "공격력 증가") +
+        GoalStrategyCalculator.AbilityTotal(unit, "공격속도 증가");
 
     private static int RemainingUsefulMetricCount(StrategyMetrics metrics,
         StrategyMetrics projected,

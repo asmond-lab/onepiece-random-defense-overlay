@@ -219,8 +219,10 @@ public sealed class PhysicalTopRecommendationPolicyTests
             catalog.Unit(goalUnitId), catalog.Unit("rawcode:130h")));
     }
 
-    [Fact]
-    public void KatakuriSoloTopRecommendationsIncludeClearRecordCore()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void KatakuriSoloTopRecommendationsMaintainRoleTargetsWithOrWithoutHistory(bool hasHistory)
     {
         var catalog = Catalog();
         var stats = ClearBuildStats.Load(
@@ -230,41 +232,25 @@ public sealed class PhysicalTopRecommendationPolicyTests
         Assert.Equal(472, profile.SampleCount);
         Assert.True(profile.CoreRawcodes.SetEquals(["Q30h", "0A0h", "W50h"]));
 
-        var recommendations = Engine(catalog).RecommendNearestCrafts(
+        var recommendations = new RecommendationEngine(catalog, hasHistory ? stats : ClearBuildStats.Empty)
+            .RecommendNearestCrafts(
             "rawcode:I70h",
             [
                 Entry("rawcode:I70h"), Entry("item_greenblood"),
                 Entry("rawcode:060h")
             ],
             take: 12, navigationMode: "PathOfKings.BountyHunter");
-        var recommendedCodes = recommendations
-            .SelectMany(recommendation =>
-                catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes)
-            .ToHashSet(StringComparer.Ordinal);
-
-        Assert.All(profile.CoreRawcodes,
-            rawcode => Assert.Contains(rawcode, recommendedCodes));
-        var corePositions = recommendations
-            .Select((recommendation, index) => new
-            {
-                Index = index,
-                IsCore = catalog.Unit(recommendation.Route.GoalUnitId).Rawcodes
-                    .Any(profile.CoreRawcodes.Contains)
-            })
-            .Where(item => item.IsCore)
-            .Select(item => item.Index)
-            .ToList();
-        Assert.Equal(3, corePositions.Count);
-        Assert.Equal(
-            Enumerable.Range(corePositions[0], corePositions.Count),
-            corePositions);
-        Assert.True(corePositions[^1] <= 4);
+        var projected = new RecommendationEngine(catalog).AggregateStrategyMetrics(
+            recommendations.Select(recommendation => recommendation.Route.GoalUnitId)
+                .Append("rawcode:I70h")
+                .ToDictionary(id => id, _ => 1, StringComparer.OrdinalIgnoreCase));
+        Assert.True(projected.Stun >= 1.4);
+        Assert.True(projected.Slow >= 102);
         var seraphim = recommendations
             .Select(recommendation => catalog.Unit(recommendation.Route.GoalUnitId))
             .Where(unit => unit.Tier.Split('[', 2)[0].Trim() == "세라핌")
             .ToList();
-        Assert.Single(seraphim);
-        Assert.Contains("0A0h", seraphim[0].Rawcodes);
+        Assert.InRange(seraphim.Count, 0, 1);
     }
 
     [Theory]

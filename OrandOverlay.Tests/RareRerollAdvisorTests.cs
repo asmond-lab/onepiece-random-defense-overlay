@@ -5,6 +5,31 @@ namespace OrandOverlay.Tests;
 
 public sealed class RareRerollAdvisorTests
 {
+    [Theory]
+    [InlineData(true, 0.5)]
+    [InlineData(false, 1)]
+    public void LateCleanupPreservesChosenGoalOrReadySupportMaterials(bool isGoal, double completion)
+    {
+        var catalog = new DataCatalog();
+        catalog.Load();
+        const string rareId = "rawcode:520h";
+        var root = catalog.AllUnits.First(unit => unit.Recipe.ContainsKey(rareId));
+        var count = root.Recipe[rareId];
+        var recommendation = new Recommendation
+        {
+            Route = new RouteDefinition { Id = "ready", GoalUnitId = root.Id, Name = root.Name },
+            RecipeProgress = new RecipeProgress
+            {
+                RequiredLeafCount = 2, OwnedLeafCount = (long)(completion * 2)
+            }
+        };
+        var advice = new RareRerollAdvisor(catalog).Evaluate(
+            [new InventoryEntry { UnitId = rareId, Count = count }], [recommendation],
+            isGoal ? root : catalog.Unit("rawcode:H90H"), round: 44);
+
+        Assert.DoesNotContain(advice, item => item.UnitId == rareId);
+    }
+
     [Fact]
     public void EveryRareUsesConsistentLateCleanupClassification()
     {

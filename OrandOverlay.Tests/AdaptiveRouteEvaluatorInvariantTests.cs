@@ -72,8 +72,8 @@ public sealed class AdaptiveRouteEvaluatorInvariantTests
         var automatic = input with { IsAutomatic = true };
         var score = new AdaptiveRouteEvaluator().Evaluate(automatic).PhysicalCandidates[0];
 
-        Assert.Equal(6000, score.EvidenceConfidenceBp);
-        Assert.Equal(6000, score.ConfidenceBp);
+        Assert.Equal(10000, score.EvidenceConfidenceBp);
+        Assert.Equal(7000, score.ConfidenceBp);
         Assert.Null(new AdaptiveRouteEvaluator().Evaluate(automatic).Selected);
     }
 

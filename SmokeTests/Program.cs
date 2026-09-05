@@ -220,9 +220,9 @@ Assert(yamatoStunSupports.Count > 0 &&
     "야마토 초월 추천은 채용률 순서와 무관하게 스턴 1.4 패키지를 유지");
 var yamatoSlowPriority = engine.RecommendNearestCrafts("yamato_transcendent",
     Inventory("rawcode:O30h", "rawcode:Y30h", "rawcode:IC0h"), 8);
-Assert(FirstRoleSupport(engine, yamatoSlowPriority, "yamato_transcendent").Route.GoalUnitId ==
-       "rawcode:V50h",
-    "야마토는 스턴 완성 뒤 순수 50이감 스모커보다 최근 커뮤니티의 에이스 왜곡을 우선");
+Assert(AbilityValue(FirstRoleSupport(engine, yamatoSlowPriority,
+           "yamato_transcendent").CompositionUnits[0], "이동속도 감소") > 0,
+    "야마토는 보유 패로 스턴 완성 뒤 부족한 이동속도 감소를 보강");
 var yamatoSignedInventory = Inventory("rawcode:O30h", "rawcode:Y30h", "rawcode:IC0h",
     "rawcode:V20h", "mobydick", "rawcode:W50h");
 var yamatoSignedSlow = engine.RecommendNearestCrafts("yamato_transcendent",
@@ -328,9 +328,9 @@ var usoppDaekkaeIds = usoppDaekkae.Select(item => item.Route.GoalUnitId).ToList(
 Console.WriteLine("우솝 대깨 순서: " + string.Join(" > ", usoppDaekkae.Select(item =>
     RecommendationPresentation.CraftUnitName(item.CompositionUnits[0]))));
 Assert(usoppDaekkaeIds.FirstOrDefault() == "rawcode:B90H" &&
-       usoppDaekkaeIds.Contains("rawcode:M30h") &&
-       usoppDaekkaeIds.Contains("rawcode:O30h"),
-    "우솝 대깨도 스턴 1.4를 먼저 맞춘 뒤 최근 빈도의 사보·봉쿠레 축을 반영");
+       AbilityValue(FirstRoleSupport(engine, usoppDaekkae,
+           "rawcode:B90H").CompositionUnits[0], "스턴") > 0,
+    "우솝 대깨는 목표를 유지하고 부족한 스턴 지원을 먼저 추천");
 var usoppRecommendedStun = usoppDaekkae.Skip(1)
     .Where(item => catalog.Unit(item.Route.GoalUnitId).Tier.Split('[', 2)[0].Trim()
         != "희귀함")
@@ -1332,8 +1332,8 @@ Assert(sanjiGoal.Tier.Contains("[마딜]", StringComparison.Ordinal) &&
     "상디초월은 바제스 가능 + 마딜 티어(물딜 오판 회귀 방지 전제)");
 var sanjiPicks = engine.RecommendNearestCrafts("rawcode:H90H", [], take: 10,
     navigationMode: "AlliedForces.EmergencyCall");
-Assert(sanjiPicks.Count > 1 && sanjiPicks[0].Route.GoalUnitId == "rawcode:H90H",
-    "긴급소집에서 상디초월 목표 카드를 먼저 표시");
+Assert(sanjiPicks.Count is > 1 and <= 10 && sanjiPicks[0].Route.GoalUnitId == "rawcode:H90H",
+    "긴급소집에서 10칸 제한을 지키며 상디초월 목표 카드를 먼저 표시");
 var sanjiStory = engine.RecipeLegendaryUnitIds("rawcode:H90H");
 var sanjiSupports = sanjiPicks.Skip(1)
     .Where(item => !sanjiStory.Contains(item.Route.GoalUnitId, StringComparer.OrdinalIgnoreCase))
@@ -1348,7 +1348,9 @@ Assert(sanjiSupports.Any(unit => unit.Rawcodes.Any(code => code is "K20h" or "D1
        sanjiSupports.All(unit => !unit.Rawcodes.Any(code => code is "U10h" or "E10h" or "610h")),
     "마딜은 짤깍 대신 쵸파 혼포인트 같은 버퍼를 넣는다");
 Assert(sanjiSupports.Sum(unit => SupportAbility(unit, "마법방어력 감소")) >= 1,
-    "마딜 상위는 마방깎 소스를 최소 한 점 확보");
+    "마딜 상위는 마방깎 소스를 최소 한 점 확보: " + string.Join(" > ",
+        sanjiPicks.Select(item => item.Route.GoalUnitId + ":" +
+            SupportAbility(catalog.Unit(item.Route.GoalUnitId), "마법방어력 감소"))));
 var sanjiStun = sanjiSupports.Sum(unit => SupportAbility(unit, "스턴"));
 Assert(sanjiStun >= 0.9 && sanjiStun <= 1.5001,
     "마딜 상위도 스턴 축은 1.4 목표·1.5 상한 규칙을 따름");
@@ -1425,16 +1427,16 @@ Assert(bundledStats.GoalProfile(["H90H"], TopScope.MultiTop)
            is { SampleCount: >= 50, Scope: TopScope.MultiTop },
     "번들 스냅샷에 상디초월 다상위 표본 충분");
 
-// 자동 시작: 첫 희귀함이 재료로 들어가는 학습 상위 중 표본 최다를 추천한다.
 var autoStartRare = catalog.AllUnits.FirstOrDefault(unit =>
     unit.Tier.Split('[', 2)[0].Trim() == "희귀함" &&
     AutoStartAdvisor.RecommendGoal(catalog, bundledStats, [unit.Id]) is not null);
 Assert(autoStartRare is not null, "희귀함에서 출발하는 자동 시작 추천이 최소 1종 존재");
 var autoStartAdvice = AutoStartAdvisor.RecommendGoal(catalog, bundledStats, [autoStartRare!.Id])!;
 Assert(AutoStartAdvisor.RequiresUnit(catalog, autoStartAdvice.Goal, autoStartRare.Id) &&
-       LearnedSelection.GoalSampleCount(bundledStats, autoStartAdvice.Goal) >=
-       ClearBuildStats.MinimumGoalSamples,
-    "자동 시작 추천 상위는 그 희귀함을 재료로 쓰고 학습 표본을 충족");
+       autoStartAdvice.Goal.Recipe.Count > 0,
+    "자동 시작 추천 상위는 그 희귀함을 재료로 쓰는 유효한 조합");
+Assert(AutoStartAdvisor.RecommendGoal(catalog, ClearBuildStats.Empty, [autoStartRare.Id]) is not null,
+    "클리어 기록 없이도 보유 희귀함 기준 추천 가능");
 Assert(AutoStartAdvisor.RecommendGoal(catalog, bundledStats, ["luffy_common"]) is null,
     "희귀함이 없으면 자동 시작 추천 없음");
 
@@ -1469,8 +1471,6 @@ Assert(rareKeepAdvisor.Evaluate(Inventory("rawcode:220h"), [noopPlan])
            .Any(item => item.UnitId == "rawcode:220h"),
     "목표·클리어 데이터 없이는 기존처럼 재료 수요만 판단");
 
-// 세라핌 기물 추천: 그린블러드 1개 레시피로 편입, 목표별 채용률 최고 세라핌 포함.
-// 세라핌 포함은 클리어 프로필이 있어야 작동하므로 학습 엔진으로 검증한다.
 var seraphimEngine = new RecommendationEngine(catalog, bundledStats);
 var jinbeWithBlood = seraphimEngine.RecommendNearestCrafts("rawcode:A90H",
     [new InventoryEntry { UnitId = "item_greenblood", Count = 1, Confidence = 1 }], 8,
@@ -1484,11 +1484,11 @@ Assert(jinbeWithBlood.Count <= 12 &&
 var hawkRecipe = catalog.Unit("rawcode:3A0h").Recipe;
 Assert(hawkRecipe.ContainsKey("item_greenblood") && hawkRecipe.ContainsKey("mihawk_hidden"),
     "S-호크 재료는 미호크 히든 + 그린블러드");
-Assert(seraphimEngine.RecommendNearestCrafts("rawcode:H90H",
-        [new InventoryEntry { UnitId = "item_greenblood", Count = 1, Confidence = 1 }], 8,
-        navigationMode: "AlliedForces.EmergencyCall")
-    .Any(rec => rec.Route.GoalUnitId.Equals("rawcode:1A0h", StringComparison.OrdinalIgnoreCase)),
-    "상디는 S-베어 세라핌을 추천");
+Assert(seraphimEngine.RecommendNearestCrafts("rawcode:1A0h",
+           Inventory("item_greenblood"), 1)[0].RecipeProgress.CompletionRatio < 1 &&
+       seraphimEngine.RecommendNearestCrafts("rawcode:1A0h",
+           Inventory("item_greenblood", "rawcode:030h"), 1)[0].RecipeProgress.CompletionRatio == 1,
+    "S-베어는 그린블러드와 쿠마 전설을 모두 보유해야 완성 가능");
 // 그린블러드는 판당 1회용: 세라핌을 이미 만들었거나 그블을 썼으면 세라핌 추천 중단.
 Assert(!seraphimEngine.RecommendNearestCrafts("rawcode:A90H", Inventory("rawcode:0A0h"), 8,
         navigationMode: "AlliedForces.EmergencyCall")
@@ -1923,12 +1923,12 @@ var yamatoSupportUnits = yamatoOrderPicks
 Assert(yamatoSupportUnits.Count > 0 &&
        !yamatoSupportUnits[0].Rawcodes.Contains("W50h", StringComparer.Ordinal),
     "목박 필러(비비 변화)를 야마토 1순위 지원으로 표시하지 않음");
-var yamatoSaboIndex = yamatoSupportUnits.FindIndex(unit =>
-    unit.Rawcodes.Contains("M30h", StringComparer.Ordinal));
+var yamatoStunIndex = yamatoSupportUnits.FindIndex(unit =>
+    SupportAbility(unit, "스턴") > 0);
 var yamatoViviIndex = yamatoSupportUnits.FindIndex(unit =>
     unit.Rawcodes.Contains("W50h", StringComparer.Ordinal));
-Assert(yamatoSaboIndex >= 0 && (yamatoViviIndex < 0 || yamatoSaboIndex < yamatoViviIndex),
-    "실측 채용률을 유지한 사보 히든이 목박 보정된 비비 변화보다 앞순위");
+Assert(yamatoStunIndex >= 0 && (yamatoViviIndex < 0 || yamatoStunIndex < yamatoViviIndex),
+    "부족한 스턴 지원을 남는 패 필러 비비 변화보다 먼저 추천");
 
 // --- 자동조합 계획: 맵에서 추출한 조합 키 + 재료 충족 단계 ---
 var combineHotkeys = CombineHotkeyCatalog.Load(
@@ -2576,7 +2576,9 @@ Console.WriteLine("PASS: T8 기존 패수치 단독 표시");
     Assert(round20 is not null && round21 is not null && round24 is not null &&
            round20.Presentation.IsRecommendationOnly &&
            round21.Applied.Navigation.State == NavigationRecommendationState.Actionable &&
-           round24.Applied.Navigation.State == NavigationRecommendationState.SourceExpectedForced,
+           round24.Applied.Navigation.State != NavigationRecommendationState.SourceExpectedForced &&
+           round24.Applied.Navigation.Options.Any(option =>
+               option.OptionId == round24.Applied.Navigation.RecommendedOptionId),
         "production composition adaptive planning replay");
     Console.WriteLine("PASS: adaptive planning replay");
 

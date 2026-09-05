@@ -48,6 +48,10 @@ public sealed class RareRerollAdvisor(DataCatalog catalog)
             var rootId = recommendation.CompositionUnits.FirstOrDefault()?.UnitId
                          ?? recommendation.Route.GoalUnitId;
             if (string.IsNullOrWhiteSpace(rootId)) continue;
+            if (round >= LateGameCleanupRound &&
+                !string.Equals(rootId, goal?.Id, StringComparison.OrdinalIgnoreCase) &&
+                recommendation.RecipeProgress.CompletionRatio < 0.9999)
+                continue;
             AccumulateRareDemand(rootId, 1, availability, rareDemand,
                 new HashSet<string>(StringComparer.OrdinalIgnoreCase));
         }
