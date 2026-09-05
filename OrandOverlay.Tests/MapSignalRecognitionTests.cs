@@ -76,6 +76,67 @@ public sealed class MapSignalRecognitionTests
     }
 
     [Fact]
+    public void Tracker_ConfirmedMarinefordAdvancesPastLingeringObjectiveAndResumesRecommendations()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+        tracker.Observe(Snapshot("n008"));
+        tracker.Observe(Snapshot("n008"));
+        Assert.Equal(7, tracker.Observe(Snapshot("n008", "n00A")).CompletedStoryStageOrdinal);
+        var advanced = tracker.Observe(Snapshot(["n008", "n00A"], ["e019"]));
+        Assert.Equal(8, advanced.CompletedStoryStageOrdinal);
+        Assert.False(tracker.LastObservationConfirmedReset);
+
+        var catalog = new DataCatalog();
+        catalog.Load(loadCarryPolicy: false);
+        var units = catalog.AllUnits.ToDictionary(unit => unit.Id);
+        StoryRewardSequenceDecision Evaluate(MapSignals signals) =>
+            StoryRewardSequencePlanner.Evaluate(new StoryRewardSequenceInput
+            {
+                Phase = PlannerPhase.AwaitMarineford,
+                Round = 22,
+                ActiveStoryStage = signals.ActiveObjectiveOrdinal,
+                CompletedStoryStage = signals.CompletedStoryStageOrdinal,
+                RewardWisps = signals.RewardWisps,
+                Inventory = [],
+                Units = units,
+                StoryStages = Story.Stages
+            });
+        Assert.Equal(StorySequenceAction.SpendRareWisps, Evaluate(advanced).Action);
+        var spent = tracker.Observe(Snapshot("n008", "n00A"));
+        var sequence = Evaluate(spent);
+        Assert.Equal(RecommendationSequenceStage.TopAndNavigation, sequence.Stage);
+        var goal = catalog.AllUnits.First(unit => TopGradePolicy.IsTopGrade(unit.Tier));
+        var candidates = RecommendationPipeline.ComputeCandidates(new RecommendationPipelineRequest
+        {
+            Engine = new RecommendationEngine(catalog),
+            Goal = goal,
+            Inventory = [],
+            InitialSurface = RecommendationSurface.StoryLegend,
+            StorySequence = sequence,
+            NavigationMode = "AlliedForces.DoubleBenefit",
+            Gorosei = GoroseiMode.None,
+            BuildVariant = BuildVariants.AutoId,
+            Difficulty = "악몽"
+        });
+        Assert.NotEmpty(candidates.Recommendations);
+    }
+
+    [Fact]
+    public void Tracker_MixedObjectivesRequireOneUnambiguousForwardCandidate()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+        tracker.Observe(Snapshot("n008"));
+        tracker.Observe(Snapshot("n008"));
+        tracker.Observe(Snapshot("n008", "n00A"));
+        tracker.Observe(Snapshot("n008", "n00A", "n001"));
+        Assert.Equal(7, tracker.Observe(Snapshot("n008", "n00A")).CompletedStoryStageOrdinal);
+        Assert.Equal(8, tracker.Observe(Snapshot("n008", "n00A")).CompletedStoryStageOrdinal);
+        tracker.Observe(Snapshot("n006", "n008"));
+        Assert.Equal(8, tracker.Observe(Snapshot("n006", "n008")).CompletedStoryStageOrdinal);
+        Assert.False(tracker.LastObservationConfirmedReset);
+    }
+
+    [Fact]
     public void Tracker_RetainsLastGoodAcrossDisappearanceTransientAndClearsOnlyOnReset()
     {
         var tracker = new MapSignalSnapshotTracker(Profile);

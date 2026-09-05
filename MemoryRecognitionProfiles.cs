@@ -81,6 +81,17 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
         var stage = objectiveRawcodes.Length == 1
             ? profile.Objective(objectiveRawcodes[0])
             : null;
+        if (objectiveRawcodes.Length > 1 && LastGood.ActiveObjectiveOrdinal is { } confirmed)
+        {
+            // 이전 대상이 함께 남아 있어도, 새로 등장한 뒤 단계가 하나면 재확인한다.
+            // 초기의 혼합 감지나 여러 미래 단계는 진행 근거로 삼지 않는다.
+            var objectives = objectiveRawcodes.Select(profile.Objective).ToArray();
+            if (objectives.All(objective => objective is not null))
+            {
+                var forward = objectives.Where(objective => objective!.Ordinal > confirmed).ToArray();
+                if (forward.Length == 1) stage = forward[0];
+            }
+        }
         if (stage is null)
         {
             _candidateOrdinal = null;
