@@ -13,7 +13,7 @@ using OrandOverlay;
 
 namespace PlannerEvidenceCapture;
 
-internal static class Program
+internal static partial class Program
 {
     private const string LongUnknownReason =
         "상대 상위 유닛 수와 첫 전설 이력이 아직 확정되지 않아 마지막으로 안전했던 추천을 유지합니다. " +
@@ -29,6 +29,12 @@ internal static class Program
         var app = new App { SkipRuntimeStartup = true };
         app.InitializeComponent();
         app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        if (args.Contains("--navigation-only", StringComparer.Ordinal))
+        {
+            CaptureNavigationStates(output, args.Contains("--live-quests", StringComparer.Ordinal));
+            app.Shutdown();
+            return 0;
+        }
         var rows = new List<EvidenceRow>();
         var bulletRows = new List<BulletEvidenceRow>();
         var currentCraftRows = new List<CurrentCraftEvidenceRow>();

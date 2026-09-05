@@ -130,6 +130,7 @@ public sealed record NavigationIntervalOptionScore(
 
 public sealed record NavigationIntervalScoringRequest
 {
+    public bool EvaluateContinuously { get; init; }
     public int Round { get; init; }
     public int BeforeBuildBp { get; init; }
     public int BeforeCoreBp { get; init; }

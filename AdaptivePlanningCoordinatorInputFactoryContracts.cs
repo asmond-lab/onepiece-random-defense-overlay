@@ -23,6 +23,8 @@ public sealed record AdaptivePlanningInputSource
     public ImmutableArray<string> PreviouslyObservedLegendIds { get; init; } = [];
     public ImmutableArray<PlanningValue> AdditionalValues { get; init; } = [];
     public required ManualLatches ManualLatches { get; init; }
+    public RouteQuestSnapshot RouteQuests { get; init; } = RouteQuestSnapshot.Unknown;
+    public bool PursueBothRouteQuests { get; init; }
     public bool IsTransient { get; init; }
     public string? CurrentOverlayRecommendationId { get; init; }
     public string? LockedOverlayRecommendationId { get; init; }

@@ -87,10 +87,11 @@ public sealed class AdaptivePlanningSystemTests
         Assert.Equal(fallbackLegendId, frames[3].Applied.State.LockedFirstLegendId);
         Assert.Equal(PlannerEvidenceState.Round20Preview, frames[4].Presentation.State);
         Assert.Equal(PlannerEvidenceState.Round21Actionable, frames[5].Presentation.State);
-        Assert.Equal(NavigationRecommendationState.SourceExpectedForced,
+        Assert.NotEqual(NavigationRecommendationState.SourceExpectedForced,
             frames[6].Applied.Navigation.State);
-        Assert.Equal("AlliedForces.DoubleBenefit",
-            frames[6].Applied.Navigation.RecommendedOptionId);
+        Assert.NotEmpty(frames[6].Applied.Navigation.Options);
+        Assert.Contains(frames[6].Applied.Navigation.Options,
+            option => option.OptionId == frames[6].Applied.Navigation.RecommendedOptionId);
         Assert.Equal(lockedGoal, frames[7].Applied.State.RouteLock?.GoalUnitId);
         Assert.Equal(lockedNavigation, frames[7].Applied.State.NavigationLockId);
         Assert.Equal(PlannerEvidenceState.ManualOverride, frames[8].Presentation.State);

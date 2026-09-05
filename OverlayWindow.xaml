@@ -30,6 +30,9 @@
                      TextWrapping="Wrap" Margin="0,2,0,0" Visibility="Collapsed"
                      AutomationProperties.AutomationId="planner-phase"
                      AutomationProperties.Name="판단 단계"/>
+          <TextBlock x:Name="NavigationCandidateText" Foreground="{x:Static local:OverlayTheme.MutedBrush}"
+                     FontSize="{x:Static local:OverlayTheme.PlannerValueTypeSize}" TextWrapping="Wrap"
+                     AutomationProperties.AutomationId="navigation-candidate" Visibility="Collapsed"/>
           <TextBlock x:Name="CarryModeText" Foreground="#FF74C0FC" FontSize="10.5"
                      FontWeight="SemiBold" Margin="0,3,0,0" Visibility="Collapsed"/>
           <TextBlock x:Name="ReadinessText" Foreground="#FFF0C75E" FontSize="10.5"

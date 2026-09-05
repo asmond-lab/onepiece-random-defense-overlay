@@ -25,13 +25,13 @@ public static class NavigationIntervalScorer
             return request.PreviousResult ?? Terminal(
                 NavigationRecommendationState.NoSafeRecommendation, null,
                 NavigationScoreBlocker.InputNotReady, isFrozen: true);
-        if (request.Round >= 24)
+        if (!request.EvaluateContinuously && request.Round >= 24)
             return Terminal(NavigationRecommendationState.SourceExpectedForced,
                 request.ForcedRound24OptionId, null);
-        if (request.ManualNavigationOverride)
+        if (!request.EvaluateContinuously && request.ManualNavigationOverride)
             return Terminal(NavigationRecommendationState.ManualOverride,
                 request.ManualOverlayOptionId, NavigationScoreBlocker.ManualOverride);
-        if (request.Round is >= 21 and <= 23 &&
+        if (!request.EvaluateContinuously && request.Round is >= 21 and <= 23 &&
             !string.IsNullOrWhiteSpace(request.LockedOverlayRecommendationId))
         {
             return request.PreviousResult is { } previous &&

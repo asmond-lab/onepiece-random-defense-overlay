@@ -226,6 +226,7 @@ public sealed record MapSignals(
     int CompletedStoryStageOrdinal,
     ImmutableDictionary<string, int> RewardWisps)
 {
+    public RouteQuestSnapshot RouteQuests { get; init; } = RouteQuestSnapshot.Unknown;
     public static MapSignals Empty { get; } = new(
         null, null, 0, ImmutableDictionary<string, int>.Empty.WithComparers(StringComparer.Ordinal));
 
@@ -554,6 +555,8 @@ public static class NavigationProfiles
 
     public static NavigationOption Find(string? id)
     {
+        if (id == "Unselected") return new("Unselected", "", "", "항법 미선택", int.MaxValue,
+            "선택한 항법 없음: 항법 전용 효과를 적용하지 않습니다.");
         if (!string.IsNullOrWhiteSpace(id) && LegacyDefaults.TryGetValue(id, out var migratedId))
             id = migratedId;
 

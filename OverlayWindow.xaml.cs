@@ -29,6 +29,15 @@ public partial class OverlayWindow : OverlayWindowBase
     private IReadOnlyDictionary<string, int>? _recognizedInventory;
     private bool _showRouteRootAsCurrentCraft;
     private Action<string>? _onRouteSelected;
+    private string? _navigationExplanation;
+
+    public void RenderNavigationContext(string candidate, string explanation)
+    {
+        NavigationCandidateText.Text = candidate;
+        NavigationCandidateText.Visibility = Visibility.Visible;
+        _navigationExplanation = explanation;
+        FillBoard();
+    }
 
     public OverlayWindow()
     {
@@ -203,6 +212,15 @@ public partial class OverlayWindow : OverlayWindowBase
                 ? PhaseHintText.Text
                 : null, children, head?.Route.Id, _plannerEvidence, bulletBoard,
             _showRouteRootAsCurrentCraft);
+        if (_navigationExplanation is { } explanation)
+        {
+            var text = new TextBlock { Text = explanation, TextWrapping = TextWrapping.Wrap,
+                Foreground = OverlayTheme.MutedBrush, FontSize = OverlayTheme.PlannerValueTypeSize,
+                Margin = OverlayTheme.PlannerBlockMargin };
+            AutomationProperties.SetAutomationId(text, "navigation-comparison");
+            AutomationProperties.SetName(text, "항법 비교와 항로개척 근거");
+            BoardPanel.Children.Insert(0, text);
+        }
     }
 
     private BulletOperatingBoard? BuildBulletOperatingBoard(Recommendation? selected)

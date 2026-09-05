@@ -21,9 +21,7 @@ internal static class AdaptivePlanningCoordinatorSimulationFactory
                 AlliedResourceInterval.UnknownFinite(0, 3),
                 AlliedResourceInterval.UnknownFinite(0, 3), 0, 0, craftValues));
 
-        var topCount = source.CompletedTopUnitIds.Length + source.Inventory.Count(entry =>
-            entry.Count > 0 && source.Units.TryGetValue(entry.UnitId, out var unit) &&
-            IsTop(unit.Tier));
+        var topCount = RouteQuestEvaluation.Evaluate(source).PlannedTopCount;
         var pathInput = new PathOfKingsSimulationInput(topCount, 0, 0, 0, false, [],
             profile.Fixture("royal-piecewise-proc-branches").SemanticInput.RoyalAttackScenarios);
         var path = new PathOfKingsNavigationSimulation(profile);

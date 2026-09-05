@@ -45,6 +45,7 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         var options = NavigationIntervalSimulationAdapter.Adapt(batch,
             new AdaptivePlanningCoordinatorOutcomeProjector(
                 beforeBuild, beforeCore, beforeCombat));
+        options = RouteQuestEvaluation.Evaluate(source).Apply(options);
         var canonical = new AdaptivePlanningInput(source.MatchGeneration, source.Round,
             source.Phase, new StorySignal(source.ActiveStoryStage ?? 0,
                 source.CompletedStoryMilestones, !source.IsTransient),
@@ -62,6 +63,7 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
             source.ManualLatches, source.IsTransient, false);
         var request = new NavigationIntervalScoringRequest
         {
+            EvaluateContinuously = true,
             Round = source.Round,
             BeforeBuildBp = beforeBuild,
             BeforeCoreBp = beforeCore,
@@ -147,11 +149,16 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
             PlanningValue.Known($"goal:{source.GoalUnitId}", 1),
             PlanningValue.Known($"navigation:{source.NavigationOptionId}", 1),
             PlanningValue.Known($"gorosei:{source.GoroseiMode}", 1),
+            PlanningValue.Known("route-quest:transcendent", (int)source.RouteQuests.Status("Q008")),
+            PlanningValue.Known("route-quest:limited", (int)source.RouteQuests.Status("Q011")),
+            PlanningValue.Known("route-quest:both", source.PursueBothRouteQuests ? 1 : 0),
             source.IsTransient ? PlanningValue.Unknown("runtime-signals") :
                 PlanningValue.Known("runtime-signals", 1)
         };
         values.AddRange(inventory.Select(pair =>
             PlanningValue.Known($"inventory:{pair.Key}", pair.Value)));
+        values.AddRange(RouteQuestCatalog.All.Select(quest =>
+            PlanningValue.Known($"route-quest:{quest.Id}", (int)source.RouteQuests.Status(quest.Id))));
         values.AddRange(source.CompletedTopUnitIds.Select(id =>
             PlanningValue.Known($"completed-top:{id}", 1)));
         values.AddRange(source.GrowthUnitIds.Select(id =>

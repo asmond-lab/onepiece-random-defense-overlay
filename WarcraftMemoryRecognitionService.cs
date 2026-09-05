@@ -28,6 +28,8 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     private readonly IncrementalMapStateScanner _mapStateScanner =
         new(MapStateBackgroundBudgetBytes);
     private LocatorCache? _locatorCache;
+    private readonly WarcraftRouteQuestReader _routeQuestReader = new();
+    private long _questProcessStarted = long.MinValue;
 
     /// <summary>전체 힙 스캔 대신 매 인식 틱에 작은 조각만 읽는다.</summary>
     private static readonly TimeSpan MapStateSliceInterval = TimeSpan.FromSeconds(1);
@@ -139,6 +141,11 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
 
             using var memory = ReadOnlyProcessMemory.Open(process.Id);
             var processStarted = process.StartTime.ToUniversalTime().Ticks;
+            if (_questProcessStarted != processStarted)
+            {
+                _routeQuestReader.Reset();
+                _questProcessStarted = processStarted;
+            }
             EnsureGrowthPointerCache(processStarted);
             var moduleBase = (ulong)module.BaseAddress.ToInt64();
             // 로컬 슬롯은 실측 앵커가 있으면 실제 값을, 없으면 프로필 고정값을 쓴다.
@@ -279,6 +286,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             var confirmedReadyBoundary = _mapSignalTracker.LastObservationConfirmedReset;
             if (confirmedReadyBoundary)
                 ResetSessionCaches(force: true, clearMapSignals: false);
+            mapSignals = mapSignals with { RouteQuests = _routeQuestReader.Read(memory,
+                version, _mapSignalProfile.MapScriptSha256,
+                localPlayerConfirmed ? measuredSlot : null, token) };
             MarkSessionReady();
             return new RecognitionResult
             {
@@ -336,6 +346,7 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
     {
         var now = DateTimeOffset.UtcNow;
         if (clearMapSignals) _mapSignalTracker?.Reset();
+        _routeQuestReader.Reset();
         if (!force && _sessionBoundaryCachesCleared &&
             (!allowPeriodicRescan || now < _nextWaitingLocatorRescanAt))
             return;

@@ -385,7 +385,6 @@ public partial class MainWindow : Window
             _engine = new RecommendationEngine(_catalog, _clearStats, _combineHotkeys);
             DataVersionText.Text = $"데이터 {_catalog.Data.DataVersion} · {_catalog.Data.Disclaimer}" +
                                    ClearStatsSummary();
-            // 새 데이터로 학습된 상위·항법 목록을 갱신한다(선택은 최대한 유지).
             RepopulateGoalChoices(SelectedGoal?.Id ?? _settings.GoalUnitId);
             RepopulateNavigationChoices();
             RefreshAll($"신+ 클리어 데이터 {fresh.Count}판을 새로 반영했습니다.");
@@ -395,22 +394,12 @@ public partial class MainWindow : Window
     private List<UnitDefinition> GoalUnits()
     {
         var tops = _catalog.AllUnits
-            .Where(unit => IsTopUnitTier(unit.Tier))
+            .Where(unit => IsTopUnitTier(unit.Tier) && unit.Recipe.Count > 0)
             .DistinctBy(x => x.Id)
             .ToList();
-        // 학습된 상위(신+ 표본 12판 이상)만 노출하고 표본 많은 순으로 보여준다.
-        // 클리어 데이터가 아예 없으면 전체 목록으로 후퇴한다.
-        if (!_clearStats.HasData)
-            return tops
-                .OrderBy(x => x.Tier, StringComparer.CurrentCulture)
-                .ThenBy(x => x.Name, StringComparer.CurrentCulture)
-                .ToList();
         return tops
-            .Select(unit => (Unit: unit, Samples: LearnedSelection.GoalSampleCount(_clearStats, unit)))
-            .Where(pair => pair.Samples >= ClearBuildStats.MinimumGoalSamples)
-            .OrderByDescending(pair => pair.Samples)
-            .ThenBy(pair => pair.Unit.Name, StringComparer.CurrentCulture)
-            .Select(pair => pair.Unit)
+            .OrderBy(unit => unit.Tier, StringComparer.CurrentCulture)
+            .ThenBy(unit => unit.Name, StringComparer.CurrentCulture)
             .ToList();
     }
 
@@ -555,7 +544,7 @@ public partial class MainWindow : Window
             .ToList();
         if (ranked.Count == 0)
         {
-            RefreshAll("학습된 상위가 없어 추천할 수 없습니다.");
+            RefreshAll("조합 정보가 있는 상위 유닛이 없습니다.");
             return;
         }
         var menu = new ContextMenu
@@ -641,10 +630,8 @@ public partial class MainWindow : Window
 
     private List<NavigationOption> VisibleNavigations(string categoryId) => NavigationProfiles
         .ForCategory(categoryId)
-        .Where(option => LearnedSelection.NavigationLearned(_clearStats, SelectedGoal, option))
         .ToList();
 
-    // 상위·클리어 데이터가 바뀔 때 항법 목록을 학습된 것만으로 다시 채운다.
     // 채우는 동안의 SelectionChanged 연쇄는 _updatingSelections로 차단한다.
     private void RepopulateNavigationChoices()
     {
@@ -716,7 +703,7 @@ public partial class MainWindow : Window
                                      _mapSignals.CompletedStoryStageOrdinal + 1, 0, 14);
         var milestones = Enumerable.Range(1, _mapSignals.CompletedStoryStageOrdinal)
             .Select(stage => $"stage-{stage}").ToImmutableArray();
-        var input = _adaptivePlanning.CreateInput(new AdaptivePlanningInputSource
+        var source = new AdaptivePlanningInputSource
         {
             MatchGeneration = _adaptivePlanning.MatchGeneration,
             RecognitionRevision = _scanGeneration,
@@ -729,6 +716,8 @@ public partial class MainWindow : Window
             GoalUnitId = goal.Id,
             RouteGoalUnitIds = GoalUnits().Select(unit => unit.Id).ToImmutableArray(),
             NavigationOptionId = navigation.Id,
+            RouteQuests = _mapSignals.RouteQuests,
+            PursueBothRouteQuests = BothRouteQuestsCheck.IsChecked == true,
             GoroseiMode = gorosei,
             CompletedTopUnitIds = _completedTopUnits.CompletedUnitIds.ToImmutableArray(),
             GrowthUnitIds = _growthUnitIds.Order(StringComparer.Ordinal).ToImmutableArray(),
@@ -740,8 +729,10 @@ public partial class MainWindow : Window
             ManualLatches = latches,
             IsTransient = transient,
             CurrentOverlayRecommendationId = _adaptivePlanningApplied?.Navigation.RecommendedOptionId,
-            LockedOverlayRecommendationId = _adaptivePlanning.State.NavigationLockId
-        });
+            LockedOverlayRecommendationId = null
+        };
+        _routeQuestEvaluation = RouteQuestEvaluation.Evaluate(source);
+        var input = _adaptivePlanning.CreateInput(source);
         _pendingAdaptiveFingerprint = input.Fingerprint;
         _pendingAdaptiveLegendIds = inventory.Where(entry => entry.Count > 0 &&
                 allUnits.TryGetValue(entry.UnitId, out var unit) &&
@@ -786,8 +777,10 @@ public partial class MainWindow : Window
         if (_pendingAdaptiveFingerprint == applied.InputFingerprint)
             _observedLegendIds.UnionWith(_pendingAdaptiveLegendIds);
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
+        RenderNavigationContext();
         if (!NavigationAutomaticRecommendationPolicy.ShouldApply(
-                _settings.AutoRecommendNavigation, _adaptivePlanning.ManualLatches,
+                _settings.AutoRecommendNavigation && _navigationSession.ConfirmedOptionId is null,
+                _adaptivePlanning.ManualLatches,
                 applied.State.Phase, applied.Navigation.State,
                 applied.Navigation.RecommendedOptionId))
         {
@@ -873,7 +866,7 @@ public partial class MainWindow : Window
                     Inventory = recommendationInventory,
                     InitialSurface = surface,
                     StorySequence = storySequence,
-                    NavigationMode = navigation.Id,
+                    NavigationMode = _navigationSession.ConfirmedOptionId ?? "Unselected",
                     Gorosei = gorosei,
                     BuildVariant = BuildVariants.AutoId,
                     Difficulty = _matchDifficulty,
@@ -913,7 +906,7 @@ public partial class MainWindow : Window
                 action => Dispatcher.BeginInvoke(new Action(action)),
                 ApplyAdaptivePlanning);
         }
-        GoalSelectLabel.Text = "목표 상위 유닛 · 학습된 유닛만" +
+        GoalSelectLabel.Text = "목표 상위 유닛 · 현재 패 우선" +
             (_liveStats.TryGetGoal(goal.Id, out var liveGoal)
                 ? $" · 실사용 {liveGoal.Plays}판{(liveGoal.ClearRateText.Length == 0 ? "" : " · " + liveGoal.ClearRateText)}"
                 : "");
@@ -992,6 +985,7 @@ public partial class MainWindow : Window
         };
         FillMainBoard();
         var emergencySummons = surface == RecommendationSurface.TopAndNavigation &&
+                               _navigationSession.ConfirmedOptionId == "AlliedForces.EmergencyCall" &&
                                navigation.Id.Equals("AlliedForces.EmergencyCall",
             StringComparison.OrdinalIgnoreCase)
             ? _engine.RecommendEmergencySummons(recommendations, recommendationInventory)
@@ -1002,7 +996,7 @@ public partial class MainWindow : Window
             RecommendationSurface.StoryLegend =>
                 $"{_storySequence?.CurrentStoryLabel} · " +
                 $"{_storySequence?.RecommendedLegendName ?? "첫 전설 계산"}",
-            _ => $"{goal.Name} · {navigation.Name}"
+            _ => _navigationSession.Header(goal.Name)
         };
         Func<Recommendation, IReadOnlyList<Recommendation>>? storyChildren =
             showClusterChildren
@@ -1022,7 +1016,7 @@ public partial class MainWindow : Window
                     _clearStats.HasData ? _clearStats : null)
                 .Concat(_alchemyAdvisor.Evaluate(
                     recommendationInventory, recommendations, displayGoal,
-                    navigation.Id, _growthUnitIds))
+                    _navigationSession.ConfirmedOptionId ?? "Unselected", _growthUnitIds))
                 .ToList(),
             _engine.ActiveStunTarget, _engine.ActiveStunCap,
             phaseHint, storyChildren,
@@ -1036,6 +1030,7 @@ public partial class MainWindow : Window
             evidenceUnknown,
             evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
             _storySequence, _mapSignals.CompletedStoryStageOrdinal, _adaptivePlanning.ManualLatches);
+        RenderNavigationContext();
         if (message is not null) FooterStatus.Text = message;
     }
 
@@ -1072,6 +1067,7 @@ public partial class MainWindow : Window
             .Append('|').Append(_adaptivePlanning.ManualLatches.NavigationOverride);
         foreach (var reward in _mapSignals.RewardWisps.OrderBy(pair => pair.Key, StringComparer.Ordinal))
             builder.Append('|').Append(reward.Key).Append(':').Append(reward.Value);
+        builder.Append('|').Append(_mapSignals.RouteQuests.Describe());
         return builder.ToString();
     }
 
@@ -1165,6 +1161,9 @@ public partial class MainWindow : Window
             var result = await recognizer.RecognizeAsync(_settings, cancellation.Token);
             if (generation != _scanGeneration || !ReferenceEquals(recognizer, _recognizer)) return;
             _latestRecognitionObservation = result.Diagnostics.AdaptivePlanningObservation;
+            if (!result.ShouldReplaceInventory)
+                _mapSignals = _mapSignals with { RouteQuests = RouteQuestSnapshot.Unavailable(
+                    "항로개척 읽기 대기 · 현재 배정·완료 여부를 확인할 수 없어 보상 계산 제외") };
             LogUnknownRawcodes(result);
             ApplyDetectedGorosei(result.Diagnostics.Gorosei);
             if (RecognitionPolicy.ShouldResetBeforeReadyInventory(result))
@@ -1258,6 +1257,7 @@ public partial class MainWindow : Window
                 _automaticStale = _automatic.Count > 0;
                 _automaticDisconnected = false;
                 RecognitionStatus.Text = "인식 오류 · 기존 패 유지";
+                _mapSignals = _mapSignals with { RouteQuests = RouteQuestSnapshot.Unknown };
                 RecognitionStatus.Foreground = Brushes.Orange;
                 RefreshIfScanStateChanged("인식 중 오류가 발생했습니다. 다음 자동 인식을 기다립니다.");
             }
@@ -1288,6 +1288,11 @@ public partial class MainWindow : Window
         _liveSessionActive = false;
         _autoStartApplied = false;
         _mapSignals = MapSignals.Empty;
+        _navigationSession.Reset();
+        _updatingSelections = true;
+        BothRouteQuestsCheck.IsChecked = false;
+        _updatingSelections = false;
+        _routeQuestEvaluation = null;
         _adaptivePlanningApplied = null;
         _latestRecognitionObservation = AdaptivePlanningRecognitionObservation.Empty;
         _lastAdaptivePlanningPerformance = null;
@@ -1324,7 +1329,6 @@ public partial class MainWindow : Window
             _autoStartApplied = true;
             _adaptivePlanning.LatchManualGoalOverride();
         }
-        // 상위가 바뀌면 그 상위 기준으로 학습된 항법·빌드 방향을 다시 보여준다.
         if (_initialized)
         {
             RepopulateNavigationChoices();

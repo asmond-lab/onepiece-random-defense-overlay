@@ -23,7 +23,7 @@
       <Border Background="#FF0C0E14" BorderBrush="#FF242934" BorderThickness="1" CornerRadius="12" Padding="14" Margin="0,0,0,12">
         <StackPanel>
           <TextBlock Text="이번 판 설정" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
-          <TextBlock x:Name="GoalSelectLabel" Text="목표 상위 유닛 · 학습된 유닛만" Style="{StaticResource FieldLabel}"/>
+          <TextBlock x:Name="GoalSelectLabel" Text="목표 상위 유닛 · 현재 패 우선" Style="{StaticResource FieldLabel}"/>
           <Grid x:Name="GoalSelectRow" Margin="0,6,0,0">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto"/>
@@ -36,7 +36,7 @@
           </Grid>
           <CheckBox x:Name="AutoStartCheck" Content="유닛 자동 추천" Margin="3,8,0,0"
                     Checked="AutoStart_OnChanged" Unchecked="AutoStart_OnChanged"
-                    ToolTip="상위를 정하지 않고 시작해도, 첫 희귀함이 잡히면 그 희귀함이 들어가는 학습된 상위 중 표본이 가장 많은 것으로 목표를 자동 전환합니다. 판이 끝나면 다시 대기합니다."/>
+                    ToolTip="첫 희귀함과 스토리 보상을 확인하며 현재 패에 맞는 상위를 추천합니다. 클리어 기록이 없어도 후보에 포함하고, 판이 끝나면 다시 대기합니다."/>
           <TextBlock x:Name="BuildVariantLabel" Text="빌드 방향" Style="{StaticResource FieldLabel}"
                      Margin="0,12,0,0" Visibility="Collapsed"/>
           <ComboBox x:Name="BuildVariantCombo" DisplayMemberPath="Name"
@@ -60,6 +60,13 @@
                     Checked="AutoNavigation_OnChanged" Unchecked="AutoNavigation_OnChanged"
                     AutomationProperties.Name="항법 자동 추천"
                     ToolTip="라운드 20에는 후보를 미리 보여주고, 21~23에는 안전한 추천을 설정에 자동 반영합니다. 워크래프트 안의 항법 선택은 직접 해야 합니다."/>
+          <TextBlock x:Name="NavigationStatusText" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+          <TextBlock x:Name="NavigationCandidateText" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+          <Button x:Name="ConfirmNavigationButton" Content="게임 내 선택 완료 확인" Click="ConfirmNavigation_OnClick" Style="{StaticResource SubtleButton}"/>
+          <Button Content="항법 미선택으로 정정" Click="ClearNavigation_OnClick" Style="{StaticResource SubtleButton}"/>
+          <TextBlock Text="이번 판 항로개척 · 자동 확인" Style="{StaticResource FieldLabel}"/>
+          <TextBlock x:Name="RouteQuestStatusText" Style="{StaticResource FieldHint}" TextWrapping="Wrap" AutomationProperties.AutomationId="route-quest-status" AutomationProperties.Name="항로개척 자동 확인 상태"/>
+          <CheckBox x:Name="BothRouteQuestsCheck" Content="초월·제한 두 퀘스트 완료 목표 (최상위 2기)" Checked="RouteQuest_OnChanged" Unchecked="RouteQuest_OnChanged"/>
           <TextBlock Text="오로성 (신 이상 판별 효과)" Style="{StaticResource FieldLabel}" Margin="0,12,0,0"/>
           <ComboBox x:Name="GoroseiCombo" DisplayMemberPath="Name"
                     SelectionChanged="GoroseiCombo_OnSelectionChanged" Margin="0,6,0,0"/>

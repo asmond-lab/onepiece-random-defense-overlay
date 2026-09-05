@@ -14,6 +14,7 @@ internal enum MapSignalKind
 
 internal sealed class MapSignalRecognitionProfile
 {
+    public string MapScriptSha256 { get; private init; } = "";
     internal const byte StoryObjectiveOwner = 5;
     private readonly ImmutableDictionary<uint, StoryStage> _objectives;
     private readonly ImmutableHashSet<uint> _rewardWisps;
@@ -44,7 +45,8 @@ internal sealed class MapSignalRecognitionProfile
                 rewards.Add(rewardRawcode);
             }
         }
-        return new MapSignalRecognitionProfile(objectives.ToImmutable(), rewards.ToImmutable());
+        return new MapSignalRecognitionProfile(objectives.ToImmutable(), rewards.ToImmutable())
+            { MapScriptSha256 = story.Source.JassSha256 };
     }
 
     public MapSignalKind Classify(byte owner, byte localOwner, uint rawcode)
