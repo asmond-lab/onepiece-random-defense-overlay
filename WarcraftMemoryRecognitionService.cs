@@ -515,8 +515,9 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
                     if (detected != GoroseiMode.None) gorosei = detected;
                 }
             }
+            var mapRawcode = MapSignalReadPolicy.ToMapRawcode(rawcode);
             var signalKind = rawcodeRead
-                ? mapSignalProfile.Classify(owner, localPlayerSlot, rawcode)
+                ? mapSignalProfile.Classify(owner, localPlayerSlot, mapRawcode)
                 : MapSignalKind.None;
             if (signalKind is MapSignalKind.StoryObjective or MapSignalKind.RewardWisp)
             {
@@ -531,12 +532,12 @@ public sealed class WarcraftMemoryRecognitionService : IInventoryRecognizer
             }
             if (signalKind == MapSignalKind.StoryObjective)
             {
-                objectiveRawcodes.Add(rawcode);
+                objectiveRawcodes.Add(mapRawcode);
                 continue;
             }
             if (signalKind == MapSignalKind.RewardWisp)
             {
-                rewardWispRawcodes.Add(rawcode);
+                rewardWispRawcodes.Add(mapRawcode);
                 continue;
             }
             if (owner != localPlayerSlot) foreignObjects++;

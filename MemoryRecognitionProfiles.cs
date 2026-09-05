@@ -166,6 +166,9 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
 
 internal static class MapSignalReadPolicy
 {
+    public static uint ToMapRawcode(uint memoryRawcode) =>
+        System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(memoryRawcode);
+
     public static bool ShouldReadRawcode(byte owner, byte localOwner, byte neutralOwner,
         bool trackedGrowth) =>
         owner == localOwner || owner == neutralOwner ||

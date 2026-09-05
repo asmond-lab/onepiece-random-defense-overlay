@@ -6,6 +6,19 @@ namespace OrandOverlay.Tests;
 
 public sealed class MapSignalRecognitionTests
 {
+    [Theory]
+    [InlineData(0x6E303030u, 5, "n000", 1)]
+    [InlineData(0x6E303041u, 5, "n00A", 1)]
+    [InlineData(0x65303139u, 0, "e019", 2)]
+    [InlineData(0x65303139u, 3, "e019", 0)]
+    public void LiveMemoryRawcode_IsConvertedBeforeStoryAndRewardClassification(
+        uint memoryRawcode, byte owner, string mapRawcode, int kind)
+    {
+        var normalized = MapSignalReadPolicy.ToMapRawcode(memoryRawcode);
+        Assert.Equal(mapRawcode, RawcodeCodec.Format(normalized));
+        Assert.Equal(kind, (int)Profile.Classify(owner, 0, normalized));
+    }
+
     private static readonly StoryProgressionProfile Story = MapStoryProfileLoader.LoadFromDirectory(
         Path.Combine(AppContext.BaseDirectory, "Data"));
     private static readonly MapSignalRecognitionProfile Profile = MapSignalRecognitionProfile.FromStory(Story);
