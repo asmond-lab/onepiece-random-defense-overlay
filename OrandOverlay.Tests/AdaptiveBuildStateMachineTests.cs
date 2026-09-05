@@ -7,6 +7,20 @@ namespace OrandOverlay.Tests;
 public sealed class AdaptiveBuildStateMachineTests
 {
     [Theory]
+    [InlineData(4)]
+    [InlineData(null)]
+    public void FirstSnapshotWithLegendDoesNotWaitForConsumedRare(int? stage)
+    {
+        var result = AdaptiveBuildStateMachine.Advance(AdaptiveBuildState.Initial(1),
+            Snapshot(stage: stage, firstRare: false, observedLegends: ["existing-legend"]));
+
+        Assert.Equal(PlannerPhase.AwaitMarineford, result.State.Phase);
+        Assert.Equal("existing-legend", result.State.LockedFirstLegendId);
+        Assert.Equal(FirstRareHistory.Unknown, result.State.FirstRareHistory);
+        Assert.Null(result.State.RouteLock);
+    }
+
+    [Theory]
     [InlineData(1)]
     [InlineData(null)]
     public void HistoricRoundStringsDoNotSkipFirstRare(int? stage)

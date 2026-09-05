@@ -33,11 +33,12 @@ public static class AdaptiveBuildStateMachine
             switch (state.Phase)
             {
                 case PlannerPhase.AwaitFirstRare:
-                    if (snapshot.FirstRareObserved)
+                    if (snapshot.FirstRareObserved || snapshot.NewlyObservedLegendIds.Length > 0)
                     {
                         state = state with
                         {
-                            FirstRareHistory = FirstRareHistory.Observed,
+                            FirstRareHistory = snapshot.FirstRareObserved
+                                ? FirstRareHistory.Observed : FirstRareHistory.Unknown,
                             Phase = PlannerPhase.AccumulateSpecialUncommon
                         };
                         continueTransitions = true;
