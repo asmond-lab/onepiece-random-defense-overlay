@@ -71,6 +71,7 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
 {
     private int? _candidateOrdinal;
     private int _candidateStreak;
+    private int? _unconfirmedObjectiveOrdinal;
     public MapSignals LastGood { get; private set; } = MapSignals.Empty;
     public bool LastObservationConfirmedReset { get; private set; }
 
@@ -89,9 +90,26 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
             if (objectives.All(objective => objective is not null))
             {
                 var forward = objectives.Where(objective => objective!.Ordinal > confirmed).ToArray();
-                if (forward.Length == 1) stage = forward[0];
+                if (forward.Length == 1 && forward[0]!.Ordinal == confirmed + 1)
+                    stage = forward[0];
             }
         }
+        else if (objectiveRawcodes.Length > 1)
+        {
+            var objectives = objectiveRawcodes.Select(profile.Objective).ToArray();
+            if (objectives.All(objective => objective is not null))
+            {
+                var latest = objectives.MaxBy(objective => objective!.Ordinal)!;
+                if (_unconfirmedObjectiveOrdinal is { } baseline && latest.Ordinal == baseline + 1)
+                    stage = latest;
+                else
+                    _unconfirmedObjectiveOrdinal = latest.Ordinal;
+            }
+            else
+                _unconfirmedObjectiveOrdinal = null;
+        }
+        else
+            _unconfirmedObjectiveOrdinal = null;
         if (stage is null)
         {
             _candidateOrdinal = null;
@@ -141,6 +159,7 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
         _candidateOrdinal = null;
         _candidateStreak = 0;
         LastObservationConfirmedReset = false;
+        _unconfirmedObjectiveOrdinal = null;
         LastGood = MapSignals.Empty;
     }
 }

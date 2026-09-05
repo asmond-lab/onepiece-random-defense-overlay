@@ -6,6 +6,21 @@ namespace OrandOverlay.Tests;
 
 public sealed class AdaptiveBuildStateMachineTests
 {
+    [Theory]
+    [InlineData(1)]
+    [InlineData(null)]
+    public void HistoricRoundStringsDoNotSkipFirstRare(int? stage)
+    {
+        var sample = MapStateReader.ScanBuffer(System.Text.Encoding.UTF8.GetBytes(
+            "현재 라운드|r : 65\0현재 라운드|r : 1\0"));
+        Assert.Equal(65, sample.MaxRound);
+        var result = AdaptiveBuildStateMachine.Advance(AdaptiveBuildState.Initial(1),
+            Snapshot(round: sample.MaxRound, stage: stage));
+
+        Assert.Equal(PlannerPhase.AwaitFirstRare, result.State.Phase);
+        Assert.Contains(AdaptiveBuildBlocker.AwaitingFirstRare, result.Blockers);
+    }
+
     [Fact]
     public void FirstRareIsLatchedWithoutSelectingAGoal()
     {

@@ -42,7 +42,7 @@ public static class AdaptiveBuildStateMachine
                         };
                         continueTransitions = true;
                     }
-                    else if (snapshot.Round >= 20 || snapshot.ActiveStoryStage >= 7)
+                    else if (snapshot.ActiveStoryStage >= 7)
                     {
                         state = state with
                         {

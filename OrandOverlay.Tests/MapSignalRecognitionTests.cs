@@ -154,6 +154,41 @@ public sealed class MapSignalRecognitionTests
     }
 
     [Fact]
+    public void Tracker_DoesNotJumpFromEarlyStoryToLingeringLateObjective()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+        tracker.Observe(Snapshot("n000"));
+        tracker.Observe(Snapshot("n000"));
+        tracker.Observe(Snapshot("n000", "n00A"));
+        Assert.Equal(1, tracker.Observe(Snapshot("n000", "n00A")).ActiveObjectiveOrdinal);
+    }
+
+    [Fact]
+    public void Tracker_InitiallyMixedObjectivesRecoverOnNewSequentialObjective()
+    {
+        var tracker = new MapSignalSnapshotTracker(Profile);
+        tracker.Observe(Snapshot("n007", "n008"));
+        Assert.Null(tracker.Observe(Snapshot("n007", "n008")).ActiveObjectiveOrdinal);
+        Assert.Null(tracker.Observe(Snapshot("n007", "n008", "n00A")).ActiveObjectiveOrdinal);
+        var recovered = tracker.Observe(Snapshot("n007", "n008", "n00A"));
+        Assert.Equal(9, recovered.ActiveObjectiveOrdinal);
+        Assert.True(recovered.MarinefordReady);
+        Assert.False(tracker.LastObservationConfirmedReset);
+        var decision = StoryRewardSequencePlanner.Evaluate(new StoryRewardSequenceInput
+        {
+            Phase = PlannerPhase.AwaitMarineford,
+            Round = 22,
+            ActiveStoryStage = recovered.ActiveObjectiveOrdinal,
+            CompletedStoryStage = recovered.CompletedStoryStageOrdinal,
+            RewardWisps = recovered.RewardWisps,
+            Inventory = [],
+            Units = new Dictionary<string, UnitDefinition>(),
+            StoryStages = Story.Stages
+        });
+        Assert.Equal(RecommendationSequenceStage.TopAndNavigation, decision.Stage);
+    }
+
+    [Fact]
     public void SignalObjects_AreExcludedFromInventoryAndCatalogRatioAccounting()
     {
         Assert.True(Profile.IsSignal(owner: 5, localOwner: 0, Code("n006")));
