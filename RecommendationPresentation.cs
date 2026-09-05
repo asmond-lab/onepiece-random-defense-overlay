@@ -8,9 +8,10 @@ public static class RecommendationPresentation
     public static PlannerEvidenceView PlannerEvidence(int round,
         AdaptivePlanningApplied? applied, bool signalsUnknown,
         string? unknownReason = null,
-        StoryRewardSequenceDecision? storySequence = null) =>
+        StoryRewardSequenceDecision? storySequence = null,
+        ManualLatches? currentManualLatches = null) =>
         PlannerEvidenceProjector.Project(
-            round, applied, signalsUnknown, unknownReason, storySequence);
+            round, applied, signalsUnknown, unknownReason, storySequence, currentManualLatches);
 
     public static string CarryModeLabel(GoalCarryMode mode) => mode switch
     {
@@ -302,6 +303,7 @@ public sealed record PlannerEvidenceView(
     PlannerEvidenceState State,
     ImmutableArray<PlannerEvidenceField> Fields)
 {
+    public bool IsManualGoal { get; init; }
     public bool IsRecommendationOnly => true;
     public bool ClaimsRuntimeSelection => false;
     public PlannerEvidenceField this[PlannerEvidenceFieldKind kind] =>
@@ -314,9 +316,12 @@ internal static class PlannerEvidenceProjector
 
     public static PlannerEvidenceView Project(int round, AdaptivePlanningApplied? applied,
         bool signalsUnknown, string? unknownReason,
-        StoryRewardSequenceDecision? storySequence = null)
+        StoryRewardSequenceDecision? storySequence = null,
+        ManualLatches? currentManualLatches = null)
     {
-        var state = State(round, applied, signalsUnknown, storySequence);
+        var manual = currentManualLatches ?? applied?.State.ManualLatches ?? ManualLatches.None;
+        var state = manual.GoalOverride ? PlannerEvidenceState.ManualOverride :
+            State(round, applied, signalsUnknown, storySequence);
         var trace = applied?.Trace;
         var navigation = applied?.Navigation;
         var physical = Best(trace, DamageLane.Physical);
@@ -330,7 +335,8 @@ internal static class PlannerEvidenceProjector
         var locked = storySequence is { TopNavigationUnlocked: false };
         var fields = ImmutableArray.Create(
             Field(PlannerEvidenceFieldKind.Phase, "planner-phase", "판단 단계",
-                StateLabel(state), trace?.Phase.ToString() ?? state.ToString(),
+                manual.GoalOverride ? "수동 목표 유지" : StateLabel(state),
+                trace?.Phase.ToString() ?? state.ToString(),
                 state is PlannerEvidenceState.Blocked or PlannerEvidenceState.Unknown),
             Field(PlannerEvidenceFieldKind.Sequence, "planner-sequence", "추천 순서",
                 storySequence?.StepSummary ?? Empty,
@@ -351,8 +357,9 @@ internal static class PlannerEvidenceProjector
                 storySequence?.ActionSummary ?? Empty,
                 storySequence?.Action.ToString() ?? "unknown"),
             Field(PlannerEvidenceFieldKind.Action, "planner-action", "지금 할 일",
-                ActionLabel(state, applied, storySequence), $"{state}|{trace?.Phase}"),
-            Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "멈춘 이유",
+                manual.GoalOverride ? "목표는 유지하고 패·보상 변화에 맞춰 조합과 보완 유닛을 계속 재계산합니다." :
+                    ActionLabel(state, applied, storySequence), $"{state}|{trace?.Phase}"),
+            Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "자동 판단 조건",
                 blockers.Display, blockers.Machine, blockers.IsWarning),
             Field(PlannerEvidenceFieldKind.LaneComparison, "planner-lane-comparison", "딜 경로 비교",
                 LockedDisplay(locked, $"물리 {Score(physical)} · 마법 {Score(magic)}"),
@@ -398,9 +405,12 @@ internal static class PlannerEvidenceProjector
                 "추천만 제공 · 게임 내 선택 없음",
                 "recommendation-only=true;runtime-selection=false"),
             Field(PlannerEvidenceFieldKind.ForcedManual, "planner-forced-manual", "강제·수동 상태",
-                ForcedManualDisplay(trace, navigation), ForcedManualMachine(trace, navigation),
+                manual.GoalOverride ? "수동 목표 유지 · 자동 목표 변경 안 함" :
+                    ForcedManualDisplay(trace, navigation),
+                ForcedManualMachine(trace, navigation) +
+                $";current-goal-manual={manual.GoalOverride};current-navigation-manual={manual.NavigationOverride}",
                 state == PlannerEvidenceState.ManualOverride));
-        return new PlannerEvidenceView(state, fields);
+        return new PlannerEvidenceView(state, fields) { IsManualGoal = manual.GoalOverride };
     }
 
     private static PlannerEvidenceState State(int round, AdaptivePlanningApplied? applied,
@@ -490,7 +500,8 @@ internal static class PlannerEvidenceProjector
         var values = build.Concat(navigation).Distinct(StringComparer.Ordinal).ToArray();
         return values.Length == 0
             ? ("없음", "none", false)
-            : ($"{values.Length}개 입력을 더 확인해야 합니다.", string.Join(',', values), true);
+            : (string.Join("\n", values.Select(PlannerInputExplanation.Blocker)),
+                string.Join(',', values), true);
     }
 
     private static string Score(AdaptiveRouteComponent? route) =>
@@ -596,8 +607,9 @@ internal static class PlannerEvidenceProjector
         $"navigation={option?.ConfidenceBp.ToString(CultureInfo.InvariantCulture) ?? "unknown"}";
 
     private static string UnknownDisplay(ImmutableArray<string> unknowns, string? reason) =>
-        !string.IsNullOrWhiteSpace(reason) ? reason : unknowns.Length == 0
-            ? "없음" : $"미확인 입력 {unknowns.Length}개";
+        string.Join("\n", unknowns.Select(PlannerInputExplanation.Signal)
+            .Append(reason).Where(value => !string.IsNullOrWhiteSpace(value))) is { Length: > 0 } detail
+            ? detail : "없음";
     private static string UnknownMachine(ImmutableArray<string> unknowns, string? reason) =>
         string.Join('|', unknowns.Append(reason).Where(value => !string.IsNullOrWhiteSpace(value))!);
 

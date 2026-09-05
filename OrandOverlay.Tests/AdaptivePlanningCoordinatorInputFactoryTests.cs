@@ -7,6 +7,54 @@ namespace OrandOverlay.Tests;
 public sealed class AdaptivePlanningCoordinatorInputFactoryTests
 {
     [Fact]
+    public void ManualGoalConstrainsAdaptiveEvaluationWithoutDisablingNavigationSimulations()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load(loadCarryPolicy: false);
+        var factory = new AdaptivePlanningCoordinatorInputFactory(Path.Combine(ProjectDirectory(), "Data"));
+        var goal = catalog.Unit("rawcode:F90H");
+        var alternative = catalog.AllUnits.First(unit => TopTier(unit.Tier) && unit.Id != goal.Id &&
+            AdaptiveRouteEvaluator.ClassifyDamage(unit) != DamageLane.Unknown);
+        var legend = catalog.AllUnits.First(unit => BaseTier(unit.Tier) == "전설");
+        var rare = catalog.AllUnits.First(unit => BaseTier(unit.Tier) == "희귀함");
+        var source = Source(catalog, goal, legend, rare, 21) with
+        {
+            ManualLatches = new ManualLatches(true, false),
+            RouteGoalUnitIds = [alternative.Id]
+        };
+
+        var input = factory.Create(source);
+
+        Assert.Equal(goal.Id, input.BuildSnapshot.RouteCandidate?.GoalUnitId);
+        Assert.Equal(NavigationIntervalScorer.RequiredOptionIds,
+            input.NavigationRequest.Options.Select(option => option.OptionId));
+        Assert.False(input.NavigationRequest.ManualNavigationOverride);
+        var coordinator = new AdaptivePlanningCoordinator(AdaptiveBuildState.Initial(3) with
+        {
+            Phase = PlannerPhase.CommitRound20,
+            ManualLatches = source.ManualLatches
+        });
+        var first = Apply(coordinator, input);
+        var updated = factory.Create(source with
+        {
+            Round = 22,
+            Phase = coordinator.State.Phase,
+            Inventory = [new InventoryEntry { UnitId = goal.Id, Count = 1 }]
+        });
+        var second = Apply(coordinator, updated);
+        Assert.NotEqual(first.InputFingerprint, second.InputFingerprint);
+        Assert.Equal(goal.Id, second.State.RouteLock?.GoalUnitId);
+        Assert.True(second.State.RouteLock!.ProgressBp > first.State.RouteLock!.ProgressBp);
+        Assert.Null(second.SuggestedGoalId);
+        Assert.True(NavigationAutomaticRecommendationPolicy.ShouldApply(true, source.ManualLatches,
+            PlannerPhase.AwaitMarineford, NavigationRecommendationState.Actionable,
+            "PathOfKings.BountyHunter"));
+        Assert.False(NavigationAutomaticRecommendationPolicy.ShouldApply(true, new ManualLatches(true, true),
+            PlannerPhase.Committed, NavigationRecommendationState.Actionable,
+            "PathOfKings.BountyHunter"));
+    }
+
+    [Fact]
     public void CompleteSnapshotTreatsMissingRewardWispsAsZero()
     {
         var catalog = new DataCatalog();

@@ -22,6 +22,8 @@ public static class AdaptiveBuildStateMachine
                 state.ManualLatches.GoalOverride || snapshot.ManualLatches.GoalOverride,
                 state.ManualLatches.NavigationOverride || snapshot.ManualLatches.NavigationOverride)
         };
+        if (state.ManualLatches.GoalOverride && snapshot.RouteCandidate is not null)
+            state = state with { RouteLock = snapshot.RouteCandidate };
 
         string? suggestedLegend = null;
         string? provisionalNavigation = null;
@@ -161,7 +163,13 @@ public static class AdaptiveBuildStateMachine
                     }
                     if (state.ManualLatches.GoalOverride)
                     {
-                        blockers.Add(AdaptiveBuildBlocker.ManualGoalOverride);
+                        if (snapshot.RouteCandidate is null)
+                        {
+                            blockers.Add(AdaptiveBuildBlocker.NoRouteCandidate);
+                            break;
+                        }
+                        state = state with { Phase = PlannerPhase.Committed };
+                        continueTransitions = true;
                         break;
                     }
                     if (snapshot.RouteCandidate is null)

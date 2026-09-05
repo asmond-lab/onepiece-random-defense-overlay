@@ -87,7 +87,7 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         AdaptivePlanningInputSource source, IReadOnlyDictionary<string, int> inventory,
         ImmutableArray<string> observedLegends)
     {
-        var ids = source.RouteGoalUnitIds.IsDefaultOrEmpty
+        var ids = source.ManualLatches.GoalOverride || source.RouteGoalUnitIds.IsDefaultOrEmpty
             ? [source.GoalUnitId]
             : source.RouteGoalUnitIds;
         var candidates = ids.Distinct(StringComparer.OrdinalIgnoreCase)

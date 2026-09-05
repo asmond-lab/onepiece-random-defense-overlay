@@ -593,7 +593,7 @@ internal static class Program
         var bottomPath = Path.Combine(output, stem + "-bottom.png");
         var view = RecommendationPresentation.PlannerEvidence(fixture.Round, fixture.Applied,
             fixture.Unknown, fixture.Unknown ? LongUnknownReason : null,
-            fixture.Sequence);
+            fixture.Sequence, fixture.CurrentManualLatches);
         if (view.State != fixture.State)
             throw new InvalidOperationException($"Fixture state mismatch: {fixture.State} != {view.State}");
 
@@ -607,12 +607,26 @@ internal static class Program
         };
         window.SetClickThrough(true);
         window.Render("플래너 검증", [], EmptyStats(), [], [], false, [], "인식 정상");
+        if (fixture.State == PlannerEvidenceState.ManualOverride)
+        {
+            var catalog = new DataCatalog();
+            catalog.Load();
+            var zoro = catalog.Unit("rawcode:F90H");
+            var inventory = zoro.Recipe.Where(pair =>
+                    !catalog.Unit(pair.Key).Name.Contains("쿠마", StringComparison.Ordinal))
+                .Select(pair => new InventoryEntry { UnitId = pair.Key, Count = pair.Value }).ToArray();
+            var rec = new RecommendationEngine(catalog).RecommendNearestCrafts(zoro.Id, inventory, 32)
+                .Single(item => item.Route.GoalUnitId == zoro.Id);
+            window.Render("조로 · 바운티헌터", [rec], EmptyStats(), [], [], false, [],
+                "검증 fixture · 초월쿠마 획득 대기", inventory: inventory);
+        }
         if (fixture.State == PlannerEvidenceState.SequenceFirstLegend)
             window.Render("쿠마 전설", [Card("legend", "쿠마 전설", "전설")],
                 EmptyStats(), [], [], false, [], "인식 정상",
                 storyChildren: _ => [Card("rare", "희귀 재료", "희귀함")]);
         window.RenderPlannerEvidence(fixture.Round, fixture.Applied, fixture.Unknown,
-            fixture.Unknown ? LongUnknownReason : null, fixture.Sequence);
+            fixture.Unknown ? LongUnknownReason : null, fixture.Sequence, null,
+            fixture.CurrentManualLatches);
         window.UpdateStatus("인식 정상 · 플래너 근거 표시 중");
         window.Show();
         window.Dispatcher.Invoke(() => { }, System.Windows.Threading.DispatcherPriority.Render);
@@ -640,6 +654,16 @@ internal static class Program
             bottomPath, 540 * scale, 740 * scale, isPendingCapture);
         ValidateFooter(window);
         ValidateAutomationTree(window, view);
+        if (fixture.State == PlannerEvidenceState.ManualOverride)
+        {
+            var text = string.Join(" ", Descendants(window).OfType<TextBlock>().Select(item => item.Text))
+                .Replace("\u2060", "", StringComparison.Ordinal);
+            if (!text.Contains("수동 목표 유지", StringComparison.Ordinal) ||
+                !text.Contains("초월쿠마", StringComparison.Ordinal) ||
+                !text.Contains("조로", StringComparison.Ordinal) ||
+                !text.Contains("자동 판단 조건", StringComparison.Ordinal))
+                throw new InvalidOperationException("Manual Zoro status, missing Kuma or automatic evidence lost.");
+        }
         if (fixture.State == PlannerEvidenceState.SequenceFirstLegend)
             ValidateFirstLegendCards(window);
         if (isPendingCapture)
@@ -1115,9 +1139,10 @@ internal static class Program
         new(PlannerEvidenceState.Committed, 22,
             Applied(NavigationRecommendationState.Locked, PlannerPhase.Committed),
             false, "추천 고정 상태"),
-        new(PlannerEvidenceState.ManualOverride, 22,
-            Applied(NavigationRecommendationState.ManualOverride, PlannerPhase.ManualOverride,
-                manual: new ManualLatches(true, true)), false, "수동 설정 유지"),
+        new(PlannerEvidenceState.ManualOverride, 19,
+            Applied(NavigationRecommendationState.NoSafeRecommendation, PlannerPhase.CommitRound20,
+                [AdaptiveBuildBlocker.UnknownStoryStage, AdaptiveBuildBlocker.UnknownRareWisps]),
+            true, "수동 목표 유지", CurrentManualLatches: new ManualLatches(true, false)),
         new(PlannerEvidenceState.Round24Forced, 24,
             Applied(NavigationRecommendationState.SourceExpectedForced, PlannerPhase.Committed,
                 forced: "AlliedForces.DoubleBenefit"), false, "원본 규칙 기대값"),
@@ -1139,7 +1164,9 @@ internal static class Program
         var actionableScaleVariants = new[] { 0.75, 1.25, 1.5 }.Select(scale =>
             (PlannerEvidenceState.Round21Actionable, scale));
         return baseVariants.Concat(pendingScaleVariants)
-            .Concat(actionableScaleVariants).ToArray();
+            .Concat(actionableScaleVariants)
+            .Concat(new[] { 0.75, 1.25, 1.5 }.Select(scale =>
+                (PlannerEvidenceState.ManualOverride, scale))).ToArray();
     }
 
     private static IReadOnlyList<BulletFixture> BulletCases()
@@ -1272,7 +1299,8 @@ internal static class Program
 
     private sealed record Fixture(PlannerEvidenceState State, int Round,
         AdaptivePlanningApplied? Applied, bool Unknown, string KoreanFixture,
-        StoryRewardSequenceDecision? Sequence = null);
+        StoryRewardSequenceDecision? Sequence = null,
+        ManualLatches? CurrentManualLatches = null);
 
     private sealed record EvidenceRow(string State, string ControlId, string Field,
         string DisplayedValue, string MachineValue, string AccessibilityName,

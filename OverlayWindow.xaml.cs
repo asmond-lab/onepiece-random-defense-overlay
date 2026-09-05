@@ -96,14 +96,18 @@ public partial class OverlayWindow : OverlayWindowBase
 
     public void RenderPlannerEvidence(int round, AdaptivePlanningApplied? applied,
         bool signalsUnknown, string? unknownReason,
-        StoryRewardSequenceDecision? storySequence, int? completedStoryStage)
+        StoryRewardSequenceDecision? storySequence, int? completedStoryStage,
+        ManualLatches? currentManualLatches = null)
     {
         _plannerRound = round;
         _completedStoryStage = completedStoryStage;
         _plannerApplied = applied;
         _plannerEvidence = RecommendationPresentation.PlannerEvidence(
-            round, applied, signalsUnknown, unknownReason, storySequence);
+            round, applied, signalsUnknown, unknownReason, storySequence, currentManualLatches);
         ApplyPhaseBanner();
+        if (currentManualLatches?.GoalOverride == true &&
+            CarryModeText.Text == RecommendationPresentation.CarryModeLabel(GoalCarryMode.Unknown))
+            CarryModeText.Text = "상위 수 판단 미확인 · 1상위 우선";
         FillBoard();
     }
 

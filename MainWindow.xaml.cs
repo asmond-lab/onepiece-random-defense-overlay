@@ -780,8 +780,9 @@ public partial class MainWindow : Window
         var previousPhase = _adaptivePlanningApplied?.State.Phase;
         var previousLegend = _adaptivePlanningApplied?.SuggestedLegendId;
         _adaptivePlanningApplied = applied;
-        DispatchPlannerEvidence(_overlay.RenderPlannerEvidence, _lastRound, applied,
-            _storySequence);
+        _overlay.RenderPlannerEvidence(_lastRound, applied,
+            _automaticStale || _automaticDisconnected, null, _storySequence,
+            _mapSignals.CompletedStoryStageOrdinal, _adaptivePlanning.ManualLatches);
         if (_pendingAdaptiveFingerprint == applied.InputFingerprint)
             _observedLegendIds.UnionWith(_pendingAdaptiveLegendIds);
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
@@ -1034,7 +1035,7 @@ public partial class MainWindow : Window
         _overlay.RenderPlannerEvidence(_lastRound, _adaptivePlanningApplied,
             evidenceUnknown,
             evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
-            _storySequence, _mapSignals.CompletedStoryStageOrdinal);
+            _storySequence, _mapSignals.CompletedStoryStageOrdinal, _adaptivePlanning.ManualLatches);
         if (message is not null) FooterStatus.Text = message;
     }
 
@@ -1111,7 +1112,7 @@ public partial class MainWindow : Window
         var plannerEvidence = RecommendationPresentation.PlannerEvidence(
             _lastRound, _adaptivePlanningApplied, evidenceUnknown,
             evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
-            _storySequence);
+            _storySequence, _adaptivePlanning.ManualLatches);
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _boardRecs, _boardPlan,
             _selectedRouteId, SelectMainRoute, _boardBanner, children, head?.Route.Id,
             plannerEvidence,

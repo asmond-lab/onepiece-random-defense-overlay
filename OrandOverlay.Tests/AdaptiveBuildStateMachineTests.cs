@@ -198,11 +198,34 @@ public sealed class AdaptiveBuildStateMachineTests
             ManualLatches = new ManualLatches(false, true)
         }, Snapshot(round: 21, stage: 9, rareWisps: 0, route: Route("goal", true), navigation: Navigation("nav", true)));
 
-        Assert.Null(routeBlocked.State.RouteLock);
-        Assert.Contains(AdaptiveBuildBlocker.ManualGoalOverride, routeBlocked.Blockers);
+        Assert.Equal("goal", routeBlocked.State.RouteLock?.GoalUnitId);
+        Assert.Equal(PlannerPhase.Committed, routeBlocked.State.Phase);
+        Assert.Equal("nav", routeBlocked.State.NavigationLockId);
+        Assert.DoesNotContain(AdaptiveBuildBlocker.ManualGoalOverride, routeBlocked.Blockers);
         Assert.NotNull(navBlocked.State.RouteLock);
         Assert.Null(navBlocked.State.NavigationLockId);
         Assert.Contains(AdaptiveBuildBlocker.ManualNavigationOverride, navBlocked.Blockers);
+    }
+
+    [Fact]
+    public void ManualGoalProgressUpdatesBeforeRound20AndAfterChangingTheGoal()
+    {
+        var state = StateReadyToCommit() with
+        {
+            ManualLatches = new ManualLatches(true, false),
+            RouteLock = Route("previous", true)
+        };
+        var first = AdaptiveBuildStateMachine.Advance(state,
+            Snapshot(round: 19, stage: 9, rareWisps: 0,
+                route: new AdaptiveRouteLockCandidate(DamageLane.Physical, "zoro", "control", 5000, false)));
+        var second = AdaptiveBuildStateMachine.Advance(first.State,
+            Snapshot(round: 19, stage: 9, rareWisps: 0,
+                route: new AdaptiveRouteLockCandidate(DamageLane.Physical, "zoro", "control", 9900, false)));
+
+        Assert.Equal("zoro", first.State.RouteLock?.GoalUnitId);
+        Assert.Equal(5000, first.State.RouteLock?.ProgressBp);
+        Assert.Equal(9900, second.State.RouteLock?.ProgressBp);
+        Assert.True(second.State.ManualLatches.GoalOverride);
     }
 
     [Fact]

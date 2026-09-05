@@ -6,7 +6,7 @@ internal static class NavigationAutomaticRecommendationPolicy
         PlannerPhase phase, NavigationRecommendationState state,
         string? recommendedOptionId) =>
         enabled && !latches.NavigationOverride &&
-        phase == PlannerPhase.Committed &&
+        (phase == PlannerPhase.Committed || latches.GoalOverride) &&
         !string.IsNullOrWhiteSpace(recommendedOptionId) &&
         state is NavigationRecommendationState.Actionable or
             NavigationRecommendationState.Locked or

@@ -34,6 +34,8 @@ internal static class RecommendationBoard
         nowPanel.Children.Clear();
         flowPanel.Children.Clear();
         boardPanel.Children.Clear();
+        if (plannerEvidence?.IsManualGoal == true)
+            banner = "수동 목표 유지";
 
         if (bulletOperatingBoard is not null)
             boardPanel.Children.Add(BulletOperatingBoardBlock(bulletOperatingBoard));

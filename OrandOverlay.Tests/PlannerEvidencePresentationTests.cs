@@ -54,6 +54,25 @@ public sealed class PlannerEvidencePresentationTests
     }
 
     [Fact]
+    public void ManualGoalWithUnknownSignalsKeepsGoalStatusAndExplainsAutomaticLimits()
+    {
+        var view = RecommendationPresentation.PlannerEvidence(19,
+            Applied(NavigationRecommendationState.NoSafeRecommendation,
+                PlannerPhase.CommitRound20,
+                blockers: [AdaptiveBuildBlocker.UnknownStoryStage,
+                    AdaptiveBuildBlocker.UnknownRareWisps],
+                manual: new ManualLatches(true, false)), true);
+
+        Assert.Equal(PlannerEvidenceState.ManualOverride, view.State);
+        Assert.Equal("수동 목표 유지", view[PlannerEvidenceFieldKind.Phase].DisplayValue);
+        Assert.Contains("조합", view[PlannerEvidenceFieldKind.Action].DisplayValue);
+        Assert.Contains("스토리", view[PlannerEvidenceFieldKind.Blocker].DisplayValue);
+        Assert.Contains("희귀 위습", view[PlannerEvidenceFieldKind.Blocker].DisplayValue);
+        Assert.DoesNotContain("개 입력", view[PlannerEvidenceFieldKind.Blocker].DisplayValue);
+        Assert.Contains("상대 상위 유닛 수", view[PlannerEvidenceFieldKind.UnknownSignals].DisplayValue);
+    }
+
+    [Fact]
     public void NavigationEvidenceRemainsRecommendationOnlyAndCarriesAuditableNumbers()
     {
         var view = RecommendationPresentation.PlannerEvidence(21,

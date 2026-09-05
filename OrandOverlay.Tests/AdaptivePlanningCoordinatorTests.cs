@@ -146,6 +146,30 @@ public sealed class AdaptivePlanningCoordinatorTests
     }
 
     [Fact]
+    public void ManualGoalIsVisibleWhileUnknownAutomaticResultPreservesLastGood()
+    {
+        var coordinator = new AdaptivePlanningCoordinator();
+        var good = Apply(coordinator, Input(19, firstRare: true));
+        coordinator.LatchManualGoalOverride();
+        var work = coordinator.TryBegin(Input(19, firstRare: true, transient: true,
+            latches: coordinator.ManualLatches))!;
+        coordinator.ScheduleApply(AdaptivePlanningCoordinator.Evaluate(work), action => action(),
+            _ => throw new InvalidOperationException("Unknown evidence must not replace last good."));
+
+        var view = RecommendationPresentation.PlannerEvidence(19, coordinator.LastApplied,
+            true, currentManualLatches: coordinator.ManualLatches);
+
+        Assert.Same(good, coordinator.LastApplied);
+        Assert.False(good.State.ManualLatches.GoalOverride);
+        Assert.Equal("수동 목표 유지", view[PlannerEvidenceFieldKind.Phase].DisplayValue);
+        Assert.Contains("조합", view[PlannerEvidenceFieldKind.Action].DisplayValue);
+        coordinator.ConfirmReset(1);
+        var reset = RecommendationPresentation.PlannerEvidence(1, coordinator.LastApplied,
+            false, currentManualLatches: coordinator.ManualLatches);
+        Assert.Equal(PlannerEvidenceState.Waiting, reset.State);
+    }
+
+    [Fact]
     public void TransientOrUnknownInputKeepsVisibleLastGoodUnchanged()
     {
         var coordinator = new AdaptivePlanningCoordinator();
