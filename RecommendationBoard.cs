@@ -281,14 +281,14 @@ internal static class RecommendationBoard
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         var title = new TextBlock
         {
-            Text = "Bullet",
+            Text = "불릿",
             Foreground = OverlayTheme.WhiteBrush,
             FontSize = OverlayTheme.PlannerTitleTypeSize,
             FontWeight = FontWeights.Bold
         };
         AutomationProperties.SetAutomationId(title, "bullet-board-title");
-        AutomationProperties.SetName(title, "Bullet");
-        AutomationProperties.SetItemStatus(title, "Bullet");
+        AutomationProperties.SetName(title, "불릿");
+        AutomationProperties.SetItemStatus(title, "불릿");
         header.Children.Add(title);
         var phase = new TextBlock
         {
@@ -337,7 +337,7 @@ internal static class RecommendationBoard
             Child = stack
         };
         AutomationProperties.SetAutomationId(root, "bullet-operating-board");
-        AutomationProperties.SetName(root, "Bullet 운영 보드");
+        AutomationProperties.SetName(root, "불릿 운영 안내");
         AutomationProperties.SetItemStatus(root,
             $"라운드 {board.Round}, {board.Phase}, {board.Confidence}");
         return root;
@@ -534,7 +534,7 @@ internal static class RecommendationBoard
         {
             text.Children.Add(new TextBlock
             {
-                Text = selected.NextAction,
+                Text = DisplayNextAction(selected.NextAction),
                 Foreground = OverlayTheme.MutedBrush,
                 FontSize = 12,
                 TextWrapping = TextWrapping.Wrap,
@@ -547,7 +547,7 @@ internal static class RecommendationBoard
         if (selected.Warnings.Count > 0)
             text.Children.Add(new TextBlock
             {
-                Text = selected.Warnings[0],
+                Text = DisplayWarning(selected.Warnings[0]),
                 Foreground = OverlayTheme.WarnBrush,
                 FontSize = 11,
                 TextWrapping = TextWrapping.Wrap,
@@ -603,6 +603,44 @@ internal static class RecommendationBoard
         AutomationProperties.SetItemStatus(row,
             $"{currentCraftName} · 진행률 {currentCraftProgress}");
         return row;
+    }
+
+    // The board projects engine diagnostics for readers without changing the recommendation.
+    internal static string DisplayNextAction(string action)
+    {
+        if (!action.StartsWith("조합 보류:", StringComparison.Ordinal)) return action;
+        if (action.Contains("실제 영웅", StringComparison.Ordinal)) return action;
+        if (action.Contains("특성강화", StringComparison.Ordinal) && action.Contains("토큰", StringComparison.Ordinal))
+            return "조합을 잠시 미뤄 주세요. 게임에서 특성강화, 필요한 아이템과 목재를 확인해 주세요.";
+        if (action.Contains("특성강화", StringComparison.Ordinal))
+            return "조합을 잠시 미뤄 주세요. 게임에서 특성강화를 확인해 주세요.";
+        if (action.Contains("토큰", StringComparison.Ordinal))
+            return "조합을 잠시 미뤄 주세요. 게임에서 필요한 아이템을 확인해 주세요.";
+        if (action.Contains("목재", StringComparison.Ordinal))
+            return "조합을 잠시 미뤄 주세요. 게임에서 목재를 확인해 주세요.";
+        return "조합 조건을 아직 확인하지 못했습니다. 게임에서 필요한 조건을 확인하기 전에는 재료를 사용하지 마세요.";
+    }
+
+    internal static string DisplayWarning(string warning)
+    {
+        if (warning.Contains("7강", StringComparison.Ordinal) && warning.Contains("20~28", StringComparison.Ordinal))
+            return "7강에서 멈추고 리롤을 포함해 목재는 20~28개까지만 사용하세요.";
+        if (warning.Contains("대체 기물", StringComparison.Ordinal))
+            return "조합에 쓸 전투 유닛을 대신할 유닛을 먼저 확보해 주세요.";
+        if (warning.Contains("하위 패", StringComparison.Ordinal))
+        {
+            var count = System.Text.RegularExpressions.Regex.Match(warning, @"하위 패\s+(\d+)").Groups[1].Value;
+            return count.Length > 0
+                ? $"목표 재료를 사용하게 됩니다. 부족한 하위 유닛 {count}개를 더 확보해 주세요."
+                : "목표 재료를 사용하게 됩니다. 부족한 하위 유닛 수를 확인하고 더 모아 주세요.";
+        }
+        if (warning.Contains("목재·골드", StringComparison.Ordinal))
+            return "유닛 재료와 별도로 게임에서 목재, 골드, 특수 포인트를 확인한 뒤 조합해 주세요.";
+        if (warning.Contains("홀딩", StringComparison.Ordinal))
+            return "적을 붙잡는 유닛이 충분한지 확인하고, 남는 유닛으로 공격을 보강해 주세요.";
+        if (warning.StartsWith("조건 필요:", StringComparison.Ordinal))
+            return "게임에서 필요한 조건을 확인해 주세요: " + warning["조건 필요:".Length..].Trim();
+        return warning;
     }
 
     private static UIElement FlowBlock(Recommendation selected)
@@ -745,8 +783,8 @@ internal static class RecommendationBoard
         return new Border
         {
             Background = current ? OverlayTheme.FeaturedBrush : OverlayTheme.RowBrush,
-            BorderBrush = current ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush,
-            BorderThickness = new Thickness(current ? 2 : 1),
+            BorderBrush = current ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush,
+            BorderThickness = OverlayTheme.WellBorderThickness,
             CornerRadius = new CornerRadius(OverlayTheme.TileRadius),
             Padding = new Thickness(5, 6, 5, 6),
             ToolTip = RecommendationPresentation.CraftIngredientLine(step),
@@ -759,7 +797,7 @@ internal static class RecommendationBoard
         return new System.Windows.Shapes.Path
         {
             Data = Geometry.Parse("M0,0 L7,5 0,10"),
-            Stroke = OverlayTheme.GoldBrush,
+            Stroke = OverlayTheme.SelectionBorderBrush,
             StrokeThickness = 2,
             Margin = new Thickness(4, 0, 4, 0),
             VerticalAlignment = VerticalAlignment.Center
@@ -786,7 +824,7 @@ internal static class RecommendationBoard
         {
             Width = 1,
             Height = 34,
-            Background = OverlayTheme.GoldBrush,
+            Background = OverlayTheme.SelectionBorderBrush,
             Opacity = 0.5,
             Margin = new Thickness(6, 0, 6, 10),
             VerticalAlignment = VerticalAlignment.Center
@@ -797,8 +835,8 @@ internal static class RecommendationBoard
         return new Border
         {
             Background = selectedInCluster ? OverlayTheme.FeaturedBrush : OverlayTheme.RowBrush,
-            BorderBrush = selectedInCluster ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush,
-            BorderThickness = new Thickness(selectedInCluster ? 1.5 : 1),
+            BorderBrush = selectedInCluster ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush,
+            BorderThickness = OverlayTheme.WellBorderThickness,
             CornerRadius = new CornerRadius(OverlayTheme.WellRadius),
             Padding = new Thickness(8, 8, 8, 6),
             Margin = new Thickness(0, 0, 10, 10),
@@ -816,7 +854,7 @@ internal static class RecommendationBoard
         var ring = new Border
         {
             HorizontalAlignment = HorizontalAlignment.Center,
-            BorderBrush = selected ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush,
+            BorderBrush = selected ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush,
             BorderThickness = new Thickness(2),
             CornerRadius = new CornerRadius(OverlayTheme.ImageRadius),
             Child = icon
@@ -841,9 +879,9 @@ internal static class RecommendationBoard
         };
         hit.ToolTip = BoardTooltip(item);
         AutomationProperties.SetName(hit, BoardTooltip(item).Replace('\n', ' '));
-        hit.MouseEnter += (_, _) => ring.BorderBrush = OverlayTheme.GoldBrush;
+        hit.MouseEnter += (_, _) => ring.BorderBrush = OverlayTheme.SelectionBorderBrush;
         hit.MouseLeave += (_, _) =>
-            ring.BorderBrush = selected ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush;
+            ring.BorderBrush = selected ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush;
         hit.PreviewMouseLeftButtonDown += (_, e) =>
         {
             e.Handled = true;
@@ -872,8 +910,8 @@ internal static class RecommendationBoard
         var tile = new Border
         {
             Background = selected ? OverlayTheme.FeaturedBrush : OverlayTheme.RowBrush,
-            BorderBrush = selected ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush,
-            BorderThickness = new Thickness(selected ? 2 : 1),
+            BorderBrush = selected ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush,
+            BorderThickness = OverlayTheme.WellBorderThickness,
             CornerRadius = new CornerRadius(OverlayTheme.TileRadius),
             Padding = new Thickness(6, 6, 6, 6),
             Margin = new Thickness(0, 0, 10, 10),
@@ -884,12 +922,12 @@ internal static class RecommendationBoard
         AutomationProperties.SetName(tile, BoardTooltip(item).Replace('\n', ' '));
         tile.MouseEnter += (_, _) =>
         {
-            if (!selected) tile.BorderBrush = OverlayTheme.GoldBrush;
+            if (!selected) tile.BorderBrush = OverlayTheme.SelectionBorderBrush;
             tile.Background = OverlayTheme.FeaturedBrush;
         };
         tile.MouseLeave += (_, _) =>
         {
-            tile.BorderBrush = selected ? OverlayTheme.GoldBrush : OverlayTheme.HairlineBrush;
+            tile.BorderBrush = selected ? OverlayTheme.SelectionBorderBrush : OverlayTheme.HairlineBrush;
             tile.Background = selected ? OverlayTheme.FeaturedBrush : OverlayTheme.RowBrush;
         };
         tile.MouseLeftButtonDown += (_, e) =>

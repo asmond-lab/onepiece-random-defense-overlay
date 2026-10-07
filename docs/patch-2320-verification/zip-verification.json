@@ -1,0 +1,17 @@
+{
+  "ZipName": "OrandOverlay-0.6.70-test.20260914.1-map2320-offline-win-x64.zip",
+  "ZipBytes": 73217551,
+  "ZipSha256": "2B0AE6DEAE78E3E271B647104E5220C9284FCEBE754EE2E394CDA85A5D8A4A82",
+  "DecompressedEntries": [
+    {
+      "Name": "OrandOverlay.exe",
+      "Size": 78767624,
+      "Sha256": "A2D401C24A72D6A88FC726EB8FB9233DCA2786A61D0736CC18511D81845AD898"
+    },
+    {
+      "Name": "README.txt",
+      "Size": 2735,
+      "Sha256": "6EA66329821B67FA591A51A92DF2773F69AA0A1ED62C10462DF66960D7B4AC06"
+    }
+  ]
+}

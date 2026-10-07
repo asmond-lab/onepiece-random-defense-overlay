@@ -105,16 +105,11 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
                 StringComparer.OrdinalIgnoreCase);
         var originalAvailability = new Dictionary<string, long>(availability,
             StringComparer.OrdinalIgnoreCase);
-        var seraphimCount = availability
-            .Where(pair => RecipeWildcards.IsSeraphim(resolveUnit(pair.Key)))
-            .Sum(pair => pair.Value);
-        if (seraphimCount > 0)
-            availability[RecipeWildcards.AnySeraphim] = seraphimCount;
         var requiredLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         var ownedLeaves = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         var resources = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (unitId, count) in requirements.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        foreach (var (unitId, count) in requirements.OrderBy(pair => RecipeWildcards.IsWildcard(pair.Key) ? 1 : 0).ThenBy(pair => pair.Key, StringComparer.Ordinal))
         {
             foreach (var (leafId, leafCount) in ExpandLeaves(unitId, new HashSet<string>(StringComparer.OrdinalIgnoreCase)))
                 Add(requiredLeaves, leafId, Multiply(leafCount, count));
@@ -204,6 +199,18 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
         if (demand <= 0) return;
         var unit = resolveUnit(unitId);
         if (IsResourcePseudo(unit)) return;
+        if (RecipeWildcards.IsWildcard(unitId))
+        {
+            foreach (var pair in RecipeWildcards.Candidates(unitId, availability, resolveUnit).ToArray())
+            {
+                var used = Math.Min(demand, pair.Value);
+                availability[pair.Key] -= used;
+                Add(ownedLeaves, unitId, used);
+                demand -= used;
+                if (demand == 0) break;
+            }
+            return;
+        }
 
         var available = availability.TryGetValue(unitId, out var availableCount) ? availableCount : 0;
         var directlyOwned = Math.Min(demand, available);
@@ -225,7 +232,8 @@ public sealed class RecipeCompletionCalculator(Func<string, UnitDefinition> reso
     private IEnumerable<KeyValuePair<string, int>> RecipeChildren(UnitDefinition unit,
         bool includeResources = false) => unit.Recipe
         .Where(pair => pair.Value > 0 &&
-            (includeResources || !IsResourcePseudo(resolveUnit(pair.Key))));
+            (includeResources || !IsResourcePseudo(resolveUnit(pair.Key))))
+        .OrderBy(pair => RecipeWildcards.IsWildcard(pair.Key) ? 1 : 0);
 
     private static string CanonicalResourceId(UnitDefinition unit)
     {

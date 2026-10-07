@@ -1,0 +1,17 @@
+name = "randypick-web"
+main = "src/worker.mjs"
+compatibility_date = "2026-09-01"
+workers_dev = false
+preview_urls = false
+
+routes = [
+  { pattern = "randypick.com", custom_domain = true },
+  { pattern = "www.randypick.com", custom_domain = true },
+]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+html_handling = "auto-trailing-slash"
+run_worker_first = true

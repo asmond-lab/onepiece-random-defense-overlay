@@ -1,0 +1,825 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "sourceSha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d",
+  "stages": [
+    {
+      "ordinal": 1,
+      "objectiveRawcode": "n000",
+      "completionFunction": "epR",
+      "baseGold": 180,
+      "baseLumber": 0,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 3
+        }
+      ],
+      "baseSourceLine": 67624,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 67624,
+          "statement": "call SetPlayerState(BpR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(BpR,PLAYER_STATE_RESOURCE_GOLD)+$b4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 67625,
+          "statement": "call R6R(Player(MpR),3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 67631,
+          "statement": "call G1f(Player(sy),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "epR",
+      "source": {
+        "startLine": 67571,
+        "endLine": 67641,
+        "sha256": "17a21715462aa5168593daf010e98b236ed3feaf249ce7c8b638bb9a73d562f2"
+      },
+      "rawSource": "function epR takes nothing returns nothing\nlocal string npR=\"\"\nlocal unitstate IpR=UNIT_STATE_MAX_LIFE\nlocal unit GpR=GetTriggerUnit()\nlocal real upR=GetUnitState(GpR,IpR)\nlocal integer MpR=0\nlocal real LpR\nlocal integer jpR\nlocal integer kpR\nlocal player BpR\nloop\nexitwhen MpR>=4\nif EC[MpR]then\ncall e2R(MpR)\nelse\ncall xpR(MpR)\nendif\nset MpR=MpR+1\nendloop\ncall PauseTimer(fy)\nset Cy=false\nset jpR=0\nloop\nexitwhen jpR>=4\nset jpR=jpR+1\nendloop\nset MpR=0\nloop\nexitwhen MpR>=4\nif yC[MpR]then\nset LpR=100.*(Ry[MpR]/upR)\nset kpR=R2I(($12c-gf[0])*LpR*5./100.)\ncall DisplayTimedTextToPlayer(Player(MpR),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(LpR,0,2)+\"% 입니다.\")\nif kpR>0 then\ncall DisplayTimedTextToPlayer(Player(MpR),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(kpR)+\"점|r\")\ncall wbf(MpR,kpR)\nendif\nif Ty<=Ry[MpR]then\nset Ty=Ry[MpR]\nset sy=MpR\nset Hy=LpR\nendif\nendif\nset MpR=MpR+1\nendloop\nset ST[sy]=ST[sy]+1\nset sf[0]=Player(sy)\nset Hf[0]=Hy*1.\nset MpR=0\nloop\nexitwhen MpR>=4\nif yC[MpR]then\nset BpR=Player(MpR)\ncall SetPlayerState(BpR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(BpR,PLAYER_STATE_RESOURCE_GOLD)+$b4)\ncall R6R(Player(MpR),3)\nendif\nset MpR=MpR+1\nendloop\ncall dEC()\ncall dvR(Player(sy),$1f4)\ncall G1f(Player(sy),1)\nset npR=npR+\"|cffFF0000\"+GetObjectName($6e303030)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset npR=npR+\"|cffffdead◎|r 재화 : |cffffd700180 골드|r\\n\"\nset npR=npR+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 3개\\n\"\nset npR=npR+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(sy))+\" (기여도 : |cffFF0000\"+R2SW(Hy,0,2)+\"%|r)\\n\"\nset npR=npR+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,npR)\nset IpR=null\nset GpR=null\nset BpR=null\nendfunction"
+    },
+    {
+      "ordinal": 2,
+      "objectiveRawcode": "n002",
+      "completionFunction": "ovf",
+      "baseGold": 800,
+      "baseLumber": 0,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 3
+        }
+      ],
+      "baseSourceLine": 31775,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 31775,
+          "statement": "call SetPlayerState(ivf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(ivf,PLAYER_STATE_RESOURCE_GOLD)+$320)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 31776,
+          "statement": "call R6R(Player(Avf),3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 31782,
+          "statement": "call G1f(Player(ry),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "ovf",
+      "source": {
+        "startLine": 31722,
+        "endLine": 31792,
+        "sha256": "be747e00fd10611c622e285728c1f88374a741460309bc7271b94e3e1369c164"
+      },
+      "rawSource": "function ovf takes nothing returns nothing\nlocal string Vvf=\"\"\nlocal unitstate mvf=UNIT_STATE_MAX_LIFE\nlocal unit lvf=GetTriggerUnit()\nlocal real vvf=GetUnitState(lvf,mvf)\nlocal integer Avf=0\nlocal real yvf\nlocal integer Pvf\nlocal integer Qvf\nlocal player ivf\nloop\nexitwhen Avf>=4\nif EC[Avf]then\ncall e2R(Avf)\nelse\ncall xpR(Avf)\nendif\nset Avf=Avf+1\nendloop\ncall PauseTimer(Zy)\nset cy=false\nset Pvf=0\nloop\nexitwhen Pvf>=4\nset Pvf=Pvf+1\nendloop\nset Avf=0\nloop\nexitwhen Avf>=4\nif yC[Avf]then\nset yvf=100.*(Ky[Avf]/vvf)\nset Qvf=R2I(($12c-gf[1])*yvf*5./100.)\ncall DisplayTimedTextToPlayer(Player(Avf),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(yvf,0,2)+\"% 입니다.\")\nif Qvf>0 then\ncall DisplayTimedTextToPlayer(Player(Avf),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(Qvf)+\"점|r\")\ncall wbf(Avf,Qvf)\nendif\nif Oy<=Ky[Avf]then\nset Oy=Ky[Avf]\nset ry=Avf\nset Xy=yvf\nendif\nendif\nset Avf=Avf+1\nendloop\nset ST[ry]=ST[ry]+1\nset sf[1]=Player(ry)\nset Hf[1]=Xy*1.\nset Avf=0\nloop\nexitwhen Avf>=4\nif yC[Avf]then\nset ivf=Player(Avf)\ncall SetPlayerState(ivf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(ivf,PLAYER_STATE_RESOURCE_GOLD)+$320)\ncall R6R(Player(Avf),3)\nendif\nset Avf=Avf+1\nendloop\ncall aqR()\ncall dvR(Player(ry),$5dc)\ncall G1f(Player(ry),1)\nset Vvf=Vvf+\"|cffFF0000\"+GetObjectName($6e303032)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset Vvf=Vvf+\"|cffffdead◎|r 재화 : |cffffd700800 골드|r\\n\"\nset Vvf=Vvf+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 3개\\n\"\nset Vvf=Vvf+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(ry))+\" (기여도 : |cffFF0000\"+R2SW(Xy,0,2)+\"%|r)\\n\"\nset Vvf=Vvf+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,Vvf)\nset mvf=null\nset lvf=null\nset ivf=null\nendfunction"
+    },
+    {
+      "ordinal": 3,
+      "objectiveRawcode": "n003",
+      "completionFunction": "uqf",
+      "baseGold": 1000,
+      "baseLumber": 0,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 4
+        },
+        {
+          "id": "e017",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 70642,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 70642,
+          "statement": "call SetPlayerState(nqf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(nqf,PLAYER_STATE_RESOURCE_GOLD)+$3e8)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 70643,
+          "statement": "call R6R(Player(iqf),4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 70644,
+          "statement": "call HXf(Player(iqf),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 70650,
+          "statement": "call G1f(Player(Py),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "uqf",
+      "source": {
+        "startLine": 70589,
+        "endLine": 70660,
+        "sha256": "b1f5095060763c45b89fee3a9b669ba67f25fb3cc2a7a8a58e713b175515e1b9"
+      },
+      "rawSource": "function uqf takes nothing returns nothing\nlocal string lqf=\"\"\nlocal unitstate oqf=UNIT_STATE_MAX_LIFE\nlocal unit Nqf=GetTriggerUnit()\nlocal real Pqf=GetUnitState(Nqf,oqf)\nlocal integer iqf=0\nlocal real Qqf\nlocal integer Sqf\nlocal integer xqf\nlocal player nqf\nloop\nexitwhen iqf>=4\nif EC[iqf]then\ncall e2R(iqf)\nelse\ncall xpR(iqf)\nendif\nset iqf=iqf+1\nendloop\ncall PauseTimer(Ay)\nset my=false\nset Sqf=0\nloop\nexitwhen Sqf>=4\nset Sqf=Sqf+1\nendloop\nset iqf=0\nloop\nexitwhen iqf>=4\nif yC[iqf]then\nset Qqf=100.*(yy[iqf]/Pqf)\nset xqf=R2I(($12c-gf[2])*Qqf*5./100.)\ncall DisplayTimedTextToPlayer(Player(iqf),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(Qqf,0,2)+\"% 입니다.\")\nif xqf>0 then\ncall DisplayTimedTextToPlayer(Player(iqf),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(xqf)+\"점|r\")\ncall wbf(iqf,xqf)\nendif\nif ly<=yy[iqf]then\nset ly=yy[iqf]\nset Py=iqf\nset Qy=Qqf\nendif\nendif\nset iqf=iqf+1\nendloop\nset ST[Py]=ST[Py]+1\nset sf[2]=Player(Py)\nset Hf[2]=Qy*1.\nset iqf=0\nloop\nexitwhen iqf>=4\nif yC[iqf]then\nset nqf=Player(iqf)\ncall SetPlayerState(nqf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(nqf,PLAYER_STATE_RESOURCE_GOLD)+$3e8)\ncall R6R(Player(iqf),4)\ncall HXf(Player(iqf),2)\nendif\nset iqf=iqf+1\nendloop\ncall dJR()\ncall dvR(Player(Py),$9c4)\ncall G1f(Player(Py),1)\nset lqf=lqf+\"|cffFF0000\"+GetObjectName($6e303033)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset lqf=lqf+\"|cffffdead◎|r 재화 : |cffffd7001000 골드|r\\n\"\nset lqf=lqf+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 4개, |cff9553ec\"+GetObjectName($65303137)+\"|r 2개\\n\"\nset lqf=lqf+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Py))+\" (기여도 : |cffFF0000\"+R2SW(Qy,0,2)+\"%|r)\\n\"\nset lqf=lqf+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1개 를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,lqf)\nset oqf=null\nset Nqf=null\nset nqf=null\nendfunction"
+    },
+    {
+      "ordinal": 4,
+      "objectiveRawcode": "n004",
+      "completionFunction": "apC",
+      "baseGold": 2000,
+      "baseLumber": 1,
+      "baseUnits": [
+        {
+          "id": "e017",
+          "count": 1
+        },
+        {
+          "id": "e016",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 50745,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 50745,
+          "statement": "call SetPlayerState(wpC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(wpC,PLAYER_STATE_RESOURCE_GOLD)+$7d0)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 50747,
+          "statement": "call SetPlayerState(wpC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(wpC,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 50748,
+          "statement": "call HXf(Player(TpC),1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 50752,
+          "statement": "call hNf(wpC,$65303136,2,CpC,dpC,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 50758,
+          "statement": "call G1f(Player(Gy),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "apC",
+      "source": {
+        "startLine": 50679,
+        "endLine": 50768,
+        "sha256": "9a2d12899719c3c162eaf764be331270ad3e33df4ffa7ec71407c370b7d639e4"
+      },
+      "rawSource": "function apC takes nothing returns nothing\nlocal string RpC=\"\"\nlocal unitstate spC=UNIT_STATE_MAX_LIFE\nlocal unit HpC=GetTriggerUnit()\nlocal real fpC=GetUnitState(HpC,spC)\nlocal integer TpC=0\nlocal real CpC\nlocal integer gpC\nlocal integer FpC\nlocal player wpC\nlocal real dpC\nloop\nexitwhen TpC>=4\nif EC[TpC]then\ncall e2R(TpC)\nelse\ncall xpR(TpC)\nendif\nset TpC=TpC+1\nendloop\ncall PauseTimer(uy)\nset Ly=false\nset gpC=0\nset FpC=0\nloop\nexitwhen gpC>=4\nif yC[gpC] and GetPlayerSlotState(Player(gpC))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(gpC))==MAP_CONTROL_USER then\nset FpC=FpC+1\nendif\nset gpC=gpC+1\nendloop\nif FpC==2 then\nset My=30\nelseif FpC==3 then\nset My=25\nelse\nset My=20\nendif\nset TpC=0\nloop\nexitwhen TpC>=4\nif yC[TpC]then\nset CpC=100.*(ny[TpC]/fpC)\nset ky[TpC]=CpC>=I2R(My)\nset FpC=R2I(($12c-gf[3])*CpC*5./100.)\ncall DisplayTimedTextToPlayer(Player(TpC),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(CpC,0,2)+\"% 입니다.\")\nif FpC>0 then\ncall DisplayTimedTextToPlayer(Player(TpC),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(FpC)+\"점|r\")\ncall wbf(TpC,FpC)\nendif\nif Iy<=ny[TpC]then\nset Iy=ny[TpC]\nset Gy=TpC\nset jy=CpC\nendif\nendif\nset TpC=TpC+1\nendloop\nset ST[Gy]=ST[Gy]+1\nset sf[3]=Player(Gy)\nset Hf[3]=jy*1.\nset TpC=0\nloop\nexitwhen TpC>=4\nif yC[TpC]then\nset wpC=Player(TpC)\ncall SetPlayerState(wpC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(wpC,PLAYER_STATE_RESOURCE_GOLD)+$7d0)\nset wpC=Player(TpC)\ncall SetPlayerState(wpC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(wpC,PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall HXf(Player(TpC),1)\nset wpC=Player(TpC)\nset CpC=GetRectCenterX(Yd)\nset dpC=GetRectCenterY(Yd)\ncall hNf(wpC,$65303136,2,CpC,dpC,bj_UNIT_FACING)\nendif\nset TpC=TpC+1\nendloop\ncall M8R()\ncall dvR(Player(Gy),$bb8)\ncall G1f(Player(Gy),1)\nset RpC=RpC+\"|cffFF0000\"+GetObjectName($6e303034)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset RpC=RpC+\"|cffffdead◎|r 재화 : |cffffd7002000 골드|r, |cff7ad8231 목재|r\\n\"\nset RpC=RpC+\"|cffffdead◎|r 유닛 : |cff0080ff\"+GetObjectName($65303136)+\"|r 2개, |cff9553ec\"+GetObjectName($65303137)+\"|r 1개\\n\"\nset RpC=RpC+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Gy))+\" (기여도 : |cffFF0000\"+R2SW(jy,0,2)+\"%|r)\\n\"\nset RpC=RpC+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,RpC)\nset spC=null\nset HpC=null\nset wpC=null\nendfunction"
+    },
+    {
+      "ordinal": 5,
+      "objectiveRawcode": "n005",
+      "completionFunction": "UnR",
+      "baseGold": 3000,
+      "baseLumber": 1,
+      "baseUnits": [
+        {
+          "id": "e017",
+          "count": 2
+        },
+        {
+          "id": "e016",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 27301,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 27301,
+          "statement": "call SetPlayerState(GnR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(GnR,PLAYER_STATE_RESOURCE_GOLD)+$bb8)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 27303,
+          "statement": "call SetPlayerState(GnR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GnR,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 27304,
+          "statement": "call HXf(Player(InR),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 27308,
+          "statement": "call hNf(GnR,$65303136,2,knR,BnR,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Technology",
+          "sourceLine": 27309,
+          "statement": "call SetPlayerTechResearched(Player(InR),$5230314e,1)",
+          "branch": "BaseActivePlayer"
+        }
+      ],
+      "name": "UnR",
+      "source": {
+        "startLine": 27289,
+        "endLine": 27333,
+        "sha256": "187f2797eb79a06623ff32f5b6478319b97171f6a3e94af0744a6cd9393c6b1f"
+      },
+      "rawSource": "function UnR takes nothing returns nothing\nlocal integer InR=0\nlocal player GnR\nlocal integer jnR\nlocal real knR\nlocal real BnR\nlocal boolean enR\nlocal boolean hnR\nloop\nexitwhen InR>=4\nif yC[InR]then\nset GnR=Player(InR)\ncall SetPlayerState(GnR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(GnR,PLAYER_STATE_RESOURCE_GOLD)+$bb8)\nset GnR=Player(InR)\ncall SetPlayerState(GnR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GnR,PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall HXf(Player(InR),2)\nset GnR=Player(InR)\nset knR=GetRectCenterX(Yd)\nset BnR=GetRectCenterY(Yd)\ncall hNf(GnR,$65303136,2,knR,BnR,bj_UNIT_FACING)\ncall SetPlayerTechResearched(Player(InR),$5230314e,1)\nif WYf(1,$64)<=5 then\nset GnR=Player(InR)\nset enR=false\nif not HaveSavedBoolean(Vg,GetPlayerId(GnR),$41493033) then\nset hnR=false\nset enR=true\nendif\nif not enR then\nset hnR=LoadBoolean(Vg,GetPlayerId(GnR),$41493033)\nset enR=true\nendif\nif not enR then\nset hnR=false\nendif\nif not hnR then\nset jnR=ZVR(Player(InR),$41493033)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(InR))+\"|r 님이 \"+GetObjectName($6e303035)+\" 를 파괴하여 \"+GetObjectName(jnR)+\" 획득!\")\nendif\nendif\nendif\nset InR=InR+1\nendloop\nset GnR=null\nendfunction"
+    },
+    {
+      "ordinal": 6,
+      "objectiveRawcode": "n006",
+      "completionFunction": "SYC",
+      "baseGold": 4000,
+      "baseLumber": 3,
+      "baseUnits": [
+        {
+          "id": "e017",
+          "count": 2
+        },
+        {
+          "id": "e016",
+          "count": 3
+        }
+      ],
+      "baseSourceLine": 71850,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 71850,
+          "statement": "call SetPlayerState(lYC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(lYC,PLAYER_STATE_RESOURCE_GOLD)+$fa0)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 71852,
+          "statement": "call SetPlayerState(lYC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(lYC,PLAYER_STATE_RESOURCE_LUMBER)+3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 71853,
+          "statement": "call HXf(Player(mYC),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 71857,
+          "statement": "call hNf(lYC,$65303136,3,QYC,iYC,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        }
+      ],
+      "name": "SYC",
+      "source": {
+        "startLine": 71838,
+        "endLine": 71881,
+        "sha256": "26299c715c2d84f2a23db4fa2a5b99d0e3c912a6e3c285f9e06ddf9143ffffc3"
+      },
+      "rawSource": "function SYC takes nothing returns nothing\nlocal integer mYC=0\nlocal player lYC\nlocal integer PYC\nlocal real QYC\nlocal real iYC\nlocal boolean oYC\nlocal boolean NYC\nloop\nexitwhen mYC>=4\nif yC[mYC]then\nset lYC=Player(mYC)\ncall SetPlayerState(lYC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(lYC,PLAYER_STATE_RESOURCE_GOLD)+$fa0)\nset lYC=Player(mYC)\ncall SetPlayerState(lYC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(lYC,PLAYER_STATE_RESOURCE_LUMBER)+3)\ncall HXf(Player(mYC),2)\nset lYC=Player(mYC)\nset QYC=GetRectCenterX(Yd)\nset iYC=GetRectCenterY(Yd)\ncall hNf(lYC,$65303136,3,QYC,iYC,bj_UNIT_FACING)\nif WYf(1,$64)<=5 then\nset lYC=Player(mYC)\nset oYC=false\nif not HaveSavedBoolean(Vg,GetPlayerId(lYC),$41493030) then\nset NYC=false\nset oYC=true\nendif\nif not oYC then\nset NYC=LoadBoolean(Vg,GetPlayerId(lYC),$41493030)\nset oYC=true\nendif\nif not oYC then\nset NYC=false\nendif\nif not NYC then\nset PYC=ZVR(Player(mYC),$41493030)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(mYC))+\"|r 님이 \"+GetObjectName($6e303036)+\" 를 파괴하여 \"+GetObjectName(PYC)+\" 획득!\")\nendif\nendif\nendif\nset mYC=mYC+1\nendloop\nset lYC=null\nendfunction"
+    },
+    {
+      "ordinal": 7,
+      "objectiveRawcode": "n007",
+      "completionFunction": "fdC",
+      "baseGold": 6000,
+      "baseLumber": 4,
+      "baseUnits": [
+        {
+          "id": "e019",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 67857,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 67857,
+          "statement": "call SetPlayerState(qwC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_GOLD)+$1770)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 67859,
+          "statement": "call SetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER)+4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 67863,
+          "statement": "call hNf(qwC,$65303139,2,UwC,RdC,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 67873,
+          "statement": "call SetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 67877,
+          "statement": "call R6R(Player(PA),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "fdC",
+      "source": {
+        "startLine": 67791,
+        "endLine": 67887,
+        "sha256": "3cfbef7e240ebe10ae1d382de0504828bc1d904ea100f8ea41c8da10eb024b8a"
+      },
+      "rawSource": "function fdC takes nothing returns nothing\nlocal string ewC=\"\"\nlocal unitstate bwC=UNIT_STATE_MAX_LIFE\nlocal unit JwC=GetTriggerUnit()\nlocal real hwC=GetUnitState(JwC,bwC)\nlocal integer EwC=0\nlocal real UwC\nlocal integer twC\nlocal integer WwC\nlocal player qwC\nlocal real RdC\nloop\nexitwhen EwC>=4\nif EC[EwC]then\ncall e2R(EwC)\nelse\ncall xpR(EwC)\nendif\nset EwC=EwC+1\nendloop\ncall PauseTimer(yA)\nset AA=false\nset twC=0\nset WwC=0\nloop\nexitwhen twC>=4\nif yC[twC] and GetPlayerSlotState(Player(twC))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(twC))==MAP_CONTROL_USER then\nset WwC=WwC+1\nendif\nset twC=twC+1\nendloop\nif WwC==2 then\nset mA=30\nelseif WwC==3 then\nset mA=25\nelse\nset mA=20\nendif\nset EwC=0\nloop\nexitwhen EwC>=4\nif yC[EwC]then\nset UwC=100.*(vA[EwC]/hwC)\nset iA[EwC]=UwC>=I2R(mA)\nset WwC=R2I(($12c-gf[6])*UwC*5./100.)\ncall DisplayTimedTextToPlayer(Player(EwC),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(UwC,0,2)+\"% 입니다.\")\nif WwC>0 then\ncall DisplayTimedTextToPlayer(Player(EwC),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(WwC)+\"점|r\")\ncall wbf(EwC,WwC)\nendif\nif lA<=vA[EwC]then\nset lA=vA[EwC]\nset PA=EwC\nset QA=UwC\nendif\nendif\nset EwC=EwC+1\nendloop\nset ST[PA]=ST[PA]+1\nset sf[6]=Player(PA)\nset Hf[6]=QA*1.\nset EwC=0\nloop\nexitwhen EwC>=4\nif yC[EwC]then\nset qwC=Player(EwC)\ncall SetPlayerState(qwC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_GOLD)+$1770)\nset qwC=Player(EwC)\ncall SetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER)+4)\nset qwC=Player(EwC)\nset UwC=GetRectCenterX(ed)\nset RdC=GetRectCenterY(ed)\ncall hNf(qwC,$65303139,2,UwC,RdC,bj_UNIT_FACING)\nendif\nset EwC=EwC+1\nendloop\nset EwC=0\nloop\nexitwhen EwC>=4\nif yC[EwC] and iA[EwC]then\ncall DisplayTimedTextToPlayer(Player(EwC),0.,0.,10.,\"기여도 \"+I2S(mA)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset qwC=Player(EwC)\ncall SetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(qwC,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset EwC=EwC+1\nendloop\ncall R6R(Player(PA),1)\nset ewC=ewC+\"|cffFF0000\"+GetObjectName($6e303037)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset ewC=ewC+\"|cffffdead◎|r 재화 : |cffffd7006000 골드|r, |cff7ad8234 목재|r\\n\"\nset ewC=ewC+\"|cffffdead◎|r 유닛 : |cffff00ff\"+GetObjectName($65303139)+\"|r 2개\\n\"\nset ewC=ewC+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(PA))+\" (기여도 : |cffFF0000\"+R2SW(QA,0,2)+\"%|r)\\n\"\nset ewC=ewC+\"|cffffdead　▶|r 해당 플레이어에게 |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,ewC)\nset bwC=null\nset JwC=null\nset qwC=null\nendfunction"
+    },
+    {
+      "ordinal": 8,
+      "objectiveRawcode": "n008",
+      "completionFunction": "XBf",
+      "baseGold": 8000,
+      "baseLumber": 4,
+      "baseUnits": [
+        {
+          "id": "e019",
+          "count": 3
+        }
+      ],
+      "baseSourceLine": 25600,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 25600,
+          "statement": "call SetPlayerState(aBf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(aBf,PLAYER_STATE_RESOURCE_GOLD)+$1f40)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 25602,
+          "statement": "call SetPlayerState(aBf,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(aBf,PLAYER_STATE_RESOURCE_LUMBER)+4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 25606,
+          "statement": "call hNf(aBf,$65303139,3,ZBf,cBf,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Technology",
+          "sourceLine": 25607,
+          "statement": "call SetPlayerTechResearched(Player(dBf),$5230314f,1)",
+          "branch": "BaseActivePlayer"
+        }
+      ],
+      "name": "XBf",
+      "source": {
+        "startLine": 25588,
+        "endLine": 25632,
+        "sha256": "ad2eecb7417e3a58adb02be506845f7813836fc10dbdc18483bad74ee674fbe4"
+      },
+      "rawSource": "function XBf takes nothing returns nothing\nlocal integer dBf=0\nlocal player aBf\nlocal integer KBf\nlocal real ZBf\nlocal real cBf\nlocal boolean OBf\nlocal boolean rBf\nloop\nexitwhen dBf>=4\nif yC[dBf]then\nset aBf=Player(dBf)\ncall SetPlayerState(aBf,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(aBf,PLAYER_STATE_RESOURCE_GOLD)+$1f40)\nset aBf=Player(dBf)\ncall SetPlayerState(aBf,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(aBf,PLAYER_STATE_RESOURCE_LUMBER)+4)\nset aBf=Player(dBf)\nset ZBf=GetRectCenterX(ed)\nset cBf=GetRectCenterY(ed)\ncall hNf(aBf,$65303139,3,ZBf,cBf,bj_UNIT_FACING)\ncall SetPlayerTechResearched(Player(dBf),$5230314f,1)\ncall oAf(dBf,1)\nif WYf(1,$64)<=5 then\nset aBf=Player(dBf)\nset OBf=false\nif not HaveSavedBoolean(Vg,GetPlayerId(aBf),$41493032) then\nset rBf=false\nset OBf=true\nendif\nif not OBf then\nset rBf=LoadBoolean(Vg,GetPlayerId(aBf),$41493032)\nset OBf=true\nendif\nif not OBf then\nset rBf=false\nendif\nif not rBf then\nset KBf=ZVR(Player(dBf),$41493032)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(dBf))+\"|r 님이 \"+GetObjectName($6e303038)+\" 를 파괴하여 \"+GetObjectName(KBf)+\" 획득!\")\nendif\nendif\nendif\nset dBf=dBf+1\nendloop\nset aBf=null\nendfunction"
+    },
+    {
+      "ordinal": 9,
+      "objectiveRawcode": "n00A",
+      "completionFunction": "klC",
+      "baseGold": 9000,
+      "baseLumber": 5,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 1
+        },
+        {
+          "id": "h05Y",
+          "count": 1
+        }
+      ],
+      "baseSourceLine": 19247,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 19247,
+          "statement": "call SetPlayerState(GlC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_GOLD)+$2328)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 19249,
+          "statement": "call SetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER)+5)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 19250,
+          "statement": "call R6R(Player(nlC),1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 19255,
+          "statement": "call CreateUnit(GlC,$68303559,xlC,GetStartLocationY(GetPlayerStartLocation(jlC)),bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Technology",
+          "sourceLine": 19256,
+          "statement": "call SetPlayerTechResearched(Player(nlC),$52303150,1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 19267,
+          "statement": "call SetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 19271,
+          "statement": "call R6R(Player(fm),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "klC",
+      "source": {
+        "startLine": 19181,
+        "endLine": 19282,
+        "sha256": "d9cac97b3c20f2ac4dcf218aaf828bc62e79f08b7bfe5a855b9b69ae86a64ae1"
+      },
+      "rawSource": "function klC takes nothing returns nothing\nlocal string NlC=\"\"\nlocal unitstate ulC=UNIT_STATE_MAX_LIFE\nlocal unit LlC=GetTriggerUnit()\nlocal real SlC=GetUnitState(LlC,ulC)\nlocal integer nlC=0\nlocal real xlC\nlocal integer MlC\nlocal integer IlC\nlocal player GlC\nlocal player jlC\nloop\nexitwhen nlC>=4\nif EC[nlC]then\ncall e2R(nlC)\nelse\ncall xpR(nlC)\nendif\nset nlC=nlC+1\nendloop\ncall PauseTimer(tA)\nset WA=false\nset MlC=0\nset IlC=0\nloop\nexitwhen MlC>=4\nif yC[MlC] and GetPlayerSlotState(Player(MlC))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(MlC))==MAP_CONTROL_USER then\nset IlC=IlC+1\nendif\nset MlC=MlC+1\nendloop\nif IlC==2 then\nset qA=30\nelseif IlC==3 then\nset qA=25\nelse\nset qA=20\nendif\nset nlC=0\nloop\nexitwhen nlC>=4\nif yC[nlC]then\nset xlC=100.*(JA[nlC]/SlC)\nset Tm[nlC]=xlC>=I2R(qA)\nset IlC=R2I(($12c-gf[8])*xlC*5./100.)\ncall DisplayTimedTextToPlayer(Player(nlC),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(xlC,0,2)+\"% 입니다.\")\nif IlC>0 then\ncall DisplayTimedTextToPlayer(Player(nlC),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(IlC)+\"점|r\")\ncall wbf(nlC,IlC)\nendif\nif Rm<=JA[nlC]then\nset Rm=JA[nlC]\nset fm=nlC\nset Cm=xlC\nendif\nendif\nset nlC=nlC+1\nendloop\nset ST[fm]=ST[fm]+1\nset sf[8]=Player(fm)\nset Hf[8]=Cm*1.\nset nlC=0\nloop\nexitwhen nlC>=4\nif yC[nlC]then\nset GlC=Player(nlC)\ncall SetPlayerState(GlC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_GOLD)+$2328)\nset GlC=Player(nlC)\ncall SetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER)+5)\ncall R6R(Player(nlC),1)\nset GlC=Player(nlC)\nset jlC=Player(nlC)\nset xlC=GetStartLocationX(GetPlayerStartLocation(jlC))\nset jlC=Player(nlC)\ncall CreateUnit(GlC,$68303559,xlC,GetStartLocationY(GetPlayerStartLocation(jlC)),bj_UNIT_FACING)\ncall SetPlayerTechResearched(Player(nlC),$52303150,1)\ncall oAf(nlC,1)\nendif\nset nlC=nlC+1\nendloop\nset nlC=0\nloop\nexitwhen nlC>=4\nif yC[nlC] and Tm[nlC]then\ncall DisplayTimedTextToPlayer(Player(nlC),0.,0.,10.,\"기여도 \"+I2S(qA)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset GlC=Player(nlC)\ncall SetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(GlC,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset nlC=nlC+1\nendloop\ncall R6R(Player(fm),1)\nset NlC=NlC+\"|cffFF0000\"+GetObjectName($6e303041)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset NlC=NlC+\"|cffffdead◎|r 재화 : |cffffd7009000 골드|r, |cff7ad8235 목재|r\\n\"\nset NlC=NlC+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 1개, |cffb22222고대의 배|r\\n\"\nset NlC=NlC+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(fm))+\" (기여도 : |cffFF0000\"+R2SW(Cm,0,2)+\"%|r)\\n\"\nset NlC=NlC+\"|cffffdead　▶|r 해당 플레이어에게 |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,NlC)\nset ulC=null\nset LlC=null\nset GlC=null\nset jlC=null\nendfunction"
+    },
+    {
+      "ordinal": 10,
+      "objectiveRawcode": "n001",
+      "completionFunction": "kff",
+      "baseGold": 10000,
+      "baseLumber": 4,
+      "baseUnits": [
+        {
+          "id": "e0IX",
+          "count": 2
+        },
+        {
+          "id": "e01A",
+          "count": 1
+        }
+      ],
+      "baseSourceLine": 17836,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 17836,
+          "statement": "call SetPlayerState(jff,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(jff,PLAYER_STATE_RESOURCE_GOLD)+$2710)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 17838,
+          "statement": "call SetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER)+4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 17839,
+          "statement": "call G1f(Player(nff),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 17840,
+          "statement": "call hNf(Player(nff),$65303141,1,Sff,Gff,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Technology",
+          "sourceLine": 17841,
+          "statement": "call SetPlayerTechResearched(Player(nff),$52303151,1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 17852,
+          "statement": "call SetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 17856,
+          "statement": "call G1f(Player(Om),1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 17857,
+          "statement": "call R6R(Player(Om),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "kff",
+      "source": {
+        "startLine": 17768,
+        "endLine": 17867,
+        "sha256": "9323af037314630be099bdda3b39c64354f9b28e8597ba9279fb2b45c4e43f29"
+      },
+      "rawSource": "function kff takes nothing returns nothing\nlocal string Nff=\"\"\nlocal unitstate uff=UNIT_STATE_MAX_LIFE\nlocal unit Lff=GetTriggerUnit()\nlocal real Sff=GetUnitState(Lff,uff)\nlocal integer nff=0\nlocal real xff\nlocal integer Mff\nlocal integer Iff\nlocal real Gff\nlocal player jff\nloop\nexitwhen nff>=4\nif EC[nff]then\ncall e2R(nff)\nelse\ncall xpR(nff)\nendif\nset nff=nff+1\nendloop\ncall PauseTimer(am)\nset Km=false\nset Mff=0\nset Iff=0\nloop\nexitwhen Mff>=4\nif yC[Mff] and GetPlayerSlotState(Player(Mff))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(Mff))==MAP_CONTROL_USER then\nset Iff=Iff+1\nendif\nset Mff=Mff+1\nendloop\nif Iff==2 then\nset Zm=30\nelseif Iff==3 then\nset Zm=25\nelse\nset Zm=20\nendif\nset nff=0\nloop\nexitwhen nff>=4\nif yC[nff]then\nset xff=100.*(dm[nff]/Sff)\nset Xm[nff]=xff>=I2R(Zm)\nset Iff=R2I(($12c-gf[9])*xff*5./100.)\ncall DisplayTimedTextToPlayer(Player(nff),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(xff,0,2)+\"% 입니다.\")\nif Iff>0 then\ncall DisplayTimedTextToPlayer(Player(nff),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(Iff)+\"점|r\")\ncall wbf(nff,Iff)\nendif\nif cm<=dm[nff]then\nset cm=dm[nff]\nset Om=nff\nset rm=xff\nendif\nendif\nset nff=nff+1\nendloop\nset ST[Om]=ST[Om]+1\nset sf[9]=Player(Om)\nset Hf[9]=rm*1.\nset nff=0\nset Sff=GetRectCenterX(Id)\nset Gff=GetRectCenterY(Id)\nloop\nexitwhen nff>=4\nif yC[nff]then\nset jff=Player(nff)\ncall SetPlayerState(jff,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(jff,PLAYER_STATE_RESOURCE_GOLD)+$2710)\nset jff=Player(nff)\ncall SetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER)+4)\ncall G1f(Player(nff),2)\ncall hNf(Player(nff),$65303141,1,Sff,Gff,bj_UNIT_FACING)\ncall SetPlayerTechResearched(Player(nff),$52303151,1)\ncall oAf(nff,1)\nendif\nset nff=nff+1\nendloop\nset nff=0\nloop\nexitwhen nff>=4\nif yC[nff] and Xm[nff]then\ncall DisplayTimedTextToPlayer(Player(nff),0.,0.,10.,\"기여도 \"+I2S(Zm)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset jff=Player(nff)\ncall SetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(jff,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset nff=nff+1\nendloop\ncall G1f(Player(Om),1)\ncall R6R(Player(Om),1)\nset Nff=Nff+\"|cffFF0000\"+GetObjectName($6e303031)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset Nff=Nff+\"|cffffdead◎|r 재화 : |cffffd70010000 골드|r, |cff7ad8234 목재|r\\n\"\nset Nff=Nff+\"|cffffdead◎|r 유닛 : |cff00fa9a\"+GetObjectName($65303141)+\"|r 1개, |cffffd700\"+GetObjectName($65304958)+\"|r 2개\\n\"\nset Nff=Nff+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Om))+\" (기여도 : |cffFF0000\"+R2SW(rm,0,2)+\"%|r)\\n\"\nset Nff=Nff+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1기, |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,Nff)\nset uff=null\nset Lff=null\nset jff=null\nendfunction"
+    },
+    {
+      "ordinal": 11,
+      "objectiveRawcode": "n00C",
+      "completionFunction": "sSR",
+      "baseGold": 12500,
+      "baseLumber": 4,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 3
+        },
+        {
+          "id": "e017",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 30909,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 30909,
+          "statement": "call SetPlayerState(TSR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_GOLD)+$30d4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 30911,
+          "statement": "call SetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER)+4)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 30912,
+          "statement": "call R6R(Player(WNR),3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 30913,
+          "statement": "call HXf(Player(WNR),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 30924,
+          "statement": "call SetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 30928,
+          "statement": "call G1f(Player(Qm),1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 30929,
+          "statement": "call R6R(Player(Qm),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "sSR",
+      "source": {
+        "startLine": 30844,
+        "endLine": 30939,
+        "sha256": "38a13cd2af2427e9315c933c8db96dcd8bcb45ebccf5d204c07f6dde0a5d4d2b"
+      },
+      "rawSource": "function sSR takes nothing returns nothing\nlocal string bNR=\"\"\nlocal unitstate qNR=UNIT_STATE_MAX_LIFE\nlocal unit RSR=GetTriggerUnit()\nlocal real JNR=GetUnitState(RSR,qNR)\nlocal integer WNR=0\nlocal real tNR\nlocal integer fSR\nlocal integer CSR\nlocal player TSR\nloop\nexitwhen WNR>=4\nif EC[WNR]then\ncall e2R(WNR)\nelse\ncall xpR(WNR)\nendif\nset WNR=WNR+1\nendloop\ncall PauseTimer(Am)\nset mm=false\nset fSR=0\nset CSR=0\nloop\nexitwhen fSR>=4\nif yC[fSR] and GetPlayerSlotState(Player(fSR))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(fSR))==MAP_CONTROL_USER then\nset CSR=CSR+1\nendif\nset fSR=fSR+1\nendloop\nif CSR==2 then\nset lm=30\nelseif CSR==3 then\nset lm=25\nelse\nset lm=20\nendif\nset WNR=0\nloop\nexitwhen WNR>=4\nif yC[WNR]then\nset tNR=100.*(ym[WNR]/JNR)\nset om[WNR]=tNR>=I2R(lm)\nset CSR=R2I(($12c-gf[10])*tNR*5./100.)\ncall DisplayTimedTextToPlayer(Player(WNR),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(tNR,0,2)+\"% 입니다.\")\nif CSR>0 then\ncall DisplayTimedTextToPlayer(Player(WNR),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(CSR)+\"점|r\")\ncall wbf(WNR,CSR)\nendif\nif Pm<=ym[WNR]then\nset Pm=ym[WNR]\nset Qm=WNR\nset im=tNR\nendif\nendif\nset WNR=WNR+1\nendloop\nset ST[Qm]=ST[Qm]+1\nset sf[10]=Player(Qm)\nset Hf[10]=im*1.\nset WNR=0\nloop\nexitwhen WNR>=4\nif yC[WNR]then\nset TSR=Player(WNR)\ncall SetPlayerState(TSR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_GOLD)+$30d4)\nset TSR=Player(WNR)\ncall SetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER)+4)\ncall R6R(Player(WNR),3)\ncall HXf(Player(WNR),2)\ncall oAf(WNR,1)\nendif\nset WNR=WNR+1\nendloop\nset WNR=0\nloop\nexitwhen WNR>=4\nif yC[WNR] and om[WNR]then\ncall DisplayTimedTextToPlayer(Player(WNR),0.,0.,10.,\"기여도 \"+I2S(lm)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset TSR=Player(WNR)\ncall SetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(TSR,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset WNR=WNR+1\nendloop\ncall G1f(Player(Qm),1)\ncall R6R(Player(Qm),1)\nset bNR=bNR+\"|cffFF0000\"+GetObjectName($6e303043)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset bNR=bNR+\"|cffffdead◎|r 재화 : |cffffd70012500 골드|r, |cff7ad8234 목재|r\\n\"\nset bNR=bNR+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 3개, |cff9553ec\"+GetObjectName($65303137)+\"|r 2개\\n\"\nset bNR=bNR+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Qm))+\" (기여도 : |cffFF0000\"+R2SW(im,0,2)+\"%|r)\\n\"\nset bNR=bNR+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1기, |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,bNR)\nset qNR=null\nset RSR=null\nset TSR=null\nendfunction"
+    },
+    {
+      "ordinal": 12,
+      "objectiveRawcode": "n00D",
+      "completionFunction": "NOC",
+      "baseGold": 10000,
+      "baseLumber": 3,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 3
+        },
+        {
+          "id": "e016",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 64671,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 64671,
+          "statement": "call SetPlayerState(iOC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_GOLD)+$2710)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 64673,
+          "statement": "call SetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER)+3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 64675,
+          "statement": "call SetPlayerState(iOC,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_FOOD_USED)+1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 64676,
+          "statement": "call R6R(Player(AOC),3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 64680,
+          "statement": "call hNf(iOC,$65303136,2,yOC,oOC,bj_UNIT_FACING)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Technology",
+          "sourceLine": 64681,
+          "statement": "call SetPlayerTechResearched(Player(AOC),$52303153,1)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 64692,
+          "statement": "call SetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 64696,
+          "statement": "call G1f(Player(km),1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 64697,
+          "statement": "call R6R(Player(km),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "NOC",
+      "source": {
+        "startLine": 64605,
+        "endLine": 64708,
+        "sha256": "e0a404031396ccb4fe0ca750465c39095289382ad2d1809fe7220cc3772599b3"
+      },
+      "rawSource": "function NOC takes nothing returns nothing\nlocal string VOC=\"\"\nlocal unitstate mOC=UNIT_STATE_MAX_LIFE\nlocal unit lOC=GetTriggerUnit()\nlocal real vOC=GetUnitState(lOC,mOC)\nlocal integer AOC=0\nlocal real yOC\nlocal integer POC\nlocal integer QOC\nlocal player iOC\nlocal real oOC\nloop\nexitwhen AOC>=4\nif EC[AOC]then\ncall e2R(AOC)\nelse\ncall xpR(AOC)\nendif\nset AOC=AOC+1\nendloop\ncall PauseTimer(Mm)\nset Im=false\nset POC=0\nset QOC=0\nloop\nexitwhen POC>=4\nif yC[POC] and GetPlayerSlotState(Player(POC))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(POC))==MAP_CONTROL_USER then\nset QOC=QOC+1\nendif\nset POC=POC+1\nendloop\nif QOC==2 then\nset Gm=30\nelseif QOC==3 then\nset Gm=25\nelse\nset Gm=20\nendif\nset AOC=0\nloop\nexitwhen AOC>=4\nif yC[AOC]then\nset yOC=100.*(Lm[AOC]/vOC)\nset em[AOC]=yOC>=I2R(Gm)\nset QOC=R2I(($12c-gf[11])*yOC*5./100.)\ncall DisplayTimedTextToPlayer(Player(AOC),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(yOC,0,2)+\"% 입니다.\")\nif QOC>0 then\ncall DisplayTimedTextToPlayer(Player(AOC),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(QOC)+\"점|r\")\ncall wbf(AOC,QOC)\nendif\nif jm<=Lm[AOC]then\nset jm=Lm[AOC]\nset km=AOC\nset Bm=yOC\nendif\nendif\nset AOC=AOC+1\nendloop\nset ST[km]=ST[km]+1\nset sf[11]=Player(km)\nset Hf[11]=Bm*1.\nset AOC=0\nloop\nexitwhen AOC>=4\nif yC[AOC]then\nset iOC=Player(AOC)\ncall SetPlayerState(iOC,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_GOLD)+$2710)\nset iOC=Player(AOC)\ncall SetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER)+3)\nset iOC=Player(AOC)\ncall SetPlayerState(iOC,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_FOOD_USED)+1)\ncall R6R(Player(AOC),3)\nset iOC=Player(AOC)\nset yOC=GetRectCenterX(Yd)\nset oOC=GetRectCenterY(Yd)\ncall hNf(iOC,$65303136,2,yOC,oOC,bj_UNIT_FACING)\ncall SetPlayerTechResearched(Player(AOC),$52303153,1)\ncall oAf(AOC,1)\nendif\nset AOC=AOC+1\nendloop\nset AOC=0\nloop\nexitwhen AOC>=4\nif yC[AOC] and em[AOC]then\ncall DisplayTimedTextToPlayer(Player(AOC),0.,0.,10.,\"기여도 \"+I2S(Gm)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset iOC=Player(AOC)\ncall SetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(iOC,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset AOC=AOC+1\nendloop\ncall G1f(Player(km),1)\ncall R6R(Player(km),1)\nset VOC=VOC+\"|cffFF0000\"+GetObjectName($6e303044)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset VOC=VOC+\"|cffffdead◎|r 재화 : |cffffd70010000 골드|r, |cff7ad8233 목재|r, |cff1e90ff특성포인트|r 1개\\n\"\nset VOC=VOC+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 3개, |cff0080ff\"+GetObjectName($65303136)+\"|r 2개\\n\"\nset VOC=VOC+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(km))+\" (기여도 : |cffFF0000\"+R2SW(Bm,0,2)+\"%|r)\\n\"\nset VOC=VOC+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1기, |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,VOC)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,\"|cffF15F5F[시스템]|r 모리아 처치 미션 활성화\")\nset mOC=null\nset lOC=null\nset iOC=null\nendfunction"
+    },
+    {
+      "ordinal": 13,
+      "objectiveRawcode": "n00B",
+      "completionFunction": "qhR",
+      "baseGold": 5000,
+      "baseLumber": 3,
+      "baseUnits": [
+        {
+          "id": "e018",
+          "count": 2
+        }
+      ],
+      "baseSourceLine": 27043,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 27043,
+          "statement": "call SetPlayerState(WhR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_GOLD)+$1388)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 27045,
+          "statement": "call SetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER)+3)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 27046,
+          "statement": "call R6R(Player(UhR),2)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Resource",
+          "sourceLine": 27058,
+          "statement": "call SetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER)+1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 27062,
+          "statement": "call G1f(Player(Cl),1)",
+          "branch": "OtherSourceBranch"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 27063,
+          "statement": "call R6R(Player(Cl),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "qhR",
+      "source": {
+        "startLine": 26978,
+        "endLine": 27073,
+        "sha256": "c6ad739184a4215676936778f58e371d76c801f52b8b26e6de766da1db167e22"
+      },
+      "rawSource": "function qhR takes nothing returns nothing\nlocal string BhR=\"\"\nlocal unitstate EhR=UNIT_STATE_MAX_LIFE\nlocal unit bhR=GetTriggerUnit()\nlocal real ehR=GetUnitState(bhR,EhR)\nlocal integer UhR=0\nlocal real hhR\nlocal integer JhR\nlocal integer thR\nlocal player WhR\nloop\nexitwhen UhR>=4\nif EC[UhR]then\ncall e2R(UhR)\nelse\ncall xpR(UhR)\nendif\nset UhR=UhR+1\nendloop\ncall PauseTimer(Wm)\nset qm=false\nset JhR=0\nset thR=0\nloop\nexitwhen JhR>=4\nif yC[JhR] and GetPlayerSlotState(Player(JhR))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(JhR))==MAP_CONTROL_USER then\nset thR=thR+1\nendif\nset JhR=JhR+1\nendloop\nif thR==2 then\nset Rl=30\nelseif thR==3 then\nset Rl=25\nelse\nset Rl=20\nendif\nset UhR=0\nloop\nexitwhen UhR>=4\nif yC[UhR]then\nset hhR=100.*(tm[UhR]/ehR)\nset sl[UhR]=hhR>=I2R(Rl)\nset thR=R2I(($12c-gf[12])*hhR*5./100.)\ncall DisplayTimedTextToPlayer(Player(UhR),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(hhR,0,2)+\"% 입니다.\")\nif thR>0 then\ncall DisplayTimedTextToPlayer(Player(UhR),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(thR)+\"점|r\")\ncall wbf(UhR,thR)\nendif\nif fl<=tm[UhR]then\nset fl=tm[UhR]\nset Cl=UhR\nset Tl=hhR\nendif\nendif\nset UhR=UhR+1\nendloop\nset ST[Cl]=ST[Cl]+1\nset sf[12]=Player(Cl)\nset Hf[12]=Tl*1.\nset UhR=0\nloop\nexitwhen UhR>=4\nif yC[UhR]then\nset WhR=Player(UhR)\ncall SetPlayerState(WhR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_GOLD)+$1388)\nset WhR=Player(UhR)\ncall SetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER)+3)\ncall R6R(Player(UhR),2)\ncall ForGroup(xg[Ls[UhR]],J5)\ncall oAf(UhR,1)\nendif\nset UhR=UhR+1\nendloop\nset UhR=0\nloop\nexitwhen UhR>=4\nif yC[UhR] and sl[UhR]then\ncall DisplayTimedTextToPlayer(Player(UhR),0.,0.,10.,\"기여도 \"+I2S(Rl)+\"% 이상으로 |cff7ad823목재 1개|r 추가 획득!\")\nset WhR=Player(UhR)\ncall SetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(WhR,PLAYER_STATE_RESOURCE_LUMBER)+1)\nendif\nset UhR=UhR+1\nendloop\ncall G1f(Player(Cl),1)\ncall R6R(Player(Cl),1)\nset BhR=BhR+\"|cffFF0000\"+GetObjectName($6e303042)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset BhR=BhR+\"|cffffdead◎|r 재화 : |cffffd7005000 골드|r, |cff7ad8233 목재|r\\n\"\nset BhR=BhR+\"|cffffdead◎|r 유닛 : |cffff8200\"+GetObjectName($65303138)+\"|r 2개\\n\"\nset BhR=BhR+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Cl))+\" (기여도 : |cffFF0000\"+R2SW(Tl,0,2)+\"%|r)\\n\"\nset BhR=BhR+\"|cffffdead　▶|r 해당 플레이어에게 |cffffd700\"+GetObjectName($65304958)+\"|r 1기, |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,BhR)\nset EhR=null\nset bhR=null\nset WhR=null\nendfunction"
+    },
+    {
+      "ordinal": 14,
+      "objectiveRawcode": "n009",
+      "completionFunction": "ZnR",
+      "baseGold": 5000,
+      "baseLumber": 0,
+      "baseUnits": [],
+      "baseSourceLine": 39066,
+      "directPayoutOperations": [
+        {
+          "kind": "Resource",
+          "sourceLine": 39066,
+          "statement": "call SetPlayerState(KnR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(KnR,PLAYER_STATE_RESOURCE_GOLD)+$1388)",
+          "branch": "BaseActivePlayer"
+        },
+        {
+          "kind": "Unit",
+          "sourceLine": 39073,
+          "statement": "call R6R(Player(Yl),1)",
+          "branch": "OtherSourceBranch"
+        }
+      ],
+      "name": "ZnR",
+      "source": {
+        "startLine": 38994,
+        "endLine": 39083,
+        "sha256": "72c5ec6c6bab646fcc59700a54d0c8962820e4439330ce166ab9833668e005a1"
+      },
+      "rawSource": "function ZnR takes nothing returns nothing\nlocal string TnR=\"\"\nlocal real snR\nlocal real HnR\nlocal integer gnR\nlocal unitstate FnR\nlocal unit wnR\nlocal integer dnR\nlocal integer anR\nlocal player KnR\ncall PauseTimer(Fl)\ncall DestroyTimerDialog(wl)\ncall gQf(Fl)\nset FnR=UNIT_STATE_MAX_LIFE\nset wnR=GetTriggerUnit()\nset snR=GetUnitState(wnR,FnR)\nset gnR=0\nloop\nexitwhen gnR>=4\nif EC[gnR]then\ncall e2R(gnR)\nelse\ncall xpR(gnR)\nendif\nset gnR=gnR+1\nendloop\ncall PauseTimer(cl)\nset Ol=false\nset dnR=0\nset anR=0\nloop\nexitwhen dnR>=4\nif yC[dnR] and GetPlayerSlotState(Player(dnR))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(dnR))==MAP_CONTROL_USER then\nset anR=anR+1\nendif\nset dnR=dnR+1\nendloop\nif anR==2 then\nset rl=30\nelseif anR==3 then\nset rl=25\nelse\nset rl=20\nendif\nset gnR=0\nloop\nexitwhen gnR>=4\nif yC[gnR]then\nset HnR=100.*(Zl[gnR]/snR)\nset pl[gnR]=HnR>=I2R(rl)\nset anR=R2I(($12c-gf[13])*HnR*5./100.)\ncall DisplayTimedTextToPlayer(Player(gnR),0.,0.,5.,\"|cffffd700자신이 가한데미지는 \"+R2SW(HnR,0,2)+\"% 입니다.\")\nif anR>0 then\ncall DisplayTimedTextToPlayer(Player(gnR),0.,0.,10.,\"|cffdc143c[클리어점수]|r 스토리 파괴 : |cffffd700\"+I2S(anR)+\"점|r\")\ncall wbf(gnR,anR)\nendif\nif Xl<=Zl[gnR]then\nset Xl=Zl[gnR]\nset Yl=gnR\nset Dl=HnR\nendif\nendif\nset gnR=gnR+1\nendloop\nset ST[Yl]=ST[Yl]+1\nset sf[13]=Player(Yl)\nset Hf[13]=Dl*1.\nset gnR=0\nloop\nexitwhen gnR>=4\nif yC[gnR]then\nset KnR=Player(gnR)\ncall SetPlayerState(KnR,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(KnR,PLAYER_STATE_RESOURCE_GOLD)+$1388)\ncall ForGroup(xg[Ls[gnR]],f3)\ncall GtR(fs[gnR],$41313341,true)\nendif\nset gnR=gnR+1\nendloop\ncall vLR()\ncall R6R(Player(Yl),1)\nset TnR=TnR+\"|cffFF0000\"+GetObjectName($6e303039)+\"|r 스토리 진행 완료! 모든 플레이어에게 보상을 지급합니다.\\n\"\nset TnR=TnR+\"|cffffdead◎|r 재화 : |cffffd7005000 골드|r\\n\"\nset TnR=TnR+\"|cffffdead◎|r 보상 : |cffff8200기록지침 :: |r|ce32bb454[그린블러드]|r|r 1개\\n\"\nset TnR=TnR+\"|cffffdead◎|r MVP : \"+GetPlayerName(Player(Yl))+\" (기여도 : |cffFF0000\"+R2SW(Dl,0,2)+\"%|r)\\n\"\nset TnR=TnR+\"|cffffdead　▶|r 해당 플레이어에게 |cffff8200\"+GetObjectName($65303138)+\"|r 1개를 추가 지급합니다!\"\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,TnR)\nset FnR=null\nset wnR=null\nset KnR=null\nendfunction"
+    }
+  ],
+  "berry": {
+    "baseClear": 1,
+    "nightmareClearAdditional": 1,
+    "nightmareZeroUnitClearAdditional": 1,
+    "allThreeMissionsClearAdditional": 1,
+    "poneglyphSuccessImmediate": 1,
+    "treasureChanceNumerator": 25,
+    "treasureChanceDenominator": 1000,
+    "treasureSuccessAdditional": 1,
+    "source": [
+      {
+        "startLine": 45543,
+        "endLine": 45543,
+        "sha256": "6976c6eb3147a6868d6ffebc32f76e11d6bfdbab10d80c15e0072dd058fb8882"
+      },
+      {
+        "startLine": 72808,
+        "endLine": 72821,
+        "sha256": "06e58d055a5bc2f24ff781a8c0acf26563e53b1f45f4b5e1d5907fdbb676c6d9"
+      },
+      {
+        "startLine": 50975,
+        "endLine": 50999,
+        "sha256": "880540481dff5a2edae79526b5593aa09d256ea5d0fd1f1e7e10b0eb0a5d8f3d"
+      },
+      {
+        "startLine": 5370,
+        "endLine": 5382,
+        "sha256": "b1464fa4bbeeb8be6ea91e0415841f9a4c908a83f9a6572af10ff8f3629bf34f"
+      },
+      {
+        "startLine": 24262,
+        "endLine": 24265,
+        "sha256": "6c0964e5d7782eec798c03b15e20d045c031fe001c6842a922ee36d5572f248e"
+      }
+    ]
+  }
+}

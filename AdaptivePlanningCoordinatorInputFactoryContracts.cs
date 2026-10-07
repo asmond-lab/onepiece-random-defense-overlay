@@ -14,6 +14,7 @@ public sealed record AdaptivePlanningInputSource
     public required IReadOnlyDictionary<string, UnitDefinition> Units { get; init; }
     public required string GoalUnitId { get; init; }
     public ImmutableArray<string> RouteGoalUnitIds { get; init; } = [];
+    public ImmutableArray<string> PlannedGoalUnitIds { get; init; } = [];
     public required string NavigationOptionId { get; init; }
     public required GoroseiMode GoroseiMode { get; init; }
     public ImmutableArray<string> CompletedTopUnitIds { get; init; } = [];

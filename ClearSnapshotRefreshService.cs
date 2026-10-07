@@ -88,6 +88,7 @@ public sealed class ClearSnapshotRefreshService(Func<string, Task<string>>? fetc
 
         try
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(cacheFile))!);
             var temp = cacheFile + ".tmp";
             File.WriteAllText(temp, ClearSampleDocument.Serialize(merged, SnapshotUrl, capturedAt));
             File.Move(temp, cacheFile, overwrite: true);

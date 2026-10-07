@@ -75,8 +75,8 @@ internal static partial class Program
             window.Close();
             window.Stats.Close();
         }
-        var main = new MainWindow(new AppSettings { AutoScanEnabled = false,
-            ClearDataAutoRefresh = false }, startRuntime: false)
+        var main = new MainWindow(FixtureContext(new AppSettings { AutoScanEnabled = false,
+            ClearDataAutoRefresh = false }))
         { Topmost = false, ShowActivated = false, Opacity = 0 };
         main.Show();
         FlushRender(main);

@@ -1,0 +1,151 @@
+{
+  "scope": "Offline extraction integrity, independent registry parsing and synthetic board-model fixtures; not live game or production regression.",
+  "passed": 36,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "archive 2.320 unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "archive 2.320 previous after hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.w3u bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.w3a bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.wts bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3mapMisc.txt bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.j bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.w3t bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.w3q bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.320/war3map.w3i bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "archive 2.314 unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "archive 2.314 previous after hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.w3u bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.w3a bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.wts bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3mapMisc.txt bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.j bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.w3t bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.w3q bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "2.314/war3map.w3i bytes and hash",
+      "status": "pass"
+    },
+    {
+      "name": "all 221 registry rows independently reparsed from pinned JASS",
+      "status": "pass"
+    },
+    {
+      "name": "registry tampering negative control",
+      "status": "pass"
+    },
+    {
+      "name": "empty explicit roster",
+      "status": "pass"
+    },
+    {
+      "name": "duplicate instances do not multiply",
+      "status": "pass"
+    },
+    {
+      "name": "weaker same-family armor wins in board algorithm",
+      "status": "pass"
+    },
+    {
+      "name": "lower registered ability level suppresses higher",
+      "status": "pass"
+    },
+    {
+      "name": "Bullet level1 registered",
+      "status": "pass"
+    },
+    {
+      "name": "Bullet level2 absent from board registry",
+      "status": "pass"
+    },
+    {
+      "name": "Bullet level3 absent from board registry",
+      "status": "pass"
+    },
+    {
+      "name": "Bullet level4 absent from board registry",
+      "status": "pass"
+    },
+    {
+      "name": "Bullet slow is separate row",
+      "status": "pass"
+    },
+    {
+      "name": "Leo normal board metadata remains7",
+      "status": "pass"
+    },
+    {
+      "name": "Leo MartialLaw level2 missing registry",
+      "status": "pass"
+    },
+    {
+      "name": "proc armor not included in first armor category",
+      "status": "pass"
+    },
+    {
+      "name": "explicitly ineligible ability contributes nothing",
+      "status": "pass"
+    },
+    {
+      "name": "unknown eligibility rejected",
+      "status": "pass"
+    }
+  ]
+}

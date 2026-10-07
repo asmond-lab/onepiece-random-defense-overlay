@@ -50,7 +50,7 @@ internal static class SecondaryTopGate
             return new SecondaryTopGateResult(active, secondary.Count,
                 readiness.IsReady
                     ? "1상위 우선 — 추가 상위 자동 추천 안 함"
-                    : "55라 준비 미달 — 2상위 보류");
+                    : "지원 수치 미달 — 2상위 보류");
         }
 
         if (carryMode == GoalCarryMode.MultiAllowed)

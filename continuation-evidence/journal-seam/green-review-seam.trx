@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="3cadf978-bf99-4fa2-a198-ba38b60da7c9" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:48:18" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:48:18.1654502+09:00" queuing="2026-09-07T19:48:18.1654503+09:00" start="2026-09-07T19:48:17.6893909+09:00" finish="2026-09-07T19:48:18.1684599+09:00" />
+  <TestSettings name="default" id="bb9b6da0-6008-46fd-a884-1e958407a160">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_48_18" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="60462b36-1b48-400b-a1eb-07307f8b3ce3" testId="7932cbfc-db04-6aca-4323-996164a23bd4" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.CoachReview_MustReadJournalSeamNotPathAlone" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0067132" startTime="2026-09-07T19:48:18.1069751+09:00" endTime="2026-09-07T19:48:18.1069820+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60462b36-1b48-400b-a1eb-07307f8b3ce3" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.CoachReview_MustReadJournalSeamNotPathAlone" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="7932cbfc-db04-6aca-4323-996164a23bd4">
+      <Execution id="60462b36-1b48-400b-a1eb-07307f8b3ce3" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="CoachReview_MustReadJournalSeamNotPathAlone" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7932cbfc-db04-6aca-4323-996164a23bd4" executionId="60462b36-1b48-400b-a1eb-07307f8b3ce3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.14]   Discovered:  OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.15]   Starting:    OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.18]   Finished:    OrandOverlay.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko" class="one">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>랜디픽 RandyPick · 원랜디 실시간 조합 추천 오버레이</title>
+  <meta name="description" content="원랜디(원피스 랜덤 디펜스)용 Windows 오버레이. 지금 내 패로 무엇을 만들지, 신 난이도 이상 클리어 기록 3만 판을 바탕으로 실시간 추천합니다.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="랜디픽 RandyPick">
+  <meta property="og:url" content="https://randypick.com/">
+  <meta property="og:title" content="랜디픽 RandyPick · 원랜디 실시간 조합 추천">
+  <meta property="og:description" content="지금 내 패로 무엇을 만들지, 고수들의 클리어 기록 3만 판이 알려 줍니다.">
+  <meta property="og:image" content="https://randypick.com/assets/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="랜디픽 워드마크와 문구 '지금 내 패로 무엇을 만들지, 고수 3만 판이 알려 줍니다.' 옆으로 밤바다 위에 떠 있는 유리 링">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#stage">본문으로 건너뛰기</a>
+
+  <div class="frame">
+    <span class="backdrop" aria-hidden="true"></span>
+
+    <header class="bar" data-od-id="header">
+      <a class="wordmark" href="/" aria-label="랜디픽 RandyPick, 처음 화면" data-od-id="wordmark">
+        <span class="wordmark__ko">랜디픽</span>
+        <span class="wordmark__en" aria-hidden="true"><span>Randy</span><span>Pick</span></span>
+      </a>
+      <nav class="nav" aria-label="소개 항목" data-od-id="nav">
+        <a href="#features">기능<span>01</span></a>
+        <a href="#data">근거<span>02</span></a>
+        <a href="#how">사용법<span>03</span></a>
+        <a href="#safety">안전<span>04</span></a>
+        <a href="#faq">FAQ<span>05</span></a>
+      </nav>
+      <a class="pending" href="/download" data-od-id="download-pending"><span class="pending__dot" aria-hidden="true"></span>다운로드 · 준비 중</a>
+    </header>
+
+    <main id="stage" class="stage" tabindex="-1">
+      <div class="copy">
+        <p class="kicker" data-od-id="kicker"><span>원랜디 실시간 조합 추천 오버레이</span><span class="beta">Beta</span></p>
+        <h1 class="headline" data-od-id="headline">
+          <span class="line"><span>지금 내 패로</span></span>
+          <span class="line"><span>무엇을 만들지,</span></span>
+          <span class="line line--soft"><span>고수 3만 판이 알려 줍니다.</span></span>
+        </h1>
+        <p class="lede" data-od-id="lede">워크래프트 III 화면 한쪽에 작은 창을 띄워, 지금 패에서 만들 가치가 있는 유닛을 실시간으로 보여 줍니다.</p>
+        <div class="actions">
+          <a class="cta" href="#features" data-od-id="cta-features">기능 살펴보기<span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
+          <a class="textlink" href="#how" data-od-id="link-how">네 단계 사용법</a>
+        </div>
+        <dl class="facts" data-od-id="facts">
+          <div><dt>신+ 클리어 기록</dt><dd>약 30,000<small>판</small></dd></div>
+          <div><dt>목표 상위 유닛</dt><dd>78<small>종</small></dd></div>
+          <div><dt>추천 모드</dt><dd>4<small>가지</small></dd></div>
+        </dl>
+      </div>
+
+      <figure class="demo" data-od-id="product-demo">
+        <div class="demo__canvas" aria-hidden="true">
+          <div class="win win--main">
+            <div class="win__title"><span class="mark">R</span><b>랜디픽 · 유닛 확인</b><span class="ver">BETA 1.0.2</span></div>
+            <div class="seg"><span>초보자</span><span class="seg__on">일반</span><span>대깨</span><span>매뉴얼</span><span class="hot hot--4"><em>04 · 모드 4가지</em></span></div>
+            <p class="win__h">첫 희귀함 · 항로 개척 준비</p>
+            <div class="tools"><span class="tbtn">모두 접기</span><span class="tbtn">모두 펼치기</span><span class="tbtn tbtn--drop">희귀 탐색<svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span><span class="tbtn">조합창 열기</span></div>
+            <p class="win__hint">인식한 패 기준 참고 안내 · 부족한 재료가 적은 순서</p>
+            <div class="group">
+              <div class="group__head"><span><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg>희귀함 <b>42</b></span><span>재료 비교</span></div>
+              <ol class="units">
+                <li class="unit"><span class="unit__i">1</span><span class="unit__tag">추천</span><span class="pt">쵸</span><b class="unit__name">쵸파 혼 포인트</b><span class="unit__p">희귀함 <b>86%</b></span><span class="unit__note">스토리 빠름</span></li>
+                <li class="unit unit--sel"><span class="unit__i">2</span><span class="unit__tag">고정</span><span class="pt">키</span><b class="unit__name">키자루</b><span class="unit__p">희귀함 <b>86%</b></span><span class="unit__note">스토리 빠름</span></li>
+                <li class="unit"><span class="unit__i">3</span><span class="pt">반</span><b class="unit__name">반 더 데켄</b><span class="unit__p">희귀함 <b>79%</b></span></li>
+                <li class="unit"><span class="unit__i">4</span><span class="pt">슈</span><b class="unit__name">슈가</b><span class="unit__p">희귀함 <b>73%</b></span></li>
+                <li class="unit"><span class="unit__i">5</span><span class="pt">죠</span><b class="unit__name">죠즈</b><span class="unit__p">희귀함 <b>77%</b></span><span class="unit__note">스토리 빠름</span></li>
+              </ol>
+              <span class="more">후보 더 보기</span>
+              <span class="hot hot--1"><em>01 · 추천 조합</em></span>
+            </div>
+            <div class="win__foot"><span class="amber">최근 확인 6라운드 · 유닛 24개 인식</span><span>v1.0.2</span></div>
+          </div>
+
+          <div class="win win--stats">
+            <div class="win__title"><span class="mark">R</span><b>현재 능력치</b><span class="ver ver--plain">랜디픽 BETA 1.0.2</span></div>
+            <div class="row-sb"><span>물리 주력</span><span>참고 부분합</span></div>
+            <div class="big">
+              <div><span>스턴</span><b>1.25</b></div><div><span>이감</span><b>62</b></div><div><span>방깎</span><b>85</b></div>
+              <span class="hot hot--2"><em>02 · 내 패 점수판</em></span>
+            </div>
+            <p class="sub">전체 지원</p>
+            <dl class="kv"><div><dt>마방깎</dt><dd>32</dd></div><div><dt>공증</dt><dd>0</dd></div><div><dt>공속</dt><dd>15</dd></div><div><dt>체젠</dt><dd>0</dd></div><div><dt>마젠</dt><dd>2.5</dd></div><div><dt>폭뎀증</dt><dd>8</dd></div></dl>
+            <p class="sub">보유 역할 · 유닛 수</p>
+            <dl class="roles"><div><dt>단일</dt><dd>1기</dd></div><div><dt>끝딜</dt><dd>1기</dd></div><div><dt>암브</dt><dd>0기</dd></div><div><dt>보잡</dt><dd>0기</dd></div></dl>
+            <div class="win__foot"><span>미확인 효과는 합계 제외 · 목표 판단 보류</span></div>
+          </div>
+
+          <div class="win win--craft">
+            <div class="craft__head"><span class="pt pt--lg">키</span><b>키자루</b><span class="craft__lv">6단계</span><span class="tbtn">닫기</span></div>
+            <div class="craft__body">
+              <div class="craft__need"><p><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg><b>부족 재료</b></p><span class="craft__meta">1종 · 2개 부족</span><div class="need"><span class="pt">루</span><b class="amber">2</b><span>개 부족</span></div><span class="craft__meta">루피</span></div>
+              <div class="steps">
+                <div class="step"><p class="step__h"><b>01</b> 다음 순서<span class="amber">재료 부족</span></p>
+                  <div class="step__row"><span class="pt">쵸</span><span class="step__lbl"><small>선택</small>쵸파</span><span class="key"><kbd>X</kbd><small>2회 →</small></span><span class="pt">베</span><span class="step__lbl"><small>결과 ×2</small>베포</span></div>
+                  <span class="hot hot--3"><em>03 · 지금 조합 가능</em></span>
+                </div>
+                <div class="step step--ok"><p class="step__h"><b>02</b> 조합 순서<span>재료 준비됨</span></p>
+                  <div class="step__row"><span class="pt">해</span><span class="step__lbl"><small>선택</small>해군 칼병</span><span class="key"><kbd>X</kbd><small>1회 →</small></span><span class="pt">타</span><span class="step__lbl"><small>결과 ×1</small>타시기</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="demo__cap" data-od-id="demo-caption"><span>랜디픽 BETA 화면을 다시 그렸어요.</span> <span>유닛 초상화는 글자로 대신했어요.</span></figcaption>
+      </figure>
+    </main>
+
+    <section class="strip" aria-label="핵심 기능" data-od-id="strip">
+      <ol class="strip__list">
+        <li class="cell" data-od-id="strip-pick"><a href="#features"><span class="cell__no">01</span><span class="cell__name">추천 조합</span><span class="cell__sub">고수 채택 비율과 함께</span><span class="cell__bar" aria-hidden="true"></span></a></li>
+        <li class="cell" data-od-id="strip-score"><a href="#features"><span class="cell__no">02</span><span class="cell__name">내 패 점수판</span><span class="cell__sub">스턴 · 이감 · 방깎 합계</span><span class="cell__bar" aria-hidden="true"></span></a></li>
+        <li class="cell" data-od-id="strip-ready"><a href="#features"><span class="cell__no">03</span><span class="cell__name">지금 조합 가능</span><span class="cell__sub">다음 순서와 누를 키</span><span class="cell__bar" aria-hidden="true"></span></a></li>
+        <li class="cell" data-od-id="strip-modes"><a href="#how"><span class="cell__no">04</span><span class="cell__name">모드 4가지</span><span class="cell__sub">초보자 · 일반 · 대깨 · 매뉴얼</span><span class="cell__bar" aria-hidden="true"></span></a></li>
+      </ol>
+    </section>
+
+    <footer class="foot" data-od-id="footer">
+      <p>비공식 팬 도구<span class="foot__more"> · 원피스 랜덤 디펜스 제작진, 티모지지(TMO.GG)와 관련이 없습니다.</span></p>
+      <a href="#notice">고지 · MIT License</a>
+    </footer>
+  </div>
+
+  <section id="features" class="sheet" aria-labelledby="features-title" data-od-id="sheet-features">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">01 / Features</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="features-title" class="sheet__title">기능. <span>지금 해야 할 판단을 한 화면에.</span></h2>
+      <p class="sheet__lede">추천마다 고수들이 같은 선택을 얼마나 했는지가 함께 표시됩니다.</p>
+      <ol class="items">
+        <li data-od-id="feature-pick"><span class="items__no">01</span><h3>추천 조합</h3><p>고른 상위 목표에 맞춰, 지금 패에서 만들 가치가 큰 유닛을 순서대로 보여 줍니다. 각 추천에는 고수들이 같은 것을 만든 비율이 근거로 붙습니다.</p></li>
+        <li data-od-id="feature-score"><span class="items__no">02</span><h3>내 패 점수판</h3><p>스턴, 이동속도 감소, 방어력 감소가 목표치에 얼마나 찼는지 게이지로 보여 줍니다. 아이템과 그린블러드 효과도 함께 계산합니다.</p></li>
+        <li data-od-id="feature-ready"><span class="items__no">03</span><h3>지금 조합 가능</h3><p>재료가 다 모인 유닛이 생기면 바로 알려 줍니다. 무엇을 고르고 어떤 키를 누를지는 언제나 직접 정합니다.</p></li>
+        <li data-od-id="feature-helper"><span class="items__no">04</span><h3>판단 도우미</h3><p>남는 희귀 패를 팔지 리롤할지, 특수함 유닛을 분해할지, 그린블러드를 누구에게 줄지, 긴급소집 와일드카드를 어디에 쓸지 안내합니다.</p></li>
+      </ol>
+      <div class="situ" data-od-id="feature-situations">
+        <h3 class="sheet__sub">게임 상황도 따라가요</h3>
+        <ul class="chips"><li>항법 · 바운티헌터 · 긴급소집</li><li>오로성 효과</li><li>마법 딜 / 물리 딜</li><li>니카 빌드 갈림길</li></ul>
+        <p class="note">항법은 추천만 합니다. 실제 선택은 워크래프트 안에서 직접 해 주세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="data" class="sheet" aria-labelledby="data-title" data-od-id="sheet-data">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">02 / Data</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="data-title" class="sheet__title">근거. <span>감이 아니라 클리어 기록에서.</span></h2>
+      <dl class="figures">
+        <div data-od-id="data-records"><dt>학습한 클리어 기록 · 신+</dt><dd><span class="nowrap">30,000</span><small>판</small></dd></div>
+        <div data-od-id="data-units"><dt>목표로 고를 수 있는 상위</dt><dd>78<small>종</small></dd></div>
+        <div data-od-id="data-modes"><dt>추천 모드</dt><dd>4<small>개</small></dd></div>
+      </dl>
+      <ul class="points">
+        <li><h3>고수들의 실제 선택을 학습</h3><p>신 난이도 이상을 깬 약 3만 판의 기록에서, 상위 목표별로 고수들이 무엇을 함께 만들었는지 배웁니다.</p></li>
+        <li><h3>근거가 보이는 추천</h3><p>추천마다 고수들 중 몇 퍼센트가 같은 것을 만들었는지 함께 보여 줍니다.</p></li>
+        <li><h3>기록이 적을 때는 공략으로</h3><p>기록이 충분하지 않은 경우에는 커뮤니티 공략을 대신 참고합니다.</p></li>
+      </ul>
+      <p class="note">티모지지(TMO.GG) 공개 기록 중 신·악몽 난이도 클리어 기록을 상위 유닛별로 학습합니다. 랜디픽 프로그램은 티모지지 서버에 직접 접속하지 않아요.</p>
+    </div>
+  </section>
+
+  <section id="how" class="sheet" aria-labelledby="how-title" data-od-id="sheet-how">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">03 / How it works</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="how-title" class="sheet__title">설치 없이. <span>네 단계면 끝.</span></h2>
+      <ol class="items items--steps">
+        <li data-od-id="step-run"><span class="items__no">01 / 실행</span><h3>프로그램 실행</h3><p>EXE 파일 하나를 실행합니다. 설치 과정은 없어요. Windows에서만 동작합니다.</p></li>
+        <li data-od-id="step-mode"><span class="items__no">02 / 모드</span><h3>모드 고르기</h3><p>초보자, 일반, 대깨, 매뉴얼 중 하나를 고릅니다. 초보자와 일반은 같은 자동 추천을 쓰고 설명의 양만 다르며, 매뉴얼에서는 상위 목표를 두 개까지 정할 수 있어요.</p></li>
+        <li data-od-id="step-start"><span class="items__no">03 / 시작</span><h3>워크래프트 III 시작</h3><p>게임을 켜면 내 패를 자동으로 인식합니다.</p></li>
+        <li data-od-id="step-toggle"><span class="items__no">04 / 토글</span><h3><kbd>F1</kbd>로 켜고 끄기</h3><p>게임 중 F1을 누르면 오버레이가 나타나거나 사라집니다. 기본값이고, 다른 키로 바꿀 수 있어요.</p></li>
+      </ol>
+      <p class="note">다운로드는 아직 열리지 않았어요. 안정 버전을 준비하고 있습니다. <a class="pending pending--inline" href="/download"><span class="pending__dot" aria-hidden="true"></span>다운로드 · 준비 중</a></p>
+    </div>
+  </section>
+
+  <section id="safety" class="sheet" aria-labelledby="safety-title" data-od-id="sheet-safety">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">04 / Safety</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="safety-title" class="sheet__title">안전. <span>읽기만 하고, 대신 누르지 않아요.</span></h2>
+      <ul class="items">
+        <li data-od-id="safety-readonly"><span class="items__no">Safe.01</span><h3>읽기 전용</h3><p>게임 메모리에 아무것도 쓰지 않고, 코드를 주입하지도 않습니다.</p></li>
+        <li data-od-id="safety-noinput"><span class="items__no">Safe.02</span><h3>대신 누르지 않아요</h3><p>키 입력이나 클릭을 대신하지 않습니다. 선택은 언제나 직접 합니다.</p></li>
+        <li data-od-id="safety-autooff"><span class="items__no">Safe.03</span><h3>스스로 꺼지는 인식</h3><p>검증된 빌드 프로필과 맞지 않으면 자동 인식이 스스로 꺼집니다.</p></li>
+        <li data-od-id="safety-consent"><span class="items__no">Safe.04</span><h3>동의할 때만 수집</h3><p>플레이 기록 수집은 동의 창에서 동의한 경우에만 이루어집니다.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq" class="sheet" aria-labelledby="faq-title" data-od-id="sheet-faq">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">05 / FAQ</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="faq-title" class="sheet__title">질문. <span>자주 묻는 것들.</span></h2>
+      <div class="faq">
+        <details data-od-id="faq-download"><summary><span>01</span>지금 내려받을 수 있나요?</summary><p>아직은 아니에요. 안정 버전을 준비하고 있고, 다운로드는 준비 중입니다.</p></details>
+        <details data-od-id="faq-env"><summary><span>02</span>어떤 환경에서 쓸 수 있나요?</summary><p>Windows 전용입니다. 워크래프트 III 유즈맵 원랜디(원피스 랜덤 디펜스)를 위한 도구예요.</p></details>
+        <details data-od-id="faq-safe"><summary><span>03</span>게임에 위험하지 않나요?</summary><p>랜디픽은 게임을 읽기만 합니다. 게임 메모리에 쓰거나 코드를 주입하지 않고, 키 입력이나 클릭을 대신하지도 않습니다. 검증된 빌드 프로필이 없으면 자동 인식이 스스로 꺼집니다.</p></details>
+        <details data-od-id="faq-nav"><summary><span>04</span>항법도 대신 골라 주나요?</summary><p>아니요. 항법은 추천만 보여 줍니다. 실제 선택은 워크래프트 안에서 직접 해 주세요.</p></details>
+        <details data-od-id="faq-modes"><summary><span>05</span>모드는 어떻게 다른가요?</summary><p>초보자, 일반, 대깨, 매뉴얼 네 가지가 있습니다. 초보자와 일반은 같은 자동 추천을 쓰고 설명의 양만 다르며, 매뉴얼에서는 상위 목표를 두 개까지 정할 수 있습니다.</p></details>
+        <details data-od-id="faq-records"><summary><span>06</span>제 플레이 기록이 수집되나요?</summary><p>동의 창에서 동의한 경우에만 플레이 기록을 수집합니다.</p></details>
+        <details data-od-id="faq-key"><summary><span>07</span>켜고 끄는 키를 바꿀 수 있나요?</summary><p>네. 기본값은 F1이고 다른 키로 바꿀 수 있습니다.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="notice" class="sheet" aria-labelledby="notice-title" data-od-id="sheet-notice">
+    <a class="sheet__scrim" href="#stage" tabindex="-1"><span class="vh">패널 닫기</span></a>
+    <div class="sheet__panel">
+      <div class="sheet__head"><p class="sheet__idx">06 / Notice</p><a class="sheet__close" href="#stage">닫기</a></div>
+      <h2 id="notice-title" class="sheet__title">고지. <span>비공식 팬 도구입니다.</span></h2>
+      <ul class="points">
+        <li><p>랜디픽은 비공식 팬 도구입니다. 원피스 랜덤 디펜스 제작진, 티모지지(TMO.GG)와 관련이 없습니다.</p></li>
+        <li><p>유닛 정보와 클리어 기록은 티모지지 공개 자료를 출처로 합니다.</p></li>
+        <li><p>MIT 라이선스로 배포됩니다.</p></li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

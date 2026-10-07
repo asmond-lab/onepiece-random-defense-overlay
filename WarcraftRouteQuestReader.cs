@@ -7,6 +7,7 @@ internal sealed class WarcraftRouteQuestReader
     private readonly Func<ulong, int, byte[]>? _testRead;
     private readonly Func<IEnumerable<(ulong Base, byte[] Buffer)>>? _testChunks;
     private Dictionary<string, ulong>? _nodes;
+    internal ulong? GlobalAnchor => _nodes?.Values.FirstOrDefault();
     private DateTime _retryAfterUtc;
     private string _lastFailure = "항로개척 자동 확인 준비 중";
 

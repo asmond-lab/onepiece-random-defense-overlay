@@ -18,20 +18,25 @@ public sealed class TelemetryUploader
     public const string EnabledHeader = "X-Orand-Telemetry-Enabled";
     private const int MaxQueued = 50;
     private const int MaxAgeDays = 30;
-    private static readonly HttpClient SharedHttp = CreateClient();
+    private static readonly Lazy<HttpClient> SharedHttp = new(CreateClient);
 
-    private readonly HttpClient _http;
+    private readonly HttpClient? _http;
     private readonly string _endpoint;
     private readonly string _queueDirectory;
+    private readonly bool _runtimeEffects;
 
     public TelemetryUploader(string? endpoint = null, string? queueDirectory = null,
-        HttpClient? httpClient = null, bool enabled = true)
+        HttpClient? httpClient = null, bool enabled = true, bool runtimeEffects = true)
     {
+        _runtimeEffects = runtimeEffects;
         _endpoint = endpoint ?? DefaultEndpoint;
-        _queueDirectory = queueDirectory
-                          ?? Path.Combine(AppPaths.UserDataDirectory, "telemetry", "pending");
-        _http = httpClient ?? SharedHttp;
-        Enabled = enabled;
+        // Inert uploaders must not even resolve the production data directory.
+        _queueDirectory = runtimeEffects
+            ? queueDirectory ?? Path.Combine(AppPaths.UserDataDirectory, "telemetry", "pending")
+            : string.Empty;
+        _http = runtimeEffects ? httpClient ?? SharedHttp.Value : null;
+        Enabled = runtimeEffects && enabled;
+        if (!_runtimeEffects) return;
         try
         {
             Directory.CreateDirectory(_queueDirectory);
@@ -47,6 +52,7 @@ public sealed class TelemetryUploader
     {
         get
         {
+            if (!_runtimeEffects) return 0;
             try { return Directory.GetFiles(_queueDirectory, "*.v2.json").Length; }
             catch { return 0; }
         }
@@ -54,7 +60,7 @@ public sealed class TelemetryUploader
 
     public void SetEnabled(bool enabled, bool deletePending = false)
     {
-        Enabled = enabled;
+        Enabled = _runtimeEffects && enabled;
         if (deletePending) DeletePending();
     }
 
@@ -92,7 +98,7 @@ public sealed class TelemetryUploader
 
                 using var content = new StringContent(payload, Encoding.UTF8, "application/json");
                 HttpResponseMessage response;
-                try { response = await _http.PostAsync(_endpoint, content); }
+                try { response = await _http!.PostAsync(_endpoint, content); }
                 catch { return; }
                 using (response)
                 {
@@ -116,6 +122,7 @@ public sealed class TelemetryUploader
 
     public void DeletePending()
     {
+        if (!_runtimeEffects) return;
         try
         {
             foreach (var path in Directory.GetFiles(_queueDirectory)) Delete(path);
@@ -125,6 +132,7 @@ public sealed class TelemetryUploader
 
     public void TrimQueue()
     {
+        if (!_runtimeEffects) return;
         try
         {
             DiscardLegacyAndUnsafeFiles();
@@ -146,7 +154,7 @@ public sealed class TelemetryUploader
     {
         using var request = new HttpRequestMessage(HttpMethod.Options, _endpoint);
         HttpResponseMessage response;
-        try { response = await _http.SendAsync(request); }
+        try { response = await _http!.SendAsync(request); }
         catch { return false; }
         using (response)
             return response.IsSuccessStatusCode &&

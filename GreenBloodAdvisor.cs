@@ -21,6 +21,30 @@ public sealed class GreenBloodAdvisor(DataCatalog catalog)
     private const string KumaWarning = "쿠마는 그린블러드를 주면 스턴 0.5가 사라집니다";
     private const int MaximumAdvice = 3;
 
+    public IReadOnlyList<GreenBloodAdvice> EvaluateBulletGuide(
+        IEnumerable<InventoryEntry> inventory, int completedStory,
+        GoroseiMode gorosei, bool stunPairReady, string? difficulty)
+    {
+        var entries = inventory.Where(entry => entry.Count > 0).ToArray();
+        if (completedStory < 8 || difficulty is not ("신" or "악몽") ||
+            !HasUnusedGreenBlood(catalog, entries))
+            return [];
+        var owned = entries.Select(entry => catalog.Unit(entry.UnitId).Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (stunPairReady && owned.Contains("rawcode:340h") &&
+            !owned.Contains("rawcode:3A0h"))
+        {
+            var hawk = catalog.Unit("rawcode:3A0h");
+            return [new(hawk.Id, hawk.Name, "불릿 공략 · 2스턴 확보 후 미호크 보스 보강", null, true)];
+        }
+        string[] candidates = gorosei == GoroseiMode.Nasjuro
+            ? ["rawcode:Z20h", "rawcode:W20h"]
+            : ["rawcode:630h", "rawcode:B30h", "rawcode:U30h", "rawcode:540h"];
+        var recipient = candidates.FirstOrDefault(owned.Contains);
+        return recipient is null ? [] :
+            [new(recipient, catalog.Unit(recipient).Name, "불릿 공략 · 보유 지원 기물에 그린블러드", null)];
+    }
+
     // 그린블러드는 신·악몽에서만 제공된다(지옥 이하는 미제공). 난이도 미확인은
     // 탐지 지연일 수 있으므로 기존 동작을 유지한다(추천 표시).
     public static bool IsGreenBloodDifficulty(string? difficulty) =>

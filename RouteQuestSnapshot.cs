@@ -6,6 +6,7 @@ public sealed record AssignedRouteQuest(int Slot, string QuestId, bool Completed
 
 public sealed record RouteQuestSnapshot
 {
+    public HighGambleObservation HighGamble { get; init; } = HighGambleObservation.Unknown;
     public ImmutableArray<AssignedRouteQuest> Assigned { get; private init; } = [];
     public string Detail { get; private init; } = "항로개척 배정·완료 상태 미확인 · 보상 계산 제외";
     public bool IsVerified => Assigned.Length == 3;
@@ -17,7 +18,7 @@ public sealed record RouteQuestSnapshot
         if (entries.Length != 3 || !entries.Select(x => x.Slot).SequenceEqual([0, 1, 2]) ||
             entries.Select(x => x.QuestId).Distinct(StringComparer.Ordinal).Count() != 3 ||
             entries.Any(x => RouteQuestCatalog.Find(x.QuestId) is null))
-            return Unavailable("항로개척 슬롯 검증 실패 · 보상 계산 제외");
+            return Unavailable("내 항로개척 정보를 정확히 확인하지 못했습니다. 보상은 아직 계산에 넣지 않습니다.");
         return new() { Assigned = entries, Detail = "항로개척 3개 자동 확인" };
     }
 

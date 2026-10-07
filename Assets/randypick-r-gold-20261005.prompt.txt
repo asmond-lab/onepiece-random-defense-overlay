@@ -1,0 +1,16 @@
+Tool: built-in image_gen, transparent_background=true
+Deliverable: randypick-r-gold-20261005.png
+Website context: local ops/website/public/styles.css and index.html. The live site could not be retrieved by the web tool.
+
+Use case: logo-brand.
+Asset type: production-ready standalone transparent PNG brand symbol for RandyPick (randypick.com), a Korean Warcraft III random-defense game companion that recommends the best unit combinations based on data.
+Primary request: create one exceptional original uppercase R monogram logo, recognizable at favicon and web-header sizes. Preserve the brand idea of R plus an intelligent pick/check, redesigned as a precise modern geometric silhouette.
+Design: a single bold custom uppercase R, upright with a subtly forward-cut diagonal leg, balanced broad strokes, softened engineered corners, one generous open counter. Integrate a small check-mark-like angular cut into the R's counter/diagonal junction through negative space; R must read immediately and remain the dominant shape. Aim for an elegant memorable game utility identity, confident and compact, professional rather than aggressive esports.
+Color palette: solid warm amber gold #F2B544, matching the existing website black #0A0A0A and gold palette. The symbol is gold only; all empty areas including counter are truly transparent.
+Composition: exactly one centered isolated symbol in a square canvas, symbol occupies about 78% of canvas height, optical balance and comfortable equal margins. Crisp smooth vector-style edges, flat 2D.
+Constraints: truly transparent alpha background. No wordmark, no other letters, no small text, no cards behind the R, no badge/container/frame, no decorative stars, no mascot, no crown, no game characters, no gradients, no shadows, no glow, no bevel, no 3D, no texture, no watermark, no mockup, no contact sheet. Deliver the actual standalone finished logo, not a presentation.
+
+Finishing edit prompt:
+Preserve the R/check silhouette, proportions, position, scale, transparent canvas and layout. Replace the textured fill with uniform amber #F2B544; remove stray flecks, surface grain, highlights, gradients, and edge rims. Clean smooth antialiased vector-style boundaries, transparent counter and background. One standalone logo, no mockup or text.
+
+Generated raster artwork; not a vector master. Website code and deployment were not changed.

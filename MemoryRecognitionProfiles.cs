@@ -16,6 +16,11 @@ internal sealed class MapSignalRecognitionProfile
 {
     public string MapScriptSha256 { get; private init; } = "";
     internal const byte StoryObjectiveOwner = 5;
+    // Pinned JASS kDw (62987-63014), registered for n00B at 87817:
+    // this native dialog is created only after Story 13 completion, before
+    // the delayed Egghead spawn. Its countdown/round is not completion evidence.
+    internal static int? ParseStoryCompletionTitle(string title) =>
+        title == "|cffFF0000에그헤드|r 등장" ? 13 : null;
     private readonly ImmutableDictionary<uint, StoryStage> _objectives;
     private readonly ImmutableHashSet<uint> _rewardWisps;
 
@@ -67,7 +72,8 @@ internal sealed class MapSignalRecognitionProfile
 
 internal sealed record MapSignalRawSnapshot(
     ImmutableArray<uint> ObjectiveRawcodes,
-    ImmutableArray<uint> RewardWispRawcodes);
+    ImmutableArray<uint> RewardWispRawcodes,
+    bool Story13CompletionObserved = false);
 
 internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profile)
 {
@@ -129,9 +135,10 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
 
         var previousProgress = Math.Max(
             LastGood.ActiveObjectiveOrdinal ?? 0,
-            LastGood.CompletedStoryStageOrdinal + 1);
+            LastGood.CompletedStoryStageOrdinal);
         if (stage is not null && _candidateStreak >= 2 &&
-            previousProgress > 1 && stage.Ordinal < previousProgress)
+            previousProgress > 1 && stage.Ordinal < previousProgress &&
+            !(LastGood.CompletedStoryStageOrdinal >= 13 && stage.Ordinal >= 13))
         {
             LastGood = MapSignals.Empty;
             LastObservationConfirmedReset = true;
@@ -145,6 +152,16 @@ internal sealed class MapSignalSnapshotTracker(MapSignalRecognitionProfile profi
             activeOrdinal = stage.Ordinal;
             activeRawcode = stage.ObjectiveRawcode;
             completed = Math.Max(completed, stage.Ordinal - 1);
+        }
+
+        if (snapshot.Story13CompletionObserved)
+        {
+            completed = Math.Max(completed, 13);
+            if (activeOrdinal <= completed)
+            {
+                activeOrdinal = null;
+                activeRawcode = null;
+            }
         }
 
         var rewards = snapshot.RewardWispRawcodes
@@ -194,6 +211,10 @@ public enum MemoryLocatorKind
 public sealed class MemoryProfile
 {
     public int ProfileSchemaVersion { get; init; } = 1;
+    public string Layout { get; init; } = "";
+    public int OwnerFieldBytes { get; init; } = 1;
+    [JsonIgnore]
+    public bool KnownExperimental => Layout == Warcraft300Diagnostic.LayoutName;
     public string ProfileId { get; init; } = "";
     public int ProfileRevision { get; init; } = 1;
     public string FileVersion { get; init; } = "";
@@ -263,7 +284,14 @@ public static class MemoryProfileValidator
     public static IReadOnlyList<string> Validate(MemoryProfile profile)
     {
         var errors = new List<string>();
-        if (profile.ProfileSchemaVersion != 1) errors.Add("profileSchemaVersion은 1이어야 합니다");
+        if (profile.ProfileSchemaVersion == 1)
+        {
+            if (profile.Layout != "" || profile.OwnerFieldBytes != 1)
+                errors.Add("schema1 only permits the legacy byte-owner layout");
+        }
+        else if (profile.ProfileSchemaVersion == 2 && profile.KnownExperimental)
+            Warcraft300Diagnostic.ValidateProfile(profile, errors);
+        else errors.Add("Unknown schema/layout combination");
         if (string.IsNullOrWhiteSpace(profile.ProfileId)) errors.Add("profileId가 비어 있습니다");
         if (profile.ProfileRevision < 1) errors.Add("profileRevision은 1 이상이어야 합니다");
         if (string.IsNullOrWhiteSpace(profile.FileVersion)) errors.Add("fileVersion이 비어 있습니다");
@@ -321,6 +349,7 @@ public static class MemoryProfileValidator
     public static bool CanActivate(MemoryProfile profile, out IReadOnlyList<string> errors)
     {
         var result = Validate(profile).ToList();
+        if (profile.KnownExperimental) result.Add("Diagnostic-only layout cannot activate in production");
         if (!profile.Enabled) result.Add("enabled가 false입니다");
         if (!profile.Verified) result.Add("verified가 false입니다");
         errors = result;
@@ -351,21 +380,28 @@ internal sealed class MemoryProfileRepository
     private MemoryProfilesSnapshot _snapshot = new([], "", 0, "프로필을 아직 읽지 않았습니다.");
     private long _generation;
 
+    private readonly string? _userPath;
+    private readonly string? _bundledPath;
+
+    // bundledPath is test-only injection; normal callers continue to use the shipped Data file.
+    public MemoryProfileRepository(string? userPath = null, string? bundledPath = null)
+    {
+        _userPath = userPath;
+        _bundledPath = bundledPath;
+    }
+
     public MemoryProfilesSnapshot GetProfiles()
     {
-        var userPath = Path.Combine(AppPaths.UserDataDirectory, "memory-profiles.json");
-        var bundledPath = Path.Combine(AppContext.BaseDirectory, "Data", "memory-profiles.json");
-        var path = File.Exists(userPath) ? userPath : bundledPath;
-        var source = File.Exists(userPath) ? $"사용자:{Path.GetFileName(userPath)}" : $"번들:{Path.GetFileName(bundledPath)}";
+        var userPath = _userPath;
+        var bundledPath = _bundledPath ?? Path.Combine(AppContext.BaseDirectory, "Data", "memory-profiles.json");
         string stamp;
         try
         {
-            var info = new FileInfo(path);
-            stamp = $"{path}|{info.Exists}|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+            stamp = $"{FileStamp(bundledPath)}|{FileStamp(userPath)}";
         }
         catch (Exception exception)
         {
-            return new MemoryProfilesSnapshot([], source, _generation, exception.Message);
+            return new MemoryProfilesSnapshot([], SourceName(bundledPath, "번들"), _generation, exception.Message);
         }
 
         lock (_gate)
@@ -373,30 +409,94 @@ internal sealed class MemoryProfileRepository
             if (stamp == _stamp) return _snapshot;
             _stamp = stamp;
             _generation++;
-            try
+
+            var bundled = LoadValidated(bundledPath, required: true);
+            var user = LoadValidated(userPath, required: false);
+            if (bundled.Error is not null && user.Error is not null)
             {
-                if (!File.Exists(path)) throw new FileNotFoundException("memory-profiles.json을 찾을 수 없습니다.", path);
-                using var document = JsonDocument.Parse(File.ReadAllText(path));
-                List<MemoryProfile>? profiles = document.RootElement.ValueKind switch
-                {
-                    JsonValueKind.Array => document.RootElement.Deserialize<List<MemoryProfile>>(Options),
-                    JsonValueKind.Object when document.RootElement.TryGetProperty("profiles", out var items)
-                        => items.Deserialize<List<MemoryProfile>>(Options),
-                    _ => null
-                };
-                if (profiles is null) throw new InvalidDataException("프로필 JSON은 배열 또는 profiles 배열을 포함한 객체여야 합니다.");
-                var duplicate = profiles.GroupBy(x => $"{x.FileVersion}|{x.ModuleName}", StringComparer.OrdinalIgnoreCase)
-                    .FirstOrDefault(x => x.Count() > 1);
-                if (duplicate is not null) throw new InvalidDataException($"중복 메모리 프로필: {duplicate.Key}");
-                _snapshot = new MemoryProfilesSnapshot(profiles, source, _generation, null);
+                _snapshot = new MemoryProfilesSnapshot([], SourceName(bundledPath, "번들"), _generation,
+                    $"번들 프로필을 읽을 수 없습니다: {bundled.Error}; 사용자 프로필을 읽을 수 없습니다: {user.Error}");
+                return _snapshot;
             }
-            catch (Exception exception)
-            {
-                _snapshot = new MemoryProfilesSnapshot([], source, _generation, exception.Message);
-            }
+
+            var profiles = Merge(bundled.Profiles, user.Profiles);
+            var source = DescribeSource(bundledPath, bundled.Error, userPath, user.Error);
+            _snapshot = new MemoryProfilesSnapshot(profiles, source, _generation, null);
             return _snapshot;
         }
     }
+
+    private static string FileStamp(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path)) return "(none)";
+        var info = new FileInfo(path);
+        if (!info.Exists) return $"{path}|False|0|0";
+        return $"{path}|True|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+    }
+
+    private static (IReadOnlyList<MemoryProfile> Profiles, string? Error) LoadValidated(string? path, bool required)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            return ([], required ? "memory-profiles.json을 찾을 수 없습니다." : null);
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(path));
+            List<MemoryProfile>? profiles = document.RootElement.ValueKind switch
+            {
+                JsonValueKind.Array => document.RootElement.Deserialize<List<MemoryProfile>>(Options),
+                JsonValueKind.Object when document.RootElement.TryGetProperty("profiles", out var items)
+                    => items.Deserialize<List<MemoryProfile>>(Options),
+                _ => null
+            };
+            if (profiles is null)
+                throw new InvalidDataException("프로필 JSON은 배열 또는 profiles 배열을 포함한 객체여야 합니다.");
+            var duplicate = profiles.GroupBy(ProfileKey, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicate is not null)
+                throw new InvalidDataException($"중복 메모리 프로필: {duplicate.Key}");
+            var invalid = profiles.Select(profile => new { profile, errors = MemoryProfileValidator.Validate(profile) })
+                .FirstOrDefault(result => result.errors.Count > 0);
+            if (invalid is not null)
+                throw new InvalidDataException($"잘못된 메모리 프로필 {ProfileKey(invalid.profile)}: {string.Join("; ", invalid.errors)}");
+            return (profiles, null);
+        }
+        catch (Exception exception)
+        {
+            return ([], exception.Message);
+        }
+    }
+
+    private static IReadOnlyList<MemoryProfile> Merge(IReadOnlyList<MemoryProfile> bundled,
+        IReadOnlyList<MemoryProfile> user)
+    {
+        var merged = bundled.ToDictionary(ProfileKey, StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in user)
+        {
+            var key = ProfileKey(candidate);
+            if (!merged.TryGetValue(key, out var shipped) || candidate.ProfileRevision > shipped.ProfileRevision)
+                merged[key] = candidate;
+            // Equal revisions deliberately retain the bundled profile, including hash conflicts.
+        }
+        return merged.Values.OrderBy(ProfileKey, StringComparer.OrdinalIgnoreCase).ToArray();
+    }
+
+    private static string ProfileKey(MemoryProfile profile) => $"{profile.FileVersion}|{profile.ModuleName}";
+
+    private static string DescribeSource(string bundledPath, string? bundledError, string? userPath, string? userError)
+    {
+        var bundledSource = SourceName(bundledPath, "번들");
+        var userSource = SourceName(userPath, "사용자");
+        if (userError is not null)
+            return $"{bundledSource} (사용자 캐시 무시: {userError})";
+        if (bundledError is not null)
+            return $"{userSource} (번들 프로필 무시: {bundledError})";
+        return string.IsNullOrWhiteSpace(userPath) || !File.Exists(userPath)
+            ? bundledSource
+            : $"{userSource} + {bundledSource}";
+    }
+
+    private static string SourceName(string? path, string kind) =>
+        string.IsNullOrWhiteSpace(path) ? $"{kind}:없음" : $"{kind}:{Path.GetFileName(path)}";
 }
 
 internal sealed record MemoryProfilesSnapshot(IReadOnlyList<MemoryProfile> Profiles, string Source,

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7b8cf2b5-a6dd-4866-83fa-4c354bbbf84c" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:05:35" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:05:35.0810509+09:00" queuing="2026-09-07T19:05:35.0810510+09:00" start="2026-09-07T19:05:34.7043665+09:00" finish="2026-09-07T19:05:35.1010311+09:00" />
+  <TestSettings name="default" id="8155f9de-a64e-47c8-a212-1e6e0b314c2a">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_05_35" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="5b89bf23-8e68-4ef0-8834-053f83876271" testId="469b7b52-3871-f664-690e-5282a89cbf2e" testName="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.CaptureVariantsCoverEveryPendingStateAtSupportedScales" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0154298" startTime="2026-09-07T19:05:35.0692788+09:00" endTime="2026-09-07T19:05:35.0692789+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5b89bf23-8e68-4ef0-8834-053f83876271" />
+    <UnitTestResult executionId="94019c9a-3652-4b37-9dee-c2f72d04a15c" testId="2a643143-c04d-4cec-4624-5be5540bedf8" testName="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.CanonicalInputsBindOverlayThemeExactlyOnce" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0027569" startTime="2026-09-07T19:05:35.0537867+09:00" endTime="2026-09-07T19:05:35.0537867+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94019c9a-3652-4b37-9dee-c2f72d04a15c" />
+    <UnitTestResult executionId="140bb1f2-c1da-49d4-8a2e-b16935f4d407" testId="78733b86-6553-702b-5b78-e8bea337a817" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsEmptyImageTile" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0001737" startTime="2026-09-07T19:05:35.0528014+09:00" endTime="2026-09-07T19:05:35.0528014+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="140bb1f2-c1da-49d4-8a2e-b16935f4d407" />
+    <UnitTestResult executionId="3825814b-096f-4bd8-833b-8feac20ad5e7" testId="241fae05-46b6-fe7b-92a8-b09bfdc03567" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.FlattenMakesPremultipliedPixelsOpaque" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0003027" startTime="2026-09-07T19:05:35.0527690+09:00" endTime="2026-09-07T19:05:35.0527690+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3825814b-096f-4bd8-833b-8feac20ad5e7" />
+    <UnitTestResult executionId="d601f0d5-9bd6-4015-aa1a-a7d405042dd5" testId="aca4c4fa-4fc8-62a4-8af4-403dc538916c" testName="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.ComputeIsDeterministicAndInputOrderStable" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0057101" startTime="2026-09-07T19:05:35.0522927+09:00" endTime="2026-09-07T19:05:35.0522928+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d601f0d5-9bd6-4015-aa1a-a7d405042dd5" />
+    <UnitTestResult executionId="784b4632-c4a0-4370-9309-c75b36124f63" testId="3cdffcc5-14e3-a162-d7f8-d08facb3439c" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateAcceptsOpaquePopulatedBorderedFrame" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0010543" startTime="2026-09-07T19:05:35.0529830+09:00" endTime="2026-09-07T19:05:35.0529831+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="784b4632-c4a0-4370-9309-c75b36124f63" />
+    <UnitTestResult executionId="ac845f8e-a9e7-46df-8df5-f32cc0fda19a" testId="9c5eedcb-4f0f-faf1-697e-da6446999cc4" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsMissingBorder" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0001843" startTime="2026-09-07T19:05:35.0526698+09:00" endTime="2026-09-07T19:05:35.0526698+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac845f8e-a9e7-46df-8df5-f32cc0fda19a" />
+    <UnitTestResult executionId="b2406cfc-0ae0-41a5-bf81-23492e7b1ecc" testId="9c520e64-6b2e-b1a0-ad77-9b371ce68488" testName="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.ComputeChangesWhenOnlyOverlayThemeChanges" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0012768" startTime="2026-09-07T19:05:35.0706161+09:00" endTime="2026-09-07T19:05:35.0706162+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b2406cfc-0ae0-41a5-bf81-23492e7b1ecc" />
+    <UnitTestResult executionId="7e29fd29-46c2-4e08-86d5-15766d8ab67c" testId="13e576b0-42aa-1f97-3ad8-214f12fd95a6" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsEmptyBackground" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0001136" startTime="2026-09-07T19:05:35.0531189+09:00" endTime="2026-09-07T19:05:35.0531189+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7e29fd29-46c2-4e08-86d5-15766d8ab67c" />
+    <UnitTestResult executionId="40a09266-4c5d-4d15-8b2c-4a21c4a3c4bc" testId="79d4431e-957a-1c64-ce86-5a1f149a4341" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsTransparentEvidence" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0001314" startTime="2026-09-07T19:05:35.0527856+09:00" endTime="2026-09-07T19:05:35.0527856+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40a09266-4c5d-4d15-8b2c-4a21c4a3c4bc" />
+    <UnitTestResult executionId="6bb2fae5-f765-4824-b91f-c40b3e9f376d" testId="3a00a699-dfdc-625e-9c98-51146d33c72f" testName="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsMissingLeftStart" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0057079" startTime="2026-09-07T19:05:35.0511898+09:00" endTime="2026-09-07T19:05:35.0511971+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6bb2fae5-f765-4824-b91f-c40b3e9f376d" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.FlattenMakesPremultipliedPixelsOpaque" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="241fae05-46b6-fe7b-92a8-b09bfdc03567">
+      <Execution id="3825814b-096f-4bd8-833b-8feac20ad5e7" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="FlattenMakesPremultipliedPixelsOpaque" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsEmptyImageTile" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="78733b86-6553-702b-5b78-e8bea337a817">
+      <Execution id="140bb1f2-c1da-49d4-8a2e-b16935f4d407" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateRejectsEmptyImageTile" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsMissingLeftStart" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="3a00a699-dfdc-625e-9c98-51146d33c72f">
+      <Execution id="6bb2fae5-f765-4824-b91f-c40b3e9f376d" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateRejectsMissingLeftStart" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.ComputeChangesWhenOnlyOverlayThemeChanges" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="9c520e64-6b2e-b1a0-ad77-9b371ce68488">
+      <Execution id="b2406cfc-0ae0-41a5-bf81-23492e7b1ecc" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests" name="ComputeChangesWhenOnlyOverlayThemeChanges" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.CaptureVariantsCoverEveryPendingStateAtSupportedScales" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="469b7b52-3871-f664-690e-5282a89cbf2e">
+      <Execution id="5b89bf23-8e68-4ef0-8834-053f83876271" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests" name="CaptureVariantsCoverEveryPendingStateAtSupportedScales" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsTransparentEvidence" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="79d4431e-957a-1c64-ce86-5a1f149a4341">
+      <Execution id="40a09266-4c5d-4d15-8b2c-4a21c4a3c4bc" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateRejectsTransparentEvidence" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.CanonicalInputsBindOverlayThemeExactlyOnce" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="2a643143-c04d-4cec-4624-5be5540bedf8">
+      <Execution id="94019c9a-3652-4b37-9dee-c2f72d04a15c" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests" name="CanonicalInputsBindOverlayThemeExactlyOnce" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsMissingBorder" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="9c5eedcb-4f0f-faf1-697e-da6446999cc4">
+      <Execution id="ac845f8e-a9e7-46df-8df5-f32cc0fda19a" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateRejectsMissingBorder" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateAcceptsOpaquePopulatedBorderedFrame" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="3cdffcc5-14e3-a162-d7f8-d08facb3439c">
+      <Execution id="784b4632-c4a0-4370-9309-c75b36124f63" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateAcceptsOpaquePopulatedBorderedFrame" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests.ComputeIsDeterministicAndInputOrderStable" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="aca4c4fa-4fc8-62a4-8af4-403dc538916c">
+      <Execution id="d601f0d5-9bd6-4015-aa1a-a7d405042dd5" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureSourceFingerprintTests" name="ComputeIsDeterministicAndInputOrderStable" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePixelContractTests.ValidateRejectsEmptyBackground" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="13e576b0-42aa-1f97-3ad8-214f12fd95a6">
+      <Execution id="7e29fd29-46c2-4e08-86d5-15766d8ab67c" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePixelContractTests" name="ValidateRejectsEmptyBackground" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="469b7b52-3871-f664-690e-5282a89cbf2e" executionId="5b89bf23-8e68-4ef0-8834-053f83876271" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a643143-c04d-4cec-4624-5be5540bedf8" executionId="94019c9a-3652-4b37-9dee-c2f72d04a15c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="78733b86-6553-702b-5b78-e8bea337a817" executionId="140bb1f2-c1da-49d4-8a2e-b16935f4d407" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="241fae05-46b6-fe7b-92a8-b09bfdc03567" executionId="3825814b-096f-4bd8-833b-8feac20ad5e7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aca4c4fa-4fc8-62a4-8af4-403dc538916c" executionId="d601f0d5-9bd6-4015-aa1a-a7d405042dd5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3cdffcc5-14e3-a162-d7f8-d08facb3439c" executionId="784b4632-c4a0-4370-9309-c75b36124f63" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c5eedcb-4f0f-faf1-697e-da6446999cc4" executionId="ac845f8e-a9e7-46df-8df5-f32cc0fda19a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c520e64-6b2e-b1a0-ad77-9b371ce68488" executionId="b2406cfc-0ae0-41a5-bf81-23492e7b1ecc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="13e576b0-42aa-1f97-3ad8-214f12fd95a6" executionId="7e29fd29-46c2-4e08-86d5-15766d8ab67c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="79d4431e-957a-1c64-ce86-5a1f149a4341" executionId="40a09266-4c5d-4d15-8b2c-4a21c4a3c4bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a00a699-dfdc-625e-9c98-51146d33c72f" executionId="6bb2fae5-f765-4824-b91f-c40b3e9f376d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="11" executed="11" passed="11" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.05]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.05]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.10]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

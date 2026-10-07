@@ -1,0 +1,12 @@
+{
+  "Version": "0.6.70-test.20260914.1",
+  "Entries": 776,
+  "DataFiles": 328,
+  "Fingerprint": "0638397cc88df886197f9fafbb6d8f292227a1863fa71cf23e4dd48fb1bc76cf",
+  "LiveRecognitionSupported": false,
+  "AutomaticNavigationScoringSupported": false,
+  "Sha256": "A2D401C24A72D6A88FC726EB8FB9233DCA2786A61D0736CC18511D81845AD898",
+  "Size": 78767624,
+  "SignatureVerified": true,
+  "Published": false
+}

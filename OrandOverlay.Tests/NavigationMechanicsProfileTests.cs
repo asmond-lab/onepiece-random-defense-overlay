@@ -10,6 +10,17 @@ namespace OrandOverlay.Tests;
 public sealed class NavigationMechanicsProfileTests
 {
     [Fact]
+    public void PoisonUsesNativeArmorEffectRatherThanLightningScriptDamage()
+    {
+        var poison = Load().HelperSpells.Single(spell => spell.Id == "A07X");
+        Assert.DoesNotContain("poison-effect", poison.SourceRangeIds);
+        Assert.Contains("armor_reduction:20", poison.Levels.Single(level => level.Level == 1).Value.Split(','));
+        Assert.Contains("armor_reduction:25", poison.Levels.Single(level => level.Level == 2).Value.Split(','));
+        Assert.All(poison.Levels, level =>
+            Assert.DoesNotContain(level.Value.Split(','), field => field.StartsWith("branch_damage:", StringComparison.Ordinal)));
+    }
+
+    [Fact]
     public void SourcePinnedImmutableProfileLoadsCompleteExactBindings()
     {
         var profile = Load();
@@ -121,7 +132,7 @@ public sealed class NavigationMechanicsProfileTests
     }
 
     [Fact]
-    public void PinnedArchiveEvidenceIsValidAndMatchesAvailableSourceArchive()
+    public void PinnedArchiveEvidenceIsValid()
     {
         var profile = Load();
         Assert.All(profile.Source.Members, expected =>
@@ -130,6 +141,12 @@ public sealed class NavigationMechanicsProfileTests
             Assert.True(expected.Length > 0);
             Assert.Matches("^[0-9a-f]{64}$", expected.Sha256);
         });
+    }
+
+    [Fact(Skip = "Requires separately approved local MPQ integration; may launch a native helper EXE")]
+    public void PinnedArchiveEvidenceMatchesAvailableSourceArchive()
+    {
+        var profile = Load();
         const string archivePath =
             @"C:\Users\123\Documents\Warcraft III\Maps\Download\ORDR_S2_2.314[R].w3x";
         if (!File.Exists(archivePath)) return;

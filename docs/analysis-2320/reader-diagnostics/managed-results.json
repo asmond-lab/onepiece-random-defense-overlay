@@ -1,0 +1,8 @@
+{
+  "package": "War3Net.IO.Mpq",
+  "version": "6.0.3",
+  "status": "blocked",
+  "stage": "2.320: war3map.j",
+  "error": "System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter \u0027index\u0027)\r\n   at System.Collections.Generic.List\u00601.get_Item(Int32 index)\r\n   at War3Net.IO.Mpq.BlockTable.get_Item(UInt32 i)\r\n   at War3Net.IO.Mpq.MpqArchive.AddFileName(String fileName)\r\n   at War3Net.IO.Mpq.MpqArchive.FileExists(String fileName)\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\ManagedMpq\\Program.cs:line 18",
+  "results": []
+}

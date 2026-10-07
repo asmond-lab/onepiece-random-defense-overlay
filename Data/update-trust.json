@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "keys": [
+    {
+      "keyId": "orand-p256-20260913",
+      "algorithm": "ECDSA-P256-SHA256-P1363",
+      "publicKeySpki": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEH2tMloZQWHktt1BzeR1MEOaYoleiQ87LjmrLmlgLsc0lrYOQNtg/8BEjOAf8Gc9ILlpQOcxZE0sEVUiN+wGaRA=="
+    }
+  ]
+}

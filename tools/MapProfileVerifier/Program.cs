@@ -7,6 +7,20 @@ using OrandOverlay;
 var options = ReadOptions(args);
 try
 {
+    if (options.MapVersion == "2.320")
+    {
+        if (options.WarcraftPid is not null || options.War3LogPath is not null)
+            throw new ArgumentException("2.320 verification is offline-only; no current-session approval is available.");
+        var bundle = Map2320DataBundle.LoadFromDirectory(Path.Combine(options.Root, "Data"));
+        Console.WriteLine(JsonSerializer.Serialize(new
+        {
+            Valid = true, MapVersion = Map2320DataBundle.Version, bundle.Fingerprint,
+            Members = Map2320DataBundle.ExpectedMembers,
+            bundle.LiveRecognitionSupported, bundle.AutomaticNavigationScoringSupported,
+            CurrentSessionReady = false
+        }, new JsonSerializerOptions { WriteIndented = true }));
+        return 0;
+    }
     var manifest = MapSourceManifestVerifier.VerifyDirectory(options.Root);
     var signals = RuntimeSignalFeasibilityProfileLoader.LoadFromDirectory(
         Path.Combine(options.Root, "Data"));
@@ -69,6 +83,7 @@ static Options ReadOptions(string[] arguments)
     var root = Directory.GetCurrentDirectory();
     int? pid = null;
     string? logPath = null;
+    var mapVersion = "2.314";
     for (var index = 0; index < arguments.Length; index += 2)
     {
         if (index + 1 >= arguments.Length)
@@ -76,6 +91,7 @@ static Options ReadOptions(string[] arguments)
         switch (arguments[index])
         {
             case "--root": root = Path.GetFullPath(arguments[index + 1]); break;
+            case "--map-version" when arguments[index + 1] is "2.314" or "2.320": mapVersion = arguments[index + 1]; break;
             case "--warcraft-pid" when int.TryParse(arguments[index + 1], out var value):
                 pid = value;
                 break;
@@ -86,7 +102,7 @@ static Options ReadOptions(string[] arguments)
     if ((pid is null) != (logPath is null))
         throw new ArgumentException(
             "Live verification requires both --warcraft-pid and --war3-log.");
-    return new Options(root, pid, logPath);
+    return new Options(root, pid, logPath, mapVersion);
 }
 
-internal sealed record Options(string Root, int? WarcraftPid, string? War3LogPath);
+internal sealed record Options(string Root, int? WarcraftPid, string? War3LogPath, string MapVersion);

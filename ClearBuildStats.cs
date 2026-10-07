@@ -29,6 +29,7 @@ public sealed class ClearBuildStats
     private readonly IReadOnlyDictionary<string, GoalClearProfile> _multiTopGoals;
     // 보유 패 조건부 재집계용 원본 표본(신+ 중복 제거본).
     private readonly IReadOnlyList<ClearSample> _samples;
+    private readonly IReadOnlyList<ClearSample> _sourceSamples;
 
     public int TotalGodPlusSamples { get; }
     public int MedianUnitCount { get; }
@@ -40,12 +41,14 @@ public sealed class ClearBuildStats
         IReadOnlyDictionary<string, GoalClearProfile> multiTopGoals,
         IReadOnlyList<ClearSample> samples,
         int totalSamples, int medianUnitCount,
-        DateTimeOffset? newestSampleAt, DateTimeOffset? oldestSampleAt)
+        DateTimeOffset? newestSampleAt, DateTimeOffset? oldestSampleAt,
+        IReadOnlyList<ClearSample>? sourceSamples = null)
     {
         _goals = goals;
         _soloTopGoals = soloTopGoals;
         _multiTopGoals = multiTopGoals;
         _samples = samples;
+        _sourceSamples = sourceSamples ?? samples;
         TotalGodPlusSamples = totalSamples;
         MedianUnitCount = medianUnitCount;
         NewestSampleAt = newestSampleAt;
@@ -58,6 +61,10 @@ public sealed class ClearBuildStats
         new Dictionary<string, GoalClearProfile>(StringComparer.Ordinal), [], 0, 0, null, null);
 
     public bool HasData => TotalGodPlusSamples > 0;
+
+    public ClearBuildStats ForDifficulty(string difficulty) =>
+        FromSamples(_sourceSamples.Where(sample => sample.Difficulty.Equals(difficulty, StringComparison.Ordinal)),
+            godPlusOnly: false);
 
     /// <summary>
     /// 목표 rawcode들 중 표본이 가장 많은 목표의 클리어 프로필을 돌려준다.
@@ -126,16 +133,23 @@ public sealed class ClearBuildStats
             Scope: profile.Scope);
     }
 
-    public static ClearBuildStats FromSamples(IEnumerable<ClearSample> samples)
+    public static ClearBuildStats FromSamples(IEnumerable<ClearSample> samples) =>
+        FromSamples(samples, godPlusOnly: true);
+
+    private static ClearBuildStats FromSamples(IEnumerable<ClearSample> samples, bool godPlusOnly)
     {
-        var godPlus = samples
+        // Preserve lower difficulties for exact queries without changing the legacy God+ aggregate.
+        var source = samples
             .Select(CanonicalizeSample)
-            .Where(sample => GodPlusDifficulties.Contains(sample.Difficulty, StringComparer.Ordinal))
             .Where(sample => sample.Units.Count > 0 && EffectiveUnitCount(sample) > 0)
             .GroupBy(sample => sample.Id, StringComparer.Ordinal)
             .Select(group => group.First())
             .ToList();
-        if (godPlus.Count == 0) return Empty;
+        var godPlus = source.Where(sample => !godPlusOnly ||
+            GodPlusDifficulties.Contains(sample.Difficulty, StringComparer.Ordinal)).ToList();
+        if (godPlus.Count == 0) return source.Count == 0 ? Empty :
+            new ClearBuildStats(Empty._goals, Empty._soloTopGoals, Empty._multiTopGoals,
+                [], 0, 0, null, null, source);
 
         var sortedCounts = godPlus.Select(EffectiveUnitCount).OrderBy(x => x).ToList();
         var median = sortedCounts[sortedCounts.Count / 2];
@@ -146,7 +160,7 @@ public sealed class ClearBuildStats
         var soloGoals = BuildProfiles(godPlus, median, newest, TopScope.SoloTop);
         var multiGoals = BuildProfiles(godPlus, median, newest, TopScope.MultiTop);
         return new ClearBuildStats(goals, soloGoals, multiGoals, godPlus, godPlus.Count, median,
-            newest, oldest);
+            newest, oldest, source);
     }
 
     /// <summary>

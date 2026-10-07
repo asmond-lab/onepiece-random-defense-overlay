@@ -16,11 +16,12 @@ public sealed class ReadinessPresentationTests
     [Fact]
     public void PhysicalReadinessShowsAllCoreNumbers()
     {
-        var line = RecommendationPresentation.ReadinessLine(
-            new CombatReadiness(ReadinessDamageType.Physical,
-                1.3, 1.4, 84, 102, 176, 211, 0, 0));
-
-        Assert.Contains("55라 준비 미달", line);
+        var readiness = new CombatReadiness(ReadinessDamageType.Physical,
+            1.3, 1.4, 84, 102, 176, 211, 0, 0);
+        var line = RecommendationPresentation.ReadinessLine(readiness);
+        var readyLine = RecommendationPresentation.ReadinessLine(readiness with
+            { CurrentStun = 1.4, CurrentSlow = 102, CurrentArmorReduction = 211 });
+        Assert.NotEqual(readyLine.Split('·')[0], line.Split('·')[0]);
         Assert.Contains("스턴 1.3/1.4", line);
         Assert.Contains("이감 84/102", line);
         Assert.Contains("방깎 176/211", line);
@@ -29,12 +30,12 @@ public sealed class ReadinessPresentationTests
     [Fact]
     public void MagicReadinessShowsSourceCountInsteadOfPhysicalArmor()
     {
-        var line = RecommendationPresentation.ReadinessLine(
-            new CombatReadiness(ReadinessDamageType.Magic,
-                1.4, 1.4, 102, 102, 0, 0, 1, 1));
-
-        Assert.Contains("55라 준비 완료", line);
-        Assert.Contains("마방깎 공급원 1/1", line);
+        var readiness = new CombatReadiness(ReadinessDamageType.Magic,
+            1.4, 1.4, 102, 102, 0, 0, 4, 4);
+        var line = RecommendationPresentation.ReadinessLine(readiness);
+        var unreadyLine = RecommendationPresentation.ReadinessLine(readiness with { CurrentMagicArmorSources = 0 });
+        Assert.NotEqual(unreadyLine.Split('·')[0], line.Split('·')[0]);
+        Assert.Contains("4/4", line);
         Assert.DoesNotContain("방깎 0/0", line);
     }
 }

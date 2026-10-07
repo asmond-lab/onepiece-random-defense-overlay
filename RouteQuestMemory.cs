@@ -38,14 +38,25 @@ internal sealed class RouteQuestMemory(Func<ulong, int, byte[]> read)
 
     internal int[]? Array(ulong node, string name, int type, int maximum)
     {
-        var pointer = BitConverter.ToUInt64(Node(node, name, type), 56);
-        if (pointer == 0) return null;
+        var identity = Node(node, name, type);
+        var pointer = BitConverter.ToUInt64(identity, 56);
+        if (pointer == 0)
+        {
+            if (!identity.AsSpan().SequenceEqual(Node(node, name, type)))
+                throw new InvalidDataException("퀘스트 배열 포인터 변경 중");
+            return null;
+        }
         var header = Bytes(pointer, 32);
         var length = BitConverter.ToInt32(header, 8);
         var capacity = BitConverter.ToInt32(header, 24);
         if (length < 1 || length > maximum || capacity < length || capacity > Math.Max(32, maximum * 2))
             throw new InvalidDataException($"퀘스트 배열 크기 미지원 ({name}: {length}/{capacity})");
-        var bytes = Bytes(BitConverter.ToUInt64(header, 16), length * 4);
+        var data = BitConverter.ToUInt64(header, 16);
+        var bytes = Bytes(data, length * 4);
+        if (!bytes.AsSpan().SequenceEqual(Bytes(data, length * 4)) ||
+            !header.AsSpan().SequenceEqual(Bytes(pointer, 32)) ||
+            !identity.AsSpan().SequenceEqual(Node(node, name, type)))
+            throw new InvalidDataException("퀘스트 배열 상태 변경 중");
         return Enumerable.Range(0, length).Select(i => BitConverter.ToInt32(bytes, i * 4)).ToArray();
     }
 

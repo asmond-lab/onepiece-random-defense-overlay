@@ -1,0 +1,6 @@
+Fatal error.
+0xC0000005
+   at Native.SFileOpenFileEx(IntPtr, System.String, UInt32, IntPtr ByRef)
+   at Program.<<Main>$>g__TryRead|0_28(IntPtr, System.String, Byte[] ByRef)
+   at Program.<<Main>$>g__HashMembers|0_19(System.String, System.Collections.Generic.IEnumerable`1<System.String>)
+   at Program.<Main>$(System.String[])

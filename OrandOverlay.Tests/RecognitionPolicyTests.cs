@@ -6,6 +6,18 @@ namespace OrandOverlay.Tests;
 public sealed class RecognitionPolicyTests
 {
     [Fact]
+    public void ConsumedWaitingBoundaryDoesNotResetAgainUntilAnotherMatch()
+    {
+        var waiting = new RecognitionResult { State = RecognitionState.Waiting, ConfirmsSessionBoundary = true };
+        Assert.False(RecognitionPolicy.ShouldResetMatch(waiting, 1, false));
+        Assert.True(RecognitionPolicy.ShouldResetMatch(waiting, 2, false));
+        for (var scans = 2; scans <= 30; scans++)
+            Assert.False(RecognitionPolicy.ShouldResetMatch(waiting, scans, true));
+        // A newly observed Ready match clears the boundary latch in ScanCoreAsync.
+        Assert.True(RecognitionPolicy.ShouldResetMatch(waiting, 2, false));
+        Assert.True(RecognitionPolicy.ShouldClearAutomaticInventory(waiting, 30));
+    }
+    [Fact]
     public void PoolRebuildDuringConfirmedMatchKeepsPreviousInventory()
     {
         var state = WarcraftMemoryRecognitionService.PoolNotReadyState(
@@ -42,7 +54,7 @@ public sealed class RecognitionPolicyTests
     }
 
     [Fact]
-    public void ViviTransformedRawcodeMapsMemoryToRareIdentity()
+    public void ViviTransformedRawcodePreservesTransformedIdentity()
     {
         var catalog = new DataCatalog();
         catalog.Load();
@@ -52,8 +64,8 @@ public sealed class RecognitionPolicyTests
         var mapped = map.Map(new Dictionary<uint, int> { [rawcode] = 1 });
 
         var entry = Assert.Single(mapped.Entries);
-        Assert.Equal("rawcode:O10h", entry.UnitId);
-        Assert.Equal("희귀함", catalog.Unit(entry.UnitId).Tier);
+        Assert.Equal("rawcode:W50h", entry.UnitId);
+        Assert.Equal("변화된", catalog.Unit(entry.UnitId).Tier);
         Assert.Equal("변화된", catalog.Unit("rawcode:W50h").Tier);
     }
 

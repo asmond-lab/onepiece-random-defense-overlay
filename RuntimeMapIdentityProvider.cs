@@ -12,6 +12,7 @@ public enum RuntimeMapIdentityFailure
     LogMissing,
     LogReadFailed,
     LogRotated,
+    LogClockUnverified,
     PartialOpeningRecord,
     NoPostStartOpeningRecord,
     AmbiguousLatestOpeningRecord,
@@ -49,56 +50,83 @@ public static class RuntimeMapIdentityProvider
     public static RuntimeMapIdentityResult Probe(
         DateTimeOffset sessionStartedAt,
         string war3LogPath,
-        MapArchivePin expected)
+        MapArchivePin expected) => Probe(sessionStartedAt, war3LogPath, expected, null, 0, 0);
+
+    public static RuntimeMapIdentityResult Probe(
+        DateTimeOffset sessionStartedAt, string war3LogPath, MapArchivePin expected,
+        RuntimeMapIdentitySession? session, int processId, long processCreationTicks)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(war3LogPath);
         ArgumentNullException.ThrowIfNull(expected);
         if (!File.Exists(war3LogPath))
-            return Unknown(RuntimeMapIdentityFailure.LogMissing,
-                "War3Log source is missing.");
-
-        var log = ReadTail(war3LogPath);
-        if (log.Failure != RuntimeMapIdentityFailure.None)
-            return Unknown(log.Failure, log.Reason, log.BytesRead, log.ReadCalls);
-        if (log.HasPartialOpeningRecord)
-            return Unknown(RuntimeMapIdentityFailure.PartialOpeningRecord,
-                "War3Log ends with a partial Opening map record.",
+        {
+            session?.Reset();
+            return Unknown(RuntimeMapIdentityFailure.LogMissing, "War3Log source is missing.");
+        }
+        var log = ReadTail(war3LogPath, session);
+        if (log.Failure != RuntimeMapIdentityFailure.None || log.HasPartialOpeningRecord)
+        {
+            session?.Reset();
+            return log.HasPartialOpeningRecord
+                ? Unknown(RuntimeMapIdentityFailure.PartialOpeningRecord,
+                    "War3Log ends with a partial Opening map record.", log.BytesRead, log.ReadCalls)
+                : Unknown(log.Failure, log.Reason, log.BytesRead, log.ReadCalls);
+        }
+        if (session is not null && !HasSessionClockAnchor(log.Text, sessionStartedAt))
+        {
+            session.Reset();
+            return Unknown(RuntimeMapIdentityFailure.LogClockUnverified,
+                "No GameMain Started clock anchor matches this process's local start.",
                 log.BytesRead, log.ReadCalls);
-
+        }
         var records = ParseRecords(log.Text, sessionStartedAt);
         if (records.Count == 0)
+        {
+            session?.Reset();
             return Unknown(RuntimeMapIdentityFailure.NoPostStartOpeningRecord,
                 "No complete Opening map record is strictly after the session start.",
                 log.BytesRead, log.ReadCalls);
+        }
 
         var latestTimestamp = records.Max(record => record.Timestamp);
         var latest = records.Where(record => record.Timestamp == latestTimestamp).ToArray();
         var paths = latest.Select(record => record.Path.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         if (paths.Length != 1)
+        {
+            session?.Reset();
             return Unknown(RuntimeMapIdentityFailure.AmbiguousLatestOpeningRecord,
-                "The latest Opening map timestamp names multiple paths.",
-                log.BytesRead, log.ReadCalls);
-
+                "The latest Opening map timestamp names multiple paths.", log.BytesRead, log.ReadCalls);
+        }
         var loggedPath = paths[0].Replace('/', Path.DirectorySeparatorChar);
         if (!Path.IsPathFullyQualified(loggedPath))
+        {
+            session?.Reset();
             return Unknown(RuntimeMapIdentityFailure.OpeningMapPathNotAbsolute,
-                "The latest Opening map value is not an absolute archive path.",
-                log.BytesRead, log.ReadCalls);
+                "The latest Opening map value is not an absolute archive path.", log.BytesRead, log.ReadCalls);
+        }
 
         string archivePath;
         try { archivePath = Path.GetFullPath(loggedPath); }
         catch (Exception exception) when (exception is ArgumentException or
             NotSupportedException or PathTooLongException)
         {
+            session?.Reset();
             return Unknown(RuntimeMapIdentityFailure.OpeningMapPathNotAbsolute,
                 "The latest Opening map path cannot be resolved.",
                 log.BytesRead, log.ReadCalls);
         }
         if (!File.Exists(archivePath))
+        {
+            session?.Reset();
             return Unknown(RuntimeMapIdentityFailure.ArchiveMissing,
                 "The archive named by the latest Opening map record is missing.",
                 log.BytesRead, log.ReadCalls, latestTimestamp, archivePath);
+        }
+        if (session is not null)
+            return session.Verify(processId, processCreationTicks, sessionStartedAt,
+                war3LogPath, log.Creation, log.Length, log.TailSha256, archivePath,
+                latestTimestamp, expected, log.BytesRead, log.ReadCalls);
 
         try
         {
@@ -133,7 +161,7 @@ public static class RuntimeMapIdentityProvider
         }
     }
 
-    private static LogTail ReadTail(string path)
+    private static LogTail ReadTail(string path, RuntimeMapIdentitySession? session)
     {
         try
         {
@@ -148,6 +176,7 @@ public static class RuntimeMapIdentityProvider
             stream.Position = start;
             var bytes = new byte[count];
             stream.ReadExactly(bytes);
+            session?.ObserveOuterRead(count);
 
             var after = new FileInfo(path);
             after.Refresh();
@@ -167,7 +196,7 @@ public static class RuntimeMapIdentityProvider
                 text[(text.LastIndexOf('\n') + 1)..].Contains(
                     "Opening map - ", StringComparison.Ordinal);
             return new LogTail(text, partial, RuntimeMapIdentityFailure.None,
-                "", count, 1);
+                "", count, 1, creation, length, Convert.ToHexString(SHA256.HashData(bytes)));
         }
         catch (Exception exception) when (exception is IOException or
             UnauthorizedAccessException or DecoderFallbackException)
@@ -175,6 +204,19 @@ public static class RuntimeMapIdentityProvider
             return LogTail.Failed(RuntimeMapIdentityFailure.LogReadFailed,
                 "War3Log could not be read consistently.", 0);
         }
+    }
+
+    private static bool HasSessionClockAnchor(string text, DateTimeOffset start)
+    {
+        foreach (var line in text.Split('\n'))
+        {
+            var match = Regex.Match(line.TrimEnd('\r'),
+                "^(?<month>[0-9]{1,2})/(?<day>[0-9]{1,2}) (?<clock>[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3})  GameMain Started$",
+                RegexOptions.CultureInvariant);
+            if (match.Success && TryTimestamp(match, start, out var at) &&
+                at >= start.AddSeconds(-2) && at <= start.AddMinutes(2)) return true;
+        }
+        return false;
     }
 
     private static List<OpeningRecord> ParseRecords(
@@ -230,11 +272,11 @@ public static class RuntimeMapIdentityProvider
     private sealed record LogTail(
         string Text, bool HasPartialOpeningRecord,
         RuntimeMapIdentityFailure Failure, string Reason,
-        long BytesRead, int ReadCalls)
+        long BytesRead, int ReadCalls, DateTime Creation, long Length, string TailSha256)
     {
         public static LogTail Failed(
             RuntimeMapIdentityFailure failure, string reason, long bytes) =>
-            new("", false, failure, reason, bytes, 1);
+            new("", false, failure, reason, bytes, 1, default, 0, "");
     }
 }
 

@@ -1,0 +1,69 @@
+{
+  "recordedUtc": "2026-09-13T23:12:12.3770568Z",
+  "scope": "2.320 diagnostic-only current-view growth attribution and material completion",
+  "productionApproval": false,
+  "published": false,
+  "fullRegression": {
+    "passed": 2798,
+    "skipped": 1,
+    "failed": 0
+  },
+  "nonLiveSmokeExit": 0,
+  "files": [
+    {
+      "path": "Data/map-growth-globals-2320.json",
+      "length": 52536,
+      "sha256": "08D09CA1386CFD57E5935BBFA9C2E595644B410AE61F7054089357FAA0904909"
+    },
+    {
+      "path": "Map2320GrowthSource.cs",
+      "length": 3391,
+      "sha256": "D8F3EC5403B0C90A5A29051B0A89388809B97718DEE98F1A9895998EEF6BCA00"
+    },
+    {
+      "path": "ReadOnlyPrivateRegionScan.cs",
+      "length": 1576,
+      "sha256": "2D4294B85D65FEEF72E4E09B5436908CC98C02E3FA54AB2A7367A3A2748FC4BE"
+    },
+    {
+      "path": "Warcraft300GrowthReader.cs",
+      "length": 17771,
+      "sha256": "BCCA2C8D1851278856DF3F4DE4CC822AD16D51F378BEFE2F351C4162745F163D"
+    },
+    {
+      "path": "GrowthMaterialInventory.cs",
+      "length": 2576,
+      "sha256": "98338C0665AD942DBB71148177144657803DA8D6C552950E9BE88CC4E5B5CD06"
+    },
+    {
+      "path": "Warcraft300Diagnostic.cs",
+      "length": 7879,
+      "sha256": "120DDE4CA27CED6994FB30B1E9D15CA66E1B4213CE47171FD562829E343711B9"
+    },
+    {
+      "path": "WarcraftMemoryRecognitionService.cs",
+      "length": 68714,
+      "sha256": "D30925706CCFD2F322CDEAD887ADF147349345488186F0D1C5CFE66161AC2945"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "length": 98307,
+      "sha256": "0B1B8C77A07CDC29D72D7334192AD472762F43015B029B033C1BB62F77CB3A05"
+    },
+    {
+      "path": "OrandOverlay.Tests/Warcraft300GrowthReaderTests.cs",
+      "length": 21393,
+      "sha256": "76769F7F23FF42CBFBC5F615F2C1E01AA428F34377E4E584D3DB2B24AD9DE6FB"
+    },
+    {
+      "path": "OrandOverlay.Tests/GrowthMaterialInventoryTests.cs",
+      "length": 9356,
+      "sha256": "4DACF8285AB1728E4E168DBF41DA0E73429982FE6DBB392526FC17EADCC44629"
+    },
+    {
+      "path": "OrandOverlay.Tests/GrowthSourceAndRegionTests.cs",
+      "length": 4578,
+      "sha256": "D75ADDDCD96F727EE4FF50F078C9CE505C69CBFCF4A3FD5BE2ADE2C22967D2D0"
+    }
+  ]
+}

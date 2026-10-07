@@ -23,10 +23,10 @@ public static class RecommendationPresentation
 
     public static string ReadinessLine(CombatReadiness readiness)
     {
-        var prefix = readiness.IsReady ? "55라 준비 완료" : "55라 준비 미달";
+        var prefix = readiness.IsReady ? "지원 유닛 수치 채움" : "지원 유닛 수치 부족";
         var damage = readiness.DamageType == ReadinessDamageType.Physical
             ? $"방깎 {Format(readiness.CurrentArmorReduction)}/{Format(readiness.RequiredArmorReduction)}"
-            : $"마방깎 공급원 {readiness.CurrentMagicArmorSources}/{readiness.RequiredMagicArmorSources}";
+            : $"마방깎 유닛 {readiness.CurrentMagicArmorSources}/{readiness.RequiredMagicArmorSources}";
         return $"{prefix} · 스턴 {Format(readiness.CurrentStun)}/{Format(readiness.RequiredStun)}" +
                $" · 이감 {Format(readiness.CurrentSlow)}/{Format(readiness.RequiredSlow)}" +
                $" · {damage}";
@@ -95,6 +95,19 @@ public static class RecommendationPresentation
 
     public static string CraftUnitName(RecipeTreeNode unit) =>
         CraftUnitName(unit.Name, unit.Tier);
+
+    /// <summary>Coach labels preserve the catalog tier; never change identity or game commands.</summary>
+    public static string CoachUnitName(string name, string? tier)
+    {
+        if (string.IsNullOrWhiteSpace(tier)) return name;
+        foreach (var suffix in new[] { $" [{tier}]", $" - {tier}" })
+            if (name.EndsWith(suffix, StringComparison.Ordinal))
+            {
+                name = name[..^suffix.Length];
+                break;
+            }
+        return $"{name} [{tier}]";
+    }
 
     public static string CraftUnitName(string name, string tier)
     {
@@ -334,7 +347,7 @@ internal static class PlannerEvidenceProjector
         var unknowns = navigation?.MissingSignalIds ?? [];
         var locked = storySequence is { TopNavigationUnlocked: false };
         var fields = ImmutableArray.Create(
-            Field(PlannerEvidenceFieldKind.Phase, "planner-phase", "판단 단계",
+            Field(PlannerEvidenceFieldKind.Phase, "planner-phase", "현재 추천 상태",
                 manual.GoalOverride ? "수동 목표 유지" : StateLabel(state),
                 trace?.Phase.ToString() ?? state.ToString(),
                 state is PlannerEvidenceState.Blocked or PlannerEvidenceState.Unknown),
@@ -349,7 +362,7 @@ internal static class PlannerEvidenceProjector
             Field(PlannerEvidenceFieldKind.StoryReward, "planner-story-reward", "클리어 보상",
                 storySequence?.ClearRewardSummary ?? Empty,
                 storySequence?.ClearRewardSummary ?? "unknown"),
-            Field(PlannerEvidenceFieldKind.RewardValue, "planner-reward-value", "보상 기대값",
+            Field(PlannerEvidenceFieldKind.RewardValue, "planner-reward-value", "예상 보상",
                 storySequence?.OutcomeValueSummary ?? Empty,
                 storySequence?.ExpectedUsefulUnitBp.ToString(CultureInfo.InvariantCulture) ??
                 "unknown"),
@@ -359,9 +372,9 @@ internal static class PlannerEvidenceProjector
             Field(PlannerEvidenceFieldKind.Action, "planner-action", "지금 할 일",
                 manual.GoalOverride ? "목표는 유지하고 패·보상 변화에 맞춰 조합과 보완 유닛을 계속 재계산합니다." :
                     ActionLabel(state, applied, storySequence), $"{state}|{trace?.Phase}"),
-            Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "자동 판단 조건",
+            Field(PlannerEvidenceFieldKind.Blocker, "planner-blocker", "추천을 기다리는 이유",
                 blockers.Display, blockers.Machine, blockers.IsWarning),
-            Field(PlannerEvidenceFieldKind.LaneComparison, "planner-lane-comparison", "딜 경로 비교",
+            Field(PlannerEvidenceFieldKind.LaneComparison, "planner-lane-comparison", "공격 조합 비교",
                 LockedDisplay(locked, $"물리 {Score(physical)} · 마법 {Score(magic)}"),
                 LockedMachine(locked,
                     $"physical={RawScore(physical)};magic={RawScore(magic)}")),
@@ -371,7 +384,7 @@ internal static class PlannerEvidenceProjector
             Field(PlannerEvidenceFieldKind.MagicRoute, "planner-magic-route", "마법 경로",
                 LockedDisplay(locked, RouteDisplay(magic)),
                 LockedMachine(locked, RouteMachine(magic))),
-            Field(PlannerEvidenceFieldKind.Package, "planner-package", "목표·패키지 완성",
+            Field(PlannerEvidenceFieldKind.Package, "planner-package", "목표·지원 유닛 완성",
                 LockedDisplay(locked, PackageDisplay(applied, physical, magic)),
                 LockedMachine(locked, PackageMachine(applied, physical, magic))),
             Field(PlannerEvidenceFieldKind.FirstLegend, "planner-first-legend", "첫 전설 적합",
@@ -390,21 +403,21 @@ internal static class PlannerEvidenceProjector
             Field(PlannerEvidenceFieldKind.Recovery, "planner-recovery", "회복 가능성",
                 LockedDisplay(locked, RecoveryDisplay(option)),
                 LockedMachine(locked, RecoveryMachine(option))),
-            Field(PlannerEvidenceFieldKind.Interval, "planner-interval", "하한·평균·상한",
+            Field(PlannerEvidenceFieldKind.Interval, "planner-interval", "예상 점수 범위 (낮음·가운데·높음)",
                 LockedDisplay(locked, IntervalDisplay(option)),
                 LockedMachine(locked, IntervalMachine(option))),
-            Field(PlannerEvidenceFieldKind.Confidence, "planner-confidence", "신뢰도",
+            Field(PlannerEvidenceFieldKind.Confidence, "planner-confidence", "추천에 필요한 정보",
                 LockedDisplay(locked, ConfidenceDisplay(trace, option)),
                 LockedMachine(locked, ConfidenceMachine(trace, option)),
                 !locked && (trace?.ConfidenceBp ?? 0) <
                 NavigationIntervalScorer.MinimumRecommendationConfidenceBp),
-            Field(PlannerEvidenceFieldKind.UnknownSignals, "planner-unknown-signals", "미확인 신호",
+            Field(PlannerEvidenceFieldKind.UnknownSignals, "planner-unknown-signals", "아직 모르는 정보",
                 UnknownDisplay(unknowns, unknownReason), UnknownMachine(unknowns, unknownReason),
                 signalsUnknown || unknowns.Length > 0),
             Field(PlannerEvidenceFieldKind.Restrictions, "planner-restrictions", "제한",
                 "추천만 제공 · 게임 내 선택 없음",
                 "recommendation-only=true;runtime-selection=false"),
-            Field(PlannerEvidenceFieldKind.ForcedManual, "planner-forced-manual", "강제·수동 상태",
+            Field(PlannerEvidenceFieldKind.ForcedManual, "planner-forced-manual", "직접 선택한 설정",
                 manual.GoalOverride ? "수동 목표 유지 · 자동 목표 변경 안 함" :
                     ForcedManualDisplay(trace, navigation),
                 ForcedManualMachine(trace, navigation) +
@@ -463,13 +476,13 @@ internal static class PlannerEvidenceProjector
         PlannerEvidenceState.SequenceFirstLegend => "3단계 · 첫 전설",
         PlannerEvidenceState.SequenceRareReward => "4단계 · 희귀 보상",
         PlannerEvidenceState.SequenceTopNavigation => "5단계 · 상위·항법 대기",
-        PlannerEvidenceState.Waiting => "판단 입력 대기",
+        PlannerEvidenceState.Waiting => "게임 정보 기다리는 중",
         PlannerEvidenceState.Blocked => "판단 보류",
         PlannerEvidenceState.Round20Preview => "20라운드 미리보기",
         PlannerEvidenceState.Round21Actionable => "21~23라운드 추천 가능",
-        PlannerEvidenceState.Committed => "추천 고정",
+        PlannerEvidenceState.Committed => "추천 유지",
         PlannerEvidenceState.ManualOverride => "수동 설정 유지",
-        PlannerEvidenceState.Round24Forced => "24라운드 원본 규칙 기대값",
+        PlannerEvidenceState.Round24Forced => "24라운드 규칙에 따른 예상 선택",
         _ => "입력 확인 필요"
     };
 
@@ -480,16 +493,16 @@ internal static class PlannerEvidenceProjector
             :
         state switch
         {
-            PlannerEvidenceState.Waiting => "게임 신호를 확인하는 중입니다.",
-            PlannerEvidenceState.Blocked => "차단 사유를 확인하고 기존 추천을 유지합니다.",
+            PlannerEvidenceState.Waiting => "게임 정보를 확인하는 중입니다.",
+            PlannerEvidenceState.Blocked => "추천을 바꾸지 못하는 이유를 확인하고 기존 추천을 유지합니다.",
             PlannerEvidenceState.Round20Preview => "두 딜 경로와 항법 후보를 비교합니다.",
             PlannerEvidenceState.Round21Actionable => "표시된 항법을 참고해 직접 선택하세요.",
-            PlannerEvidenceState.Committed => "고정된 빌드와 항법 추천을 유지합니다.",
-            PlannerEvidenceState.ManualOverride => "사용자가 고른 오버레이 설정을 유지합니다.",
-            PlannerEvidenceState.Round24Forced => "맵 원본 규칙의 24라운드 기대값을 안내합니다.",
+            PlannerEvidenceState.Committed => "정해진 조합 목표와 항법 추천을 유지합니다.",
+            PlannerEvidenceState.ManualOverride => "직접 고른 설정을 유지합니다.",
+            PlannerEvidenceState.Round24Forced => "24라운드 규칙상 예상되는 항법을 보여 줍니다. 게임에서 확인해 주세요.",
             _ => applied?.State.Phase == PlannerPhase.ChooseLegend
                 ? "표시된 첫 전설 후보를 확인하세요."
-                : "미확인 신호가 안정될 때까지 마지막 추천을 유지합니다."
+                : "게임 정보가 다시 확인될 때까지 마지막 추천을 유지합니다."
         };
 
     private static (string Display, string Machine, bool IsWarning) Blockers(
@@ -524,7 +537,7 @@ internal static class PlannerEvidenceProjector
     {
         var route = SelectedRoute(applied, physical, magic);
         return route is null ? Empty
-            : $"선택 목표 {Bp(route.GoalProgressBp)} · 지원 패키지 {Bp(route.PackageProgressBp)}";
+            : $"선택 목표 {Bp(route.GoalProgressBp)} · 지원 유닛 {Bp(route.PackageProgressBp)}";
     }
 
     private static string PackageMachine(AdaptivePlanningApplied? applied,
@@ -541,7 +554,7 @@ internal static class PlannerEvidenceProjector
             ? $"{name} · {storySequence.ActionSummary}"
             :
         applied?.State.LockedFirstLegendId is not null
-            ? "첫 전설 확정 · 선택 경로에 반영"
+            ? "첫 전설을 확인해 추천에 반영했습니다"
             : applied?.State.PossibleFirstLegendIds.Length > 0
                 ? $"후보 {applied.State.PossibleFirstLegendIds.Length}개"
                 : Empty;
@@ -565,8 +578,8 @@ internal static class PlannerEvidenceProjector
     };
     private static string PostureLabel(NavigationRiskPosture? posture) => posture switch
     {
-        NavigationRiskPosture.FloorDefense => "하한 방어",
-        NavigationRiskPosture.HighCeiling => "상한 추구",
+        NavigationRiskPosture.FloorDefense => "안정적인 결과 우선",
+        NavigationRiskPosture.HighCeiling => "최고의 결과 노리기",
         NavigationRiskPosture.Balanced => "균형",
         _ => "성향 확인 전"
     };
@@ -600,7 +613,7 @@ internal static class PlannerEvidenceProjector
     private static string ConfidenceDisplay(AdaptiveDecisionEvent? trace,
         NavigationIntervalOptionScore? option) => trace is null && option is null
         ? Empty
-        : $"판단 {Bp(trace?.ConfidenceBp ?? 0)} · 항법 {Bp(option?.ConfidenceBp ?? 0)}";
+        : $"조합 추천 {Bp(trace?.ConfidenceBp ?? 0)} · 항법 추천 {Bp(option?.ConfidenceBp ?? 0)}";
     private static string ConfidenceMachine(AdaptiveDecisionEvent? trace,
         NavigationIntervalOptionScore? option) =>
         $"decision={trace?.ConfidenceBp.ToString(CultureInfo.InvariantCulture) ?? "unknown"};" +
@@ -621,7 +634,7 @@ internal static class PlannerEvidenceProjector
             navigation?.State == NavigationRecommendationState.ManualOverride)
             return "수동 설정 우선";
         return trace?.SourceDefinedForcedExpectationId is { } forced
-            ? $"원본 규칙 기대값 · {NavigationProfiles.Find(forced).Name}"
+            ? $"규칙상 예상되는 항법 · {NavigationProfiles.Find(forced).Name} (게임에서 확인 필요)"
             : "자동 추천";
     }
     private static string ForcedManualMachine(AdaptiveDecisionEvent? trace,

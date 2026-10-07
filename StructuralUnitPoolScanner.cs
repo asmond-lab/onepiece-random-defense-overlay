@@ -18,6 +18,55 @@ namespace OrandOverlay;
 /// </summary>
 internal static class StructuralUnitPoolScanner
 {
+    // Dedicated diagnostic sweep: only actual CWorldFrameWar3 primary heads qualify.
+    // No guessed heap addresses, shifted count/array roots or root-zero fallback.
+    internal static ulong ResolveDiagnostic(ReadOnlyProcessMemory memory, ProcessModule module,
+        MemoryProfile profile, CancellationToken token)
+    {
+        var b = (ulong)module.BaseAddress.ToInt64();
+        _ = Warcraft300Diagnostic.ReadView(memory.ReadAvailable, b);
+        var candidates = new HashSet<ulong>();
+        var watch = Stopwatch.StartNew();
+        long scanned = 0;
+        // The observed 3.0 process has more than 4 GiB of readable private allocations.
+        // Diagnostic-only ceiling: 8 GiB / 30 seconds, with exact reads rather than silent skipped tails.
+        var buffer = new byte[1024 * 1024];
+        foreach (var region in memory.ReadablePrivateRegions())
+        {
+            for (ulong consumed = 0; consumed < region.Size;)
+            {
+                token.ThrowIfCancellationRequested();
+                var length = (int)Math.Min((ulong)buffer.Length, region.Size - consumed);
+                if (scanned + length > 8L * 1024 * 1024 * 1024 || watch.Elapsed > TimeSpan.FromSeconds(30))
+                    throw new InvalidDataException("Diagnostic typed-root sweep budget exceeded; incomplete search rejected");
+                var chunkBase = checked(region.BaseAddress + consumed);
+                scanned += length;
+                if (memory.ReadInto(chunkBase, buffer, length) != length)
+                    throw new InvalidDataException("Incomplete diagnostic typed-root read rejected");
+                for (var offset = 0; offset + 8 <= length; offset += 8)
+                    if (BitConverter.ToUInt64(buffer, offset) == AddressMath.Add(b, Warcraft300Diagnostic.FrameVtable))
+                    {
+                        candidates.Add(AddressMath.Add(chunkBase, offset));
+                        if (candidates.Count > 256) throw new InvalidDataException("Too many diagnostic frame heads");
+                    }
+                consumed += (ulong)length;
+            }
+        }
+        var valid = new List<ulong>();
+        foreach (var candidate in candidates)
+        {
+            try
+            {
+                _ = Warcraft300Diagnostic.ReadInventory(memory.ReadAvailable, b, candidate, profile, token);
+                valid.Add(candidate);
+            }
+            catch (Exception e) when (e is InvalidDataException or Win32Exception or OverflowException) { }
+        }
+        LastScanMilliseconds = (int)watch.ElapsedMilliseconds;
+        if (valid.Count != 1) throw new InvalidDataException($"Diagnostic typed-root selection requires one frame; found {valid.Count}");
+        return valid[0];
+    }
+
     private static readonly TimeSpan FailureCooldown = TimeSpan.FromSeconds(5);
     private static readonly object Gate = new();
     private static DateTime _lastFailureUtc = DateTime.MinValue;
@@ -63,8 +112,9 @@ internal static class StructuralUnitPoolScanner
         if (moduleSize <= 0 || moduleSize > 512 * 1024 * 1024)
             throw new InvalidDataException($"비정상 모듈 크기: {moduleSize}");
 
-        // vftable은 모듈이 같으면 변하지 않는다. 221MB 이미지 재독을 매번 하지 않도록 캐시한다.
-        var unitVftables = GetUnitVftables(memory, moduleBase, moduleSize, profile.UnitClassName);
+        // The process-identity-aware locator cache avoids rescanning on ordinary ticks.
+        // Do not retain vftables across processes that reuse the same module base.
+        var unitVftables = GetUnitVftables(memory, moduleBase, moduleSize, profile.UnitClassName, token);
 
         var (units, structs) = Sweep(memory, profile, unitVftables, token);
         if (units.Count < profile.MinimumUnitObjects)
@@ -163,22 +213,15 @@ internal static class StructuralUnitPoolScanner
         }
     }
 
-    private static readonly object VftableGate = new();
-    private static (ulong ModuleBase, string ClassName, HashSet<ulong> Vftables)? _vftableCache;
-
     private static HashSet<ulong> GetUnitVftables(ReadOnlyProcessMemory memory, ulong moduleBase, int moduleSize,
-        string className)
+        string className, CancellationToken token)
     {
-        lock (VftableGate)
-            if (_vftableCache is { } cached && cached.ModuleBase == moduleBase && cached.ClassName == className)
-                return cached.Vftables;
-
-        var image = ReadImage(memory, moduleBase, moduleSize);
+        var image = ReadImage(moduleBase, moduleSize,
+            memory.ReadableModuleRegions(moduleBase, moduleSize, token), memory.ReadInto, token);
         if (image.Length < 0x1000) throw new InvalidDataException("모듈 이미지를 읽지 못했습니다.");
-        var vftables = FindClassVftables(image, moduleBase, className).ToHashSet();
+        var vftables = FindClassVftables(image, moduleBase, className, token).ToHashSet();
         if (vftables.Count == 0)
             throw new InvalidOperationException($"{className} vftable을 찾지 못했습니다.");
-        lock (VftableGate) _vftableCache = (moduleBase, className, vftables);
         return vftables;
     }
 
@@ -256,29 +299,69 @@ internal static class StructuralUnitPoolScanner
     /// 모듈 이미지를 조각내어 한 버퍼로 읽는다(단일 읽기 상한보다 이미지가 클 수 있다).
     /// 못 읽은 페이지는 0으로 남고 RVA 대응은 그대로 유지된다.
     /// </summary>
-    private static byte[] ReadImage(ReadOnlyProcessMemory memory, ulong moduleBase, int moduleSize)
+    internal static byte[] ReadImage(ulong moduleBase, int moduleSize, IEnumerable<MemoryRegion> regions,
+        Func<ulong, byte[], int, int> readInto, CancellationToken token = default)
     {
-        const int chunk = 16 * 1024 * 1024;
+        ReadOnlyProcessMemory.ValidateModuleBounds(moduleBase, moduleSize);
+        token.ThrowIfCancellationRequested();
+        const int pageBytes = 0x1000;
+        const int chunkBytes = 64 * 1024;
         var image = new byte[moduleSize];
+        var buffer = new byte[Math.Min(chunkBytes, moduleSize)];
+        var end = moduleBase + (ulong)moduleSize;
+        var previousEnd = moduleBase;
         var read = 0;
-        for (var position = 0; position < moduleSize; position += chunk)
+        var attempts = 0;
+        var budget = 3 * ((moduleSize + pageBytes - 1) / pageBytes) + 1024;
+        foreach (var region in regions)
         {
-            var length = Math.Min(chunk, moduleSize - position);
-            var part = memory.ReadAvailable(moduleBase + (ulong)position, length);
-            if (part.Length == 0) continue;
-            part.CopyTo(image, position);
-            read += part.Length;
+            token.ThrowIfCancellationRequested();
+            // Reject overlaps/out-of-bounds input rather than reading unrelated memory.
+            if (region.Size == 0 || region.BaseAddress < previousEnd || region.BaseAddress >= end ||
+                region.Size > end - region.BaseAddress)
+                throw new InvalidDataException("Invalid readable module range.");
+            var regionEnd = region.BaseAddress + region.Size;
+            previousEnd = regionEnd;
+            var address = region.BaseAddress;
+            var pageRead = false;
+            while (address < regionEnd)
+            {
+                token.ThrowIfCancellationRequested();
+                if (++attempts > budget)
+                    throw new InvalidDataException("Module image read budget exceeded.");
+                var maximum = pageRead ? pageBytes - (int)(address % pageBytes) : chunkBytes;
+                var length = (int)Math.Min((ulong)maximum, regionEnd - address);
+                var actual = readInto(address, buffer, length);
+                if (actual < 0 || actual > length)
+                    throw new InvalidDataException("Invalid module image read count.");
+                if (actual > 0)
+                {
+                    Buffer.BlockCopy(buffer, 0, image, (int)(address - moduleBase), actual);
+                    read += actual;
+                    address += (ulong)actual;
+                    pageRead = actual < length;
+                }
+                else if (!pageRead)
+                    pageRead = true; // Retry a failed large read page-by-page.
+                else
+                {
+                    address += (ulong)length; // Only this failed page remains zero.
+                    pageRead = false;
+                }
+            }
         }
-        return read >= 0x1000 ? image : [];
+        return read >= pageBytes ? image : [];
     }
 
     /// <summary>모듈 이미지에서 MSVC RTTI 클래스명에 해당하는 vftable 주소를 모두 찾는다.</summary>
-    private static List<ulong> FindClassVftables(byte[] image, ulong moduleBase, string className)
+    internal static List<ulong> FindClassVftables(byte[] image, ulong moduleBase, string className,
+        CancellationToken token = default)
     {
         var name = Encoding.ASCII.GetBytes(className + "\0");
         var typeDescriptorRvas = new List<uint>();
         for (var index = 0; index + name.Length <= image.Length; index++)
         {
+            if ((index & 0xFFFF) == 0) token.ThrowIfCancellationRequested();
             if (image[index] != name[0]) continue;
             if (!image.AsSpan(index, name.Length).SequenceEqual(name)) continue;
             if (index >= 0x10) typeDescriptorRvas.Add((uint)(index - 0x10)); // 이름은 타입 디스크립터 +0x10
@@ -288,17 +371,23 @@ internal static class StructuralUnitPoolScanner
         var locators = new HashSet<ulong>();
         foreach (var typeRva in typeDescriptorRvas)
             for (var index = 0; index + 0x18 <= image.Length; index += 4)
+            {
+                if ((index & 0xFFFF) == 0) token.ThrowIfCancellationRequested();
                 if (BitConverter.ToUInt32(image, index) == 1 &&
                     BitConverter.ToUInt32(image, index + 0x0C) == typeRva &&
                     BitConverter.ToUInt32(image, index + 0x14) == (uint)index)
                     locators.Add(moduleBase + (ulong)index);
+            }
 
         // vftable 바로 앞(-8)에 COL 주소가 놓인다.
         var vftables = new List<ulong>();
         if (locators.Count == 0) return vftables;
         for (var index = 0; index + 8 <= image.Length; index += 8)
+        {
+            if ((index & 0xFFFF) == 0) token.ThrowIfCancellationRequested();
             if (locators.Contains(BitConverter.ToUInt64(image, index)))
                 vftables.Add(moduleBase + (ulong)index + 8);
+        }
         return vftables;
     }
 

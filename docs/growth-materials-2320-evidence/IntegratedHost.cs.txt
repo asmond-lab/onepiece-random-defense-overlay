@@ -1,0 +1,28 @@
+using System.IO;
+using System.Reflection;
+using System.Diagnostics;
+using System.Text.Json;
+using OrandOverlay;
+
+const string session=@"C:\Users\123\.aside\u\0\sessions\2026-09-13_X2j2h7HlhcnGq0XN\tmp\live-3.0";
+var userRoot=Path.Combine(session,"isolated-user");
+using var identity=JsonDocument.Parse(File.ReadAllText(Path.Combine(session,"cursor.json")));
+using var process=Process.GetProcessById(79380);
+if(process.StartTime.ToUniversalTime().Ticks!=identity.RootElement.GetProperty("Start").GetInt64())throw new Exception("Expected session ended");
+var catalog=new DataCatalog();catalog.Load(mapVersion:"2.320");
+var ctor=typeof(WarcraftMemoryRecognitionService).GetConstructor(BindingFlags.Instance|BindingFlags.NonPublic,null,new[]{typeof(DataCatalog),typeof(string)},null)!;
+var reader=(WarcraftMemoryRecognitionService)ctor.Invoke(new object[]{catalog,userRoot});
+var old=Environment.GetEnvironmentVariable("ORAND_VERIFY_DIR");
+try{
+ Environment.SetEnvironmentVariable("ORAND_VERIFY_DIR",null);
+ var blocked=await reader.RecognizeAsync(new AppSettings(),CancellationToken.None);
+ if(blocked.State!=RecognitionState.UnverifiedProfile)throw new Exception("Normal mode must reject experimental profile: "+blocked.Status);
+ Console.WriteLine("PRODUCTION_GATE_PASS: experimental profile rejected without explicit verification mode.");
+ Environment.SetEnvironmentVariable("ORAND_VERIFY_DIR",userRoot);
+ using var stop=new CancellationTokenSource(TimeSpan.FromSeconds(60));
+ var result=await reader.RecognizeAsync(new AppSettings(),stop.Token);
+ var counts=result.Entries.ToDictionary(e=>e.UnitId,e=>e.Count);var withoutGrowth=new Dictionary<string,int>(counts);foreach(var id in result.Diagnostics.GrowthUnitIds)if(withoutGrowth.GetValueOrDefault(id)>0)withoutGrowth[id]--;var calc=new RecipeCompletionCalculator(catalog.Unit);var kizaru=catalog.Unit("rawcode:R10h");var withProgress=calc.Calculate([kizaru.Id],counts);var beforeProgress=calc.Calculate([kizaru.Id],withoutGrowth);
+ var report=new{state=result.State.ToString(),result.Status,total=result.Entries.Sum(e=>e.Count),entries=result.Entries.Select(e=>new{e.UnitId,name=catalog.Unit(e.UnitId).Name,tier=catalog.Unit(e.UnitId).Tier,e.Count}),growthIds=result.Diagnostics.GrowthUnitIds,materialProgress=new{target=kizaru.Name,required=withProgress.RequiredLeafCount,ownedWithGrowth=withProgress.OwnedLeafCount,ownedWithoutGrowth=beforeProgress.OwnedLeafCount,ratioWithGrowth=withProgress.CompletionRatio,ratioWithoutGrowth=beforeProgress.CompletionRatio},diagnosticSource=result.Diagnostics.Source,detail=result.Diagnostics.Detail,hasMapState=result.Diagnostics.MapState!=null};
+ var json=JsonSerializer.Serialize(report);File.WriteAllText(Path.Combine(@"C:\Users\123\.aside\u\0\sessions\2026-09-13_X2j2h7HlhcnGq0XN\tmp\growth-materials","integrated-growth.json"),json);Console.WriteLine(json);
+ if(result.State!=RecognitionState.Ready)Environment.ExitCode=2;
+}finally{Environment.SetEnvironmentVariable("ORAND_VERIFY_DIR",old);}

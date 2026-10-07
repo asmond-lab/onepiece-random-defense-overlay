@@ -1,0 +1,214 @@
+[
+  {
+    "file": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-ko-2.320\\war3map.j",
+    "status": "PASS",
+    "errors": [],
+    "errorLines": [],
+    "errorOffsets": [],
+    "fullStringExactlyEqualsInput": true,
+    "sha256After": "6FDFC64BF8AD9463F5B5C8A351FFA7E1875D6CF9B51210129539375FA77A6C7C",
+    "globalDeclarationCount": 3936,
+    "astNodeCounts": [
+      {
+        "Name": "JassArgumentListSyntax",
+        "Count": 76607
+      },
+      {
+        "Name": "JassArrayDeclaratorSyntax",
+        "Count": 686
+      },
+      {
+        "Name": "JassBinaryExpressionSyntax",
+        "Count": 22188
+      },
+      {
+        "Name": "JassElementAccessClauseSyntax",
+        "Count": 9494
+      },
+      {
+        "Name": "JassElementAccessExpressionSyntax",
+        "Count": 2959
+      },
+      {
+        "Name": "JassElseClauseSyntax",
+        "Count": 962
+      },
+      {
+        "Name": "JassElseIfClauseDeclaratorSyntax",
+        "Count": 1457
+      },
+      {
+        "Name": "JassEmptyParameterListSyntax",
+        "Count": 2208
+      },
+      {
+        "Name": "JassEqualsValueClauseSyntax",
+        "Count": 27784
+      },
+      {
+        "Name": "JassFunctionDeclaratorSyntax",
+        "Count": 2650
+      },
+      {
+        "Name": "JassFunctionReferenceExpressionSyntax",
+        "Count": 2086
+      },
+      {
+        "Name": "JassIdentifierNameSyntax",
+        "Count": 154746
+      },
+      {
+        "Name": "JassIfClauseDeclaratorSyntax",
+        "Count": 4714
+      },
+      {
+        "Name": "JassIfClauseSyntax",
+        "Count": 4714
+      },
+      {
+        "Name": "JassInvocationExpressionSyntax",
+        "Count": 14969
+      },
+      {
+        "Name": "JassLiteralExpressionSyntax",
+        "Count": 52370
+      },
+      {
+        "Name": "JassParameterListSyntax",
+        "Count": 442
+      },
+      {
+        "Name": "JassParenthesizedExpressionSyntax",
+        "Count": 534
+      },
+      {
+        "Name": "JassPredefinedTypeSyntax",
+        "Count": 9459
+      },
+      {
+        "Name": "JassReturnClauseSyntax",
+        "Count": 2650
+      },
+      {
+        "Name": "JassUnaryExpressionSyntax",
+        "Count": 1392
+      },
+      {
+        "Name": "JassVariableDeclaratorSyntax",
+        "Count": 8923
+      }
+    ],
+    "globalTypeCounts": [
+      {
+        "Name": "JassGlobalVariableDeclarationSyntax",
+        "Count": 3936
+      }
+    ]
+  },
+  {
+    "file": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\indexed-members\\2314\\war3map.j",
+    "status": "PASS",
+    "errors": [],
+    "errorLines": [],
+    "errorOffsets": [],
+    "fullStringExactlyEqualsInput": true,
+    "sha256After": "0BCCC47907A9505F38EFAF6BBF20228A728EABDFAEC3209CCA7DF2269BFC2028",
+    "globalDeclarationCount": 3823,
+    "astNodeCounts": [
+      {
+        "Name": "JassArgumentListSyntax",
+        "Count": 76632
+      },
+      {
+        "Name": "JassArrayDeclaratorSyntax",
+        "Count": 630
+      },
+      {
+        "Name": "JassBinaryExpressionSyntax",
+        "Count": 20520
+      },
+      {
+        "Name": "JassElementAccessClauseSyntax",
+        "Count": 10360
+      },
+      {
+        "Name": "JassElementAccessExpressionSyntax",
+        "Count": 3978
+      },
+      {
+        "Name": "JassElseClauseSyntax",
+        "Count": 751
+      },
+      {
+        "Name": "JassElseIfClauseDeclaratorSyntax",
+        "Count": 1314
+      },
+      {
+        "Name": "JassEmptyParameterListSyntax",
+        "Count": 2282
+      },
+      {
+        "Name": "JassEqualsValueClauseSyntax",
+        "Count": 28390
+      },
+      {
+        "Name": "JassFunctionDeclaratorSyntax",
+        "Count": 2694
+      },
+      {
+        "Name": "JassFunctionReferenceExpressionSyntax",
+        "Count": 2068
+      },
+      {
+        "Name": "JassIdentifierNameSyntax",
+        "Count": 160391
+      },
+      {
+        "Name": "JassIfClauseDeclaratorSyntax",
+        "Count": 3854
+      },
+      {
+        "Name": "JassIfClauseSyntax",
+        "Count": 3854
+      },
+      {
+        "Name": "JassInvocationExpressionSyntax",
+        "Count": 15486
+      },
+      {
+        "Name": "JassLiteralExpressionSyntax",
+        "Count": 54390
+      },
+      {
+        "Name": "JassParameterListSyntax",
+        "Count": 412
+      },
+      {
+        "Name": "JassParenthesizedExpressionSyntax",
+        "Count": 496
+      },
+      {
+        "Name": "JassPredefinedTypeSyntax",
+        "Count": 11558
+      },
+      {
+        "Name": "JassReturnClauseSyntax",
+        "Count": 2694
+      },
+      {
+        "Name": "JassUnaryExpressionSyntax",
+        "Count": 884
+      },
+      {
+        "Name": "JassVariableDeclaratorSyntax",
+        "Count": 11930
+      }
+    ],
+    "globalTypeCounts": [
+      {
+        "Name": "JassGlobalVariableDeclarationSyntax",
+        "Count": 3823
+      }
+    ]
+  }
+]

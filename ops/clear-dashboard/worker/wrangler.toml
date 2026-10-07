@@ -5,8 +5,12 @@ compatibility_date = "2026-08-01"
 [observability]
 enabled = false
 
+[triggers]
+crons = ["* * * * *"]
+
 [vars]
 TELEMETRY_ENABLED = "true"
+GAMEPLAY_V3_ENABLED = "true"
 
 [[d1_databases]]
 binding = "DB"

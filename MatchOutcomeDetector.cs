@@ -40,6 +40,9 @@ public sealed class MatchOutcomeDetector(int requiredZeroScans = 2)
     private bool _defeated;
     private string _difficulty = "unknown";
 
+    public static bool IsKnownDifficulty(string? difficulty) =>
+        difficulty is "쉬움" or "보통" or "어려움" or "지옥" or "신" or "악몽";
+
     /// <summary>맵 스크립트 기준 클리어 라운드. 쉬움 40, 보통 50, 그 외 65.</summary>
     public static int ClearRound(string difficulty) => difficulty switch
     {

@@ -4,7 +4,10 @@ public sealed record NavigationAdvice(
     string OptionId,
     string Name,
     string Reason,
-    IReadOnlyList<string> FollowUps);
+    IReadOnlyList<string> FollowUps)
+{
+    public bool CanSelectNow { get; init; }
+}
 
 /// <summary>
 /// 21라운드 전에 패를 보고 초보가 쓰기 쉬운 항법만 2~3개 띄운다.
@@ -33,9 +36,13 @@ public sealed class NavigationAdvisor(DataCatalog catalog)
         IEnumerable<InventoryEntry> inventory,
         UnitDefinition? goal,
         int round,
-        int take = 3)
+        int take = 3) => EvaluateGoals(inventory, goal is null ? [] : [goal], round, take);
+
+    public IReadOnlyList<NavigationAdvice> EvaluateGoals(IEnumerable<InventoryEntry> inventory,
+        IReadOnlyList<UnitDefinition> goals, int round, int take = 3, bool selectionWindow = false)
     {
-        if (round >= DecisionRound) return [];
+        if (Map2320DataBundle.IsCompatible(catalog.MapVersion)) return [];
+        if (round >= DecisionRound && !selectionWindow) return [];
         var owned = inventory
             .Where(entry => entry.Count > 0)
             .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
@@ -44,13 +51,14 @@ public sealed class NavigationAdvisor(DataCatalog catalog)
         if (owned.Count == 0) return [];
 
         var scored = new List<(int Score, NavigationAdvice Advice)>();
-        Add(scored, ViviAlchemy(goal));
-        Add(scored, TraitEngineering(owned, goal));
-        Add(scored, ReverseThinking(owned, goal));
+        var targets = goals.Count == 0 ? new UnitDefinition?[] { null } : goals.Cast<UnitDefinition?>().ToArray();
+        foreach (var goal in targets) Add(scored, ViviAlchemy(goal));
+        foreach (var goal in targets) Add(scored, TraitEngineering(owned, goal));
+        foreach (var goal in targets) Add(scored, ReverseThinking(owned, goal));
         Add(scored, EmergencyCall(owned));
         Add(scored, ContinuousBetting(owned));
-        Add(scored, DoubleBenefit(owned, goal));
-        Add(scored, BountyHunter(owned, goal));
+        foreach (var goal in targets) Add(scored, DoubleBenefit(owned, goal));
+        foreach (var goal in targets) Add(scored, BountyHunter(owned, goal));
         return scored
             .OrderByDescending(item => item.Score)
             .Select(item => item.Advice)

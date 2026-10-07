@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="b1276180-c5f7-4207-b25e-a85618069ee1" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:15:19" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:15:19.5646552+09:00" queuing="2026-09-07T19:15:19.5646554+09:00" start="2026-09-07T19:15:19.1639594+09:00" finish="2026-09-07T19:15:19.5685459+09:00" />
+  <TestSettings name="default" id="277a3ea2-1599-4689-8709-abf7de8523b6">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_15_19" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="77b46060-67e5-45b4-9de4-a805eb6d929d" testId="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;\\\\fake-server\\share\\out&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0009086" startTime="2026-09-07T19:15:19.5051361+09:00" endTime="2026-09-07T19:15:19.5051361+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77b46060-67e5-45b4-9de4-a805eb6d929d" />
+    <UnitTestResult executionId="af8487c3-fdda-48c3-af37-ff10909066cb" testId="42ac3b77-9d75-99b9-2173-44f801b6b3e2" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0006389" startTime="2026-09-07T19:15:19.5085760+09:00" endTime="2026-09-07T19:15:19.5085761+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af8487c3-fdda-48c3-af37-ff10909066cb" />
+    <UnitTestResult executionId="d4062139-a0be-4ab4-ab28-8a5357c71e80" testId="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NewOwnedRunRejectsSiblingPrefixAndExistingOutput" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0017857" startTime="2026-09-07T19:15:19.5078891+09:00" endTime="2026-09-07T19:15:19.5078892+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d4062139-a0be-4ab4-ab28-8a5357c71e80" />
+    <UnitTestResult executionId="f57e9f4f-ff0f-4e3b-9592-18baa6414b97" testId="5b2da5cb-41da-33f3-9d4e-55597e93b4bd" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;relative&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0062209" startTime="2026-09-07T19:15:19.5039046+09:00" endTime="2026-09-07T19:15:19.5039136+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f57e9f4f-ff0f-4e3b-9592-18baa6414b97" />
+    <UnitTestResult executionId="fc39bd94-7ea8-40ab-be84-9a6edd0ecca9" testId="290c080d-a865-7d5d-c2e7-52ce209aef84" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.ApprovedParentMustAlreadyExist" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0008511" startTime="2026-09-07T19:15:19.5060448+09:00" endTime="2026-09-07T19:15:19.5060449+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fc39bd94-7ea8-40ab-be84-9a6edd0ecca9" />
+    <UnitTestResult executionId="abeb2436-4a07-42a4-a87b-7f78524a5b18" testId="7bfd89ec-7d28-9502-2349-8741c87554b7" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;C:relative&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0005142" startTime="2026-09-07T19:15:19.5052598+09:00" endTime="2026-09-07T19:15:19.5052598+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="abeb2436-4a07-42a4-a87b-7f78524a5b18" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="42ac3b77-9d75-99b9-2173-44f801b6b3e2">
+      <Execution id="af8487c3-fdda-48c3-af37-ff10909066cb" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;\\\\fake-server\\share\\out&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4">
+      <Execution id="77b46060-67e5-45b4-9de4-a805eb6d929d" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;relative&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="5b2da5cb-41da-33f3-9d4e-55597e93b4bd">
+      <Execution id="f57e9f4f-ff0f-4e3b-9592-18baa6414b97" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NewOwnedRunRejectsSiblingPrefixAndExistingOutput" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448">
+      <Execution id="d4062139-a0be-4ab4-ab28-8a5357c71e80" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="NewOwnedRunRejectsSiblingPrefixAndExistingOutput" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;C:relative&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="7bfd89ec-7d28-9502-2349-8741c87554b7">
+      <Execution id="abeb2436-4a07-42a4-a87b-7f78524a5b18" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.ApprovedParentMustAlreadyExist" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="290c080d-a865-7d5d-c2e7-52ce209aef84">
+      <Execution id="fc39bd94-7ea8-40ab-be84-9a6edd0ecca9" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="ApprovedParentMustAlreadyExist" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4" executionId="77b46060-67e5-45b4-9de4-a805eb6d929d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42ac3b77-9d75-99b9-2173-44f801b6b3e2" executionId="af8487c3-fdda-48c3-af37-ff10909066cb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448" executionId="d4062139-a0be-4ab4-ab28-8a5357c71e80" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5b2da5cb-41da-33f3-9d4e-55597e93b4bd" executionId="f57e9f4f-ff0f-4e3b-9592-18baa6414b97" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="290c080d-a865-7d5d-c2e7-52ce209aef84" executionId="fc39bd94-7ea8-40ab-be84-9a6edd0ecca9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7bfd89ec-7d28-9502-2349-8741c87554b7" executionId="abeb2436-4a07-42a4-a87b-7f78524a5b18" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="6" executed="6" passed="6" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.05]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.09]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

@@ -1,0 +1,15 @@
+using System.Reflection;
+using System.Text.Json;
+using War3Net.IO.Mpq;
+foreach(var version in new[]{"2.314","2.320"}){
+using var source=new FileStream(@"C:\Users\123\Documents\Warcraft III\Maps\Download\ORDR_S2_"+version+"[R].w3x",FileMode.Open,FileAccess.Read,FileShare.Read);
+using var archive=MpqArchive.Open(source,false);
+const BindingFlags f=BindingFlags.Instance|BindingFlags.NonPublic;
+var table=typeof(MpqArchive).GetField("_hashTable",f)!.GetValue(archive)!;
+var slots=(MpqHash[])table.GetType().GetField("_hashes",f)!.GetValue(table)!;
+foreach(var name in new[]{"war3map.j","Scripts\\war3map.j","war3map.lua","war3map.w3u","war3map.w3a","war3map.wts","war3mapMisc.txt"}){
+var wanted=MpqHash.GetHashedFileName(name);var visited=new List<int>();bool found=false;int? stop=null;var start=MpqHash.GetIndex(name,(uint)slots.Length-1);
+for(int step=0;step<slots.Length;step++){int i=(int)((start+(uint)step)&((uint)slots.Length-1));var h=slots[i];if(h.Name==wanted){visited.Add(i);found=true;}else if(h.IsEmpty&&found){stop=i;break;}}
+var matches=Enumerable.Range(0,slots.Length).Where(i=>slots[i].Name==wanted).Select(i=>{var h=slots[i];var valid=h.BlockIndex<(uint)archive.Count;var e=valid?archive[(int)h.BlockIndex]:null;return new{slot=i,lookupOrdinal=visited.IndexOf(i),h.BlockIndex,locale=(uint)h.Locale,h.IsEmpty,h.IsDeleted,inRange=valid,block=e==null?null:new{e.HeaderOffset,e.FileOffset,e.CompressedSize,e.FileSize,flags=(uint)e.Flags,absolute=(ulong)e.HeaderOffset+e.FileOffset,within=(ulong)e.HeaderOffset+e.FileOffset+e.CompressedSize<=(ulong)source.Length}};}).ToArray();
+Console.WriteLine(JsonSerializer.Serialize(new{version,name,count=archive.Count,hashCount=slots.Length,start,stop,visited,matches}));}
+}

@@ -1,0 +1,14 @@
+{
+  "mapVersion": "2.320",
+  "mapScriptSha256": "6FDFC64BF8AD9463F5B5C8A351FFA7E1875D6CF9B51210129539375FA77A6C7C",
+  "recipeId": "ET02",
+  "result": "H0BK",
+  "alternatives": [
+    "H099",
+    "H0B2"
+  ],
+  "token": "AI01",
+  "tokenCount": 1,
+  "lumber": 5,
+  "source": "docs/analysis-2320/bullet-nika-analysis.md; MHy sg != 0 before EDT; ITEM boolean capacity 1; 700I mapping UNVERIFIED"
+}

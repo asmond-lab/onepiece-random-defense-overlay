@@ -7,7 +7,7 @@ namespace OrandOverlay.Tests;
 public sealed class AdaptivePlanningSystemBaselineTests
 {
     internal const string ProfilePin =
-        "1285441e29434ca6b45f50743caa5708c9afdda79cc690c07a6ad2d1179d4928";
+        "40a0988b4b2d03374456f80b4ad066643946ee9e09eb31b880d1190d629c79d3";
     internal const string DataPin =
         "9d251140732dfba86c5a77dfa7073bb8b41dd1f9f4933abe5c63ea92af1d8721";
 

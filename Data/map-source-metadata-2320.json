@@ -1,0 +1,1772 @@
+{
+  "MapVersion": "2.320",
+  "Archive": {
+    "FileName": "ORDR_S2_2.320[R].w3x",
+    "LengthBytes": 119129261,
+    "Sha256": "68445631fdaca12a343e9465e5bc5dc9b4c8c6cc927d701f52e2cb822821e15f"
+  },
+  "Members": [
+    {
+      "Name": "war3map.j",
+      "LengthBytes": 3014709,
+      "Sha256": "6fdfc64bf8ad9463f5b5c8a351ffa7e1875d6cf9b51210129539375fa77a6c7c"
+    },
+    {
+      "Name": "war3map.w3a",
+      "LengthBytes": 699383,
+      "Sha256": "d3fde16020faf5f3e0becdbf571927d3acd77be9d5610f3e07a2b2584ac60aa5"
+    },
+    {
+      "Name": "war3map.w3i",
+      "LengthBytes": 649,
+      "Sha256": "efb80440694ab7a152dd1874b3e8350c7967e912e7c7c11807490046d279d2ed"
+    },
+    {
+      "Name": "war3map.w3q",
+      "LengthBytes": 65872,
+      "Sha256": "2bcdafaa4864163d0365161f178ca77f158591ca51c0bb01110aea24159fc8bf"
+    },
+    {
+      "Name": "war3map.w3t",
+      "LengthBytes": 4311,
+      "Sha256": "2e74935d1e540509e8e7b70597dc48db8b759a62b4440075fb9bd6d4e769306b"
+    },
+    {
+      "Name": "war3map.w3u",
+      "LengthBytes": 917401,
+      "Sha256": "18b5dba815b7baed4e56683136883e9b239fc4e8ac63491bc57696fb05586b2a"
+    },
+    {
+      "Name": "war3map.wts",
+      "LengthBytes": 1816858,
+      "Sha256": "4b9c531cde67c979eae0ba289d133862f57714cd7dc0cf3bbac3376b52ee6946"
+    },
+    {
+      "Name": "war3mapMisc.txt",
+      "LengthBytes": 1183,
+      "Sha256": "8428c5e040ac9a75ce37209145b25b6640c560f5d96e5f068e589946317bf140"
+    }
+  ],
+  "JassPins": [
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 8792,
+      "EndLine": 8792,
+      "Purpose": "owner-5 objective n000 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 37493,
+      "EndLine": 37493,
+      "Purpose": "owner-5 objective n002 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 55168,
+      "EndLine": 55168,
+      "Purpose": "owner-5 objective n003 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 32528,
+      "EndLine": 32528,
+      "Purpose": "owner-5 objective n004 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 51984,
+      "EndLine": 51984,
+      "Purpose": "owner-5 objective n005 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 47184,
+      "EndLine": 47184,
+      "Purpose": "owner-5 objective n006 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 48988,
+      "EndLine": 48988,
+      "Purpose": "owner-5 objective n007 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 58205,
+      "EndLine": 58205,
+      "Purpose": "owner-5 objective n008 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 10774,
+      "EndLine": 10774,
+      "Purpose": "owner-5 objective n00A creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 56498,
+      "EndLine": 56498,
+      "Purpose": "owner-5 objective n001 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 26028,
+      "EndLine": 26028,
+      "Purpose": "owner-5 objective n00C creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 53341,
+      "EndLine": 53341,
+      "Purpose": "owner-5 objective n00D creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 33218,
+      "EndLine": 33218,
+      "Purpose": "owner-5 objective n00B creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 43769,
+      "EndLine": 43769,
+      "Purpose": "owner-5 objective n009 creation"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 85353,
+      "EndLine": 85366,
+      "Purpose": "ordered story objective table"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 10413,
+      "EndLine": 10417,
+      "Purpose": "bounded reward unit factory for e0IX"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 11194,
+      "EndLine": 11198,
+      "Purpose": "bounded reward unit factory for e018"
+    },
+    {
+      "Artifact": "war3map.j",
+      "StartLine": 12141,
+      "EndLine": 12145,
+      "Purpose": "bounded reward unit factory for e017"
+    }
+  ],
+  "W3uEvidence": {
+    "MemberName": "war3map.w3u",
+    "ParserLimits": {
+      "MaxMemberBytes": 536870912,
+      "MaxTables": 2,
+      "MaxRecordsPerTable": 100000,
+      "MaxModificationsPerRecord": 100000,
+      "MaxStringBytes": 1048576
+    },
+    "Layout": {
+      "Version": 3,
+      "HeaderEndOffset": 4,
+      "Tables": [
+        {
+          "Name": "Original",
+          "CountOffset": 4,
+          "RecordCount": 1,
+          "RecordsStartOffset": 8,
+          "EndOffset": 93
+        },
+        {
+          "Name": "Custom",
+          "CountOffset": 93,
+          "RecordCount": 1517,
+          "RecordsStartOffset": 97,
+          "EndOffset": 917401
+        }
+      ],
+      "TotalRecordCount": 1518,
+      "TotalModificationCount": 48313,
+      "ZeroSanityMarkerCount": 48313,
+      "ConsumedBytes": 917401,
+      "TrailingBytes": 0
+    },
+    "Records": [
+      {
+        "ObjectId": "e0IX",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 653,
+        "StartOffset": 445202,
+        "EndOffset": 445469,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 445218,
+        "ModificationCount": 15,
+        "SemanticKind": "RandomReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 445222,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 445230,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 445240,
+            "SanityValue": "00000000",
+            "EndOffset": 445244
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 445244,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 445252,
+            "Value": "",
+            "SanityOffset": 445253,
+            "SanityValue": "00000000",
+            "EndOffset": 445257
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 445257,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 445265,
+            "Value": "0",
+            "SanityOffset": 445269,
+            "SanityValue": "00000000",
+            "EndOffset": 445273
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 445273,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 445281,
+            "Value": "0.5",
+            "SanityOffset": 445285,
+            "SanityValue": "00000000",
+            "EndOffset": 445289
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 445289,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 445297,
+            "Value": "0",
+            "SanityOffset": 445301,
+            "SanityValue": "00000000",
+            "EndOffset": 445305
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 445305,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 445313,
+            "Value": "",
+            "SanityOffset": 445314,
+            "SanityValue": "00000000",
+            "EndOffset": 445318
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 445318,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 445326,
+            "Value": "10",
+            "SanityOffset": 445330,
+            "SanityValue": "00000000",
+            "EndOffset": 445334
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 445334,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 445342,
+            "Value": "TRIGSTR_848",
+            "SanityOffset": 445354,
+            "SanityValue": "00000000",
+            "EndOffset": 445358
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 445358,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 445366,
+            "Value": "0",
+            "SanityOffset": 445370,
+            "SanityValue": "00000000",
+            "EndOffset": 445374
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 445374,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 445382,
+            "Value": "522",
+            "SanityOffset": 445386,
+            "SanityValue": "00000000",
+            "EndOffset": 445390
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 445390,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 445398,
+            "Value": "1",
+            "SanityOffset": 445402,
+            "SanityValue": "00000000",
+            "EndOffset": 445406
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 445406,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 445414,
+            "Value": "TRIGSTR_849",
+            "SanityOffset": 445426,
+            "SanityValue": "00000000",
+            "EndOffset": 445430
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 445430,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 445438,
+            "Value": "",
+            "SanityOffset": 445439,
+            "SanityValue": "00000000",
+            "EndOffset": 445443
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 445443,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 445451,
+            "Value": "",
+            "SanityOffset": 445452,
+            "SanityValue": "00000000",
+            "EndOffset": 445456
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 445456,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 445464,
+            "Value": "",
+            "SanityOffset": 445465,
+            "SanityValue": "00000000",
+            "EndOffset": 445469
+          }
+        ]
+      },
+      {
+        "ObjectId": "e0IA",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 676,
+        "StartOffset": 456861,
+        "EndOffset": 457363,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 456877,
+        "ModificationCount": 28,
+        "SemanticKind": "MechanicalDummyNotReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 456881,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 456889,
+            "Value": "A17J,Aloc,Avul",
+            "SanityOffset": 456904,
+            "SanityValue": "00000000",
+            "EndOffset": 456908
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 456908,
+            "FieldId": "uble",
+            "ValueType": 1,
+            "ValueOffset": 456916,
+            "Value": "0",
+            "SanityOffset": 456920,
+            "SanityValue": "00000000",
+            "EndOffset": 456924
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 456924,
+            "FieldId": "ubdi",
+            "ValueType": 0,
+            "ValueOffset": 456932,
+            "Value": "0",
+            "SanityOffset": 456936,
+            "SanityValue": "00000000",
+            "EndOffset": 456940
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 456940,
+            "FieldId": "ubba",
+            "ValueType": 0,
+            "ValueOffset": 456948,
+            "Value": "0",
+            "SanityOffset": 456952,
+            "SanityValue": "00000000",
+            "EndOffset": 456956
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 456956,
+            "FieldId": "ubsi",
+            "ValueType": 0,
+            "ValueOffset": 456964,
+            "Value": "0",
+            "SanityOffset": 456968,
+            "SanityValue": "00000000",
+            "EndOffset": 456972
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 456972,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 456980,
+            "Value": "",
+            "SanityOffset": 456981,
+            "SanityValue": "00000000",
+            "EndOffset": 456985
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 456985,
+            "FieldId": "ucbs",
+            "ValueType": 2,
+            "ValueOffset": 456993,
+            "Value": "0",
+            "SanityOffset": 456997,
+            "SanityValue": "00000000",
+            "EndOffset": 457001
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 457001,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 457009,
+            "Value": "0",
+            "SanityOffset": 457013,
+            "SanityValue": "00000000",
+            "EndOffset": 457017
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 457017,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 457025,
+            "Value": "0.10000000149011612",
+            "SanityOffset": 457029,
+            "SanityValue": "00000000",
+            "EndOffset": 457033
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 457033,
+            "FieldId": "uerd",
+            "ValueType": 1,
+            "ValueOffset": 457041,
+            "Value": "0",
+            "SanityOffset": 457045,
+            "SanityValue": "00000000",
+            "EndOffset": 457049
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 457049,
+            "FieldId": "umdl",
+            "ValueType": 3,
+            "ValueOffset": 457057,
+            "Value": "bijuuexplosion.mdl",
+            "SanityOffset": 457076,
+            "SanityValue": "00000000",
+            "EndOffset": 457080
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 457080,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 457088,
+            "Value": "0",
+            "SanityOffset": 457092,
+            "SanityValue": "00000000",
+            "EndOffset": 457096
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 457096,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 457104,
+            "Value": "",
+            "SanityOffset": 457105,
+            "SanityValue": "00000000",
+            "EndOffset": 457109
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 457109,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 457117,
+            "Value": "3",
+            "SanityOffset": 457121,
+            "SanityValue": "00000000",
+            "EndOffset": 457125
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 457125,
+            "FieldId": "usca",
+            "ValueType": 1,
+            "ValueOffset": 457133,
+            "Value": "3.25",
+            "SanityOffset": 457137,
+            "SanityValue": "00000000",
+            "EndOffset": 457141
+          },
+          {
+            "ModificationIndex": 15,
+            "StartOffset": 457141,
+            "FieldId": "umvh",
+            "ValueType": 2,
+            "ValueOffset": 457149,
+            "Value": "30",
+            "SanityOffset": 457153,
+            "SanityValue": "00000000",
+            "EndOffset": 457157
+          },
+          {
+            "ModificationIndex": 16,
+            "StartOffset": 457157,
+            "FieldId": "umvt",
+            "ValueType": 3,
+            "ValueOffset": 457165,
+            "Value": "fly",
+            "SanityOffset": 457169,
+            "SanityValue": "00000000",
+            "EndOffset": 457173
+          },
+          {
+            "ModificationIndex": 17,
+            "StartOffset": 457173,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 457181,
+            "Value": "TRIGSTR_894",
+            "SanityOffset": 457193,
+            "SanityValue": "00000000",
+            "EndOffset": 457197
+          },
+          {
+            "ModificationIndex": 18,
+            "StartOffset": 457197,
+            "FieldId": "uhpr",
+            "ValueType": 2,
+            "ValueOffset": 457205,
+            "Value": "-1",
+            "SanityOffset": 457209,
+            "SanityValue": "00000000",
+            "EndOffset": 457213
+          },
+          {
+            "ModificationIndex": 19,
+            "StartOffset": 457213,
+            "FieldId": "uhrt",
+            "ValueType": 3,
+            "ValueOffset": 457221,
+            "Value": "always",
+            "SanityOffset": 457228,
+            "SanityValue": "00000000",
+            "EndOffset": 457232
+          },
+          {
+            "ModificationIndex": 20,
+            "StartOffset": 457232,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 457240,
+            "Value": "0",
+            "SanityOffset": 457244,
+            "SanityValue": "00000000",
+            "EndOffset": 457248
+          },
+          {
+            "ModificationIndex": 21,
+            "StartOffset": 457248,
+            "FieldId": "utar",
+            "ValueType": 3,
+            "ValueOffset": 457256,
+            "Value": "air",
+            "SanityOffset": 457260,
+            "SanityValue": "00000000",
+            "EndOffset": 457264
+          },
+          {
+            "ModificationIndex": 22,
+            "StartOffset": 457264,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 457272,
+            "Value": "TRIGSTR_891",
+            "SanityOffset": 457284,
+            "SanityValue": "00000000",
+            "EndOffset": 457288
+          },
+          {
+            "ModificationIndex": 23,
+            "StartOffset": 457288,
+            "FieldId": "utyp",
+            "ValueType": 3,
+            "ValueOffset": 457296,
+            "Value": "mechanical",
+            "SanityOffset": 457307,
+            "SanityValue": "00000000",
+            "EndOffset": 457311
+          },
+          {
+            "ModificationIndex": 24,
+            "StartOffset": 457311,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 457319,
+            "Value": "",
+            "SanityOffset": 457320,
+            "SanityValue": "00000000",
+            "EndOffset": 457324
+          },
+          {
+            "ModificationIndex": 25,
+            "StartOffset": 457324,
+            "FieldId": "usnd",
+            "ValueType": 3,
+            "ValueOffset": 457332,
+            "Value": "",
+            "SanityOffset": 457333,
+            "SanityValue": "00000000",
+            "EndOffset": 457337
+          },
+          {
+            "ModificationIndex": 26,
+            "StartOffset": 457337,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 457345,
+            "Value": "",
+            "SanityOffset": 457346,
+            "SanityValue": "00000000",
+            "EndOffset": 457350
+          },
+          {
+            "ModificationIndex": 27,
+            "StartOffset": 457350,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 457358,
+            "Value": "",
+            "SanityOffset": 457359,
+            "SanityValue": "00000000",
+            "EndOffset": 457363
+          }
+        ]
+      },
+      {
+        "ObjectId": "e01A",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 1288,
+        "StartOffset": 769524,
+        "EndOffset": 769793,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 769540,
+        "ModificationCount": 15,
+        "SemanticKind": "TranscendenceReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 769544,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 769552,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 769562,
+            "SanityValue": "00000000",
+            "EndOffset": 769566
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 769566,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 769574,
+            "Value": "",
+            "SanityOffset": 769575,
+            "SanityValue": "00000000",
+            "EndOffset": 769579
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 769579,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 769587,
+            "Value": "0",
+            "SanityOffset": 769591,
+            "SanityValue": "00000000",
+            "EndOffset": 769595
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 769595,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 769603,
+            "Value": "0.5",
+            "SanityOffset": 769607,
+            "SanityValue": "00000000",
+            "EndOffset": 769611
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 769611,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 769619,
+            "Value": "0",
+            "SanityOffset": 769623,
+            "SanityValue": "00000000",
+            "EndOffset": 769627
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 769627,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 769635,
+            "Value": "",
+            "SanityOffset": 769636,
+            "SanityValue": "00000000",
+            "EndOffset": 769640
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 769640,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 769648,
+            "Value": "10",
+            "SanityOffset": 769652,
+            "SanityValue": "00000000",
+            "EndOffset": 769656
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 769656,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 769664,
+            "Value": "TRIGSTR_2118",
+            "SanityOffset": 769677,
+            "SanityValue": "00000000",
+            "EndOffset": 769681
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 769681,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 769689,
+            "Value": "0",
+            "SanityOffset": 769693,
+            "SanityValue": "00000000",
+            "EndOffset": 769697
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 769697,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 769705,
+            "Value": "522",
+            "SanityOffset": 769709,
+            "SanityValue": "00000000",
+            "EndOffset": 769713
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 769713,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 769721,
+            "Value": "1",
+            "SanityOffset": 769725,
+            "SanityValue": "00000000",
+            "EndOffset": 769729
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 769729,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 769737,
+            "Value": "TRIGSTR_2119",
+            "SanityOffset": 769750,
+            "SanityValue": "00000000",
+            "EndOffset": 769754
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 769754,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 769762,
+            "Value": "",
+            "SanityOffset": 769763,
+            "SanityValue": "00000000",
+            "EndOffset": 769767
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 769767,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 769775,
+            "Value": "",
+            "SanityOffset": 769776,
+            "SanityValue": "00000000",
+            "EndOffset": 769780
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 769780,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 769788,
+            "Value": "",
+            "SanityOffset": 769789,
+            "SanityValue": "00000000",
+            "EndOffset": 769793
+          }
+        ]
+      },
+      {
+        "ObjectId": "e019",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 1289,
+        "StartOffset": 769793,
+        "EndOffset": 770062,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 769809,
+        "ModificationCount": 15,
+        "SemanticKind": "RareReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 769813,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 769821,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 769831,
+            "SanityValue": "00000000",
+            "EndOffset": 769835
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 769835,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 769843,
+            "Value": "",
+            "SanityOffset": 769844,
+            "SanityValue": "00000000",
+            "EndOffset": 769848
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 769848,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 769856,
+            "Value": "0",
+            "SanityOffset": 769860,
+            "SanityValue": "00000000",
+            "EndOffset": 769864
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 769864,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 769872,
+            "Value": "0.5",
+            "SanityOffset": 769876,
+            "SanityValue": "00000000",
+            "EndOffset": 769880
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 769880,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 769888,
+            "Value": "0",
+            "SanityOffset": 769892,
+            "SanityValue": "00000000",
+            "EndOffset": 769896
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 769896,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 769904,
+            "Value": "",
+            "SanityOffset": 769905,
+            "SanityValue": "00000000",
+            "EndOffset": 769909
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 769909,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 769917,
+            "Value": "10",
+            "SanityOffset": 769921,
+            "SanityValue": "00000000",
+            "EndOffset": 769925
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 769925,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 769933,
+            "Value": "TRIGSTR_2120",
+            "SanityOffset": 769946,
+            "SanityValue": "00000000",
+            "EndOffset": 769950
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 769950,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 769958,
+            "Value": "0",
+            "SanityOffset": 769962,
+            "SanityValue": "00000000",
+            "EndOffset": 769966
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 769966,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 769974,
+            "Value": "522",
+            "SanityOffset": 769978,
+            "SanityValue": "00000000",
+            "EndOffset": 769982
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 769982,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 769990,
+            "Value": "1",
+            "SanityOffset": 769994,
+            "SanityValue": "00000000",
+            "EndOffset": 769998
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 769998,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 770006,
+            "Value": "TRIGSTR_2121",
+            "SanityOffset": 770019,
+            "SanityValue": "00000000",
+            "EndOffset": 770023
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 770023,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 770031,
+            "Value": "",
+            "SanityOffset": 770032,
+            "SanityValue": "00000000",
+            "EndOffset": 770036
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 770036,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 770044,
+            "Value": "",
+            "SanityOffset": 770045,
+            "SanityValue": "00000000",
+            "EndOffset": 770049
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 770049,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 770057,
+            "Value": "",
+            "SanityOffset": 770058,
+            "SanityValue": "00000000",
+            "EndOffset": 770062
+          }
+        ]
+      },
+      {
+        "ObjectId": "e018",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 1290,
+        "StartOffset": 770062,
+        "EndOffset": 770344,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 770078,
+        "ModificationCount": 16,
+        "SemanticKind": "CommonSelectableReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 770082,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 770090,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 770100,
+            "SanityValue": "00000000",
+            "EndOffset": 770104
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 770104,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 770112,
+            "Value": "",
+            "SanityOffset": 770113,
+            "SanityValue": "00000000",
+            "EndOffset": 770117
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 770117,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 770125,
+            "Value": "0",
+            "SanityOffset": 770129,
+            "SanityValue": "00000000",
+            "EndOffset": 770133
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 770133,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 770141,
+            "Value": "0.5",
+            "SanityOffset": 770145,
+            "SanityValue": "00000000",
+            "EndOffset": 770149
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 770149,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 770157,
+            "Value": "0",
+            "SanityOffset": 770161,
+            "SanityValue": "00000000",
+            "EndOffset": 770165
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 770165,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 770173,
+            "Value": "",
+            "SanityOffset": 770174,
+            "SanityValue": "00000000",
+            "EndOffset": 770178
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 770178,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 770186,
+            "Value": "10",
+            "SanityOffset": 770190,
+            "SanityValue": "00000000",
+            "EndOffset": 770194
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 770194,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 770202,
+            "Value": "TRIGSTR_2122",
+            "SanityOffset": 770215,
+            "SanityValue": "00000000",
+            "EndOffset": 770219
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 770219,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 770227,
+            "Value": "0",
+            "SanityOffset": 770231,
+            "SanityValue": "00000000",
+            "EndOffset": 770235
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 770235,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 770243,
+            "Value": "522",
+            "SanityOffset": 770247,
+            "SanityValue": "00000000",
+            "EndOffset": 770251
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 770251,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 770259,
+            "Value": "1",
+            "SanityOffset": 770263,
+            "SanityValue": "00000000",
+            "EndOffset": 770267
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 770267,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 770275,
+            "Value": "TRIGSTR_2123",
+            "SanityOffset": 770288,
+            "SanityValue": "00000000",
+            "EndOffset": 770292
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 770292,
+            "FieldId": "utyp",
+            "ValueType": 3,
+            "ValueOffset": 770300,
+            "Value": "",
+            "SanityOffset": 770301,
+            "SanityValue": "00000000",
+            "EndOffset": 770305
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 770305,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 770313,
+            "Value": "",
+            "SanityOffset": 770314,
+            "SanityValue": "00000000",
+            "EndOffset": 770318
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 770318,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 770326,
+            "Value": "",
+            "SanityOffset": 770327,
+            "SanityValue": "00000000",
+            "EndOffset": 770331
+          },
+          {
+            "ModificationIndex": 15,
+            "StartOffset": 770331,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 770339,
+            "Value": "",
+            "SanityOffset": 770340,
+            "SanityValue": "00000000",
+            "EndOffset": 770344
+          }
+        ]
+      },
+      {
+        "ObjectId": "e017",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 1291,
+        "StartOffset": 770344,
+        "EndOffset": 770613,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 770360,
+        "ModificationCount": 15,
+        "SemanticKind": "UncommonReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 770364,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 770372,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 770382,
+            "SanityValue": "00000000",
+            "EndOffset": 770386
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 770386,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 770394,
+            "Value": "",
+            "SanityOffset": 770395,
+            "SanityValue": "00000000",
+            "EndOffset": 770399
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 770399,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 770407,
+            "Value": "0",
+            "SanityOffset": 770411,
+            "SanityValue": "00000000",
+            "EndOffset": 770415
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 770415,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 770423,
+            "Value": "0.5",
+            "SanityOffset": 770427,
+            "SanityValue": "00000000",
+            "EndOffset": 770431
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 770431,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 770439,
+            "Value": "0",
+            "SanityOffset": 770443,
+            "SanityValue": "00000000",
+            "EndOffset": 770447
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 770447,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 770455,
+            "Value": "",
+            "SanityOffset": 770456,
+            "SanityValue": "00000000",
+            "EndOffset": 770460
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 770460,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 770468,
+            "Value": "10",
+            "SanityOffset": 770472,
+            "SanityValue": "00000000",
+            "EndOffset": 770476
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 770476,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 770484,
+            "Value": "TRIGSTR_2124",
+            "SanityOffset": 770497,
+            "SanityValue": "00000000",
+            "EndOffset": 770501
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 770501,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 770509,
+            "Value": "0",
+            "SanityOffset": 770513,
+            "SanityValue": "00000000",
+            "EndOffset": 770517
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 770517,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 770525,
+            "Value": "522",
+            "SanityOffset": 770529,
+            "SanityValue": "00000000",
+            "EndOffset": 770533
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 770533,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 770541,
+            "Value": "1",
+            "SanityOffset": 770545,
+            "SanityValue": "00000000",
+            "EndOffset": 770549
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 770549,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 770557,
+            "Value": "TRIGSTR_2125",
+            "SanityOffset": 770570,
+            "SanityValue": "00000000",
+            "EndOffset": 770574
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 770574,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 770582,
+            "Value": "",
+            "SanityOffset": 770583,
+            "SanityValue": "00000000",
+            "EndOffset": 770587
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 770587,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 770595,
+            "Value": "",
+            "SanityOffset": 770596,
+            "SanityValue": "00000000",
+            "EndOffset": 770600
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 770600,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 770608,
+            "Value": "",
+            "SanityOffset": 770609,
+            "SanityValue": "00000000",
+            "EndOffset": 770613
+          }
+        ]
+      },
+      {
+        "ObjectId": "e016",
+        "BaseId": "ewsp",
+        "Table": "Custom",
+        "RecordIndex": 1292,
+        "StartOffset": 770613,
+        "EndOffset": 770882,
+        "Reserved0": 1,
+        "Reserved1": 0,
+        "ModificationCountOffset": 770629,
+        "ModificationCount": 15,
+        "SemanticKind": "SpecialReward",
+        "Fields": [
+          {
+            "ModificationIndex": 0,
+            "StartOffset": 770633,
+            "FieldId": "uabi",
+            "ValueType": 3,
+            "ValueOffset": 770641,
+            "Value": "Aeth,Avul",
+            "SanityOffset": 770651,
+            "SanityValue": "00000000",
+            "EndOffset": 770655
+          },
+          {
+            "ModificationIndex": 1,
+            "StartOffset": 770655,
+            "FieldId": "ubui",
+            "ValueType": 3,
+            "ValueOffset": 770663,
+            "Value": "",
+            "SanityOffset": 770664,
+            "SanityValue": "00000000",
+            "EndOffset": 770668
+          },
+          {
+            "ModificationIndex": 2,
+            "StartOffset": 770668,
+            "FieldId": "ucol",
+            "ValueType": 2,
+            "ValueOffset": 770676,
+            "Value": "0",
+            "SanityOffset": 770680,
+            "SanityValue": "00000000",
+            "EndOffset": 770684
+          },
+          {
+            "ModificationIndex": 3,
+            "StartOffset": 770684,
+            "FieldId": "udtm",
+            "ValueType": 2,
+            "ValueOffset": 770692,
+            "Value": "0.5",
+            "SanityOffset": 770696,
+            "SanityValue": "00000000",
+            "EndOffset": 770700
+          },
+          {
+            "ModificationIndex": 4,
+            "StartOffset": 770700,
+            "FieldId": "ufoo",
+            "ValueType": 0,
+            "ValueOffset": 770708,
+            "Value": "0",
+            "SanityOffset": 770712,
+            "SanityValue": "00000000",
+            "EndOffset": 770716
+          },
+          {
+            "ModificationIndex": 5,
+            "StartOffset": 770716,
+            "FieldId": "uhot",
+            "ValueType": 3,
+            "ValueOffset": 770724,
+            "Value": "",
+            "SanityOffset": 770725,
+            "SanityValue": "00000000",
+            "EndOffset": 770729
+          },
+          {
+            "ModificationIndex": 6,
+            "StartOffset": 770729,
+            "FieldId": "uhpm",
+            "ValueType": 0,
+            "ValueOffset": 770737,
+            "Value": "10",
+            "SanityOffset": 770741,
+            "SanityValue": "00000000",
+            "EndOffset": 770745
+          },
+          {
+            "ModificationIndex": 7,
+            "StartOffset": 770745,
+            "FieldId": "unam",
+            "ValueType": 3,
+            "ValueOffset": 770753,
+            "Value": "TRIGSTR_2126",
+            "SanityOffset": 770766,
+            "SanityValue": "00000000",
+            "EndOffset": 770770
+          },
+          {
+            "ModificationIndex": 8,
+            "StartOffset": 770770,
+            "FieldId": "ushr",
+            "ValueType": 0,
+            "ValueOffset": 770778,
+            "Value": "0",
+            "SanityOffset": 770782,
+            "SanityValue": "00000000",
+            "EndOffset": 770786
+          },
+          {
+            "ModificationIndex": 9,
+            "StartOffset": 770786,
+            "FieldId": "umvs",
+            "ValueType": 0,
+            "ValueOffset": 770794,
+            "Value": "522",
+            "SanityOffset": 770798,
+            "SanityValue": "00000000",
+            "EndOffset": 770802
+          },
+          {
+            "ModificationIndex": 10,
+            "StartOffset": 770802,
+            "FieldId": "uspe",
+            "ValueType": 0,
+            "ValueOffset": 770810,
+            "Value": "1",
+            "SanityOffset": 770814,
+            "SanityValue": "00000000",
+            "EndOffset": 770818
+          },
+          {
+            "ModificationIndex": 11,
+            "StartOffset": 770818,
+            "FieldId": "utip",
+            "ValueType": 3,
+            "ValueOffset": 770826,
+            "Value": "TRIGSTR_2127",
+            "SanityOffset": 770839,
+            "SanityValue": "00000000",
+            "EndOffset": 770843
+          },
+          {
+            "ModificationIndex": 12,
+            "StartOffset": 770843,
+            "FieldId": "utub",
+            "ValueType": 3,
+            "ValueOffset": 770851,
+            "Value": "",
+            "SanityOffset": 770852,
+            "SanityValue": "00000000",
+            "EndOffset": 770856
+          },
+          {
+            "ModificationIndex": 13,
+            "StartOffset": 770856,
+            "FieldId": "upgr",
+            "ValueType": 3,
+            "ValueOffset": 770864,
+            "Value": "",
+            "SanityOffset": 770865,
+            "SanityValue": "00000000",
+            "EndOffset": 770869
+          },
+          {
+            "ModificationIndex": 14,
+            "StartOffset": 770869,
+            "FieldId": "unsf",
+            "ValueType": 3,
+            "ValueOffset": 770877,
+            "Value": "",
+            "SanityOffset": 770878,
+            "SanityValue": "00000000",
+            "EndOffset": 770882
+          }
+        ]
+      }
+    ]
+  },
+  "WtsEvidence": {
+    "MemberName": "war3map.wts",
+    "TargetTextEncoding": "UTF-8",
+    "ParsedRecordCount": 10990,
+    "Records": [
+      {
+        "ObjectId": "e0IX",
+        "FieldId": "unam",
+        "RecordId": 848,
+        "RecordStartOffset": 114877,
+        "RecordEndOffset": 114963,
+        "TextStartOffset": 114946,
+        "TextEndOffset": 114958,
+        "ResolvedText": "랜덤위습",
+        "RecordSha256": "74ad7b75186490ff669d63c166aa1245ed44a60da310db915d5f358a6d096b3b"
+      },
+      {
+        "ObjectId": "e0IX",
+        "FieldId": "utip",
+        "RecordId": 849,
+        "RecordStartOffset": 114965,
+        "RecordEndOffset": 115069,
+        "TextStartOffset": 115052,
+        "TextEndOffset": 115064,
+        "ResolvedText": "랜덤위습",
+        "RecordSha256": "d6ea3552a5b7c4a20f99c28dd72f231a96a5bc284fc1a9d66c7f67662eb2594c"
+      },
+      {
+        "ObjectId": "e0IA",
+        "FieldId": "unam",
+        "RecordId": 894,
+        "RecordStartOffset": 119872,
+        "RecordEndOffset": 119974,
+        "TextStartOffset": 119949,
+        "TextEndOffset": 119969,
+        "ResolvedText": "!0909_bijuuexplosion",
+        "RecordSha256": "16067713ec48a524fbdcf8812be76e477b9659c91696724e2a9743304b7e2ef7"
+      },
+      {
+        "ObjectId": "e0IA",
+        "FieldId": "utip",
+        "RecordId": 891,
+        "RecordStartOffset": 119550,
+        "RecordEndOffset": 119662,
+        "TextStartOffset": 119645,
+        "TextEndOffset": 119657,
+        "ResolvedText": "더미유닛",
+        "RecordSha256": "2e1c3ee059dd662d88c3158085361e160790fa49f605e54e2d3d60879408d09b"
+      },
+      {
+        "ObjectId": "e01A",
+        "FieldId": "unam",
+        "RecordId": 2118,
+        "RecordStartOffset": 259101,
+        "RecordEndOffset": 259188,
+        "TextStartOffset": 259171,
+        "TextEndOffset": 259183,
+        "ResolvedText": "초월위습",
+        "RecordSha256": "734a1820835c097bf2f69dd992c4cb68c30b542e7e7603c155045798f61e430e"
+      },
+      {
+        "ObjectId": "e01A",
+        "FieldId": "utip",
+        "RecordId": 2119,
+        "RecordStartOffset": 259190,
+        "RecordEndOffset": 259295,
+        "TextStartOffset": 259278,
+        "TextEndOffset": 259290,
+        "ResolvedText": "초월위습",
+        "RecordSha256": "09ef4d50af7b7c3d46c5797be4e5c49d6cc9dd09b90f7fa65ea554f64516a741"
+      },
+      {
+        "ObjectId": "e019",
+        "FieldId": "unam",
+        "RecordId": 2120,
+        "RecordStartOffset": 259297,
+        "RecordEndOffset": 259384,
+        "TextStartOffset": 259367,
+        "TextEndOffset": 259379,
+        "ResolvedText": "희귀위습",
+        "RecordSha256": "e2a9d1817425b185b27b48ead1ea8fe4ef022c6e0478c5ad41ea7d45f88b38fb"
+      },
+      {
+        "ObjectId": "e019",
+        "FieldId": "utip",
+        "RecordId": 2121,
+        "RecordStartOffset": 259386,
+        "RecordEndOffset": 259491,
+        "TextStartOffset": 259474,
+        "TextEndOffset": 259486,
+        "ResolvedText": "희귀위습",
+        "RecordSha256": "b8bd85e4d9e1e261d4062ad3ce083663344838897cbf95576b47cd1c9df049fc"
+      },
+      {
+        "ObjectId": "e018",
+        "FieldId": "unam",
+        "RecordId": 2122,
+        "RecordStartOffset": 259493,
+        "RecordEndOffset": 259592,
+        "TextStartOffset": 259569,
+        "TextEndOffset": 259587,
+        "ResolvedText": "흔함선택위습",
+        "RecordSha256": "2fc6e58e311aef62f5b00020dc95bed80d4daecc8f919b73c761daa0d6c938de"
+      },
+      {
+        "ObjectId": "e018",
+        "FieldId": "utip",
+        "RecordId": 2123,
+        "RecordStartOffset": 259594,
+        "RecordEndOffset": 259711,
+        "TextStartOffset": 259688,
+        "TextEndOffset": 259706,
+        "ResolvedText": "흔함선택위습",
+        "RecordSha256": "e81cfcf478283533ec54cf27ce1e1dee0be38eb36a0de5bdba92db37921130ad"
+      },
+      {
+        "ObjectId": "e017",
+        "FieldId": "unam",
+        "RecordId": 2124,
+        "RecordStartOffset": 259713,
+        "RecordEndOffset": 259806,
+        "TextStartOffset": 259786,
+        "TextEndOffset": 259801,
+        "ResolvedText": "안흔함위습",
+        "RecordSha256": "bdc05bf56feed3573e230b16a1c36e679db0383c48e2a9c110c4e481c63bcc33"
+      },
+      {
+        "ObjectId": "e017",
+        "FieldId": "utip",
+        "RecordId": 2125,
+        "RecordStartOffset": 259808,
+        "RecordEndOffset": 259919,
+        "TextStartOffset": 259899,
+        "TextEndOffset": 259914,
+        "ResolvedText": "안흔함위습",
+        "RecordSha256": "c449a706267790dfa210c80a1c45f0effd3454c176c4f392927f71fd48add12e"
+      },
+      {
+        "ObjectId": "e016",
+        "FieldId": "unam",
+        "RecordId": 2126,
+        "RecordStartOffset": 259921,
+        "RecordEndOffset": 260008,
+        "TextStartOffset": 259991,
+        "TextEndOffset": 260003,
+        "ResolvedText": "특별위습",
+        "RecordSha256": "0c27d3cfcb5da54343ad30ad8f222bd7f23e11ae833f730a305e15bd5be29bd0"
+      },
+      {
+        "ObjectId": "e016",
+        "FieldId": "utip",
+        "RecordId": 2127,
+        "RecordStartOffset": 260010,
+        "RecordEndOffset": 260115,
+        "TextStartOffset": 260098,
+        "TextEndOffset": 260110,
+        "ResolvedText": "특별위습",
+        "RecordSha256": "34b96309d831dc2c9ddaed1b362cc6d75f4a806c468ff237b1b8185aa1c001c9"
+      }
+    ]
+  }
+}

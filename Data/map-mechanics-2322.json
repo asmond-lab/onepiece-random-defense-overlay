@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "sourceSha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d",
+  "automaticCraftEligibility": "Unresolved KING and PICK; target ability A800 must be observed",
+  "source": [
+    {
+      "startLine": 29091,
+      "endLine": 29100,
+      "sha256": "28f35681fc75857fbe67f8568baeafb1c450e7f7470074b722e97bd4feb7ed30"
+    },
+    {
+      "startLine": 67396,
+      "endLine": 67400,
+      "sha256": "c07118c9e91dc4e70fabd7cadfe823080cde7f257006af7849236b9fdf8fc25c"
+    }
+  ],
+  "boardRegistryDeltaOnly": {
+    "previousScriptSha256": "55d0ffb9921433f45a9244cb946bdd27dcd2552a3550d30c4617c2eaccb94e97",
+    "rows": [
+      {
+        "ability": "A0WN",
+        "level": 1,
+        "value": -5
+      },
+      {
+        "ability": "A0WN",
+        "level": 2,
+        "value": -20
+      },
+      {
+        "ability": "A0WN",
+        "level": 3,
+        "value": -40
+      },
+      {
+        "ability": "A0WN",
+        "level": 4,
+        "value": -50
+      },
+      {
+        "ability": "A0BS",
+        "level": 1,
+        "value": -5
+      }
+    ],
+    "currentSource": [
+      {
+        "startLine": 84253,
+        "endLine": 84256,
+        "sha256": "5c89524e70f23e37a561849a8f674a2368308becd940b7d6bff3d04bc21e737f"
+      },
+      {
+        "startLine": 84476,
+        "endLine": 84476,
+        "sha256": "550898cc22a4073fa1461a1d1fd413e98531e3be93134560ac01e1c6bc57211a"
+      }
+    ],
+    "previousSource": [
+      {
+        "startLine": 4513,
+        "endLine": 4513,
+        "sha256": "42170090610b3572ba299f2ebb3e938f994bd338130856488cab59ff2162e464"
+      },
+      {
+        "startLine": 4558,
+        "endLine": 4558,
+        "sha256": "fb3b5cfbc4d7ea27b5030e834c126cddd6d8103e6e5d006e8f941d6538fafc0e"
+      }
+    ]
+  }
+}

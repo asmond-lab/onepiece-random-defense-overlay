@@ -205,23 +205,22 @@ public static class BulletOperatingBoardPolicy
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(input);
+        if (input.Round <= 0) return null;
         if (!IsBullet(profile, input.SelectedGoalId) &&
             !IsBullet(profile, input.CommittedGoalId)) return null;
 
-        var unknownReason = string.IsNullOrWhiteSpace(input.UnknownReason)
-            ? "필요한 인식 신호가 없습니다."
-            : input.UnknownReason.Trim();
+        const string unknownReason = "필요한 게임 정보를 아직 확인하지 못했습니다. 게임에서 확인한 뒤 다시 살펴보세요.";
         var state = State(profile, input);
         var phase = Phase(state);
         var blocker = Blocker(profile, input, state, unknownReason);
         var confidence = blocker.Length == 0
-            ? "높음 · 현재 인벤토리와 수치 신호가 확인됨"
+            ? "높음 · 현재 패와 능력 수치를 확인했습니다"
             : "낮음 · " + blocker;
         var fields = Fields(profile, input, unknownReason);
         return new BulletOperatingBoard(state, input.Round, phase, confidence,
             Action(state), Objective(profile, state), Routes(profile, state), Focus(state),
             Gate(state), blocker.Length == 0 ? null : blocker,
-            blocker.Length == 0 ? null : "누락된 신호를 다시 인식한 뒤 현재 단계를 재평가합니다.",
+            blocker.Length == 0 ? null : "게임 정보를 다시 확인한 뒤 현재 단계를 살펴보세요.",
             blocker, fields);
     }
 
@@ -270,13 +269,13 @@ public static class BulletOperatingBoardPolicy
     private static string Action(BulletOperatingBoardState state) => state switch
     {
         BulletOperatingBoardState.EarlyFoundation => "초반 첫 전설 기반을 확정하세요.",
-        BulletOperatingBoardState.AirMobility => "공중 가능 전설 2/2를 먼저 만드세요.",
+        BulletOperatingBoardState.AirMobility => "공중 이동이 가능한 전설을 2/2까지 먼저 확보하세요.",
         BulletOperatingBoardState.BossKill => "보스 처치 전설을 2/2로 맞추세요.",
         BulletOperatingBoardState.StoryDeadline =>
             "35라운드까지 와노쿠니를 파괴할 스토리 화력을 먼저 보강하세요.",
         BulletOperatingBoardState.ControlArmor => "감속·방어력 감소·기절 수치를 충족하세요.",
         BulletOperatingBoardState.Ready => "방어력 감소부터 강화하고 라운드 50 조합을 준비하세요.",
-        _ => "라운드 50 Bullet 조합을 즉시 목표로 두세요."
+        _ => "50라 불릿 조합을 목표로 준비하세요."
     };
 
     private static string Objective(BulletStrategyProfile profile, BulletOperatingBoardState state) =>
@@ -289,8 +288,8 @@ public static class BulletOperatingBoardPolicy
             BulletOperatingBoardState.StoryDeadline =>
                 $"라운드 {profile.StoryDeadlineRound}까지 스토리 {profile.StoryDeadlineStage}단계 파괴",
             BulletOperatingBoardState.ControlArmor => "외부 감속 82, 오라 방어력 감소 100, 기절 충족",
-            BulletOperatingBoardState.Ready => "라운드 50 Bullet 조합 준비",
-            _ => "라운드 50 Bullet 조합"
+            BulletOperatingBoardState.Ready => "50라 불릿 조합 준비",
+            _ => "50라 불릿 조합"
         };
 
     private static ImmutableArray<string> Routes(BulletStrategyProfile profile,
@@ -305,14 +304,14 @@ public static class BulletOperatingBoardPolicy
             ["스토리 예상 피해를 높이는 완성 가능한 조합을 우선합니다.",
                 "보스 처치 2/2를 소비하지 않는 경로를 유지합니다."],
         BulletOperatingBoardState.ControlArmor =>
-            ["외부 감속 82를 확보합니다.", "오라 방어력 감소 100을 확보합니다.", "기절 목표를 Green Blood +0.3과 함께 확인합니다."],
+            ["외부 감속 82를 확보합니다.", "오라 방어력 감소 100을 확보합니다.", "기절 목표를 그린블러드 +0.3과 함께 확인합니다."],
         _ => ["방어력 감소 → 공격 속도 → 공격력 순서로 강화합니다.",
-            "Bounty Hunter를 기본으로 추천합니다.", "Emergency Call은 대체 추천으로만 유지합니다."]
+            "바운티헌터를 기본으로 추천합니다.", "긴급소집은 대체 추천으로만 안내합니다."]
     };
 
     private static string Focus(BulletOperatingBoardState state) => state switch
     {
-        BulletOperatingBoardState.ControlArmor => "Bullet 기여와 Green Blood 기절을 수치로 함께 확인",
+        BulletOperatingBoardState.ControlArmor => "불릿의 효과와 그린블러드 기절 수치를 함께 확인",
         BulletOperatingBoardState.StoryDeadline => "스토리 진행 단계와 마감 화력",
         BulletOperatingBoardState.Ready or BulletOperatingBoardState.Round50 =>
             "방어력 감소 → 공격 속도 → 공격력",
@@ -325,9 +324,9 @@ public static class BulletOperatingBoardPolicy
         BulletOperatingBoardState.AirMobility => "보스 처치 전설 2/2",
         BulletOperatingBoardState.BossKill => "감속·방어력 감소·기절 제어 수치 확인",
         BulletOperatingBoardState.StoryDeadline => "와노쿠니 파괴 후 공중·제어 준비 복귀",
-        BulletOperatingBoardState.ControlArmor => "라운드 50 Bullet 조합 또는 명시적 차단 사유",
-        BulletOperatingBoardState.Ready => "라운드 50 Bullet 조합",
-        _ => "조합 결과 확인 또는 명시적 차단 사유"
+        BulletOperatingBoardState.ControlArmor => "50라 불릿 조합 또는 확인할 조건",
+        BulletOperatingBoardState.Ready => "50라 불릿 조합",
+        _ => "조합 결과 또는 필요한 조건 확인"
     };
 
     private static string Blocker(BulletStrategyProfile profile, BulletOperatingBoardInput input,
@@ -351,9 +350,9 @@ public static class BulletOperatingBoardPolicy
         if (input.Stun is null)
             return "기절 수치 확인 불가 — " + unknownReason;
         if (input.GreenBloodKnown is null)
-            return "Green Blood 사용 상태 확인 불가 — " + unknownReason;
+            return "그린블러드 사용 여부 확인 전 — " + unknownReason;
         if (input.BulletCrafted is null)
-            return "Bullet 조합 상태 확인 불가 — " + unknownReason;
+            return "불릿 조합 여부 확인 전 — " + unknownReason;
         if (string.IsNullOrWhiteSpace(input.EnhancementStatus))
             return "강화 단계 확인 불가 — " + unknownReason;
         return "";
@@ -370,25 +369,25 @@ public static class BulletOperatingBoardPolicy
             value => $"현재 {value}/2 · 목표 2/2", "목표 2/2",
             "보스 처치 전설", unknownReason);
         var slow = Current(input.ExternalSlow,
-            value => $"현재 {Number(value)}/82 · Bullet 고유 +{Number(profile.BulletSlowContribution)}",
-            $"목표 82 · Bullet 고유 +{Number(profile.BulletSlowContribution)}",
+            value => $"현재 {Number(value)}/82 · 불릿 자체 효과 +{Number(profile.BulletSlowContribution)}",
+            $"목표 82 · 불릿 자체 효과 +{Number(profile.BulletSlowContribution)}",
             "외부 감속", unknownReason);
         var armor = Current(input.AuraArmorReduction,
-            value => $"현재 {Number(value)}/100 · Bullet 정책 선언 기여 +{Number(profile.BulletArmorReductionContribution)}",
-            $"목표 100 · Bullet 정책 선언 기여 +{Number(profile.BulletArmorReductionContribution)}",
+            value => $"현재 {Number(value)}/100 · 기존 공략의 계획 기여 +{Number(profile.BulletArmorReductionContribution)} (실제 특성값 아님)",
+            $"목표 100 · 기존 공략의 계획 기여 +{Number(profile.BulletArmorReductionContribution)} (실제 특성값 아님)",
             "오라 방어력 감소", unknownReason);
         var stun = Current(input.Stun,
-            value => $"현재 {Number(value)} · 목표 {Number(input.StunTarget)} · Green Blood +{Number(profile.GreenBloodStunContribution)}",
-            $"목표 {Number(input.StunTarget)} · Green Blood +{Number(profile.GreenBloodStunContribution)}",
+            value => $"현재 {Number(value)} · 목표 {Number(input.StunTarget)} · 그린블러드 +{Number(profile.GreenBloodStunContribution)}",
+            $"목표 {Number(input.StunTarget)} · 그린블러드 +{Number(profile.GreenBloodStunContribution)}",
             "기절", unknownReason);
         var craft = Current(input.BulletCrafted,
-            value => $"현재 {(value ? "조합 완료" : "조합 전")} · 목표 라운드 50 Bullet 조합",
-            "목표 라운드 50 Bullet 조합", "라운드 50 Bullet 조합", unknownReason);
+            value => $"현재 {(value ? "조합 완료" : "조합 전")} · 목표 50라 불릿 조합",
+            "목표 50라 불릿 조합", "50라 불릿 조합", unknownReason);
         var enhancement = string.IsNullOrWhiteSpace(input.EnhancementStatus)
             ? Unknown("목표 방어력 감소 → 공격 속도 → 공격력", "강화 순서", unknownReason)
             : $"현재 {input.EnhancementStatus} · 목표 방어력 감소 → 공격 속도 → 공격력";
         const string navigation =
-            "현재 권장 Bounty Hunter · 목표 Bounty Hunter · 대체 Emergency Call · 추천만 제공";
+            "현재 추천 바운티헌터 · 목표 바운티헌터 · 대안 긴급소집 · 게임에서 선택했는지는 확인이 필요합니다";
         return
         [
             Field(BulletOperatingBoardFieldKind.Flying, "bullet-board-flying", "공중 가능 전설", flying),
@@ -396,7 +395,7 @@ public static class BulletOperatingBoardPolicy
             Field(BulletOperatingBoardFieldKind.Slow, "bullet-board-slow", "외부 감속", slow),
             Field(BulletOperatingBoardFieldKind.ArmorReduction, "bullet-board-armor-reduction", "오라 방어력 감소", armor),
             Field(BulletOperatingBoardFieldKind.Stun, "bullet-board-stun", "기절", stun),
-            Field(BulletOperatingBoardFieldKind.Craft, "bullet-board-craft", "라운드 50 Bullet 조합", craft),
+            Field(BulletOperatingBoardFieldKind.Craft, "bullet-board-craft", "50라 불릿 조합", craft),
             Field(BulletOperatingBoardFieldKind.Enhancement, "bullet-board-enhancement", "강화 순서", enhancement),
             Field(BulletOperatingBoardFieldKind.Navigation, "bullet-board-navigation", "항법 추천", navigation)
         ];
@@ -408,12 +407,12 @@ public static class BulletOperatingBoardPolicy
         : Unknown(target, signal, reason);
 
     private static string Unknown(string target, string signal, string reason) =>
-        $"알 수 없음 · {target} — {signal} {reason}";
+        $"확인 전 · {target} — {signal} {reason}";
 
     private static BulletOperatingBoardField Field(BulletOperatingBoardFieldKind kind,
         string id, string label, string value) =>
         new(kind, id, label, value, label, value,
-            value.StartsWith("알 수 없음", StringComparison.Ordinal));
+            value.StartsWith("확인 전", StringComparison.Ordinal));
 
     private static string Number(double value) =>
         value.ToString("0.##", CultureInfo.InvariantCulture);

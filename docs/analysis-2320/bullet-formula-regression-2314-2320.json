@@ -1,0 +1,758 @@
+{
+  "schemaVersion": 1,
+  "scope": "Independent offline pre-damage-wrapper scalar regression fixture; no app edits, no game execution",
+  "sourceHashes": {
+    "new": {
+      "path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-ko-2.320\\war3map.j",
+      "sha256": "6FDFC64BF8AD9463F5B5C8A351FFA7E1875D6CF9B51210129539375FA77A6C7C"
+    },
+    "old": {
+      "path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\indexed-members\\2314\\war3map.j",
+      "sha256": "0BCCC47907A9505F38EFAF6BBF20228A728EABDFAEC3209CCA7DF2269BFC2028"
+    }
+  },
+  "levels": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "targetCurrentLife": 1000000,
+  "levelSemantics": "OLD raw ability level L; NEW NfT returns L>3?3:L. Level0 and OLD level4 are counterfactual formula boundary tests, not proof reachable under normal upgrade flow. Formula activation filters still apply.",
+  "floatingPoint": "expectedFloat64 is host JavaScript binary64 arithmetic; expectedBinary32Model rounds operands and each arithmetic result using Math.fround and preserves written operator association. Binary32Model is an explicit model, NOT verified Warcraft VM bit-exact execution. Values are pre-wrapper and not actual HP damage. Do not integer-round intermediate values.",
+  "comparison": {
+    "absoluteTolerance": 0.5,
+    "relativeTolerance": 0.000001,
+    "reason": "Suggested non-bit-exact scalar regression tolerance; use max(absTolerance, abs(expected)*relativeTolerance)."
+  },
+  "formulas": [
+    {
+      "id": "speed_base_unique_aoe",
+      "oldExpression": "30000 + 2500 * L",
+      "newExpression": "30000 + 25000 * min(L,3)",
+      "oldSource": {
+        "function": "Pmw",
+        "start": 38693,
+        "end": 38695
+      },
+      "newSource": {
+        "function": "RRT",
+        "start": 30736,
+        "end": 30738
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 30000,
+            "new": 30000
+          },
+          "expectedBinary32Model": {
+            "old": 30000,
+            "new": 30000
+          },
+          "expectedIdealDecimal": {
+            "old": 30000,
+            "new": 30000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 32500,
+            "new": 55000
+          },
+          "expectedBinary32Model": {
+            "old": 32500,
+            "new": 55000
+          },
+          "expectedIdealDecimal": {
+            "old": 32500,
+            "new": 55000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 35000,
+            "new": 80000
+          },
+          "expectedBinary32Model": {
+            "old": 35000,
+            "new": 80000
+          },
+          "expectedIdealDecimal": {
+            "old": 35000,
+            "new": 80000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 37500,
+            "new": 105000
+          },
+          "expectedBinary32Model": {
+            "old": 37500,
+            "new": 105000
+          },
+          "expectedIdealDecimal": {
+            "old": 37500,
+            "new": 105000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 40000,
+            "new": 105000
+          },
+          "expectedBinary32Model": {
+            "old": 40000,
+            "new": 105000
+          },
+          "expectedIdealDecimal": {
+            "old": 40000,
+            "new": 105000
+          }
+        }
+      ],
+      "levelAbility": "A0WO (speed)"
+    },
+    {
+      "id": "speed_legendary_aoe",
+      "oldExpression": "50000 + 4500 * L",
+      "newExpression": "50000 + 45000 * min(L,3)",
+      "oldSource": {
+        "function": "RSE",
+        "start": 40965,
+        "end": 40967
+      },
+      "newSource": {
+        "function": "wob",
+        "start": 77419,
+        "end": 77421
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 50000,
+            "new": 50000
+          },
+          "expectedBinary32Model": {
+            "old": 50000,
+            "new": 50000
+          },
+          "expectedIdealDecimal": {
+            "old": 50000,
+            "new": 50000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 54500,
+            "new": 95000
+          },
+          "expectedBinary32Model": {
+            "old": 54500,
+            "new": 95000
+          },
+          "expectedIdealDecimal": {
+            "old": 54500,
+            "new": 95000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 59000,
+            "new": 140000
+          },
+          "expectedBinary32Model": {
+            "old": 59000,
+            "new": 140000
+          },
+          "expectedIdealDecimal": {
+            "old": 59000,
+            "new": 140000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 63500,
+            "new": 185000
+          },
+          "expectedBinary32Model": {
+            "old": 63500,
+            "new": 185000
+          },
+          "expectedIdealDecimal": {
+            "old": 63500,
+            "new": 185000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 68000,
+            "new": 185000
+          },
+          "expectedBinary32Model": {
+            "old": 68000,
+            "new": 185000
+          },
+          "expectedIdealDecimal": {
+            "old": 68000,
+            "new": 185000
+          }
+        }
+      ],
+      "levelAbility": "A0WO (speed)"
+    },
+    {
+      "id": "speed_extra_single_target",
+      "oldExpression": "10000 * L",
+      "newExpression": "100000 * min(L,3)",
+      "oldSource": {
+        "function": "jfG",
+        "start": 62006,
+        "end": 62172
+      },
+      "newSource": {
+        "function": "Mqy",
+        "start": 24030,
+        "end": 24122
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 0,
+            "new": 0
+          },
+          "expectedBinary32Model": {
+            "old": 0,
+            "new": 0
+          },
+          "expectedIdealDecimal": {
+            "old": 0,
+            "new": 0
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 10000,
+            "new": 100000
+          },
+          "expectedBinary32Model": {
+            "old": 10000,
+            "new": 100000
+          },
+          "expectedIdealDecimal": {
+            "old": 10000,
+            "new": 100000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 20000,
+            "new": 200000
+          },
+          "expectedBinary32Model": {
+            "old": 20000,
+            "new": 200000
+          },
+          "expectedIdealDecimal": {
+            "old": 20000,
+            "new": 200000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 30000,
+            "new": 300000
+          },
+          "expectedBinary32Model": {
+            "old": 30000,
+            "new": 300000
+          },
+          "expectedIdealDecimal": {
+            "old": 30000,
+            "new": 300000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 40000,
+            "new": 300000
+          },
+          "expectedBinary32Model": {
+            "old": 40000,
+            "new": 300000
+          },
+          "expectedIdealDecimal": {
+            "old": 40000,
+            "new": 300000
+          }
+        }
+      ],
+      "levelAbility": "A0WO (speed)"
+    },
+    {
+      "id": "attack_ordinary_target",
+      "oldExpression": "(250000 + H * .02) * L * .01",
+      "newExpression": "(250000 + H * .02) * (1 + min(L,3) * .1)",
+      "oldSource": {
+        "function": "qPE",
+        "start": 69666,
+        "end": 69668
+      },
+      "newSource": {
+        "function": "BTF",
+        "start": 9456,
+        "end": 9458
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 0,
+            "new": 270000
+          },
+          "expectedBinary32Model": {
+            "old": 0,
+            "new": 270000
+          },
+          "expectedIdealDecimal": {
+            "old": 0,
+            "new": 270000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 2700,
+            "new": 297000
+          },
+          "expectedBinary32Model": {
+            "old": 2700,
+            "new": 297000
+          },
+          "expectedIdealDecimal": {
+            "old": 2700,
+            "new": 297000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 5400,
+            "new": 324000
+          },
+          "expectedBinary32Model": {
+            "old": 5400,
+            "new": 324000
+          },
+          "expectedIdealDecimal": {
+            "old": 5400,
+            "new": 324000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 8100,
+            "new": 351000
+          },
+          "expectedBinary32Model": {
+            "old": 8100,
+            "new": 351000
+          },
+          "expectedIdealDecimal": {
+            "old": 8100,
+            "new": 351000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 10800,
+            "new": 351000
+          },
+          "expectedBinary32Model": {
+            "old": 10800,
+            "new": 351000
+          },
+          "expectedIdealDecimal": {
+            "old": 10800,
+            "new": 351000
+          }
+        }
+      ],
+      "levelAbility": "A0WQ (attack)"
+    },
+    {
+      "id": "attack_special_target",
+      "oldExpression": "250000 * L * .02 + H * .01",
+      "newExpression": "250000 * (1 + min(L,3) * .2) + H * .01",
+      "oldSource": {
+        "function": "ZMw",
+        "start": 50080,
+        "end": 50082
+      },
+      "newSource": {
+        "function": "gGy",
+        "start": 49542,
+        "end": 49544
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 10000,
+            "new": 260000
+          },
+          "expectedBinary32Model": {
+            "old": 10000,
+            "new": 260000
+          },
+          "expectedIdealDecimal": {
+            "old": 10000,
+            "new": 260000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 15000,
+            "new": 310000
+          },
+          "expectedBinary32Model": {
+            "old": 15000,
+            "new": 310000
+          },
+          "expectedIdealDecimal": {
+            "old": 15000,
+            "new": 310000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 20000,
+            "new": 360000
+          },
+          "expectedBinary32Model": {
+            "old": 20000,
+            "new": 360000
+          },
+          "expectedIdealDecimal": {
+            "old": 20000,
+            "new": 360000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 25000,
+            "new": 410000
+          },
+          "expectedBinary32Model": {
+            "old": 25000,
+            "new": 410000
+          },
+          "expectedIdealDecimal": {
+            "old": 25000,
+            "new": 410000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 30000,
+            "new": 410000
+          },
+          "expectedBinary32Model": {
+            "old": 30000,
+            "new": 410000
+          },
+          "expectedIdealDecimal": {
+            "old": 30000,
+            "new": 410000
+          }
+        }
+      ],
+      "levelAbility": "A0WQ (attack)"
+    },
+    {
+      "id": "strike_initial_hit",
+      "oldExpression": "1500000 * (1 + L * .05)",
+      "newExpression": "1500000 * (1 + min(L,3) * .5)",
+      "oldSource": {
+        "function": "baw",
+        "start": 51979,
+        "end": 51981
+      },
+      "newSource": {
+        "function": "yOb",
+        "start": 79677,
+        "end": 79679
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 1500000,
+            "new": 1500000
+          },
+          "expectedBinary32Model": {
+            "old": 1500000,
+            "new": 1500000
+          },
+          "expectedIdealDecimal": {
+            "old": 1500000,
+            "new": 1500000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 1575000,
+            "new": 2250000
+          },
+          "expectedBinary32Model": {
+            "old": 1574999.875,
+            "new": 2250000
+          },
+          "expectedIdealDecimal": {
+            "old": 1575000,
+            "new": 2250000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 1650000.0000000002,
+            "new": 3000000
+          },
+          "expectedBinary32Model": {
+            "old": 1650000,
+            "new": 3000000
+          },
+          "expectedIdealDecimal": {
+            "old": 1650000,
+            "new": 3000000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 1724999.9999999998,
+            "new": 3750000
+          },
+          "expectedBinary32Model": {
+            "old": 1725000,
+            "new": 3750000
+          },
+          "expectedIdealDecimal": {
+            "old": 1725000,
+            "new": 3750000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 1800000,
+            "new": 3750000
+          },
+          "expectedBinary32Model": {
+            "old": 1800000.125,
+            "new": 3750000
+          },
+          "expectedIdealDecimal": {
+            "old": 1800000,
+            "new": 3750000
+          }
+        }
+      ],
+      "levelAbility": "A0WQ (attack)"
+    },
+    {
+      "id": "strike_repeated_hit_each",
+      "oldExpression": "100000 * (1 + L * .01)",
+      "newExpression": "100000 * (1 + min(L,3) * .1)",
+      "oldSource": {
+        "function": "cRN",
+        "start": 52608,
+        "end": 52610
+      },
+      "newSource": {
+        "function": "HLT",
+        "start": 15660,
+        "end": 15662
+      },
+      "samples": [
+        {
+          "inputLevel": 0,
+          "oldEffectiveLevel": 0,
+          "newEffectiveLevel": 0,
+          "expectedFloat64": {
+            "old": 100000,
+            "new": 100000
+          },
+          "expectedBinary32Model": {
+            "old": 100000,
+            "new": 100000
+          },
+          "expectedIdealDecimal": {
+            "old": 100000,
+            "new": 100000
+          }
+        },
+        {
+          "inputLevel": 1,
+          "oldEffectiveLevel": 1,
+          "newEffectiveLevel": 1,
+          "expectedFloat64": {
+            "old": 101000,
+            "new": 110000.00000000001
+          },
+          "expectedBinary32Model": {
+            "old": 101000,
+            "new": 110000
+          },
+          "expectedIdealDecimal": {
+            "old": 101000,
+            "new": 110000
+          }
+        },
+        {
+          "inputLevel": 2,
+          "oldEffectiveLevel": 2,
+          "newEffectiveLevel": 2,
+          "expectedFloat64": {
+            "old": 102000,
+            "new": 120000
+          },
+          "expectedBinary32Model": {
+            "old": 102000,
+            "new": 120000.0078125
+          },
+          "expectedIdealDecimal": {
+            "old": 102000,
+            "new": 120000
+          }
+        },
+        {
+          "inputLevel": 3,
+          "oldEffectiveLevel": 3,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 103000,
+            "new": 130000
+          },
+          "expectedBinary32Model": {
+            "old": 103000,
+            "new": 129999.9921875
+          },
+          "expectedIdealDecimal": {
+            "old": 103000,
+            "new": 130000
+          }
+        },
+        {
+          "inputLevel": 4,
+          "oldEffectiveLevel": 4,
+          "newEffectiveLevel": 3,
+          "expectedFloat64": {
+            "old": 104000,
+            "new": 130000
+          },
+          "expectedBinary32Model": {
+            "old": 104000,
+            "new": 129999.9921875
+          },
+          "expectedIdealDecimal": {
+            "old": 104000,
+            "new": 130000
+          }
+        }
+      ],
+      "levelAbility": "A0WO (speed)"
+    }
+  ],
+  "validation": {
+    "cases": 35,
+    "float64AndBinary32ModelWithinTolerance": true,
+    "newLevel4EqualsLevel3ForAllSeven": true,
+    "gameExecuted": false
+  }
+}

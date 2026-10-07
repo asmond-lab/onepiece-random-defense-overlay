@@ -15,6 +15,27 @@ namespace PlannerEvidenceCapture;
 
 internal static partial class Program
 {
+    private static CaptureOutputScope? outputScope;
+    private static CaptureOutputScope Output
+    {
+        get => outputScope ?? throw new InvalidOperationException("Output preflight has not run.");
+        set => outputScope = value;
+    }
+
+    private static void WriteEvidenceText(string path, string text)
+    {
+        using var stream = Output.CreateNew(path);
+        using var writer = new StreamWriter(stream);
+        writer.Write(text);
+    }
+
+    private static void CopyEvidence(string source, string destination)
+    {
+        using var input = File.OpenRead(source);
+        using var target = Output.CreateNew(destination);
+        input.CopyTo(target);
+    }
+
     private const string LongUnknownReason =
         "상대 상위 유닛 수와 첫 전설 이력이 아직 확정되지 않아 마지막으로 안전했던 추천을 유지합니다. " +
         "신호가 안정되면 하한·평균·상한과 회복 가능성을 다시 계산합니다.";
@@ -22,13 +43,142 @@ internal static partial class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        CapturePreflight.ValidateArguments(args);
         var output = Argument(args, "--output") ?? throw new ArgumentException("--output is required.");
-        Directory.CreateDirectory(output);
+        using var outputScope = CaptureOutputScope.Create(Path.GetTempPath(), output);
+        Output = outputScope;
+        CaptureInputContract.ValidateBundledInputs(Path.Combine(AppContext.BaseDirectory, "Data"));
+        CaptureInputContract.InitializeBundledAllowlist();
+        Output.EnsureDirectory(Path.Combine(output, "telemetry-disabled"));
         var buildSha = Argument(args, "--build-sha") ?? GitHead();
         var sourceFingerprint = SourceFingerprint();
-        var app = new App { SkipRuntimeStartup = true };
+        var app = new App { Execution = FixtureContext(new AppSettings()) };
         app.InitializeComponent();
         app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        if (args.Contains("--bullet-guide-live", StringComparer.Ordinal) ||
+            args.Contains("--player-resources-live", StringComparer.Ordinal) ||
+            args.Contains("--native-unit-probe", StringComparer.Ordinal))
+        {
+            typeof(Application).GetField("_startupUri", System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic)!.SetValue(app, null);
+            var catalog = new DataCatalog();
+            catalog.Load();
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+            var recognizer = new WarcraftMemoryRecognitionService(catalog);
+            var settings = new AppSettings { Mode = PlayMode.Guide, GuideNumber = 1, TelemetryEnabled = false };
+            var result = recognizer.RecognizeAsync(settings, timeout.Token).GetAwaiter().GetResult();
+            var slices = 1;
+            // Finite incremental discovery computation, not a wait for user/game state changes.
+            if (args.Contains("--player-resources-live", StringComparer.Ordinal))
+                while (result.State == RecognitionState.Ready && result.PlayerResources is null && slices < 128)
+                {
+                    result = recognizer.RecognizeAsync(settings, timeout.Token).GetAwaiter().GetResult();
+                    slices++;
+                }
+            WriteEvidenceText(Path.Combine(output, "bullet-guide-live.json"), JsonSerializer.Serialize(new
+            {
+                Kind = "one-read-only-production-recognition-no-game-input", result.State, result.Status,
+                result.GuideRuntime, result.Entries, result.Diagnostics.ProcessVersion,
+                result.Diagnostics.ProcessId, result.Diagnostics.ResolvedListAddress,
+                result.Diagnostics.UnknownRawcodes, result.Diagnostics.ObservedObjects,
+                result.Diagnostics.MapState, result.Diagnostics.Detail, result.PlayerResources,
+                result.LoadedClearCount, Slices = slices
+            }, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine($"BULLET_GUIDE_LIVE state={result.State} tiers={result.GuideRuntime.IsCurrent} units={result.Entries.Count}");
+            Console.WriteLine($"LOADED_CLEAR_COUNT value={result.LoadedClearCount?.ToString() ?? "unknown"}");
+            if (args.Contains("--player-resources-live", StringComparer.Ordinal))
+                Console.WriteLine($"PLAYER_RESOURCES state={result.State} values={result.PlayerResources} slices={slices}");
+            if (args.Contains("--capture-resource-ui", StringComparer.Ordinal))
+                CapturePlayerResources(output, result);
+            if (args.Contains("--native-unit-probe", StringComparer.Ordinal))
+                ProbeNativeUnits(output, result);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--bullet-guide", StringComparer.Ordinal))
+        {
+            typeof(Application).GetField("_startupUri", System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic)!.SetValue(app, null);
+            CaptureBulletGuide(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-finished-rewards", StringComparer.Ordinal))
+        {
+            // Keep compiled app resources, but prevent the queued StartupUri from launching
+            // a second, runtime-enabled window. The public setter rejects null.
+            typeof(Application).GetField("_startupUri", System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic)!.SetValue(app, null);
+            CaptureCoachFinishedRewards(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--ready-boundary", StringComparer.Ordinal))
+        {
+            CaptureReadyBoundary(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-status", StringComparer.Ordinal))
+        {
+            CaptureCoachStatus(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--intermediate-craft", StringComparer.Ordinal))
+        {
+            CaptureIntermediateCraft(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--goal-consistency", StringComparer.Ordinal))
+        {
+            CaptureGoalConsistency(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-recipes", StringComparer.Ordinal))
+        {
+            CaptureCoachRecipes(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-rewards", StringComparer.Ordinal))
+        {
+            CaptureCoachRewards(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-difficulties", StringComparer.Ordinal))
+        {
+            CaptureCoachDifficulties(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--four-modes", StringComparer.Ordinal))
+        {
+            CaptureFourModes(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-app", StringComparer.Ordinal))
+        {
+            CaptureCoachApp(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--coach-showcase", StringComparer.Ordinal))
+        {
+            CaptureCoachShowcase(output);
+            app.Shutdown();
+            return 0;
+        }
+        if (args.Contains("--gaban-actions", StringComparer.Ordinal))
+        {
+            CaptureGabanActions(output);
+            app.Shutdown();
+            return 0;
+        }
         if (args.Contains("--navigation-only", StringComparer.Ordinal))
         {
             CaptureNavigationStates(output, args.Contains("--live-quests", StringComparer.Ordinal));
@@ -73,7 +223,7 @@ internal static partial class Program
 
         var matrixPath = Path.Combine(output, "planner-ui-evidence-matrix.json");
         var generatedAtUtc = DateTimeOffset.UtcNow;
-        File.WriteAllText(matrixPath, JsonSerializer.Serialize(new
+        WriteEvidenceText(matrixPath, JsonSerializer.Serialize(new
         {
             schemaVersion = 1,
             kind = "desktop-automation-transcript",
@@ -482,13 +632,14 @@ internal static partial class Program
     {
         var path = Path.Combine(output, "telemetry-privacy-settings.png");
         var queueDirectory = Path.Combine(output, "telemetry-fixture-queue");
-        var window = new MainWindow(new AppSettings
+        var window = new MainWindow(FixtureContext(new AppSettings
         {
+            BeginnerCoachEnabled = false,
             AutoScanEnabled = false,
             ClearDataAutoRefresh = false,
             TelemetryEnabled = true,
             TelemetryDisclosureVersion = 0
-        }, startRuntime: false, telemetryQueueDirectory: queueDirectory)
+        }))
         {
             ShowActivated = false,
             Topmost = false,
@@ -527,7 +678,7 @@ internal static partial class Program
         ValidateCapture(path, scroll.ActualWidth, scroll.ActualHeight);
         window.Close();
         if (Directory.Exists(queueDirectory))
-            Directory.Delete(queueDirectory, recursive: true);
+            throw new InvalidOperationException("Fixture unexpectedly created a telemetry queue.");
         return new TelemetrySettingsEvidence(
             "automatic-default-disclosure-opt-out",
             AutomationProperties.GetName(telemetry),
@@ -544,11 +695,12 @@ internal static partial class Program
         var path = Path.Combine(output, "main-pending-recommendation-100.png");
         var contextPath = Path.Combine(
             output, "main-pending-recommendation-context-100.png");
-        var window = new MainWindow(new AppSettings
+        var window = new MainWindow(FixtureContext(new AppSettings
         {
+            BeginnerCoachEnabled = false,
             AutoScanEnabled = false,
             ClearDataAutoRefresh = false
-        }, startRuntime: false)
+        }))
         {
             ShowActivated = false,
             Topmost = false,
@@ -693,8 +845,8 @@ internal static partial class Program
                 topPath, bottomPath, buildSha, sourceFingerprint, "PASS"));
 
         if (fixture.State == PlannerEvidenceState.Round21Actionable && Math.Abs(scale - 1) < 0.001)
-            File.Copy(topPath, Path.Combine(output,
-                "task-18-round-20-adaptive-build-routing.png"), overwrite: true);
+            CopyEvidence(topPath, Path.Combine(output,
+                "task-18-round-20-adaptive-build-routing.png"));
         window.Stats.CloseForApplication();
         window.CloseForApplication();
     }
@@ -760,7 +912,7 @@ internal static partial class Program
             PixelFormats.Bgra32, null, pixels, stride);
         var encoder = new PngBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(opaque));
-        using var stream = File.Create(path);
+        using var stream = Output.CreateNew(path);
         encoder.Save(stream);
     }
 

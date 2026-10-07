@@ -4,7 +4,18 @@ namespace OrandOverlay;
 
 public partial class App : System.Windows.Application
 {
-    internal bool SkipRuntimeStartup { get; init; }
+    private OverlayExecutionContext? _execution;
+    internal OverlayExecutionContext Execution
+    {
+        get => _execution ??= OverlayExecutionContext.Production();
+        init => _execution = value ?? throw new ArgumentNullException(nameof(value));
+    }
+    // Compatibility for existing capture callers; no shared defaults are evaluated.
+    internal bool SkipRuntimeStartup
+    {
+        get => !Execution.RuntimeEnabled;
+        init { if (value) _execution = OverlayExecutionContext.Fixture(new AppSettings()); }
+    }
 
     // 중복 실행 방지. 두 인스턴스가 같은 설정 파일과 오버레이 핫키를 두고 다투면
     // 설정이 서로를 덮어쓰고 핫키는 한쪽만 먹는다 — 두 번째 실행은 기존 창을
@@ -13,15 +24,32 @@ public partial class App : System.Windows.Application
     // 자동 업데이트와의 관계: 교체 스크립트는 옛 프로세스가 죽어 exe가 지워질
     // 때까지 기다렸다가 새 버전을 실행한다. 뮤텍스는 프로세스 종료 시 OS가
     // 해제하므로 새 버전이 잠금에 막히는 일은 없다.
-    private const string InstanceMutexName = @"Local\OrandOverlay.SingleInstance";
-    private const string ActivationEventName = @"Local\OrandOverlay.ShowExisting";
+    internal string InstanceMutexName { get; init; } = @"Local\OrandOverlay.SingleInstance";
+    internal string ActivationEventName { get; init; } = @"Local\OrandOverlay.ShowExisting";
 
     private Mutex? _instanceMutex;
     private EventWaitHandle? _activationSignal;
+    private Window? _consentWindow;
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        if (SkipRuntimeStartup) return;
+        // This branch must precede every normal-runtime dependency, including Execution.
+        if (RandyPickPackageProbe.TryHandleStartup(e.Args, out var probeExitCode))
+        {
+            TelemetryConsentStartup.ClearStartupUri(this);
+            Shutdown(probeExitCode);
+            return;
+        }
+
+        // Capture callers may still assign the old URI. Clear it even for inert fixtures.
+        TelemetryConsentStartup.ClearStartupUri(this);
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        if (!Execution.RuntimeEnabled) return;
+        StartRuntime(e);
+    }
+
+    private void StartRuntime(StartupEventArgs e)
+    {
         _instanceMutex = new Mutex(initiallyOwned: true, InstanceMutexName, out var createdNew);
         if (!createdNew)
         {
@@ -32,12 +60,41 @@ public partial class App : System.Windows.Application
             return;
         }
 
-        // 워크3 패치가 앱 릴리스보다 먼저 나와도 최신 검증 프로필을 받을 수 있게 한다.
-        // 시작 화면은 네트워크를 기다리지 않고, 실패하면 기존 캐시/번들 프로필을 사용한다.
-        _ = MemoryProfileRefreshService.TryRefreshAsync();
-
+        // IPC precedes consent so a second launch activates the pending dialog too.
         ListenForActivationSignal();
+        try
+        {
+            if (!Execution.EnsureConsent(() =>
+            {
+                _consentWindow = new TelemetryConsentWindow();
+                try { return _consentWindow.ShowDialog(); }
+                finally { _consentWindow = null; }
+            }))
+            {
+                Shutdown();
+                return;
+            }
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            System.Diagnostics.Trace.TraceError("Consent could not be saved: {0}", error);
+            MessageBox.Show("동의를 저장하지 못했어요. 저장 공간과 폴더 권한을 확인한 뒤 다시 실행해 주세요. 앱을 종료합니다.",
+                "랜디픽", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown();
+            return;
+        }
+
+        Execution.RequireConsent();
         base.OnStartup(e);
+        MainWindow = new MainWindow(Execution);
+        if (MainWindow is MainWindow { StartupAborted: true })
+        {
+            Shutdown(1);
+            return;
+        }
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
+        MainWindow.Show();
+        _ = Execution.RefreshProfilesAsync();
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -48,7 +105,7 @@ public partial class App : System.Windows.Application
     }
 
     /// <summary>기존 인스턴스에 "창 보여줘" 신호를 보낸다. 실패해도 그냥 끝낸다.</summary>
-    private static void SignalExistingInstance()
+    private void SignalExistingInstance()
     {
         try
         {
@@ -74,7 +131,7 @@ public partial class App : System.Windows.Application
                 catch (ObjectDisposedException) { return; }
                 Dispatcher.BeginInvoke(() =>
                 {
-                    if (MainWindow is not { } window) return;
+                    if ((_consentWindow ?? MainWindow) is not { } window) return;
                     window.Show();
                     if (window.WindowState == WindowState.Minimized)
                         window.WindowState = WindowState.Normal;

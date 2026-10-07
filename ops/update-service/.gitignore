@@ -1,0 +1,7 @@
+# Local tooling state and credentials must never be committed.
+.wrangler/
+node_modules/
+.dev.vars
+.dev.vars.*
+.env
+.env.*

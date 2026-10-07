@@ -5,12 +5,18 @@ namespace OrandOverlay;
 public sealed record RouteQuestEvaluation(int PlannedTopCount, int FutureCommonWisps,
     int SurplusCommonWisps, int FutureBuildUpperBp, string Description)
 {
+    public int PlannedBuildBp { get; init; }
+    public long PlannedMissingLeaves { get; init; }
     public static RouteQuestEvaluation Evaluate(AdaptivePlanningInputSource source)
     {
         var counts = source.Inventory.Where(x => x.Count > 0)
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.Sum(x => x.Count), StringComparer.OrdinalIgnoreCase);
-        var goals = new List<string> { source.GoalUnitId };
+        var goals = source.PlannedGoalUnitIds.IsDefaultOrEmpty
+            ? new List<string> { source.GoalUnitId }
+            : source.PlannedGoalUnitIds.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        if (goals.Count > 2 || goals.Any(id => !source.Units.ContainsKey(id)))
+            throw new ArgumentException("The explicit goal bundle must contain at most two known units.", nameof(source));
         var calculator = new RecipeCompletionCalculator(id => source.Units[id]);
         var notes = new List<string> { source.RouteQuests.Describe() };
         var rewards = 0;
@@ -27,7 +33,8 @@ public sealed record RouteQuestEvaluation(int PlannedTopCount, int FutureCommonW
                 notes.Add($"{quest.Name}: 목표 이미 보유 · 새 조합 계획이 없어 보상 미산입");
                 continue;
             }
-            if (target is null && source.PursueBothRouteQuests && tier is "초월" or "제한됨")
+            if (target is null && source.PlannedGoalUnitIds.IsDefaultOrEmpty &&
+                source.PursueBothRouteQuests && tier is "초월" or "제한됨")
             {
                 target = source.Units.Values.Where(unit => Tier(unit) == tier && unit.Recipe.Count > 0 &&
                         counts.GetValueOrDefault(unit.Id) == 0)
@@ -56,9 +63,14 @@ public sealed record RouteQuestEvaluation(int PlannedTopCount, int FutureCommonW
             IsTop(source.Units[id]))).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         var topCount = topIds.Sum(id => Math.Max(1, counts.GetValueOrDefault(id)));
         notes.Add($"목표 묶음: 최상위 {topCount}기 · 부족 재료 {missing}개 · " +
-            $"골드 {allocation.ResourceRequirements.Gold}, 목재 {allocation.ResourceRequirements.Lumber}");
+            $"총 조합 비용 골드 {allocation.ResourceRequirements.Gold}, 목재 {allocation.ResourceRequirements.Lumber}");
         notes.Add("보상은 조합 이후 지급: 현재 패에 선지급하지 않음. 미래 잉여만 점수 상한에 반영.");
-        return new(topCount, rewards, surplus, upper, string.Join("\n", notes));
+        return new(topCount, rewards, surplus, upper, string.Join("\n", notes))
+        {
+            PlannedBuildBp = (int)Math.Round(allocation.Progress.CompletionRatio * 10_000,
+                MidpointRounding.AwayFromZero),
+            PlannedMissingLeaves = missing
+        };
     }
 
     public ImmutableArray<NavigationIntervalOptionInput> Apply(

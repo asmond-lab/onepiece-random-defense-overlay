@@ -1,0 +1,600 @@
+{
+  "SchemaVersion": 1,
+  "MapVersion": "2.320",
+  "SourcePins": [
+    {
+      "Path": "docs/analysis-2320/modern-reader/members-ko-2.320/war3map.j",
+      "Length": 3014709,
+      "Sha256": "6fdfc64bf8ad9463f5b5c8a351ffa7e1875d6cf9b51210129539375fa77a6c7c"
+    },
+    {
+      "Path": "docs/analysis-2320/object-diff/2.320.w3a.json",
+      "Length": 22613449,
+      "Sha256": "51e6e06c1c40c3949aeb0590fc4d51f0d4268ce47cfb1eb213fec32aed8c75df"
+    },
+    {
+      "Path": "docs/analysis-2320/object-diff/2.320.w3u.json",
+      "Length": 31523491,
+      "Sha256": "d32b1f98630a23657627aeb0f493cc54bddf9cfef6120e65c36a6a6a594f59af"
+    },
+    {
+      "Path": "docs/analysis-2320/object-diff/leo-board-reconciliation.json",
+      "Length": 80408,
+      "Sha256": "5c43596e7e2ddad5915054718d3ba75a4aa077f7ba3cb0a20c3bd2655f3b7fb4"
+    }
+  ],
+  "Options": [
+    {
+      "Id": "AlliedForces.DoubleBenefit",
+      "Name": "일석이조",
+      "Category": "AlliedForces",
+      "Effects": [
+        "Prior counted crafts: one extra e0IX per cumulative dg+mg+Vg+Dg+eg+Gg+Xg+ag+Pg; future qualifying point value >100 gives base1+extra1."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Njy",
+        "kqT",
+        "XSy",
+        "jfT"
+      ]
+    },
+    {
+      "Id": "AlliedForces.EmergencyCall",
+      "Name": "긴급소집",
+      "Category": "AlliedForces",
+      "Effects": [
+        "A09C special selection ability receives +3 levels; Mg=2 disables ongoing category craft payout."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Njy",
+        "XSy"
+      ]
+    },
+    {
+      "Id": "AlliedForces.TraitEngineering",
+      "Name": "특성공학",
+      "Category": "AlliedForces",
+      "Effects": [
+        "+1 trait point and Hy change allowance; disables A082; adds A0VD. A0VD consumes two random wisps and one lumber for one trait point."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Njy",
+        "pyF"
+      ]
+    },
+    {
+      "Id": "PathOfKings.MartialLaw",
+      "Name": "계엄령",
+      "Category": "PathOfKings",
+      "Effects": [
+        "Summon h0C8 Leo with A0II level2, configured aura slow20%, radius850. Top-unit limit0. No inherited berry multiplier or boss lumber bonus."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "m7y",
+        "l0b",
+        "J9y"
+      ]
+    },
+    {
+      "Id": "PathOfKings.BountyHunter",
+      "Name": "바운티헌터",
+      "Category": "PathOfKings",
+      "Effects": [
+        "Summon h0C8 Leo A0II level1 slow10%, radius850; top-unit limit1. Eligible line death chest roll1..10000 <=1+hg; failure hg+=8, success reset0. Chest buckets: lumber1, random wisp1, map progress or gold2000..5000; probabilities unknown."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "m7y",
+        "UOy",
+        "lsT",
+        "l0b"
+      ]
+    },
+    {
+      "Id": "PathOfKings.RoyalLoader",
+      "Name": "로얄로더",
+      "Category": "PathOfKings",
+      "Effects": [
+        "Summon h0C8 Leo A0II level1 slow10%, radius850; top-unit limit1. Qualifying units gain A0IW/A0VQ. Royal proc roll1..100 <=8, radius400; cooldown-scaled damage capped at cooldown*671052.625. Object stat contribution not migrated."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "m7y",
+        "qkb",
+        "KKT",
+        "adF",
+        "l0b"
+      ]
+    },
+    {
+      "Id": "Gambler.Casino",
+      "Name": "카지노",
+      "Category": "Gambler",
+      "Effects": [
+        "Disable low/middle gambling; rare rerolls+1. Otherworld selection remaining=2*remaining+consumed; future qualifying base1 grants2. World failure may replace h06G fallback with ix[0..41] rare.",
+        "Normal high-gamble failure roll <=30 unchanged; Casino skips h05X exceptional branch and sets special-pool threshold0, so surviving success uses Tq rare pool with A0YE. Exact probabilities remain unknown."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Fxy",
+        "IhT",
+        "AuT",
+        "ykb"
+      ]
+    },
+    {
+      "Id": "Gambler.RiskHedge",
+      "Name": "리스크헷지",
+      "Category": "Gambler",
+      "Effects": [
+        "Rare rerolls+2; normal high failure two total h06G and lumber1. World success threshold15+risk; failure risk+15, success resets0. Rare and world reroll resource fees waived, allowance still required."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Fxy",
+        "IhT",
+        "ykb",
+        "Vvy",
+        "JbF"
+      ]
+    },
+    {
+      "Id": "Gambler.Exchange2320",
+      "Name": "환전소",
+      "Category": "Gambler",
+      "Effects": [
+        "Creates h0BU and I009 initialized zero. Middle attempt grants point1 before outcome including failure. Seven redemptions costs1/3/3/5/3/10/20. No selection rare-reroll grant; existing allowance retained. High gamble disabled; A0MA otherworld-only."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Fxy",
+        "Ejy",
+        "FWT",
+        "SrT",
+        "mKy",
+        "MKT",
+        "OLT",
+        "eMy",
+        "hsy"
+      ]
+    },
+    {
+      "Id": "BestHelp.MaximumOutput",
+      "Name": "최대출력",
+      "Category": "BestHelp",
+      "Effects": [
+        "A0BZ/A0BY/A07T/A07X/A07W level2; adds A0UY potion. Detailed helper scoring remains unknown.",
+        "A0UY restores300 helper mana per use, increments its ability level and removes ability on level3 use."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "G1y",
+        "cyy",
+        "N7y",
+        "G9y",
+        "dyF"
+      ]
+    },
+    {
+      "Id": "BestHelp.Alchemy",
+      "Name": "연금술",
+      "Category": "BestHelp",
+      "Effects": [
+        "Adds A0J2; owned special/rare target only (A0BA/A0B9 or h01C/h015). Destroy target and grant direct UNIT rows from each registered recipe, ignoring non-UNIT costs, not recursive decomposition. Rejected target refunds100 mana; effective object cost must be separately verified."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "G1y",
+        "UVT"
+      ]
+    },
+    {
+      "Id": "BestHelp.ReverseThinking",
+      "Name": "역발상",
+      "Category": "BestHelp",
+      "Effects": [
+        "Removes A0BZ/A0BY/A07X/A07T/A07U; grants h05X and one unique excavation stack subject to cap."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "G1y",
+        "dly"
+      ]
+    },
+    {
+      "Id": "Random.BlueFlavor",
+      "Name": "파란색맛",
+      "Category": "Random",
+      "Effects": [
+        "Random dispatch bonus e0IX1; distribution and selection scoring unknown.",
+        "PRT requires round>20 and not already selected; dispatch category roll1..4 and option1..3, with Path top-unit-dependent rerolls. Not uniform12 when restrictions apply."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Wfb",
+        "PRT"
+      ]
+    },
+    {
+      "Id": "Random.GreenFlavor",
+      "Name": "초록색맛",
+      "Category": "Random",
+      "Effects": [
+        "Random dispatch bonus lumber1; distribution and selection scoring unknown.",
+        "PRT requires round>20 and not already selected; dispatch category roll1..4 and option1..3, with Path top-unit-dependent rerolls. Not uniform12 when restrictions apply."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Wfb",
+        "PRT"
+      ]
+    },
+    {
+      "Id": "Random.YellowFlavor",
+      "Name": "노란색맛",
+      "Category": "Random",
+      "Effects": [
+        "Random dispatch bonus h0101; distribution and selection scoring unknown.",
+        "PRT requires round>20 and not already selected; dispatch category roll1..4 and option1..3, with Path top-unit-dependent rerolls. Not uniform12 when restrictions apply."
+      ],
+      "ScoringStatus": "Unknown",
+      "SourceFunctions": [
+        "Wfb",
+        "PRT"
+      ]
+    }
+  ],
+  "Exchanges": [
+    {
+      "Ability": "A0CI",
+      "Cost": 1,
+      "Function": "FWT",
+      "Outcome": "gold5000 | e0IX1 | e0181",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": false,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0EZ",
+      "Cost": 3,
+      "Function": "SrT",
+      "Outcome": "lumber1..2",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": false,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0DB",
+      "Cost": 3,
+      "Function": "mKy",
+      "Outcome": "e0181..2",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": false,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0IY",
+      "Cost": 5,
+      "Function": "MKT",
+      "Outcome": "h0601",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": false,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0JR",
+      "Cost": 3,
+      "Function": "OLT",
+      "Outcome": "normal excavation+1 capped10",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": true,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0BV",
+      "Cost": 10,
+      "Function": "eMy",
+      "Outcome": "unique excavation+1 capped10",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": true,
+      "LifetimeOnceStatus": "Unknown"
+    },
+    {
+      "Ability": "A0MA",
+      "Cost": 20,
+      "Function": "hsy",
+      "Outcome": "xx[0..13] with A0YZ plus h06G1",
+      "CooldownSeconds": 0.20000000298023224,
+      "ManaCost": null,
+      "ManaStatus": "UnknownInheritedANcl",
+      "ProbabilityStatus": "Unknown",
+      "DisableAfterUse": false,
+      "LifetimeOnceStatus": "Unknown"
+    }
+  ],
+  "Evidence": [
+    {
+      "Function": "Fxy",
+      "StartLine": 26777,
+      "EndLine": 26850,
+      "Text": "function Fxy takes integer bxy,integer Txy returns nothing\nlocal location yxy\nif bxy==1 then\nif not cq[Txy]then\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 카지노|r 을(를) 선택하셨습니다.\")\nendif\nset Og[Txy]=1\ncall SetPlayerTechMaxAllowed(Player(Txy),$68303642,0)\ncall SetPlayerTechMaxAllowed(Player(Txy),$68303643,0)\nset ng[Txy]=ng[Txy]+1\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00001|r회 증가했습니다.\")\nif ng[Txy]>0 then\ncall SetPlayerAbilityAvailable(Player(Txy),$41305945,true)\nendif\nset xM=ANy()\nset BM[xM]=Player(Txy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall YTy(xM)\nif Xy then\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 카지노효과로 이세계 도박 횟수가 추가됩니다.\")\nset NF[Txy]=2*NF[Txy]+GF[Txy]\ncall AddUnitToStock(Fg[Txy],$48304157,NF[Txy],16)\nendif\nset Rg[Txy]=\"카지노\"\nset Ry[Txy]=true\nelseif bxy==2 then\nif not cq[Txy]then\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 리스크헷지|r 을(를) 선택하셨습니다.\")\nendif\nset Og[Txy]=2\nset ng[Txy]=ng[Txy]+2\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00002|r회 증가했습니다.\")\nif ng[Txy]>0 then\ncall SetPlayerAbilityAvailable(Player(Txy),$41305945,true)\nendif\nset xM=ANy()\nset BM[xM]=Player(Txy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall YTy(xM)\nset Rg[Txy]=\"리스크헷지\"\nset Ry[Txy]=true\nelseif bxy==3 then\nif not cq[Txy]then\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 환전소|r 을(를) 선택하셨습니다.\")\nendif\nset Og[Txy]=3\ncall SetPlayerTechMaxAllowed(Player(Txy),$68303644,0)\nif ng[Txy]>0 then\ncall SetPlayerAbilityAvailable(Player(Txy),$41305945,true)\nendif\nset Qg[Txy]=CreateUnit(Player(Txy),$68304255,GetUnitX(Fg[Txy])+220.,GetUnitY(Fg[Txy]),270.)\ncall SetPlayerAbilityAvailable(Player(Txy),$41304d41,false)\nif rg[Txy]==null then\nset yxy=GetStartLocationLoc(GetPlayerStartLocation(Player(Txy)))\nset bj_lastCreatedItem=CreateItem($49303039,GetLocationX(yxy),GetLocationY(yxy))\nset rg[Txy]=bj_lastCreatedItem\ncall SetItemUserData(rg[Txy],Txy)\ncall SetItemCharges(rg[Txy],0)\ncall UnitAddItemSwapped(rg[Txy],Qg[Txy])\nendif\nif Xy then\ncall DisplayTimedTextToPlayer(Player(Txy),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 환전소 효과로 환전소에 랜덤전용 유닛이 입고됩니다.\")\ncall SetPlayerAbilityAvailable(Player(Txy),$41304d41,true)\nendif\nset xM=ANy()\nset BM[xM]=Player(Txy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall YTy(xM)\nset Rg[Txy]=\"환전소\"\nset Ry[Txy]=true\nendif\nset Bg[Txy]=\"도박광\"\nset yxy=null\nendfunction"
+    },
+    {
+      "Function": "G1y",
+      "StartLine": 26851,
+      "EndLine": 26916,
+      "Text": "function G1y takes integer c1y,integer d1y returns nothing\nlocal player m1y\nlocal player V1y\nlocal player D1y\nlocal real e1y\nif c1y==1 then\nif not cq[d1y]then\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 최대출력|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(d1y),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소 스킬이 강화됩니다.\")\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소에 |cff51ddf5마나포션|r 스킬이 추가됩니다.\")\ncall SetUnitAbilityLevel(Ag[d1y],$4130425a,2)\ncall SetUnitAbilityLevel(Ag[d1y],$41304259,2)\ncall SetUnitAbilityLevel(Ag[d1y],$41303754,2)\ncall SetUnitAbilityLevel(Ag[d1y],$41303758,2)\ncall SetUnitAbilityLevel(Ag[d1y],$41303757,2)\ncall UnitAddAbility(Ag[d1y],$41305559)\nset xM=ANy()\nset BM[xM]=Player(d1y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall YTy(xM)\nset Rg[d1y]=\"최대출력\"\nset Ry[d1y]=true\nelseif c1y==2 then\nif not cq[d1y]then\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 연금술|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(d1y),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 연금술|r 항법효과로 도움소에 |cffff0000'연금술'|r 스킬이 추가됩니다.\")\ncall UnitAddAbility(Ag[d1y],$41304a32)\nset xM=ANy()\nset BM[xM]=Player(d1y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall YTy(xM)\nset Rg[d1y]=\"연금술\"\nset Ry[d1y]=true\nelseif c1y==3 then\nif not cq[d1y]then\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 역발상|r 을(를) 선택하셨습니다.\")\nendif\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 도움소 마나소모가 |cffff0000150|r 이하 스킬 사용 가능\")\ncall UnitRemoveAbility(Ag[d1y],$4130425a)\ncall UnitRemoveAbility(Ag[d1y],$41304259)\ncall UnitRemoveAbility(Ag[d1y],$41303758)\ncall UnitRemoveAbility(Ag[d1y],$41303754)\ncall UnitRemoveAbility(Ag[d1y],$41303755)\nset D1y=Player(d1y)\nset m1y=Player(d1y)\nset e1y=GetStartLocationX(GetPlayerStartLocation(m1y))\nset V1y=Player(d1y)\nset bj_lastCreatedUnit=CreateUnit(D1y,$68303558,e1y,GetStartLocationY(GetPlayerStartLocation(V1y)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\ncall dly(Player(d1y),1,1)\nset xM=ANy()\nset BM[xM]=Player(d1y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall YTy(xM)\nset Rg[d1y]=\"역발상\"\nset Ry[d1y]=true\nendif\nset Bg[d1y]=\"최고의도움\"\nset m1y=null\nset V1y=null\nset D1y=null\nendfunction"
+    },
+    {
+      "Function": "Njy",
+      "StartLine": 26917,
+      "EndLine": 26965,
+      "Text": "function Njy takes integer sjy,integer njy returns nothing\nif sjy==1 then\nif not cq[njy]then\ncall DisplayTimedTextToPlayer(Player(njy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 일석이조|r 을(를) 선택하셨습니다.\")\nendif\nset Mg[njy]=1\ncall kqT(njy)\nset xM=ANy()\nset BM[xM]=Player(njy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall YTy(xM)\nset Rg[njy]=\"일석이조\"\nset Ry[njy]=true\nelseif sjy==2 then\nif not cq[njy]then\ncall DisplayTimedTextToPlayer(Player(njy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 긴급소집|r 을(를) 선택하셨습니다.\")\nendif\nset Mg[njy]=2\nif GetUnitAbilityLevel(Tg[njy],$41303943)>0 then\ncall SetUnitAbilityLevel(Tg[njy],$41303943,GetUnitAbilityLevel(Tg[njy],$41303943)+3)\nelse\ncall MVy(Tg[njy],$41303943,true)\ncall SetUnitAbilityLevel(Tg[njy],$41303943,3)\nendif\nset xM=ANy()\nset BM[xM]=Player(njy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall YTy(xM)\nset Rg[njy]=\"긴급소집\"\nset Ry[njy]=true\nelseif sjy==3 then\nif not cq[njy]then\ncall DisplayTimedTextToPlayer(Player(njy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 특성공학|r 을(를) 선택하셨습니다.\")\nendif\nset Mg[njy]=3\ncall SetPlayerAbilityAvailable(Player(njy),$41303832,false)\ncall UnitAddAbility(Tg[njy],$41305644)\nset Hy[njy]=Hy[njy]+1\ncall SetUnitAbilityLevel(Tg[njy],$41304b38,Hy[njy]+1)\ncall SetPlayerState(Player(njy),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(Player(njy),PLAYER_STATE_RESOURCE_FOOD_USED)+1)\nset xM=ANy()\nset BM[xM]=Player(njy)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall YTy(xM)\nset Rg[njy]=\"특성공학\"\nset Ry[njy]=true\nendif\nset Bg[njy]=\"연합세력\"\nendfunction"
+    },
+    {
+      "Function": "Wfb",
+      "StartLine": 26966,
+      "EndLine": 26994,
+      "Text": "function Wfb takes integer ofb,integer kfb returns nothing\nlocal player Lfb\nlocal player jfb\nlocal player ufb\nlocal real pfb\nif cq[kfb]then\nset Lfb=null\nset jfb=null\nset ufb=null\nreturn\nendif\nif ofb==1 then\ncall uTT(Player(kfb),1)\ncall DisplayTimedTextToPlayer(Player(kfb),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 파란색맛|r 항법효과로 \"+GetObjectName($65304958)+\" 1기 획득!\")\nelseif ofb==2 then\ncall SetPlayerState(Player(kfb),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(kfb),PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall DisplayTimedTextToPlayer(Player(kfb),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 초록색맛|r 항법효과로 |cff7ad8231 목재|r 획득!\")\nelseif ofb==3 then\nset ufb=Player(kfb)\nset Lfb=Player(kfb)\nset pfb=GetStartLocationX(GetPlayerStartLocation(Lfb))\nset jfb=Player(kfb)\nset bj_lastCreatedUnit=CreateUnit(ufb,$68303130,pfb,GetStartLocationY(GetPlayerStartLocation(jfb)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(kfb),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 노란색맛|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset Lfb=null\nset jfb=null\nset ufb=null\nendfunction"
+    },
+    {
+      "Function": "m7y",
+      "StartLine": 26995,
+      "EndLine": 27076,
+      "Text": "function m7y takes integer T7y,integer y7y returns nothing\nlocal integer F7y\nlocal player g7y\nlocal player A7y\nlocal player c7y\nlocal real d7y\nif T7y==1 then\nif oy[y7y]>=1 then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 보유중일 경우 선택하실 수 없습니다.\")\nset g7y=null\nset A7y=null\nset c7y=null\nreturn\nendif\nset Aq[y7y]=true\nif not cq[y7y]then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 계엄령|r 을(를) 선택하셨습니다.\")\nendif\nset vg[y7y]=1\nset xM=ANy()\nset BM[xM]=Player(y7y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall YTy(xM)\nset Rg[y7y]=\"계엄령\"\nset Ry[y7y]=true\nelseif T7y==2 then\nif oy[y7y]>=2 then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유중일 경우 선택하실 수 없습니다.\")\nset g7y=null\nset A7y=null\nset c7y=null\nreturn\nendif\nset Aq[y7y]=true\nif not cq[y7y]then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 바운티헌터|r 을(를) 선택하셨습니다.\")\nendif\nset vg[y7y]=2\nset xM=ANy()\nset BM[xM]=Player(y7y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall YTy(xM)\nset Rg[y7y]=\"바운티헌터\"\nset Ry[y7y]=true\nelseif T7y==3 then\nif oy[y7y]>=2 then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유 중일 경우 선택하실 수 없습니다.\")\nset g7y=null\nset A7y=null\nset c7y=null\nreturn\nendif\nset Aq[y7y]=true\nif not cq[y7y]then\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 로얄로더|r 을(를) 선택하셨습니다.\")\nendif\nset vg[y7y]=3\nset F7y=d7b()\ncall GroupEnumUnitsOfPlayer(Hc[F7y],Player(y7y),Condition(r3))\ncall qny(F7y)\nset xM=ANy()\nset BM[xM]=Player(y7y)\nset RM[xM]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall YTy(xM)\nset Rg[y7y]=\"로얄로더\"\nset Ry[y7y]=true\nendif\nset c7y=Player(y7y)\nset g7y=Player(y7y)\nset d7y=GetStartLocationX(GetPlayerStartLocation(g7y))\nset A7y=Player(y7y)\nset bj_lastCreatedUnit=CreateUnit(c7y,$68304338,d7y,GetStartLocationY(GetPlayerStartLocation(A7y)),bj_UNIT_FACING)\nif T7y==1 then\ncall SetUnitAbilityLevel(bj_lastCreatedUnit,$41304949,2)\nendif\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법 기본효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nset Bg[y7y]=\"패왕의길\"\nset g7y=null\nset A7y=null\nset c7y=null\nendfunction"
+    },
+    {
+      "Function": "UOy",
+      "StartLine": 35322,
+      "EndLine": 35366,
+      "Text": "function UOy takes nothing returns nothing\nlocal unit uOy=GetTriggerUnit()\nlocal integer pOy=GetUnitAbilityLevel(uOy,$41393031)\nlocal integer WOy=pb\nlocal integer wOy\nlocal texttag YOy\nif pOy==0 then\nset uOy=null\nset YOy=null\nreturn\nendif\nset pOy=pOy-1\nif not Zy[pOy]then\nset uOy=null\nset YOy=null\nreturn\nendif\nif vg[pOy]==2 then\nif ptT(1,$2710)<=1+hg[pOy]then\nset hg[pOy]=0\nset bj_lastCreatedUnit=CreateUnit(Player(pOy),$68303735,GetRectCenterX(EF[pOy]),GetRectCenterY(EF[pOy]),270.)\ncall UnitRemoveAbility(bj_lastCreatedUnit,$416d6f76)\nelse\nset hg[pOy]=hg[pOy]+8\nendif\nendif\ncall ForGroup(Hc[Hg[pOy]],M8)\nif ptT(1,4)==3 then\nset wOy=R2I(1.+2.*(WOy/5.)+3.*(WOy/6.)-WOy/10.)\nset wOy=R2I(wOy*2.*(1.+Jy[pOy]))\ncall bnT(Player(pOy),wOy)\nif GetLocalPlayer()==Player(pOy) then\nset YOy=CreateTextTag()\ncall SetTextTagText(YOy,\"|cffffd700 +\"+I2S(wOy),.023)\ncall SetTextTagPosUnit(YOy,uOy,15.)\ncall SetTextTagColor(YOy,$ff,$ff,$ff,$ff)\ncall SetTextTagPermanent(YOy,false)\ncall SetTextTagLifespan(YOy,1.5)\ncall SetTextTagFadepoint(YOy,.45)\ncall SetTextTagVelocity(YOy,.0,.04)\nendif\nendif\nset uOy=null\nset YOy=null\nendfunction"
+    },
+    {
+      "Function": "lsT",
+      "StartLine": 55366,
+      "EndLine": 55414,
+      "Text": "function lsT takes nothing returns nothing\nlocal integer usT=GetPlayerId(GetTriggerPlayer())\nlocal integer psT=ptT(1,$64)\nlocal unit wsT=GetTriggerUnit()\nlocal integer WsT\nlocal integer YsT\nlocal string UsT\nlocal integer EsT\ncall ShowUnit(wsT,false)\ncall KillUnit(wsT)\nif psT<=40 and psT>20 then\ncall DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,\"보물상자에서 위습을 발견했습니다.\\n|cffffd700랜덤위습 1개|r 획득!\")\ncall uTT(Player(usT),1)\nelseif psT<=20 then\ncall DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,\"보물상자에서 목재를 발견했습니다.\\n|cff7ad8231 목재|r 획득!\")\ncall SetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_LUMBER)+1)\nelseif psT>=96 and tg[usT]!=0 then\nset tg[usT]=tg[usT]-1\nif tg[usT]==0 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(usT))+\"|r 님이 모든 |cff00ced1보물지도|r를 찾으셨습니다!\")\ncall DisplayTimedTextToPlayer(Player(usT),0.,0.,10.,\"|cffff8200★|r 기록지침에 |cffff69b4원피스|r 능력이 추가됩니다!\")\ncall MVy(Tg[usT],$41304b56,true)\ncall UnitAddAbility(SF[usT],$41304b54)\ncall UnitAddAbility(SF[usT],$41304b55)\ncall UnitAddAbility(SF[usT],$41304b53)\ncall UnitAddAbility(SF[usT],$41304b52)\nset hy[usT]=hy[usT]+10\nset Qy[usT]=Qy[usT]+10\nelse\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(usT))+\"|r 님이 |cff00ced1보물지도|r를 찾으셨습니다! 남은 보물지도 : \"+I2S(tg[usT])+\"개\\n추가적으로 탐색 가능한 '보물' 이 3개 추가됩니다.\")\nset YsT=3\nset UsT=\"(보물지도)\"\nset EsT=0\nloop\nexitwhen EsT>=YsT\nset xA[RA]=b0b(GetRectMinX(YV),GetRectMaxX(YV))\nset MA[RA]=b0b(GetRectMinY(YV),GetRectMaxY(YV))\nset RA=RA+1\nset EsT=EsT+1\nendloop\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,\"|cff04ffc4[알림]|r 보물이 \"+I2S(YsT)+\"개 스폰되었습니다. \"+UsT)\nendif\nelse\nset WsT=ptT($7d0,$1388)\ncall DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,\"보물상자에서 금화를 발견했습니다.\\n|cffffd700\"+I2S(WsT)+\" 골드|r 획득!\")\ncall SetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_GOLD)+WsT)\nendif\nset wsT=null\nendfunction"
+    },
+    {
+      "Function": "qkb",
+      "StartLine": 20794,
+      "EndLine": 20812,
+      "Text": "function qkb takes unit Nkb returns nothing\nlocal integer ikb=GetPlayerId(GetOwningPlayer(Nkb))\nif (GetUnitAbilityLevel(Nkb,$4130374f)>0 and IsUnitType(Nkb,UNIT_TYPE_HERO))or GetUnitAbilityLevel(Nkb,$41393035)>0 or GetUnitAbilityLevel(Nkb,$41393036)>0 or GetUnitAbilityLevel(Nkb,$41393037)>0 or GetUnitAbilityLevel(Nkb,$41393039)>0 then\nif vg[ikb]==3 then\ncall DisplayTimedTextToPlayer(Player(ikb),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길 :: 로얄로더|r 항법효과로 \"+GetUnitName(Nkb)+\" 에게 추가 능력치 부여\")\ncall MVy(Nkb,$41304957,true)\ncall MVy(Nkb,$41305651,true)\nif HaveSavedInteger(mb,hc,GetUnitTypeId(Nkb)) then\nreturn\nendif\ncall tob(hc,GetUnitTypeId(Nkb),1)\ncall npT(GetUnitTypeId(Nkb),Tu)\nif x4y(GetUnitTypeId(Nkb))!=0 then\ncall tob(hc,x4y(GetUnitTypeId(Nkb)),1)\ncall npT(x4y(GetUnitTypeId(Nkb)),Tu)\nendif\nendif\nendif\nendfunction"
+    },
+    {
+      "Function": "KKT",
+      "StartLine": 20220,
+      "EndLine": 20247,
+      "Text": "function KKT takes nothing returns nothing\nlocal integer iKT=GetPlayerId(Ty)\nlocal unit qKT=FirstOfGroup(dy)\nif (GetUnitAbilityLevel(qKT,$4130374f)>0 and IsUnitType(qKT,UNIT_TYPE_HERO))or GetUnitAbilityLevel(qKT,$41393035)>0 or GetUnitAbilityLevel(qKT,$41393036)>0 or GetUnitAbilityLevel(qKT,$41393037)>0 or GetUnitAbilityLevel(qKT,$41393039)>0 then\nif GetUnitTypeId(qKT)!=$4830424b and GetUnitTypeId(qKT)!=$68303537 then\nset oy[iKT]=oy[iKT]+1\nendif\ncall F6b(Player(iKT))\nif vg[iKT]==3 then\ncall DisplayTimedTextToPlayer(Player(iKT),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길 :: 로얄로더|r 항법효과로 \"+GetUnitName(qKT)+\" 에게 추가 능력치 부여\")\ncall UnitAddAbility(qKT,$41304957)\ncall UnitMakeAbilityPermanent(qKT,true,$41304957)\ncall UnitAddAbility(qKT,$41305651)\ncall UnitMakeAbilityPermanent(qKT,true,$41305651)\nif HaveSavedInteger(mb,hc,GetUnitTypeId(qKT)) then\nset qKT=null\nreturn\nendif\ncall tob(hc,GetUnitTypeId(qKT),1)\ncall npT(GetUnitTypeId(qKT),Tu)\nif x4y(GetUnitTypeId(qKT))!=0 then\ncall tob(hc,x4y(GetUnitTypeId(qKT)),1)\ncall npT(x4y(GetUnitTypeId(qKT)),Tu)\nendif\nendif\nendif\nset qKT=null\nendfunction"
+    },
+    {
+      "Function": "adF",
+      "StartLine": 42724,
+      "EndLine": 42749,
+      "Text": "function adF takes nothing returns nothing\nlocal unit ddF=GetAttacker()\nlocal unit mdF=GetTriggerUnit()\nlocal location DdF=GetUnitLoc(mdF)\nlocal real edF=255000.\nlocal real GdF=BlzGetUnitAttackCooldown(ddF,0)\nlocal real XdF=GdF*671052.625\nlocal unit VdF\nif GdF>.38 then\nset edF=255000.+671052.6*(GdF-.38)\nendif\nif edF>XdF then\nset edF=XdF\nendif\nif ptT(1,$64)<=8 and GetUnitAbilityLevel(ddF,$41304957)>0 then\nset VdF=CreateUnitAtLoc(Vy,$68303832,DdF,bj_UNIT_FACING)\ncall SetUnitScale(VdF,1.5,1.,1.)\ncall UnitApplyTimedLife(VdF,$42487765,1.)\ncall Ymy(gg[GetPlayerId(GetOwningPlayer(ddF))],0.,400.,DdF,edF,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)\nendif\ncall RemoveLocation(DdF)\nset ddF=null\nset mdF=null\nset VdF=null\nset DdF=null\nendfunction"
+    },
+    {
+      "Function": "UVT",
+      "StartLine": 35498,
+      "EndLine": 35571,
+      "Text": "function UVT takes nothing returns nothing\nlocal integer rVT=GetPlayerId(GetTriggerPlayer())\nlocal integer QVT=GetUnitTypeId(GetSpellTargetUnit())\nlocal integer hVT=0\nlocal integer tVT=LoadInteger(Lc,QVT,-1)\nlocal unit JVT\nlocal real HVT\nlocal integer oVT\nlocal integer kVT\nlocal integer LVT\nlocal integer jVT\nlocal integer uVT\nlocal integer pVT\nlocal integer WVT\nlocal player wVT\nlocal player YVT\nif GetOwningPlayer(GetSpellTargetUnit())!=Player(rVT) then\ncall DisplayTimedTextToPlayer(Player(rVT),0.,0.,5.,\"자신의 유닛에만 사용할 수 있습니다.\")\nset JVT=GetTriggerUnit()\ncall SetUnitState(JVT,UNIT_STATE_MANA,GetUnitState(JVT,UNIT_STATE_MANA)+100.)\nset JVT=null\nset wVT=null\nset YVT=null\nreturn\nendif\nif GetUnitAbilityLevel(GetSpellTargetUnit(),$41304241)<=0 and GetUnitTypeId(GetSpellTargetUnit())!=$68303143 and GetUnitTypeId(GetSpellTargetUnit())!=$68303135 and GetUnitAbilityLevel(GetSpellTargetUnit(),$41304239)<=0 then\ncall DisplayTimedTextToPlayer(Player(rVT),0.,0.,5.,\"|cffff0000[오류]|r 연금술은 '특별' 또는 '희귀' 유닛에게만 사용 가능합니다.\")\nset JVT=GetTriggerUnit()\ncall SetUnitState(JVT,UNIT_STATE_MANA,GetUnitState(JVT,UNIT_STATE_MANA)+100.)\nset JVT=null\nset wVT=null\nset YVT=null\nreturn\nendif\nset JVT=GetSpellTargetUnit()\ncall ShowUnit(JVT,false)\ncall KillUnit(JVT)\ncall DisplayTimedTextToPlayer(Player(rVT),0.,0.,5.,\"|cffFFB2F5[연금술]|r 분해 완료!\")\nloop\nexitwhen hVT>=tVT\nset oVT=rVT\nset kVT=LoadInteger(Lc,QVT,hVT)\nset LVT=0\nset jVT=LoadInteger(Kb,kVT,3)\nloop\nexitwhen LVT>=jVT\nset uVT=LoadInteger(Rb,kVT,LVT)\nset pVT=LoadInteger(xb,kVT,LVT)\nset WVT=LoadInteger(Mb,kVT,LVT)\nif uVT==$554e4954 then\nset uVT=0\nloop\nexitwhen uVT>=WVT\nset YVT=Player(oVT)\nset wVT=Player(oVT)\nset HVT=GetStartLocationX(GetPlayerStartLocation(wVT))\nset wVT=Player(oVT)\nset JVT=CreateUnit(YVT,pVT,HVT,GetStartLocationY(GetPlayerStartLocation(wVT)),bj_UNIT_FACING)\ncall IssueImmediateOrder(JVT,\"holdposition\")\nif IsUnitType(JVT,UNIT_TYPE_UNDEAD) then\ncall UnitAddAbility(JVT,$41303759)\nendif\ncall DisplayTimedTextToPlayer(Player(oVT),0.,0.,5.,GetUnitName(JVT)+\" 획득!\")\nset uVT=uVT+1\nendloop\nendif\nset LVT=LVT+1\nendloop\nset hVT=hVT+1\nendloop\nset JVT=null\nset wVT=null\nset YVT=null\nendfunction"
+    },
+    {
+      "Function": "pyF",
+      "StartLine": 69897,
+      "EndLine": 69930,
+      "Text": "function pyF takes nothing returns nothing\nlocal integer oyF=d7b()\nlocal integer jyF=GetPlayerId(GetTriggerPlayer())\nlocal unit kyF\nlocal integer LyF\nlocal integer uyF\ncall GroupEnumUnitsOfPlayer(Hc[oyF],GetTriggerPlayer(),Filter(O3))\nset LyF=ktb(oyF)\nif LyF<2 then\ncall DisplayTimedTextToPlayer(Player(jyF),0.,0.,5.,\"|cffff8200기록지침 :: |r|ce32bb454[특성공학]|r에 필요한 |cffffd700랜덤위습|r이 부족합니다. 필요 개수 : |cffFF00002개|r\")\ncall IssueImmediateOrder(GetTriggerUnit(),\"stop\")\nset kyF=null\nreturn\nendif\nif GetPlayerState(Player(jyF),PLAYER_STATE_RESOURCE_LUMBER)<1 then\ncall DisplayTimedTextToPlayer(Player(jyF),0.,0.,5.,\"|cffff8200기록지침 :: |r|ce32bb454[특성공학]|r에 필요한 |cff7ad823목재|r가 부족합니다. 필요 개수 : |cffFF00001개|r\")\ncall IssueImmediateOrder(GetTriggerUnit(),\"stop\")\nset kyF=null\nreturn\nendif\nset uyF=0\nloop\nexitwhen uyF>=2\nset kyF=WPT(oyF)\ncall GroupRemoveUnit(Hc[oyF],kyF)\ncall Yhb(kyF)\nset uyF=uyF+1\nendloop\ncall qny(oyF)\ncall SetPlayerState(Player(jyF),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(jyF),PLAYER_STATE_RESOURCE_LUMBER)-1)\ncall DisplayTimedTextToPlayer(Player(jyF),0.,0.,5.,\"|cffff8200기록지침 :: |r|ce32bb454[특성공학]|r 으로 |cff1e90ff1 특성포인트|r 획득!|r\")\ncall SetPlayerState(Player(jyF),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(Player(jyF),PLAYER_STATE_RESOURCE_FOOD_USED)+1)\nset kyF=null\nendfunction"
+    },
+    {
+      "Function": "cyy",
+      "StartLine": 45464,
+      "EndLine": 45472,
+      "Text": "function cyy takes nothing returns nothing\nlocal unit Ayy=GetTriggerUnit()\nif GetUnitAbilityLevel(Ayy,$41304259)==2 then\ncall OeT(Ayy,Ayy,GetUnitState(Ayy,UNIT_STATE_MAX_LIFE)*.1,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)\nelse\ncall OeT(Ayy,Ayy,GetUnitState(Ayy,UNIT_STATE_MAX_LIFE)*.07,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)\nendif\nset Ayy=null\nendfunction"
+    },
+    {
+      "Function": "N7y",
+      "StartLine": 24378,
+      "EndLine": 24391,
+      "Text": "function N7y takes nothing returns nothing\nlocal unit P7y=GetTriggerUnit()\nlocal location s7y=GetSpellTargetLoc()\nlocal real n7y\nif GetUnitAbilityLevel(P7y,$4130425a)==2 then\nset n7y=10000000.\nelse\nset n7y=7000000.\nendif\ncall UnitDamagePointLoc(P7y,.0,450.,s7y,n7y,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)\ncall RemoveLocation(s7y)\nset P7y=null\nset s7y=null\nendfunction"
+    },
+    {
+      "Function": "G9y",
+      "StartLine": 14696,
+      "EndLine": 14705,
+      "Text": "function G9y takes nothing returns nothing\nlocal integer e9y=GetPlayerId(GetTriggerPlayer())\nif GetUnitAbilityLevel(GetTriggerUnit(),$41305559)==3 then\ncall UnitRemoveAbility(GetTriggerUnit(),$41305559)\nelse\ncall IncUnitAbilityLevel(GetTriggerUnit(),$41305559)\nendif\ncall SetUnitState(Ag[e9y],UNIT_STATE_MANA,(GetUnitState(Ag[e9y],UNIT_STATE_MANA)+300.)*1.)\ncall DisplayTimedTextToPlayer(Player(e9y),0.,0.,5.,\"|cff04ffc4[알림]|r 마나 포션 사용! 도움소의 현재 마나 : |cff51ddf5\"+I2S(R2I(GetUnitState(Ag[e9y],UNIT_STATE_MANA)))+\"|r\")\nendfunction"
+    },
+    {
+      "Function": "dyF",
+      "StartLine": 46477,
+      "EndLine": 46490,
+      "Text": "function dyF takes nothing returns nothing\nlocal unit AyF=GetTriggerUnit()\nlocal unit cyF=GetSpellTargetUnit()\nif GetUnitAbilityLevel(AyF,$41303757)==2 then\ncall OeT(AyF,cyF,2200000.,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)\nif GetUnitAbilityLevel(cyF,$41393033)>0 then\ncall OeT(AyF,cyF,GetUnitState(cyF,UNIT_STATE_MAX_LIFE)*.2,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)\nelseif GetUnitAbilityLevel(cyF,$41393032)>0 or GetUnitAbilityLevel(cyF,$41393131)>0 or GetUnitAbilityLevel(cyF,$41393034)>0 then\ncall OeT(AyF,cyF,GetUnitState(cyF,UNIT_STATE_MAX_LIFE)*.05,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)\nendif\nendif\nset AyF=null\nset cyF=null\nendfunction"
+    },
+    {
+      "Function": "Ejy",
+      "StartLine": 12494,
+      "EndLine": 12539,
+      "Text": "function Ejy takes nothing returns nothing\nlocal integer jjy=GetPlayerId(GetTriggerPlayer())\nlocal player Wjy=Player(jjy)\nlocal real ujy=GetStartLocationX(GetPlayerStartLocation(Wjy))\nlocal real pjy\nlocal unit wjy\nlocal player Yjy\nlocal player Ujy\nset Wjy=Player(jjy)\nset pjy=GetStartLocationY(GetPlayerStartLocation(Wjy))\nset wjy=GetTrainedUnit()\ncall ShowUnit(wjy,false)\ncall KillUnit(wjy)\nset cF[jjy]=cF[jjy]+1\nif Og[jjy]==3 then\ncall SetItemCharges(rg[jjy],GetItemCharges(rg[jjy])+1)\ncall DisplayTimedTextToPlayer(Player(jjy),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffff8200환전소|r 효과로 |cffD0FC5C콤푸|r를 획득합니다. (보유 콤푸 : \"+I2S(GetItemCharges(rg[jjy]))+\" )\")\nendif\nif ptT(1,$64)<=30 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(jjy))+\"|r 님이 |cffff8200중급유닛 도박|r을 |cffff0000실패|r 하셨습니다.\")\nset Yjy=Player(jjy)\nset Q=Yjy\ncall TriggerEvaluate(r)\nset Wjy=null\nset wjy=null\nset Yjy=null\nset Ujy=null\nreturn\nendif\nset dF[jjy]=dF[jjy]+1\nif ptT(1,$3e8)<=45 then\nset bj_lastCreatedUnit=CreateUnit(Player(jjy),$68303630,ujy,pjy,bj_UNIT_FACING)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(jjy))+\"|r 님이 |cffff8200중급유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nelse\nset bj_lastCreatedUnit=PlaceRandomUnit(gq,Player(jjy),ujy,pjy,bj_UNIT_FACING)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(jjy))+\"|r 님이 |cffff8200중급유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset Ujy=Player(jjy)\nset Q=Ujy\ncall TriggerEvaluate(r)\nset Wjy=null\nset wjy=null\nset Yjy=null\nset Ujy=null\nendfunction"
+    },
+    {
+      "Function": "FWT",
+      "StartLine": 13725,
+      "EndLine": 13753,
+      "Text": "function FWT takes nothing returns nothing\nlocal unit CpT=GetTriggerUnit()\nlocal player SpT=GetTriggerPlayer()\nlocal integer bWT=GetPlayerId(SpT)\nlocal string yWT=null\nlocal integer TWT\nif GetItemCharges(rg[bWT])<1 then\ncall DisplayTimedTextToPlayer(SpT,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(CpT,\"stop\")\nset CpT=null\nset SpT=null\nreturn\nendif\ncall SetItemCharges(rg[bWT],GetItemCharges(rg[bWT])-1)\nset TWT=ptT(1,5)\nif TWT>=4 then\nset yWT=\"|cffffd7005000골드|r\"\ncall SetPlayerState(SpT,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(SpT,PLAYER_STATE_RESOURCE_GOLD)+$1388)\nelseif TWT>=2 and TWT<4 then\nset yWT=\"|cffffd700\"+GetObjectName($65304958)+\"|r\"\ncall uTT(SpT,1)\nelseif TWT==1 then\nset yWT=\"|cffff8200\"+GetObjectName($65303138)+\"|r\"\ncall gpy(SpT,1)\nendif\ncall DisplayTimedTextToPlayer(SpT,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(1)+\" 콤푸|r를 소모하여 \"+yWT+\" 획득!\")\nset CpT=null\nset SpT=null\nendfunction"
+    },
+    {
+      "Function": "SrT",
+      "StartLine": 32161,
+      "EndLine": 32179,
+      "Text": "function SrT takes nothing returns nothing\nlocal unit ErT=GetTriggerUnit()\nlocal player lrT=GetTriggerPlayer()\nlocal integer IrT=GetPlayerId(lrT)\nlocal integer CrT\nif GetItemCharges(rg[IrT])<3 then\ncall DisplayTimedTextToPlayer(lrT,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(ErT,\"stop\")\nset ErT=null\nset lrT=null\nreturn\nendif\ncall SetItemCharges(rg[IrT],GetItemCharges(rg[IrT])-3)\nset CrT=ptT(1,2)\ncall DMb(lrT,CrT)\ncall DisplayTimedTextToPlayer(lrT,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(3)+\" 콤푸|r를 소모하여 |cff7ad823\"+I2S(CrT)+\" 목재|r 획득!\")\nset ErT=null\nset lrT=null\nendfunction"
+    },
+    {
+      "Function": "mKy",
+      "StartLine": 56437,
+      "EndLine": 56455,
+      "Text": "function mKy takes nothing returns nothing\nlocal unit gKy=GetTriggerUnit()\nlocal player AKy=GetTriggerPlayer()\nlocal integer cKy=GetPlayerId(AKy)\nlocal integer dKy\nif GetItemCharges(rg[cKy])<3 then\ncall DisplayTimedTextToPlayer(AKy,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(gKy,\"stop\")\nset gKy=null\nset AKy=null\nreturn\nendif\ncall SetItemCharges(rg[cKy],GetItemCharges(rg[cKy])-3)\nset dKy=ptT(1,2)\ncall gpy(AKy,dKy)\ncall DisplayTimedTextToPlayer(AKy,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(3)+\" 콤푸|r를 소모하여 |cffff8200\"+GetObjectName($65303138)+\"|r \"+I2S(dKy)+\"개 획득!\")\nset gKy=null\nset AKy=null\nendfunction"
+    },
+    {
+      "Function": "MKT",
+      "StartLine": 23098,
+      "EndLine": 23119,
+      "Text": "function MKT takes nothing returns nothing\nlocal unit ZKT=GetTriggerUnit()\nlocal player BKT=GetTriggerPlayer()\nlocal integer RKT=GetPlayerId(BKT)\nlocal unit fKT\nlocal real xKT\nif GetItemCharges(rg[RKT])<5 then\ncall DisplayTimedTextToPlayer(BKT,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(ZKT,\"stop\")\nset ZKT=null\nset fKT=null\nset BKT=null\nreturn\nendif\ncall SetItemCharges(rg[RKT],GetItemCharges(rg[RKT])-5)\nset xKT=GetStartLocationX(GetPlayerStartLocation(BKT))\nset fKT=CreateUnit(BKT,$68303630,xKT,GetStartLocationY(GetPlayerStartLocation(BKT)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(BKT,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(5)+\" 콤푸|r를 소모하여 |cff20b2aa\"+GetUnitName(fKT)+\"|r 획득!\")\nset ZKT=null\nset fKT=null\nset BKT=null\nendfunction"
+    },
+    {
+      "Function": "OLT",
+      "StartLine": 26111,
+      "EndLine": 26128,
+      "Text": "function OLT takes nothing returns nothing\nlocal unit xLT=GetTriggerUnit()\nlocal player MLT=GetTriggerPlayer()\nlocal integer vLT=GetPlayerId(MLT)\nif GetItemCharges(rg[vLT])<3 then\ncall DisplayTimedTextToPlayer(MLT,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(xLT,\"stop\")\nset xLT=null\nset MLT=null\nreturn\nendif\ncall SetItemCharges(rg[vLT],GetItemCharges(rg[vLT])-3)\ncall dly(MLT,1,0)\ncall SetPlayerAbilityAvailable(MLT,$41304a52,false)\ncall DisplayTimedTextToPlayer(MLT,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(3)+\" 콤푸|r를 소모하여 |cffA6A6A6아이템 발굴 1 스택|r 획득!\")\nset xLT=null\nset MLT=null\nendfunction"
+    },
+    {
+      "Function": "eMy",
+      "StartLine": 46853,
+      "EndLine": 46870,
+      "Text": "function eMy takes nothing returns nothing\nlocal unit mMy=GetTriggerUnit()\nlocal player VMy=GetTriggerPlayer()\nlocal integer DMy=GetPlayerId(VMy)\nif GetItemCharges(rg[DMy])<10 then\ncall DisplayTimedTextToPlayer(VMy,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(mMy,\"stop\")\nset mMy=null\nset VMy=null\nreturn\nendif\ncall SetItemCharges(rg[DMy],GetItemCharges(rg[DMy])-10)\ncall dly(VMy,1,1)\ncall SetPlayerAbilityAvailable(VMy,$41304256,false)\ncall DisplayTimedTextToPlayer(VMy,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(10)+\" 콤푸|r를 소모하여 |cffFF8200유니크 아이템 발굴 1 스택|r 획득!\")\nset mMy=null\nset VMy=null\nendfunction"
+    },
+    {
+      "Function": "hsy",
+      "StartLine": 51005,
+      "EndLine": 51036,
+      "Text": "function hsy takes nothing returns nothing\nlocal unit Bsy=GetTriggerUnit()\nlocal player Rsy=GetTriggerPlayer()\nlocal integer xsy=GetPlayerId(Rsy)\nlocal unit Msy\nlocal unit vsy\nlocal integer Osy\nlocal real rsy\nlocal real Qsy\nif GetItemCharges(rg[xsy])<20 then\ncall DisplayTimedTextToPlayer(Rsy,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(Bsy,\"stop\")\nset Bsy=null\nset Rsy=null\nset Msy=null\nset vsy=null\nreturn\nendif\ncall SetItemCharges(rg[xsy],GetItemCharges(rg[xsy])-20)\nset Osy=xx[ptT(0,13)]\nset rsy=GetStartLocationX(GetPlayerStartLocation(Rsy))\nset Msy=CreateUnit(Rsy,Osy,rsy,GetStartLocationY(GetPlayerStartLocation(Rsy)),bj_UNIT_FACING)\ncall UnitAddAbility(Msy,$4130595a)\ncall IssueImmediateOrder(Msy,\"holdposition\")\nset Qsy=GetStartLocationX(GetPlayerStartLocation(Rsy))\nset vsy=CreateUnit(Rsy,$68303647,Qsy,GetStartLocationY(GetPlayerStartLocation(Rsy)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Rsy,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(20)+\" 콤푸|r를 소모하여 \"+GetUnitName(Msy)+\"와 \"+GetUnitName(vsy)+\" 획득!\")\nset Bsy=null\nset Rsy=null\nset Msy=null\nset vsy=null\nendfunction"
+    },
+    {
+      "Function": "dly",
+      "StartLine": 11130,
+      "EndLine": 11193,
+      "Text": "function dly takes player EEy,integer lEy,integer IEy returns nothing\nlocal integer CEy=GetPlayerId(EEy)\nlocal string SEy\nlocal integer bly\nlocal string Tly\nlocal integer yly\nlocal string Fly\nlocal integer gly\nlocal string Aly\nlocal integer cly\nif lEy<=0 then\nset SEy=\"|cffff0000[오류]|r index에 0보다 같거나 작은값이 입력되었습니다\"\nset bly=0\nloop\ncall DisplayTimedTextToPlayer(Player(bly),0.,0.,60.,SEy)\nset bly=bly+1\nexitwhen bly==bj_MAX_PLAYERS\nendloop\nreturn\nendif\nif lEy>10 then\nset Tly=\"|cffff0000[오류]|r index에 10보다 큰값이 입력되었습니다. 최대값은 10 입니다\"\nset yly=0\nloop\ncall DisplayTimedTextToPlayer(Player(yly),0.,0.,60.,Tly)\nset yly=yly+1\nexitwhen yly==bj_MAX_PLAYERS\nendloop\nreturn\nendif\nif IEy==Qc then\nif Ly[CEy]+lEy>10 then\nset Fly=\"|cffff0000[오류]|r 아이템 스택이 최대값인 10을 초과했습니다\"\nset gly=0\nloop\ncall DisplayTimedTextToPlayer(Player(gly),0.,0.,60.,Fly)\nset gly=gly+1\nexitwhen gly==bj_MAX_PLAYERS\nendloop\nreturn\nendif\ncall UnitRemoveAbility(Tg[CEy],LoadInteger(Zc,0,Ly[CEy]))\nset Ly[CEy]=Ly[CEy]+lEy\ncall UnitAddAbility(Tg[CEy],LoadInteger(Zc,0,Ly[CEy]))\ncall DisplayTimedTextToPlayer(EEy,0.,0.,5.,\"|cff04ffc4[알림]|r |cffA6A6A6아이템 발굴|r 스택이 |cff1e90ff\"+I2S(lEy)+\"|r 증가했습니다.\")\ncall DisplayTimedTextToPlayer(EEy,0.,0.,5.,\"현재 |cffA6A6A6아이템 발굴|r 스택 : |cff1e90ff\"+I2S(Vob(EEy,0))+\"|r\")\nelseif IEy==1 then\nif jy[CEy]+lEy>10 then\nset Aly=\"|cffff0000[오류]|r 유니크 아이템 스택이 최대값인 10을 초과했습니다\"\nset cly=0\nloop\ncall DisplayTimedTextToPlayer(Player(cly),0.,0.,60.,Aly)\nset cly=cly+1\nexitwhen cly==bj_MAX_PLAYERS\nendloop\nreturn\nendif\ncall UnitRemoveAbility(Tg[CEy],LoadInteger(Zc,1,jy[CEy]))\nset jy[CEy]=jy[CEy]+lEy\ncall UnitAddAbility(Tg[CEy],LoadInteger(Zc,1,jy[CEy]))\ncall DisplayTimedTextToPlayer(EEy,0.,0.,5.,\"|cff04ffc4[알림]|r |cffFF8200유니크 아이템 발굴|r 스택이 |cff1e90ff\"+I2S(lEy)+\"|r 증가했습니다.\")\ncall DisplayTimedTextToPlayer(EEy,0.,0.,5.,\"현재 |cffFF8200유니크 아이템 발굴|r 스택 : |cff1e90ff\"+I2S(Vob(EEy,1))+\"|r\")\nendif\nendfunction"
+    },
+    {
+      "Function": "IhT",
+      "StartLine": 17789,
+      "EndLine": 17831,
+      "Text": "function IhT takes nothing returns nothing\nlocal integer WhT=GetPlayerId(GetTriggerPlayer())\nlocal player EhT=Player(WhT)\nlocal real whT=GetStartLocationX(GetPlayerStartLocation(EhT))\nlocal real YhT\nlocal integer UhT\nlocal unit lhT\nset EhT=Player(WhT)\nset YhT=GetStartLocationY(GetPlayerStartLocation(EhT))\nset UhT=15\nset lhT=GetSoldUnit()\ncall ShowUnit(lhT,false)\ncall KillUnit(lhT)\nset NF[WhT]=NF[WhT]-1\nset GF[WhT]=GF[WhT]+1\nif Og[WhT]==2 then\nset UhT=15+iF[WhT]\nendif\nif ptT(1,$64)>UhT then\nif Og[WhT]==1 and ptT(1,2)==1 then\nset bj_lastCreatedUnit=CreateUnit(Player(WhT),ix[ptT(0,41)],whT,YhT,bj_UNIT_FACING)\ncall UnitAddAbility(bj_lastCreatedUnit,$41305945)\ncall DisplayTimedTextToPlayer(Player(WhT),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00도박광 :: 카지노|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nelse\nset bj_lastCreatedUnit=CreateUnit(Player(WhT),$68303647,whT,YhT,bj_UNIT_FACING)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(WhT))+\"|r 님이 |cffff8200이세계유닛 도박|r을 |cffff0000실패|r 하셨습니다.\")\ncall DisplayTimedTextToPlayer(Player(WhT),0.,0.,5.,\"|cffffdead◈|r |cffff0000이세계유닛 도박|r을 실패하여 \"+GetUnitName(bj_lastCreatedUnit)+\" 1개 획득\")\nendif\nif Og[WhT]==2 then\nset iF[WhT]=iF[WhT]+15\ncall DisplayTimedTextToPlayer(Player(WhT),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00도박광 :: 리스크헷지|r 항법효과로 |cffff8200이세계유닛 도박|r 확률이 |cffff0000\"+I2S(iF[WhT])+\"%|r 증가합니다.\")\nendif\nelse\nset XF[WhT]=XF[WhT]+1\nset iF[WhT]=0\nset bj_lastCreatedUnit=CreateUnit(Player(WhT),xx[ptT(0,13)],whT,YhT,bj_UNIT_FACING)\ncall UnitAddAbility(bj_lastCreatedUnit,$4130595a)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(WhT))+\"|r 님이 |cffff8200이세계유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset EhT=null\nset lhT=null\nendfunction"
+    },
+    {
+      "Function": "AuT",
+      "StartLine": 17386,
+      "EndLine": 17392,
+      "Text": "function AuT takes integer FuT,integer guT returns nothing\nif Og[FuT]==1 then\nset guT=guT+1\nendif\nset NF[FuT]=NF[FuT]+guT\ncall AddUnitToStock(Fg[FuT],$48304157,NF[FuT],16)\nendfunction"
+    },
+    {
+      "Function": "kqT",
+      "StartLine": 21196,
+      "EndLine": 21202,
+      "Text": "function kqT takes integer HqT returns nothing\nlocal integer oqT=dg[HqT]+mg[HqT]+Vg[HqT]+Dg[HqT]+eg[HqT]+Gg[HqT]+Xg[HqT]+ag[HqT]+Pg[HqT]\nif oqT>0 then\ncall uTT(Player(HqT),oqT)\ncall DisplayTimedTextToPlayer(Player(HqT),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00연합세력 :: 일석이조|r 항법효과를 소급 적용하여 |cffffd700\"+GetObjectName($65304958)+\"|r \"+I2S(oqT)+\"개 획득\")\nendif\nendfunction"
+    },
+    {
+      "Function": "XSy",
+      "StartLine": 39736,
+      "EndLine": 39750,
+      "Text": "function XSy takes nothing returns nothing\nlocal integer GSy=GetPlayerId(Ty)\nif Mg[GSy]<=0 or Mg[GSy]==2 then\nreturn\nendif\nif GetUnitPointValue(FirstOfGroup(dy))<=$64 then\nreturn\nendif\ncall uTT(Player(GSy),1)\ncall DisplayTimedTextToPlayer(Player(GSy),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00연합세력|r 항법효과로 |cffffd700\"+GetObjectName($65304958)+\"|r 1개 획득\")\nif Mg[GSy]==1 then\ncall uTT(Player(GSy),1)\ncall DisplayTimedTextToPlayer(Player(GSy),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00연합세력 :: 일석이조|r 항법효과로 |cffffd700\"+GetObjectName($65304958)+\"|r 1개 추가 획득\")\nendif\nendfunction"
+    },
+    {
+      "Function": "jfT",
+      "StartLine": 53003,
+      "EndLine": 53061,
+      "Text": "function jfT takes nothing returns nothing\nlocal integer tfT=GetPlayerId(Ty)\nlocal unit JfT=FirstOfGroup(dy)\nlocal integer HfT\nlocal integer ofT\nlocal boolean kfT\nlocal boolean LfT\nif GetUnitAbilityLevel(JfT,$4130374f)>0 and IsUnitType(JfT,UNIT_TYPE_HERO) and tfT<4 then\nif Hg[tfT]==0 then\nset Hg[tfT]=d7b()\nendif\ncall GroupAddUnit(Hc[Hg[tfT]],JfT)\nset dg[tfT]=dg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393035)>0 then\nset mg[tfT]=mg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393036)>0 then\nset Vg[tfT]=Vg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393037)>0 then\nset Dg[tfT]=Dg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393039)>0 then\nset eg[tfT]=eg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393130)>0 then\nset Gg[tfT]=Gg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$41393132)>0 then\nset Xg[tfT]=Xg[tfT]+1\nelseif GetUnitAbilityLevel(JfT,$4130374e)>0 then\nset ag[tfT]=ag[tfT]+1\nelse\nset kfT=false\nset HfT=GetUnitTypeId(JfT)\nset ofT=0\nloop\nexitwhen kfT\nexitwhen (not kfT)and ofT>=5\nif not kfT then\nif HfT==fx[ofT]then\nif not kfT then\nset LfT=true\nset kfT=true\nendif\nendif\nendif\nif not kfT then\nset ofT=ofT+1\nendif\nendloop\nif not kfT then\nset LfT=false\nset kfT=true\nendif\nif not kfT then\nset LfT=false\nendif\nif LfT then\nset Pg[tfT]=Pg[tfT]+1\nendif\nendif\nset JfT=null\nendfunction"
+    },
+    {
+      "Function": "i_F",
+      "StartLine": 51610,
+      "EndLine": 51650,
+      "Text": "function i_F takes nothing returns nothing\nlocal player m_F=GetTriggerPlayer()\nlocal integer V_F=GetPlayerId(m_F)\nlocal integer D_F=S2I(BlzGetTriggerSyncData())\nlocal integer X_F=V_F*3+D_F\nlocal integer e_F\nlocal integer G_F\nlocal integer a_F\nlocal integer P_F\nlocal integer s_F\nlocal integer n_F\nlocal integer N_F\nif pb>=10 or V_F<0 or V_F>=4 or D_F<0 or D_F>=3 or iA[V_F] or qA[X_F] or NA[X_F]==0 then\ncall DisplayTimedTextToPlayer(m_F,0.,0.,5.,\"|cffff0000[오류]|r 퀘스트 변경은 10라운드 시작 전, 미완료 퀘스트에 한해 변경할 수 있습니다.\")\nset m_F=null\nreturn\nendif\nset G_F=NA[V_F*3+D_F]\nset a_F=Gx-1\nset P_F=ptT(0,a_F)\nset s_F=ex[P_F]\nset ex[P_F]=ex[a_F]\nset Gx=Gx-1\nset e_F=s_F\nset ex[Gx]=G_F\nset Gx=Gx+1\nset iA[V_F]=true\ncall VpT(e_F,m_F,D_F)\nif GetLocalPlayer()==m_F then\nset n_F=1\nloop\nexitwhen n_F>3\nset N_F=n_F\ncall K8T(Er[N_F],false)\ncall knb(Ur[N_F],$64)\nset n_F=n_F+1\nendloop\nendif\ncall DisplayTimedTextToPlayer(m_F,0.,0.,5.,\"|cffF361A6[퀘스트]|r 선택한 퀘스트를 새로운 퀘스트로 변경했습니다. (게임 내 변경 기회 사용 완료)\")\nset m_F=null\nendfunction"
+    },
+    {
+      "Function": "agy",
+      "StartLine": 42822,
+      "EndLine": 42838,
+      "Text": "function agy takes nothing returns nothing\nlocal integer Ggy=GetPlayerId(Ty)\nlocal integer Xgy=eK[Ggy]\nif (not VK[Ggy])or(not KCy($51303137,Ggy,eK[Ggy])) then\nreturn\nendif\nif GetUnitAbilityLevel(FirstOfGroup(dy),$41393039)>0 then\nset VK[Ggy]=false\nset qA[Ggy*3+Xgy]=true\ncall DisplayTimedTextToPlayer(Player(Ggy),0.,0.,10.,\"|cffF361A6[퀘스트]|r '유닛조합(신비)' 완료\")\ncall DisplayTimedTextToPlayer(Player(Ggy),0.,0.,10.,\"|cffff8200보상|r : |cff7ad823목재|r 5개 획득!\")\nif GetLocalPlayer()==Player(Ggy) then\ncall jrb(Xgy+1)\nendif\ncall DMb(Player(Ggy),5)\nendif\nendfunction"
+    },
+    {
+      "Function": "Cly",
+      "StartLine": 10418,
+      "EndLine": 10457,
+      "Text": "function Cly takes nothing returns nothing\nlocal integer lly=0\nlocal integer Ily\nif pb>=9 then\nreturn\nendif\nif not JK then\nreturn\nendif\nset JK=false\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"|cffc15af4[도전과제]|r 신속한 철거 완료\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"|cffff8200보상|r : |cffffd700랜덤위습|r 1개 획득!\")\ncall EVy(FQ[oK],true)\nset bj_lastPlayedSound=tyy(\"Sound\\\\Interface\\\\QuestCompleted.wav\",null,$7f,1.,false,1.,1.)\ncall StartSound(bj_lastPlayedSound)\nset Ily=0\nloop\nexitwhen Ily>=4\nif Zy[Ily]then\ncall uTT(Player(Ily),1)\nendif\nset Ily=Ily+1\nendloop\nloop\nexitwhen lly>=4\nif Zy[lly]then\nset kg[lly]=kg[lly]+1\nif kg[lly]<0 then\ncall AddHeroXP(LX[lly],$10e,true)\nendif\nendif\nset lly=lly+1\nendloop\nif og>=7 then\nset og=og+1\ncall g1T()\nelse\nset og=og+1\nendif\nendfunction"
+    },
+    {
+      "Function": "Gtb",
+      "StartLine": 15226,
+      "EndLine": 15265,
+      "Text": "function Gtb takes nothing returns nothing\nif WR or(not Dcy(GetTriggerPlayer())) then\nreturn\nendif\nif GetTriggerUnit()!=Ax and GetTriggerUnit()!=cx and GetTriggerUnit()!=dx then\nreturn\nendif\nif ay<4 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,2.,\"|cff04ffc4[알림]|r 지옥 난이도 이상에서만 모드를 선택할 수 있습니다.\")\nreturn\nendif\nif GetTriggerUnit()==Ax then\nif Gy[1]then\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand\")\nset Gy[1]=false\nelse\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand Alternate\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,2.,\"|cff9553ec[변질모드]|r 상위테크 유닛의 30%가 조합이 불가능해집니다.\")\nset Gy[1]=true\nendif\nelseif GetTriggerUnit()==cx then\nif Gy[2]then\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand\")\nset Gy[2]=false\nelse\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand Alternate\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,2.,\"|cff4FC9DE[이세계모드]|r 게임에 이세계 유닛이 추가되며 도박소에 이세계 도박이 활성화됩니다.\")\nset Gy[2]=true\nendif\nelseif GetTriggerUnit()==dx then\nif Gy[3]then\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand\")\nset Gy[3]=false\nelse\ncall SetUnitAnimation(GetTriggerUnit(),\"Stand Alternate\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,2.,\"|cff81b28e[연구소모드]|r 상위테크 유닛의 30% 가 조합이 불가능해집니다.\")\nset Gy[3]=true\nendif\nendif\nendfunction"
+    },
+    {
+      "Function": "b7b",
+      "StartLine": 43214,
+      "EndLine": 43757,
+      "Text": "function b7b takes nothing returns nothing\nlocal integer ISb=0\nlocal player CSb\nlocal player SSb\nlocal player b3b\nlocal player T3b\nlocal player y3b\nlocal player F3b\nlocal player g3b\nlocal player A3b\nlocal player c3b\nlocal player d3b\nlocal player m3b\nlocal player V3b\nlocal player D3b\nlocal player e3b\nlocal player G3b\nlocal player X3b\nlocal player a3b\nlocal player P3b\nlocal player s3b\nlocal player n3b\nlocal player N3b\nlocal player i3b\nlocal player q3b\nlocal player K3b\nlocal player Z3b\nlocal player f3b\nlocal player B3b\nlocal player R3b\nlocal player x3b\nlocal player M3b\nlocal player v3b\nlocal player O3b\nlocal player r3b\nlocal player Q3b\nlocal player h3b\nlocal player t3b\nlocal player J3b\nlocal player H3b\nlocal player o3b\nlocal player k3b\nlocal player L3b\nlocal player j3b\nlocal player u3b\nlocal player p3b\nlocal player W3b\nlocal player w3b\nlocal player Y3b\nlocal player U3b\nlocal player E3b\nlocal player l3b\nlocal player I3b\nlocal player C3b\nlocal player S3b\nif WR or(not Dcy(GetTriggerPlayer())) then\nset CSb=null\nset SSb=null\nset b3b=null\nset T3b=null\nset y3b=null\nset F3b=null\nset g3b=null\nset A3b=null\nset c3b=null\nset d3b=null\nset m3b=null\nset V3b=null\nset D3b=null\nset e3b=null\nset G3b=null\nset X3b=null\nset a3b=null\nset P3b=null\nset s3b=null\nset n3b=null\nset N3b=null\nset i3b=null\nset q3b=null\nset K3b=null\nset Z3b=null\nset f3b=null\nset B3b=null\nset R3b=null\nset x3b=null\nset M3b=null\nset v3b=null\nset O3b=null\nset r3b=null\nset Q3b=null\nset h3b=null\nset t3b=null\nset J3b=null\nset H3b=null\nset o3b=null\nset k3b=null\nset L3b=null\nset j3b=null\nset u3b=null\nset p3b=null\nset W3b=null\nset w3b=null\nset Y3b=null\nset U3b=null\nset E3b=null\nset l3b=null\nset I3b=null\nset C3b=null\nset S3b=null\nreturn\nendif\nif GetTriggerUnit()!=Fx then\nset CSb=null\nset SSb=null\nset b3b=null\nset T3b=null\nset y3b=null\nset F3b=null\nset g3b=null\nset A3b=null\nset c3b=null\nset d3b=null\nset m3b=null\nset V3b=null\nset D3b=null\nset e3b=null\nset G3b=null\nset X3b=null\nset a3b=null\nset P3b=null\nset s3b=null\nset n3b=null\nset N3b=null\nset i3b=null\nset q3b=null\nset K3b=null\nset Z3b=null\nset f3b=null\nset B3b=null\nset R3b=null\nset x3b=null\nset M3b=null\nset v3b=null\nset O3b=null\nset r3b=null\nset Q3b=null\nset h3b=null\nset t3b=null\nset J3b=null\nset H3b=null\nset o3b=null\nset k3b=null\nset L3b=null\nset j3b=null\nset u3b=null\nset p3b=null\nset W3b=null\nset w3b=null\nset Y3b=null\nset U3b=null\nset E3b=null\nset l3b=null\nset I3b=null\nset C3b=null\nset S3b=null\nreturn\nendif\nset ex[Gx]=$51303030\nset Gx=Gx+1\nset ex[Gx]=$51303031\nset Gx=Gx+1\nset ex[Gx]=$51303032\nset Gx=Gx+1\nset ex[Gx]=$51303033\nset Gx=Gx+1\nset ex[Gx]=$51303034\nset Gx=Gx+1\nset ex[Gx]=$51303035\nset Gx=Gx+1\nset ex[Gx]=$51303036\nset Gx=Gx+1\nset ex[Gx]=$51303037\nset Gx=Gx+1\nset ex[Gx]=$51303038\nset Gx=Gx+1\nset ex[Gx]=$51303039\nset Gx=Gx+1\nset ex[Gx]=$51303130\nset Gx=Gx+1\nset ex[Gx]=$51303131\nset Gx=Gx+1\nset ex[Gx]=$51303132\nset Gx=Gx+1\nset ex[Gx]=$51303133\nset Gx=Gx+1\nset ex[Gx]=$51303134\nset Gx=Gx+1\nset ex[Gx]=$51303135\nset Gx=Gx+1\nset ex[Gx]=$51303136\nset Gx=Gx+1\nif Gy[2]then\nset ex[Gx]=$51303137\nset Gx=Gx+1\nendif\nset sA=1\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303030))\nset sA=-1\nset sA=2\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303031))\nset sA=-1\nset sA=3\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303032))\nset sA=-1\nset sA=4\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303033))\nset sA=-1\nset sA=5\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303034))\nset sA=-1\nset sA=6\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303035))\nset sA=-1\nset sA=7\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303036))\nset sA=-1\nset sA=8\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303037))\nset sA=-1\nset sA=9\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303038))\nset sA=-1\nset sA=10\ncall TriggerExecute(LoadTriggerHandle(nA,0,$54303039))\nset sA=-1\nif ay==0 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,1.,\"|cffff0000[오류]|r 게임 난이도가 선택되지 않았습니다.\")\nset CSb=null\nset SSb=null\nset b3b=null\nset T3b=null\nset y3b=null\nset F3b=null\nset g3b=null\nset A3b=null\nset c3b=null\nset d3b=null\nset m3b=null\nset V3b=null\nset D3b=null\nset e3b=null\nset G3b=null\nset X3b=null\nset a3b=null\nset P3b=null\nset s3b=null\nset n3b=null\nset N3b=null\nset i3b=null\nset q3b=null\nset K3b=null\nset Z3b=null\nset f3b=null\nset B3b=null\nset R3b=null\nset x3b=null\nset M3b=null\nset v3b=null\nset O3b=null\nset r3b=null\nset Q3b=null\nset h3b=null\nset t3b=null\nset J3b=null\nset H3b=null\nset o3b=null\nset k3b=null\nset L3b=null\nset j3b=null\nset u3b=null\nset p3b=null\nset W3b=null\nset w3b=null\nset Y3b=null\nset U3b=null\nset E3b=null\nset l3b=null\nset I3b=null\nset C3b=null\nset S3b=null\nreturn\nendif\nset WR=true\nset rF=21\ncall SetUnitAnimation(Fx,\"Stand Alternate\")\nif ay==1 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"보스를 죽이지 못해도 패배하지 않으며 스토리의 체력이 20% 감소합니다.\\n모든 라운드 유닛들의 체력이 15% 감소합니다.\\n|cffffd70041라운드|r 진입시 클리어합니다.\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"|cffff4500스토리 존에 진입하여 스토리 격파시 클리어에 용이합니다.|r\")\nset Py=\"|cff00bfff쉬움|r\"\nset xy=$64\nset CSb=Player(5)\ncall SetPlayerTechResearched(CSb,$52303144,1)\nset SSb=Player(5)\ncall SetPlayerTechResearched(SSb,$52303059,1)\nset b3b=Player(6)\ncall SetPlayerTechResearched(b3b,$5230304f,3)\nset T3b=Player(6)\ncall SetPlayerTechResearched(T3b,$52303042,1)\nelseif ay==2 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"|cffffd70050라운드|r 센고쿠 처치시 클리어합니다.\")\nset Py=\"|cffee82ee보통|r\"\nset xy=$64\nset y3b=Player(5)\ncall SetPlayerTechResearched(y3b,$52303145,1)\nset F3b=Player(5)\ncall SetPlayerTechResearched(F3b,$5230305a,1)\nset g3b=Player(6)\ncall SetPlayerTechResearched(g3b,$5230304f,3)\nset A3b=Player(6)\ncall SetPlayerTechResearched(A3b,$5230304e,1)\nset c3b=Player(6)\ncall SetPlayerTechResearched(c3b,$52303041,1)\nelseif ay==3 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"유닛 카운트가 80으로 줄어듭니다.\\n모든 적들의 체력이 증가하며 보스 유닛들의 체력이 40% 증가합니다.\\n모든 적 유닛들의 이동속도가 30% 증가합니다.\\n|cffffd70035라운드|r까지 |cffff00009. 어인섬|r을 파괴하지 못하면 패배합니다.\")\nset Py=\"|cffff0000어려움|r\"\nset Ng=true\nset xy=80\nset ny=2\nset d3b=Player(5)\ncall SetPlayerTechResearched(d3b,$52303143,1)\nset m3b=Player(5)\ncall SetPlayerTechResearched(m3b,$52303130,1)\nset V3b=Player(6)\ncall SetPlayerTechResearched(V3b,$52303234,1)\nset D3b=Player(6)\ncall SetPlayerTechResearched(D3b,$5230304f,2)\nset e3b=Player(6)\ncall SetPlayerTechResearched(e3b,$5230304b,1)\nset G3b=Player(6)\ncall SetPlayerTechResearched(G3b,$52303054,1)\nset X3b=Player(6)\ncall SetPlayerTechResearched(X3b,$52303056,2)\nset a3b=Player(6)\ncall SetPlayerTechResearched(a3b,$52303055,2)\nset P3b=Player(6)\ncall SetPlayerTechResearched(P3b,$52303057,2)\nset s3b=Player(6)\ncall SetPlayerTechResearched(s3b,$52303041,5)\nelseif ay==4 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"유닛 카운트가 70으로 줄어듭니다.\\n모든 적의 |cff87cefa마법방어력|r이 5% 증가하며 보스 유닛들의 체력이 125% 증가합니다.\\n모든 적 유닛들의 이동속도가 30% 증가합니다.\\n|cffffd70035라운드|r까지 |cffff000011. 드레스로자|r를 파괴하지 못하면 패배합니다.\")\nset Py=\"|cff9400d3지옥|r\"\nset Ng=true\nset xy=70\nset rF=21\nset Qy[0]=21\nset Qy[1]=21\nset Qy[2]=21\nset Qy[3]=21\nset ny=2\nset n3b=Player(5)\ncall SetPlayerTechResearched(n3b,$52303131,1)\nset N3b=Player(5)\ncall SetPlayerTechResearched(N3b,$52303142,1)\nset i3b=Player(6)\ncall SetPlayerTechResearched(i3b,$52303234,2)\nset q3b=Player(6)\ncall SetPlayerTechResearched(q3b,$5230304f,1)\nset K3b=Player(6)\ncall SetPlayerTechResearched(K3b,$5230304a,7)\nset Z3b=Player(6)\ncall SetPlayerTechResearched(Z3b,$5230304c,1)\nset f3b=Player(6)\ncall SetPlayerTechResearched(f3b,$52303041,10)\nset B3b=Player(6)\ncall SetPlayerTechResearched(B3b,$52303054,2)\nset R3b=Player(6)\ncall SetPlayerTechResearched(R3b,$52303056,5)\nset x3b=Player(6)\ncall SetPlayerTechResearched(x3b,$52303055,5)\nset M3b=Player(6)\ncall SetPlayerTechResearched(M3b,$52303057,7)\nelseif ay==5 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"유닛 카운트가 70으로 줄어들며 41라운드부터 유닛 카운트가 55로 감소합니다.\\n모든 적의 |cff87cefa마법방어력|r이 5% 증가하며 보스 유닛들의 체력이 200% 증가합니다.\\n모든 적 유닛들의 이동속도가 50% 증가합니다.\\n|cffffd70035라운드|r까지 |cffff000012. 홀케이크섬|r을 파괴하지 못하면 패배합니다.\")\nset Py=\"|cffffd700신|r\"\nset Ng=true\nset xy=70\nset rF=21\nset Qy[0]=21\nset Qy[1]=21\nset Qy[2]=21\nset Qy[3]=21\nset ny=1\nset v3b=Player(5)\ncall SetPlayerTechResearched(v3b,$52303141,1)\nset O3b=Player(5)\ncall SetPlayerTechResearched(O3b,$52303132,1)\nset r3b=Player(6)\ncall SetPlayerTechResearched(r3b,$52303152,1)\nset Q3b=Player(6)\ncall SetPlayerTechResearched(Q3b,$52303234,3)\nset h3b=Player(6)\ncall SetPlayerTechResearched(h3b,$5230304f,1)\nset t3b=Player(6)\ncall SetPlayerTechResearched(t3b,$5230304a,10)\nset J3b=Player(6)\ncall SetPlayerTechResearched(J3b,$5230304d,1)\nset H3b=Player(6)\ncall SetPlayerTechResearched(H3b,$52303041,14)\nset o3b=Player(6)\ncall SetPlayerTechResearched(o3b,$52303054,3)\nset k3b=Player(6)\ncall SetPlayerTechResearched(k3b,$52303056,6)\nset L3b=Player(6)\ncall SetPlayerTechResearched(L3b,$52303055,7)\nset j3b=Player(6)\ncall SetPlayerTechResearched(j3b,$52303057,8)\nelseif ay==6 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,\"유닛 카운트가 70으로 줄어들며 41라운드부터 유닛 카운트가 50으로 감소합니다.\\n모든 적의 |cff87cefa마법방어력|r이 10% 증가하며 보스 유닛들의 체력이 200% 증가합니다.\\n모든 적 유닛들의 이동속도가 50% 증가합니다.\\n|cffffd70035라운드|r까지 |cffff000013. 와노쿠니|r를 파괴하지 못하면 패배합니다.\\n클리어시|cff00d9ff1 베리|r 추가 획득\")\nset Py=\"|c00cc3337악몽|r\"\nset Ng=true\nset xy=70\nset rF=16\nset Qy[0]=16\nset Qy[1]=16\nset Qy[2]=16\nset Qy[3]=16\nset My[0]=My[0]+1\nset My[1]=My[1]+1\nset My[2]=My[2]+1\nset My[3]=My[3]+1\nset u3b=Player(5)\ncall SetPlayerTechResearched(u3b,$52303141,1)\nset p3b=Player(5)\ncall SetPlayerTechResearched(p3b,$52303132,1)\nset W3b=Player(6)\ncall SetPlayerTechResearched(W3b,$52303152,1)\nset w3b=Player(6)\ncall SetPlayerTechResearched(w3b,$52303234,3)\nset Y3b=Player(6)\ncall SetPlayerTechResearched(Y3b,$5230304a,11)\nset U3b=Player(6)\ncall SetPlayerTechResearched(U3b,$5230324d,1)\nset E3b=Player(6)\ncall SetPlayerTechResearched(E3b,$52303041,15)\nset l3b=Player(6)\ncall SetPlayerTechResearched(l3b,$52303054,4)\nset I3b=Player(6)\ncall SetPlayerTechResearched(I3b,$52303056,6)\nset C3b=Player(6)\ncall SetPlayerTechResearched(C3b,$52303055,8)\nset S3b=Player(6)\ncall SetPlayerTechResearched(S3b,$52303057,9)\nendif\nloop\nexitwhen ISb>3\nif ay<4 then\nset Gy[ISb]=false\nendif\nset ISb=ISb+1\nendloop\nif Gy[1]then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,\"|cff8b3eb4변질모드|r 가 선택되었습니다.\\n|cff5f9ea0상위테크 유닛의 30%가 조합이 불가능해집니다.|r\")\nset sy[1]=\"|cff8b3eb4변질|r\"\ncall TriggerEvaluate(i)\nendif\nif Gy[2]then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,\"|cff51ddf5이세계모드|r 가 선택되었습니다.\\n|cff5f9ea0게임에 이세계 유닛이 추가되며 도박소에 이세계 도박이 활성화됩니다.|r\")\nset sy[2]=\"|cff51ddf5이세계|r\"\ncall SetPlayerTechResearched(Player(0),$52303050,1)\ncall SetPlayerTechResearched(Player(1),$52303050,1)\ncall SetPlayerTechResearched(Player(2),$52303050,1)\ncall SetPlayerTechResearched(Player(3),$52303050,1)\nset Xy=true\ncall TriggerEvaluate(D)\nendif\ncall SetCineFilterTexture(\"ReplaceableTextures\\\\CameraMasks\\\\Black_mask.blp\")\ncall SetCineFilterBlendMode(BLEND_MODE_BLEND)\ncall SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)\ncall SetCineFilterStartColor($ff,$ff,$ff,0)\ncall SetCineFilterEndColor(0,0,0,$ff)\ncall SetCineFilterDuration(2.)\ncall DisplayCineFilter(true)\nset ISb=0\nloop\nexitwhen ISb>=4\ncall B8b(Player(ISb))\nset ISb=ISb+1\nendloop\ncall TimerStart(Dx,2.,false,K8)\ncall TriggerEvaluate(V)\nset CSb=null\nset SSb=null\nset b3b=null\nset T3b=null\nset y3b=null\nset F3b=null\nset g3b=null\nset A3b=null\nset c3b=null\nset d3b=null\nset m3b=null\nset V3b=null\nset D3b=null\nset e3b=null\nset G3b=null\nset X3b=null\nset a3b=null\nset P3b=null\nset s3b=null\nset n3b=null\nset N3b=null\nset i3b=null\nset q3b=null\nset K3b=null\nset Z3b=null\nset f3b=null\nset B3b=null\nset R3b=null\nset x3b=null\nset M3b=null\nset v3b=null\nset O3b=null\nset r3b=null\nset Q3b=null\nset h3b=null\nset t3b=null\nset J3b=null\nset H3b=null\nset o3b=null\nset k3b=null\nset L3b=null\nset j3b=null\nset u3b=null\nset p3b=null\nset W3b=null\nset w3b=null\nset Y3b=null\nset U3b=null\nset E3b=null\nset l3b=null\nset I3b=null\nset C3b=null\nset S3b=null\nendfunction"
+    },
+    {
+      "Function": "l0b",
+      "StartLine": 54591,
+      "EndLine": 54604,
+      "Text": "function l0b takes nothing returns nothing\nlocal player U0b=Player(hb)\nlocal integer E0b=GetPlayerId(U0b)\nif vg[E0b]>0 then\nif vg[E0b]==1 then\ncall DisplayTimedTextToPlayer(U0b,0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길 :: 계엄령|r 항법효과로 최상위 유닛을 조합할 수 없습니다.\")\nset ob=2\nelseif oy[E0b]>=1 then\ncall DisplayTimedTextToPlayer(U0b,0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법효과로 최상위 유닛은 1개로 제한됩니다.\")\nset ob=2\nendif\nendif\nset U0b=null\nendfunction"
+    },
+    {
+      "Function": "J9y",
+      "StartLine": 18579,
+      "EndLine": 18651,
+      "Text": "function J9y takes nothing returns nothing\nlocal integer t9y\ncall jNy(0)\nif mv[Yg]==0 then\ncall hFF(Yg,0,GetAttacker())\ncall hFF(Yg,1,GetTriggerUnit())\ncall lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))\ncall lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))\ncall hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))\nif GetUnitUserData(LoadUnitHandle(UO,0,Yg*$1f4))>=3 then\ncall DestroyEffect(AddSpecialEffectTarget(\"supershinythingy.mdx\",LoadUnitHandle(UO,0,Yg*$1f4),\"weapon\"))\nelse\ncall DestroyEffect(AddSpecialEffectTarget(\"Effect TX_Shunshenzhishu.mdx\",LoadUnitHandle(UO,0,Yg*$1f4),\"weapon\"))\nendif\ncall ghb(Yg,LoadUnitHandle(UO,0,Yg*$1f4+1),EVENT_UNIT_DAMAGED,Condition(bu),2)\ncall TYT(Yg,.9,1)\nelseif mv[Yg]==1 then\ncall U5T(Yg)\ncall ewb(Yg)\nelseif mv[Yg]==2 then\ncall U5T(Yg)\ncall hFF(Yg,10,CreateUnitAtLoc(Vy,$65303957,LoadLocationHandle(lO,0,Yg*$1f4),LoadReal(yr,0,Yg*$1f4)))\ncall UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)\nif GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4),$41304949)==1 then\ncall hXT(Yg,2,550.)\ncall hXT(Yg,3,300000.)\ncall TYT(Yg,.03,3)\nelseif GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4),$41304949)>=2 and GetUnitUserData(LoadUnitHandle(UO,0,Yg*$1f4))<3 then\ncall SetUnitUserData(LoadUnitHandle(UO,0,Yg*$1f4),GetUnitUserData(LoadUnitHandle(UO,0,Yg*$1f4))+1)\ncall hXT(Yg,2,650.)\ncall hXT(Yg,3,500000.)\ncall TYT(Yg,.03,3)\nelseif GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4),$41304949)>=2 then\ncall SetUnitUserData(LoadUnitHandle(UO,0,Yg*$1f4),0)\ncall hXT(Yg,2,650.)\ncall hXT(Yg,3,1200000.)\ncall TYT(Yg,.03,4)\nelse\ncall TYT(Yg,.03,1)\nendif\nelseif mv[Yg]==3 then\ncall lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4),250.,LoadReal(yr,0,Yg*$1f4)))\ncall hFF(Yg,10,CreateUnitAtLoc(Vy,$6530354f,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4)+180.))\ncall SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.,1.,1.)\ncall SetUnitVertexColor(LoadUnitHandle(UO,0,Yg*$1f4+10),$ff,$ff,$ff,$96)\ncall SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),50.,.0)\ncall UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)\ncall hFF(Yg,10,CreateUnitAtLoc(Vy,$6530355a,LoadLocationHandle(lO,0,Yg*$1f4),LoadReal(yr,0,Yg*$1f4)))\ncall SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.,1.,1.)\ncall UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)\ncall SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),50.,0.)\ncall TYT(Yg,.03,5)\nelseif mv[Yg]==4 then\nset t9y=0\nloop\nexitwhen t9y>=4\ncall lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),100.,GetRandomReal(0.,360.)))\ncall hFF(Yg,10,CreateUnitAtLoc(Vy,$65303555,LoadLocationHandle(lO,0,Yg*$1f4+2),GetRandomReal(0.,360.)))\ncall SetUnitVertexColor(LoadUnitHandle(UO,0,Yg*$1f4+10),$ff,$ff,$ff,$96)\ncall SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),4.5,1.,1.)\ncall UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)\nset t9y=t9y+1\nendloop\ncall hFF(Yg,10,CreateUnitAtLoc(Vy,$65303532,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))\ncall SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.,1.,1.)\ncall UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)\ncall IssuePointOrderById(suT(GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4)))),OrderId(\"dreadlordinferno\"),GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1)),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1)))\ncall TYT(Yg,.03,5)\nelseif mv[Yg]==5 then\ncall UnitDamagePointLoc(LoadUnitHandle(UO,0,Yg*$1f4),0.,LoadReal(yr,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4+3),ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)\ncall ewb(Yg)\nendif\nendfunction"
+    },
+    {
+      "Function": "ptT",
+      "StartLine": 6993,
+      "EndLine": 7001,
+      "Text": "function ptT takes integer ktT,integer LtT returns integer\nlocal integer jtT=Jcy(ktT,LtT)\nlocal integer utT=svy(LtT-ktT)\nif Db==0 then\nset Db=GetRandomInt(1,$f4240)\nendif\nset Db=ModuloInteger($10dcd*Db+1,$7fffffff)\nreturn R2I(I2R(Db)/I2R($7fffffff)*(utT+1))+jtT\nendfunction"
+    },
+    {
+      "Function": "ykb",
+      "StartLine": 79869,
+      "EndLine": 79943,
+      "Text": "function ykb takes nothing returns nothing\nlocal integer Yob=GetPlayerId(GetTriggerPlayer())\nlocal player Iob=Player(Yob)\nlocal real Uob=GetStartLocationX(GetPlayerStartLocation(Iob))\nlocal real Eob\nlocal integer lob\nlocal unit Cob\nlocal player Sob\nlocal player bkb\nlocal player Tkb\nset Iob=Player(Yob)\nset Eob=GetStartLocationY(GetPlayerStartLocation(Iob))\nset lob=50\nset Cob=GetTrainedUnit()\ncall ShowUnit(Cob,false)\ncall KillUnit(Cob)\nset mF[Yob]=mF[Yob]+1\nif ptT(1,$64)<=30 then\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(Yob))+\"|r 님이 |cffff8200고급유닛 도박|r을 |cffff0000실패|r 하셨습니다.\")\nset bj_lastCreatedUnit=CreateUnit(Player(Yob),$68303647,Uob,Eob,bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(Yob),0.,0.,5.,\"|cffffdead◈|r |cffff8200고급유닛 도박|r을 실패하여 \"+GetUnitName(bj_lastCreatedUnit)+\" 1개 획득\")\nset VF[Yob]=VF[Yob]+1\nif Og[Yob]==2 then\nset bj_lastCreatedUnit=CreateUnit(Player(Yob),$68303647,Uob,Eob,bj_UNIT_FACING)\ncall SetPlayerState(Player(Yob),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(Yob),PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall DisplayTimedTextToPlayer(Player(Yob),0.,0.,5.,\"|cffF15F5F[시스템]|r |cffffae00도박광 :: 리스크헷지|r 항법효과로 |cff7ad823목재 1개|r, \"+GetUnitName(bj_lastCreatedUnit)+\" 1개 추가 획득\")\nendif\nset Sob=Player(Yob)\nset Q=Sob\ncall TriggerEvaluate(r)\nset Iob=null\nset Cob=null\nset Sob=null\nset bkb=null\nset Tkb=null\nreturn\nendif\nif Og[Yob]!=1 and ptT(1,$64)<=4 then\nset eF[Yob]=eF[Yob]+1\nset bj_lastCreatedUnit=CreateUnit(Player(Yob),$68303558,Uob,Eob,bj_UNIT_FACING)\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(Yob))+\"|r 님이 |cffff8200고급유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nset bkb=Player(Yob)\nset Q=bkb\ncall TriggerEvaluate(r)\nset Iob=null\nset Cob=null\nset Sob=null\nset bkb=null\nset Tkb=null\nreturn\nendif\nif Og[Yob]==1 then\nset lob=0\nendif\nif ptT(1,$64)<=lob then\nset DF[Yob]=DF[Yob]+1\nset bj_lastCreatedUnit=PlaceRandomUnit(bq,Player(Yob),Uob,Eob,bj_UNIT_FACING)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(Yob))+\"|r 님이 |cffff8200고급유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nelse\nset eF[Yob]=eF[Yob]+1\nset bj_lastCreatedUnit=PlaceRandomUnit(Tq,Player(Yob),Uob,Eob,bj_UNIT_FACING)\ncall UnitAddAbility(bj_lastCreatedUnit,$41305945)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(Yob))+\"|r 님이 |cffff8200고급유닛 도박|r으로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset Tkb=Player(Yob)\nset Q=Tkb\ncall TriggerEvaluate(r)\nset Iob=null\nset Cob=null\nset Sob=null\nset bkb=null\nset Tkb=null\nendfunction"
+    },
+    {
+      "Function": "Vvy",
+      "StartLine": 37312,
+      "EndLine": 37358,
+      "Text": "function Vvy takes nothing returns nothing\nlocal integer Tvy=GetPlayerId(GetOwningPlayer(GetTriggerUnit()))\nlocal real yvy=GetUnitX(GetTriggerUnit())\nlocal real Fvy=GetUnitY(GetTriggerUnit())\nlocal integer gvy=GetUnitTypeId(GetTriggerUnit())\nlocal string cvy=GetUnitName(GetTriggerUnit())\nlocal integer Avy\nlocal integer dvy\nlocal unit mvy\nif Og[Tvy]==2 then\nset dvy=0\nelse\nset dvy=2\nendif\nif ng[Tvy]<=0 then\ncall DisplayTimedTextToPlayer(Player(Tvy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffFF8200리롤 횟수|r를 모두 소진했습니다.\")\ncall IssueImmediateOrder(GetTriggerUnit(),\"holdposition\")\nset mvy=null\nreturn\nendif\nif Og[Tvy]!=2 and GetPlayerState(Player(Tvy),PLAYER_STATE_RESOURCE_LUMBER)<dvy then\ncall DisplayTimedTextToPlayer(Player(Tvy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffFF8200목재|r가 부족합니다. (|cffFF82002 목재|r 필요)\")\ncall IssueImmediateOrder(GetTriggerUnit(),\"holdposition\")\nset mvy=null\nreturn\nendif\nset ng[Tvy]=ng[Tvy]-1\ncall SetPlayerState(Player(Tvy),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(Tvy),PLAYER_STATE_RESOURCE_LUMBER)-dvy)\nset mvy=GetTriggerUnit()\ncall ShowUnit(mvy,false)\ncall KillUnit(mvy)\nloop\nset Avy=ptT(0,41)\nexitwhen ix[Avy]!=gvy\nendloop\nset bj_lastCreatedUnit=CreateUnit(Player(Tvy),ix[Avy],yvy,Fvy,bj_UNIT_FACING)\ncall UnitAddAbility(bj_lastCreatedUnit,$41305945)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(Tvy))+\"님이 |cffff8200희귀 리롤|r 을(를) 사용하여 \\n\"+cvy+\" → \"+GetUnitName(bj_lastCreatedUnit)+\" 으로 변환되었습니다!\")\nif ng[Tvy]<=0 then\ncall SetPlayerAbilityAvailable(Player(Tvy),$41305945,false)\ncall DisplayTimedTextToPlayer(Player(Tvy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffFF8200리롤 횟수|r를 모두 소진했습니다.\")\nelse\ncall DisplayTimedTextToPlayer(Player(Tvy),0.,0.,3.,\"|cff04ffc4[알림]|r |cffFF8200리롤 횟수|r가 |cffff0000\"+I2S(ng[Tvy])+\"|r회 남았습니다.\")\nendif\nset mvy=null\nendfunction"
+    },
+    {
+      "Function": "JbF",
+      "StartLine": 19330,
+      "EndLine": 19368,
+      "Text": "function JbF takes nothing returns nothing\nlocal integer RbF=GetPlayerId(GetOwningPlayer(GetTriggerUnit()))\nlocal real xbF=GetUnitX(GetTriggerUnit())\nlocal real MbF=GetUnitY(GetTriggerUnit())\nlocal integer vbF=GetUnitTypeId(GetTriggerUnit())\nlocal string rbF=GetUnitName(GetTriggerUnit())\nlocal boolean hbF=false\nlocal integer BbF\nlocal integer ObF\nlocal integer QbF\nlocal unit tbF\nif Og[RbF]!=2 then\nset hbF=true\nendif\nif hbF then\nset BbF=d7b()\ncall GroupEnumUnitsOfPlayer(Hc[BbF],Player(RbF),Filter(n8))\nset QbF=ktb(BbF)\nif QbF<=0 then\ncall DisplayTimedTextToPlayer(Player(RbF),0.,0.,5.,\"|cffff0000[오류]|r |cffFF8200행운의 토큰|r이 부족합니다. 필요 개수 : |cffFF00001개|r\")\ncall IssueImmediateOrder(GetTriggerUnit(),\"stop\")\nset tbF=null\nreturn\nendif\ncall Yhb(WPT(BbF))\ncall qny(BbF)\nendif\nset tbF=GetTriggerUnit()\ncall ShowUnit(tbF,false)\ncall KillUnit(tbF)\nloop\nset ObF=ptT(0,13)\nexitwhen xx[ObF]!=vbF\nendloop\nset bj_lastCreatedUnit=CreateUnit(Player(RbF),xx[ObF],xbF,MbF,bj_UNIT_FACING)\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,GetPlayerName(Player(RbF))+\"님이 |cffff8200랜덤유닛 리롤|r 을(를) 사용하여 \\n\"+rbF+\" → \"+GetUnitName(bj_lastCreatedUnit)+\" 으로 변환되었습니다!\")\nset tbF=null\nendfunction"
+    },
+    {
+      "Function": "PRT",
+      "StartLine": 27095,
+      "EndLine": 27137,
+      "Text": "function PRT takes nothing returns nothing\nlocal integer eRT=S2I(BlzGetTriggerSyncData())\nlocal integer GRT=GetPlayerId(GetTriggerPlayer())\nlocal integer XRT=ptT(1,4)\nlocal integer aRT=ptT(1,3)\nif pb<=20 then\ncall DisplayTimedTextToPlayer(Player(GRT),0.,0.,5.,\"|cff04ffc4[알림]|r 항법은 |cffFF000021 라운드|r부터 선택할 수 있습니다.\")\nreturn\nendif\nif Aq[GRT]then\nreturn\nendif\nif XRT==2 then\nif oy[GRT]>=2 then\nset XRT=ptT(1,3)\nif XRT>=2 then\nset XRT=XRT+1\nendif\nelseif oy[GRT]==1 and aRT==1 then\nset aRT=ptT(2,3)\nendif\nendif\nset Aq[GRT]=true\nset cq[GRT]=true\nif XRT==1 then\ncall Njy(aRT,GRT)\nelseif XRT==2 then\ncall m7y(aRT,GRT)\nelseif XRT==3 then\ncall Fxy(aRT,GRT)\nelseif XRT==4 then\ncall G1y(aRT,GRT)\nendif\nif Ry[GRT]then\nset xg[GRT]=true\ncall DisplayTimedTextToPlayer(Player(GRT),0.,0.,3.,\"|cff04ffc4[알림]|r 랜덤 항법으로 |cffffae00\"+Rg[GRT]+\" 항법|r이 선택되었습니다.\")\nendif\nset cq[GRT]=false\ncall Wfb(eRT,GRT)\nif GetLocalPlayer()==Player(GRT) then\ncall yob(false)\nendif\nendfunction"
+    }
+  ],
+  "Limitations": [
+    "Offline source only; no game or memory access.",
+    "All option scoring unknown. Bounded outcomes are not probabilities or safe recommendations.",
+    "Mana inherited ANcl unresolved; actual cast success requires engine state.",
+    "Excavation re-enable paths untraced; disable after use is not lifetime once.",
+    "Royal object bonus stats, full helper damage/cost scoring and alchemy recipe availability are not migrated.",
+    "Cumulative craft counter event/decrement coverage not exhaustively audited.",
+    "Leo configured aura is not measured final movement speed; utility board stale7/level2 omission is separate."
+  ]
+}

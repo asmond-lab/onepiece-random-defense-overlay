@@ -1,0 +1,27 @@
+<Window x:Class="OrandOverlay.AuxiliaryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:OrandOverlay"
+        Width="{x:Static local:AuxiliaryWindowPlacement.PreferredWidth}"
+        Height="{x:Static local:AuxiliaryWindowPlacement.PreferredHeight}"
+        WindowStyle="ToolWindow" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStartupLocation="Manual" UseLayoutRounding="True"
+        Background="{x:Static local:OverlayTheme.PlanSurface}"
+        Foreground="{x:Static local:OverlayTheme.PlanText}" FontFamily="Malgun Gothic"
+        AutomationProperties.AutomationId="main-auxiliary-window">
+  <Border BorderBrush="{x:Static local:OverlayTheme.OutlineBrush}"
+          BorderThickness="{x:Static local:OverlayTheme.WellBorderThickness}" ClipToBounds="True">
+    <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+      <Border Background="{x:Static local:OverlayTheme.PlanRaised}"
+              BorderBrush="{x:Static local:OverlayTheme.OutlineBrush}"
+              BorderThickness="{x:Static local:MainPlanTheme.BottomLine}"
+              Padding="{x:Static local:OverlayTheme.CoachPanelPadding}">
+        <TextBlock x:Name="PaneTitle" FontSize="{x:Static local:OverlayTheme.PlanHeadingSize}"
+                   FontWeight="SemiBold" TextWrapping="Wrap" AutomationProperties.AutomationId="aux-title"/>
+      </Border>
+      <ContentControl x:Name="PaneHost" Grid.Row="1" Margin="{x:Static local:OverlayTheme.CoachPanelPadding}"
+                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+    </Grid>
+  </Border>
+</Window>

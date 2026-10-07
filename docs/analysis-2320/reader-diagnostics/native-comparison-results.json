@@ -1,0 +1,47 @@
+{
+  "status": "blocked_new_map",
+  "helper": "D:\\OrandOverlay\\work\\MpqEvidence\\bin\\Release\\net10.0-windows\\win-x86\\MpqEvidence.exe",
+  "helperSha256": "f5ef9e098c6078f850d5958d8360b2c96d8e38feda488faae9178f62386e82b8",
+  "newMapError": "Native fatal 0xC0000005 at SFileOpenFileEx on first requested member war3map.j; exit -1073741819",
+  "newMembers": [],
+  "baselineExtractedMembers": [
+    {
+      "name": "war3map.j",
+      "length": 3069240,
+      "sha256": "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028"
+    },
+    {
+      "name": "war3map.w3u",
+      "length": 857425,
+      "sha256": "a9aa2cb9c08130c3bee970aecb05b62fdc3db867685f4997dd2533735d2ea278"
+    },
+    {
+      "name": "war3map.w3a",
+      "length": 681032,
+      "sha256": "095b9e1d61ba83084beac0a56827448cdb2d18619efba72a84aa014a65094919"
+    },
+    {
+      "name": "war3map.wts",
+      "length": 1756386,
+      "sha256": "bef1477f56bfffef3ef6b030f324b7fc75a69564760e185c8aa4da8a618a275c"
+    },
+    {
+      "name": "war3mapMisc.txt",
+      "length": 1183,
+      "sha256": "8428c5e040ac9a75ce37209145b25b6640c560f5d96e5f068e589946317bf140"
+    }
+  ],
+  "baselineJass": {
+    "version": "2.314",
+    "strictUtf8": true,
+    "nulCount": 0,
+    "lineCount": 88593,
+    "functionDeclarations": 2694,
+    "endfunctionCount": 2694,
+    "prefix": "globals\nhashtable G=null\nhashtable N=null\nhashtable E=null\nhashtable w=null\nmultiboard array P\nhashtable M=null\ninteger array S\nhashtable J=null\ntrigger X=null\ntrigger c=null\ntrigger R=null\ntrigger B=null\ntrigger a=null\ntrigger o=null\ntrigg"
+  },
+  "newJassReadability": "unknown",
+  "memberDiffs": "unavailable",
+  "sourceEdits": false,
+  "archiveRepairAttempted": false
+}

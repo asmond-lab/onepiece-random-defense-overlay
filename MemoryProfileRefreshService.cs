@@ -1,58 +1,93 @@
-using System.Net.Http;
 using System.Text.Json;
 
 namespace OrandOverlay;
 
-/// <summary>
-/// Warcraft 패치 대응용 메모리 프로필 갱신기.
-/// 앱 업데이트와 분리해 GitHub의 최신 memory-profiles.json을 사용자 데이터 폴더에 캐시한다.
-/// 네트워크/스키마/검증 실패 시 기존 사용자 캐시 또는 번들 프로필을 그대로 사용한다.
-/// </summary>
+/// <summary>Refreshes authenticated profile bytes independently of application updates.
+/// Any network/signature/content failure preserves the existing cache and bundled profiles.</summary>
 public static class MemoryProfileRefreshService
 {
-    public const string ProfilesUrl =
-        "https://raw.githubusercontent.com/AsmondKR/onepiece-random-defense-overlay/main/Data/memory-profiles.json";
-
+    public const string ProfilesUrl = SignedUpdateManifest.ProfilesManifestUrl;
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(6);
-    private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(3);
+    private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(15);
+    private static readonly SemaphoreSlim RefreshGate = new(1, 1);
 
-    private static string UserProfilePath =>
-        Path.Combine(AppPaths.UserDataDirectory, "memory-profiles.json");
+    public static Task TryRefreshAsync(CancellationToken cancellationToken = default) =>
+        TryRefreshAsync(AppPaths.UserDataDirectory, cancellationToken);
 
-    private static string StampPath =>
-        Path.Combine(AppPaths.UserDataDirectory, "memory-profiles.last-check");
-
-    public static async Task TryRefreshAsync(CancellationToken cancellationToken = default)
+    internal static async Task TryRefreshAsync(string userRoot, CancellationToken cancellationToken = default,
+        Func<CancellationToken, Task<string>>? fetch = null,
+        Func<string, CancellationToken, Task<byte[]>>? fetchAsset = null, UpdateTrust? trust = null, bool force = false)
     {
+        var userProfilePath = Path.Combine(userRoot, "memory-profiles.json");
+        var stampPath = Path.Combine(userRoot, "memory-profiles.cloudflare.last-check");
+        var manifestPath = Path.Combine(userRoot, "memory-profiles.signed.json");
+        var temp = userProfilePath + ".tmp";
+        try { await RefreshGate.WaitAsync(cancellationToken).ConfigureAwait(false); }
+        catch (OperationCanceledException) { return; }
         try
         {
-            if (!ShouldRefresh()) return;
-
+            if (!force && !ShouldRefresh(stampPath)) return;
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             linked.CancelAfter(RequestTimeout);
-            using var client = new HttpClient { Timeout = RequestTimeout };
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("OrandOverlay/1.0 (memory-profile-refresh)");
-            var json = await client.GetStringAsync(ProfilesUrl, linked.Token).ConfigureAwait(false);
+            // Injected fetches still supply a signed envelope and authenticated artifact bytes.
+            var envelope = fetch is null
+                ? await UpdateTransport.FetchManifestAsync(ProfilesUrl, linked.Token).ConfigureAwait(false)
+                : await fetch(linked.Token).ConfigureAwait(false);
+            var manifest = trust is null ? SignedUpdateManifest.Verify(envelope, "memory-profiles")
+                : SignedUpdateManifest.Verify(envelope, "memory-profiles", "stable", trust);
+            if (File.Exists(manifestPath) && new FileInfo(manifestPath).Length <= SignedUpdateManifest.MaximumManifestSize)
+            {
+                SignedUpdateManifest? prior = null;
+                try
+                {
+                    var previousEnvelope = await File.ReadAllTextAsync(manifestPath, linked.Token).ConfigureAwait(false);
+                    prior = trust is null ? SignedUpdateManifest.Verify(previousEnvelope, "memory-profiles")
+                        : SignedUpdateManifest.Verify(previousEnvelope, "memory-profiles", "stable", trust);
+                }
+                catch (InvalidDataException) { /* A valid new signature may repair corrupt local metadata. */ }
+                if (prior is not null)
+                {
+                    SignedUpdateManifest.TryVersion(prior.Version, out var previousVersion);
+                    SignedUpdateManifest.TryVersion(manifest.Version, out var nextVersion);
+                    if (nextVersion < previousVersion || nextVersion == previousVersion && manifest.Sha256 != prior.Sha256) return;
+                }
+            }
+            var bytes = fetchAsset is null
+                ? await UpdateTransport.ReadBoundedAsync(manifest.DownloadUrl, (int)manifest.AssetSize, linked.Token).ConfigureAwait(false)
+                : await fetchAsset(manifest.DownloadUrl, linked.Token).ConfigureAwait(false);
+            using var source = new MemoryStream(bytes, writable: false);
+            using var verified = new MemoryStream();
+            await UpdateService.VerifyDownloadedBodyAsync(source, verified, manifest.AssetSize, "sha256:" + manifest.Sha256,
+                cancellationToken: linked.Token).ConfigureAwait(false);
+            var json = SignedUpdateManifest.StrictUtf8.GetString(bytes);
             if (!TryValidate(json)) return;
-
-            Directory.CreateDirectory(AppPaths.UserDataDirectory);
-            var temp = UserProfilePath + ".tmp";
-            await File.WriteAllTextAsync(temp, json, linked.Token).ConfigureAwait(false);
-            File.Move(temp, UserProfilePath, overwrite: true);
-            File.WriteAllText(StampPath, DateTimeOffset.UtcNow.ToString("O"));
+            linked.Token.ThrowIfCancellationRequested();
+            Directory.CreateDirectory(userRoot);
+            // Advance the authenticated rollback floor before changing active profile bytes.
+            // If the later write fails, the same signed version can be retried without accepting an older one.
+            await File.WriteAllTextAsync(manifestPath + ".tmp", envelope, linked.Token).ConfigureAwait(false);
+            File.Move(manifestPath + ".tmp", manifestPath, overwrite: true);
+            await File.WriteAllBytesAsync(temp, bytes, linked.Token).ConfigureAwait(false);
+            File.Move(temp, userProfilePath, overwrite: true);
+            File.WriteAllText(stampPath, DateTimeOffset.UtcNow.ToString("O"));
         }
         catch
         {
-            // 프로필 갱신은 보조 기능이다. 실패해도 번들/기존 캐시로 계속 실행한다.
+            // No unsigned runtime fallback, and failed refreshes do not advance the check stamp.
+        }
+        finally
+        {
+            try { File.Delete(temp); File.Delete(manifestPath + ".tmp"); } catch { }
+            RefreshGate.Release();
         }
     }
 
-    private static bool ShouldRefresh()
+    private static bool ShouldRefresh(string stampPath)
     {
         try
         {
-            if (!File.Exists(StampPath)) return true;
-            if (!DateTimeOffset.TryParse(File.ReadAllText(StampPath), out var checkedAt)) return true;
+            if (!File.Exists(stampPath)) return true;
+            if (!DateTimeOffset.TryParse(File.ReadAllText(stampPath), out var checkedAt)) return true;
             return DateTimeOffset.UtcNow - checkedAt >= RefreshInterval;
         }
         catch

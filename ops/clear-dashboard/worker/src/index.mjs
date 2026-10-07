@@ -1,4 +1,7 @@
 import { validateRecord } from "./validate.mjs";
+import { gameplay, purgeGameplay } from "./gameplay.mjs";
+import { aggregateGameplay } from "./gameplay-learning.mjs";
+import { observations, purgeObservations } from "./observations.mjs";
 
 const UPLOAD_PATH = "/v2/aggregates";
 const DASHBOARD_PATH = "/v1/dashboard-snapshot";
@@ -10,8 +13,19 @@ const HEADERS = {
 };
 
 export default {
+  async scheduled(_controller, env) {
+    await purgeGameplay(env);
+    await purgeObservations(env);
+    if (String(env.GAMEPLAY_V3_ENABLED ?? "true").toLowerCase() !== "false" &&
+        String(env.TELEMETRY_ENABLED ?? "true").toLowerCase() !== "false")
+      await aggregateGameplay(env);
+  },
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/v4/observations") return observations(request, env, url);
+    if (url.pathname === "/v3/gameplay" || url.pathname === "/v3/live-stats") {
+      return gameplay(request, env, url);
+    }
     if (url.pathname === DASHBOARD_PATH && request.method === "GET") {
       return dashboard(request, env);
     }

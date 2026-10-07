@@ -34,5 +34,23 @@
     "localPlayerRootOffsetB": 45972424,
     "localPlayerRootXor": "363ABBFD3DEFAEC9",
     "localPlayerIdOffset": 9828
+  },
+  {
+    "profileSchemaVersion": 2,
+    "profileId": "war3-3.0.0.24268-reference",
+    "profileRevision": 1,
+    "fileVersion": "3.0.0.24268",
+    "moduleName": "Warcraft III.exe",
+    "enabled": false,
+    "verified": false,
+    "sha256": "BD2A0DC256289DE45287BB60F3725B88F1235216D5177984377FE1CA22840A12",
+    "layout": "Warcraft30024268Diagnostic",
+    "ownerFieldBytes": 4,
+    "locatorKind": "StructuralScan",
+    "countOffset": 3080,
+    "entriesPointerOffset": 3088,
+    "ownerOffset": 448,
+    "rawcodeOffset": 376,
+    "minimumUnitObjects": 1
   }
 ]

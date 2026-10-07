@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="33e6bef6-bf25-4ea7-8d46-d39564fdd1bd" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:15:44" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:15:44.4919826+09:00" queuing="2026-09-07T19:15:44.4919827+09:00" start="2026-09-07T19:15:44.0741909+09:00" finish="2026-09-07T19:15:44.4959986+09:00" />
+  <TestSettings name="default" id="a6cc4482-9e9c-4c07-8d5b-3f9f2e54ba62">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_15_44" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ecc9df64-1300-4f97-9c34-77aba4a956ca" testId="37dd5e02-edb8-4635-d2da-22277fa36199" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsSymbolicLinkParentWithoutWritingToTarget" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0015072" startTime="2026-09-07T19:15:44.4315936+09:00" endTime="2026-09-07T19:15:44.4315936+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ecc9df64-1300-4f97-9c34-77aba4a956ca">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : 클라이언트가 필요한 권한을 가지고 있지 않습니다. : 'C:\Users\123\AppData\Local\Temp\orand-output-tests-9a6085dbc5b745ac958b4fbc07ae6ef0\link'</Message>
+          <StackTrace>   at Interop.Kernel32.CreateSymbolicLink(String symlinkFileName, String targetFileName, Boolean isDirectory)&#xD;
+   at System.IO.Directory.CreateSymbolicLink(String path, String pathToTarget)&#xD;
+   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsSymbolicLinkParentWithoutWritingToTarget() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 18&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="82357222-d8af-4c85-8107-5c63ccad3826" testId="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NewOwnedRunRejectsSiblingPrefixAndExistingOutput" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0017645" startTime="2026-09-07T19:15:44.4332155+09:00" endTime="2026-09-07T19:15:44.4332156+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="82357222-d8af-4c85-8107-5c63ccad3826" />
+    <UnitTestResult executionId="087ae3c7-3aed-45c0-9c13-91224b3dd9e0" testId="290c080d-a865-7d5d-c2e7-52ce209aef84" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.ApprovedParentMustAlreadyExist" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0008326" startTime="2026-09-07T19:15:44.4303193+09:00" endTime="2026-09-07T19:15:44.4303193+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="087ae3c7-3aed-45c0-9c13-91224b3dd9e0" />
+    <UnitTestResult executionId="6e8d8aad-4ab1-4c5d-b108-7debd3d868e7" testId="42ac3b77-9d75-99b9-2173-44f801b6b3e2" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0006784" startTime="2026-09-07T19:15:44.4339351+09:00" endTime="2026-09-07T19:15:44.4339351+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6e8d8aad-4ab1-4c5d-b108-7debd3d868e7" />
+    <UnitTestResult executionId="a97e6002-85db-492a-8686-e9481f2ab474" testId="80ed0787-6303-b04d-e553-2b9f024bce55" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RunDirectoryCannotBeRenamedWhileScopeIsAlive" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0030240" startTime="2026-09-07T19:15:44.4302484+09:00" endTime="2026-09-07T19:15:44.4302487+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a97e6002-85db-492a-8686-e9481f2ab474">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: No exception was thrown&#xD;
+Expected: typeof(System.IO.IOException)</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RunDirectoryCannotBeRenamedWhileScopeIsAlive() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 32&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="03c5f6a9-19ff-40b1-963a-1037863b6359" testId="7bfd89ec-7d28-9502-2349-8741c87554b7" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;C:relative&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0004600" startTime="2026-09-07T19:15:44.4211612+09:00" endTime="2026-09-07T19:15:44.4211612+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="03c5f6a9-19ff-40b1-963a-1037863b6359" />
+    <UnitTestResult executionId="63e63d06-3dc2-4fed-a040-d32b976f0e34" testId="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;\\\\fake-server\\share\\out&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0007741" startTime="2026-09-07T19:15:44.4210152+09:00" endTime="2026-09-07T19:15:44.4210153+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="63e63d06-3dc2-4fed-a040-d32b976f0e34" />
+    <UnitTestResult executionId="546f8c1e-a3dd-45c1-ba37-768ad017b92a" testId="5b2da5cb-41da-33f3-9d4e-55597e93b4bd" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;relative&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0045427" startTime="2026-09-07T19:15:44.4196080+09:00" endTime="2026-09-07T19:15:44.4196158+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="546f8c1e-a3dd-45c1-ba37-768ad017b92a" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="42ac3b77-9d75-99b9-2173-44f801b6b3e2">
+      <Execution id="6e8d8aad-4ab1-4c5d-b108-7debd3d868e7" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsDotSegmentsInsteadOfNormalizingThemIntoApprovedRoot" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;\\\\fake-server\\share\\out&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4">
+      <Execution id="63e63d06-3dc2-4fed-a040-d32b976f0e34" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;relative&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="5b2da5cb-41da-33f3-9d4e-55597e93b4bd">
+      <Execution id="546f8c1e-a3dd-45c1-ba37-768ad017b92a" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NewOwnedRunRejectsSiblingPrefixAndExistingOutput" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448">
+      <Execution id="82357222-d8af-4c85-8107-5c63ccad3826" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="NewOwnedRunRejectsSiblingPrefixAndExistingOutput" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsNonLocalAbsolutePathsBeforeIo(output: &quot;C:relative&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="7bfd89ec-7d28-9502-2349-8741c87554b7">
+      <Execution id="03c5f6a9-19ff-40b1-963a-1037863b6359" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsNonLocalAbsolutePathsBeforeIo" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.ApprovedParentMustAlreadyExist" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="290c080d-a865-7d5d-c2e7-52ce209aef84">
+      <Execution id="087ae3c7-3aed-45c0-9c13-91224b3dd9e0" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="ApprovedParentMustAlreadyExist" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsSymbolicLinkParentWithoutWritingToTarget" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="37dd5e02-edb8-4635-d2da-22277fa36199">
+      <Execution id="ecc9df64-1300-4f97-9c34-77aba4a956ca" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RejectsSymbolicLinkParentWithoutWritingToTarget" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RunDirectoryCannotBeRenamedWhileScopeIsAlive" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="80ed0787-6303-b04d-e553-2b9f024bce55">
+      <Execution id="a97e6002-85db-492a-8686-e9481f2ab474" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="RunDirectoryCannotBeRenamedWhileScopeIsAlive" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="37dd5e02-edb8-4635-d2da-22277fa36199" executionId="ecc9df64-1300-4f97-9c34-77aba4a956ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b9cd6b8-ebb8-0fc3-846e-cfe7773f7448" executionId="82357222-d8af-4c85-8107-5c63ccad3826" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="290c080d-a865-7d5d-c2e7-52ce209aef84" executionId="087ae3c7-3aed-45c0-9c13-91224b3dd9e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42ac3b77-9d75-99b9-2173-44f801b6b3e2" executionId="6e8d8aad-4ab1-4c5d-b108-7debd3d868e7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="80ed0787-6303-b04d-e553-2b9f024bce55" executionId="a97e6002-85db-492a-8686-e9481f2ab474" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7bfd89ec-7d28-9502-2349-8741c87554b7" executionId="03c5f6a9-19ff-40b1-963a-1037863b6359" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="78fd6c8f-41c2-d9ae-0a7c-58dafccdeeb4" executionId="63e63d06-3dc2-4fed-a040-d32b976f0e34" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5b2da5cb-41da-33f3-9d4e-55597e93b4bd" executionId="546f8c1e-a3dd-45c1-ba37-768ad017b92a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="8" executed="8" passed="6" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.09]       Assert.Throws() Failure: No exception was thrown&#xD;
+[xUnit.net 00:00:00.09]       Expected: typeof(System.IO.IOException)&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(32,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RunDirectoryCannotBeRenamedWhileScopeIsAlive()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.09]       System.IO.IOException : 클라이언트가 필요한 권한을 가지고 있지 않습니다. : 'C:\Users\123\AppData\Local\Temp\orand-output-tests-9a6085dbc5b745ac958b4fbc07ae6ef0\link'&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]            at Interop.Kernel32.CreateSymbolicLink(String symlinkFileName, String targetFileName, Boolean isDirectory)&#xD;
+[xUnit.net 00:00:00.09]            at System.IO.Directory.CreateSymbolicLink(String path, String pathToTarget)&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(18,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsSymbolicLinkParentWithoutWritingToTarget()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.10]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:15:44.4296417+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RunDirectoryCannotBeRenamedWhileScopeIsAlive [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:15:44.4315504+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.RejectsSymbolicLinkParentWithoutWritingToTarget [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

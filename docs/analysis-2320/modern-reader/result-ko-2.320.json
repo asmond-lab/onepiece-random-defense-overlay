@@ -1,0 +1,26 @@
+{
+  "version": "2.320",
+  "reader": "official v9.40 release stormlib_dll.zip x64",
+  "flags": "0x100 STREAM_FLAG_READ_ONLY only",
+  "locale": 1042,
+  "x64": true,
+  "archive": "C:\\Users\\123\\Documents\\Warcraft III\\Maps\\Download\\ORDR_S2_2.320[R].w3x",
+  "sha256Before": "68445631FDACA12A343E9465E5BC5DC9B4C8C6CC927D701F52E2CB822821E15F",
+  "opened": true,
+  "members": [
+    {
+      "name": "war3map.j",
+      "opened": true,
+      "size": 3014709,
+      "flags": "0x80010200",
+      "status": "read",
+      "readBytes": 3014709,
+      "sha256": "6FDFC64BF8AD9463F5B5C8A351FFA7E1875D6CF9B51210129539375FA77A6C7C"
+    }
+  ],
+  "openError": 0,
+  "sectorSize": 1073741824,
+  "archiveFlags": 1029,
+  "fileTableSize": 65536,
+  "sha256After": "68445631FDACA12A343E9465E5BC5DC9B4C8C6CC927D701F52E2CB822821E15F"
+}

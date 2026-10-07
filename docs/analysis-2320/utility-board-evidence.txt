@@ -1,0 +1,5113 @@
+4143: function TRT takes string IBT,code CBT returns nothing
+4144: local trigger SBT=CreateTrigger()
+4145: local integer bRT=0
+4146: call TriggerAddAction(SBT,CBT)
+4147: loop
+4148: exitwhen bRT>=4
+4149: call BlzTriggerRegisterPlayerSyncEvent(SBT,Player(bRT),IBT,false)
+4150: set bRT=bRT+1
+4151: endloop
+4152: set SBT=null
+4153: endfunction
+
+5053: function UtilityObjectData__Init takes nothing returns nothing
+5054: local real value=-35.0000
+5055: set vT[MT]=$41313547
+5056: set OT[MT]=1
+5057: set rT[MT]=1
+5058: set QT[MT]=$4230324d
+5059: set hT[MT]=value
+5060: set MT=MT+1
+5061: set value=-40.0000
+5062: set vT[MT]=$4131344b
+5063: set OT[MT]=1
+5064: set rT[MT]=1
+5065: set QT[MT]=$4230314c
+5066: set hT[MT]=value
+5067: set MT=MT+1
+5068: set value=-20.0000
+5069: set vT[MT]=$41313436
+5070: set OT[MT]=1
+5071: set rT[MT]=1
+5072: set QT[MT]=$41313436
+5073: set hT[MT]=value
+5074: set MT=MT+1
+5075: set value=-35.0000
+5076: set vT[MT]=$41313355
+5077: set OT[MT]=1
+5078: set rT[MT]=1
+5079: set QT[MT]=$42303834
+5080: set hT[MT]=value
+5081: set MT=MT+1
+5082: set value=-5.0000
+5083: set vT[MT]=$41313332
+5084: set OT[MT]=1
+5085: set rT[MT]=1
+5086: set QT[MT]=$42303043
+5087: set hT[MT]=value
+5088: set MT=MT+1
+5089: set value=-25.0000
+5090: set vT[MT]=$41313241
+5091: set OT[MT]=1
+5092: set rT[MT]=1
+5093: set QT[MT]=$41313241
+5094: set hT[MT]=value
+5095: set MT=MT+1
+5096: set value=-25.0000
+5097: set vT[MT]=$41313241
+5098: set OT[MT]=1
+5099: set rT[MT]=2
+5100: set QT[MT]=$41313241
+5101: set hT[MT]=value
+5102: set MT=MT+1
+5103: set value=-25.0000
+5104: set vT[MT]=$41313141
+5105: set OT[MT]=1
+5106: set rT[MT]=1
+5107: set QT[MT]=$42303659
+5108: set hT[MT]=value
+5109: set MT=MT+1
+5110: set value=-35.0000
+5111: set vT[MT]=$41313132
+5112: set OT[MT]=1
+5113: set rT[MT]=1
+5114: set QT[MT]=$42303041
+5115: set hT[MT]=value
+5116: set MT=MT+1
+5117: set value=-15.0000
+5118: set vT[MT]=$41313059
+5119: set OT[MT]=1
+5120: set rT[MT]=1
+5121: set QT[MT]=$4230374a
+5122: set hT[MT]=value
+5123: set MT=MT+1
+5124: set value=-50.0000
+5125: set vT[MT]=$41313049
+5126: set OT[MT]=1
+5127: set rT[MT]=1
+5128: set QT[MT]=$41313049
+5129: set hT[MT]=value
+5130: set MT=MT+1
+5131: set value=-15.0000
+5132: set vT[MT]=$41305958
+5133: set OT[MT]=1
+5134: set rT[MT]=1
+5135: set QT[MT]=$42303732
+5136: set hT[MT]=value
+5137: set MT=MT+1
+5138: set value=-25.0000
+5139: set vT[MT]=$41305844
+5140: set OT[MT]=1
+5141: set rT[MT]=1
+5142: set QT[MT]=$42303059
+5143: set hT[MT]=value
+5144: set MT=MT+1
+5145: set value=-20.0000
+5146: set vT[MT]=$41305838
+5147: set OT[MT]=1
+5148: set rT[MT]=1
+5149: set QT[MT]=$42303041
+5150: set hT[MT]=value
+5151: set MT=MT+1
+5152: set value=-5.0000
+5153: set vT[MT]=$4130574e
+5154: set OT[MT]=1
+5155: set rT[MT]=1
+5156: set QT[MT]=$4130574e
+5157: set hT[MT]=value
+5158: set MT=MT+1
+5159: set value=-44.0000
+5160: set vT[MT]=$41305732
+5161: set OT[MT]=1
+5162: set rT[MT]=1
+5163: set QT[MT]=$4230364b
+5164: set hT[MT]=value
+5165: set MT=MT+1
+5166: set value=-30.0000
+5167: set vT[MT]=$41305652
+5168: set OT[MT]=1
+5169: set rT[MT]=1
+5170: set QT[MT]=$42303554
+5171: set hT[MT]=value
+5172: set MT=MT+1
+5173: set value=-35.0000
+5174: set vT[MT]=$4130554c
+5175: set OT[MT]=1
+5176: set rT[MT]=1
+5177: set QT[MT]=$42303646
+5178: set hT[MT]=value
+5179: set MT=MT+1
+5180: set value=-35.0000
+5181: set vT[MT]=$4130544e
+5182: set OT[MT]=1
+5183: set rT[MT]=1
+5184: set QT[MT]=$42303642
+5185: set hT[MT]=value
+5186: set MT=MT+1
+5187: set value=-38.0000
+5188: set vT[MT]=$41305446
+5189: set OT[MT]=1
+5190: set rT[MT]=1
+5191: set QT[MT]=$42303249
+5192: set hT[MT]=value
+5193: set MT=MT+1
+5194: set value=-15.0000
+5195: set vT[MT]=$41305439
+5196: set OT[MT]=1
+5197: set rT[MT]=1
+5198: set QT[MT]=$42303639
+5199: set hT[MT]=value
+5200: set MT=MT+1
+5201: set value=-15.0000
+5202: set vT[MT]=$4130535a
+5203: set OT[MT]=1
+5204: set rT[MT]=1
+5205: set QT[MT]=$4230324f
+5206: set hT[MT]=value
+5207: set MT=MT+1
+5208: set value=-45.0000
+5209: set vT[MT]=$41305342
+5210: set OT[MT]=1
+5211: set rT[MT]=1
+5212: set QT[MT]=$42303631
+5213: set hT[MT]=value
+5214: set MT=MT+1
+5215: set value=-25.0000
+5216: set vT[MT]=$41305337
+5217: set OT[MT]=1
+5218: set rT[MT]=1
+5219: set QT[MT]=$42303659
+5220: set hT[MT]=value
+5221: set MT=MT+1
+5222: set value=-11.0000
+5223: set vT[MT]=$41305238
+5224: set OT[MT]=1
+5225: set rT[MT]=1
+5226: set QT[MT]=$42303551
+5227: set hT[MT]=value
+5228: set MT=MT+1
+5229: set value=-30.0000
+5230: set vT[MT]=$41305145
+5231: set OT[MT]=1
+5232: set rT[MT]=1
+5233: set QT[MT]=$41305145
+5234: set hT[MT]=value
+5235: set MT=MT+1
+5236: set value=-35.0000
+5237: set vT[MT]=$41305145
+5238: set OT[MT]=1
+5239: set rT[MT]=2
+5240: set QT[MT]=$41305145
+5241: set hT[MT]=value
+5242: set MT=MT+1
+5243: set value=-42.0000
+5244: set vT[MT]=$41305145
+5245: set OT[MT]=1
+5246: set rT[MT]=3
+5247: set QT[MT]=$41305145
+5248: set hT[MT]=value
+5249: set MT=MT+1
+5250: set value=-7.0000
+5251: set vT[MT]=$4130504d
+5252: set OT[MT]=1
+5253: set rT[MT]=1
+5254: set QT[MT]=$42303542
+5255: set hT[MT]=value
+5256: set MT=MT+1
+5257: set value=-25.0000
+5258: set vT[MT]=$4130504b
+5259: set OT[MT]=1
+5260: set rT[MT]=1
+5261: set QT[MT]=$42303131
+5262: set hT[MT]=value
+5263: set MT=MT+1
+5264: set value=-8.0000
+5265: set vT[MT]=$41304f53
+5266: set OT[MT]=1
+5267: set rT[MT]=1
+5268: set QT[MT]=$42303532
+5269: set hT[MT]=value
+5270: set MT=MT+1
+5271: set value=-22.0000
+5272: set vT[MT]=$41304f52
+5273: set OT[MT]=1
+5274: set rT[MT]=1
+5275: set QT[MT]=$42303531
+5276: set hT[MT]=value
+5277: set MT=MT+1
+5278: set value=-50.0000
+5279: set vT[MT]=$41304f49
+5280: set OT[MT]=1
+5281: set rT[MT]=1
+5282: set QT[MT]=$42303235
+5283: set hT[MT]=value
+5284: set MT=MT+1
+5285: set value=-3.0000
+5286: set vT[MT]=$41304f37
+5287: set OT[MT]=1
+5288: set rT[MT]=1
+5289: set QT[MT]=$42303453
+5290: set hT[MT]=value
+5291: set MT=MT+1
+5292: set value=-6.0000
+5293: set vT[MT]=$41304f30
+5294: set OT[MT]=1
+5295: set rT[MT]=1
+5296: set QT[MT]=$42303452
+5297: set hT[MT]=value
+5298: set MT=MT+1
+5299: set value=-35.0000
+5300: set vT[MT]=$41304e52
+5301: set OT[MT]=1
+5302: set rT[MT]=1
+5303: set QT[MT]=$41304e52
+5304: set hT[MT]=value
+5305: set MT=MT+1
+5306: set value=-40.0000
+5307: set vT[MT]=$41304e52
+5308: set OT[MT]=1
+5309: set rT[MT]=2
+5310: set QT[MT]=$41304e52
+5311: set hT[MT]=value
+5312: set MT=MT+1
+5313: set value=-30.0000
+5314: set vT[MT]=$41304e4a
+5315: set OT[MT]=1
+5316: set rT[MT]=1
+5317: set QT[MT]=$42303445
+5318: set hT[MT]=value
+5319: set MT=MT+1
+5320: set value=-25.0000
+5321: set vT[MT]=$41304d5a
+5322: set OT[MT]=1
+5323: set rT[MT]=1
+5324: set QT[MT]=$42303442
+5325: set hT[MT]=value
+5326: set MT=MT+1
+5327: set value=-35.0000
+5328: set vT[MT]=$41304d34
+5329: set OT[MT]=1
+5330: set rT[MT]=1
+5331: set QT[MT]=$42303242
+5332: set hT[MT]=value
+5333: set MT=MT+1
+5334: set value=-25.0000
+5335: set vT[MT]=$41304c4d
+5336: set OT[MT]=1
+5337: set rT[MT]=1
+5338: set QT[MT]=$42303354
+5339: set hT[MT]=value
+5340: set MT=MT+1
+5341: set value=-30.0000
+5342: set vT[MT]=$41304b55
+5343: set OT[MT]=1
+5344: set rT[MT]=1
+5345: set QT[MT]=$4230334a
+5346: set hT[MT]=value
+5347: set MT=MT+1
+5348: set value=-60.0000
+5349: set vT[MT]=$41304a50
+5350: set OT[MT]=1
+5351: set rT[MT]=1
+5352: set QT[MT]=$42303341
+5353: set hT[MT]=value
+5354: set MT=MT+1
+5355: set value=-20.0000
+5356: set vT[MT]=$41304a37
+5357: set OT[MT]=1
+5358: set rT[MT]=1
+5359: set QT[MT]=$42303055
+5360: set hT[MT]=value
+5361: set MT=MT+1
+5362: set value=-22.0000
+5363: set vT[MT]=$4130484b
+5364: set OT[MT]=1
+5365: set rT[MT]=1
+5366: set QT[MT]=$42303257
+5367: set hT[MT]=value
+5368: set MT=MT+1
+5369: set value=-20.0000
+5370: set vT[MT]=$41304839
+5371: set OT[MT]=1
+5372: set rT[MT]=1
+5373: set QT[MT]=$42303255
+5374: set hT[MT]=value
+5375: set MT=MT+1
+5376: set value=-12.0000
+5377: set vT[MT]=$41304835
+5378: set OT[MT]=1
+5379: set rT[MT]=1
+5380: set QT[MT]=$42303252
+5381: set hT[MT]=value
+5382: set MT=MT+1
+5383: set value=-25.0000
+5384: set vT[MT]=$41304757
+5385: set OT[MT]=1
+5386: set rT[MT]=1
+5387: set QT[MT]=$42303251
+5388: set hT[MT]=value
+5389: set MT=MT+1
+5390: set value=-18.0000
+5391: set vT[MT]=$41304755
+5392: set OT[MT]=1
+5393: set rT[MT]=1
+5394: set QT[MT]=$42303250
+5395: set hT[MT]=value
+5396: set MT=MT+1
+5397: set value=-15.0000
+5398: set vT[MT]=$4130474e
+5399: set OT[MT]=1
+5400: set rT[MT]=1
+5401: set QT[MT]=$4230324f
+5402: set hT[MT]=value
+5403: set MT=MT+1
+5404: set value=-25.0000
+5405: set vT[MT]=$4130474a
+5406: set OT[MT]=1
+5407: set rT[MT]=1
+5408: set QT[MT]=$4230324d
+5409: set hT[MT]=value
+5410: set MT=MT+1
+5411: set value=-18.0000
+5412: set vT[MT]=$41304734
+5413: set OT[MT]=1
+5414: set rT[MT]=1
+5415: set QT[MT]=$42303249
+5416: set hT[MT]=value
+5417: set MT=MT+1
+5418: set value=-10.0000
+5419: set vT[MT]=$41304657
+5420: set OT[MT]=1
+5421: set rT[MT]=1
+5422: set QT[MT]=$42303148
+5423: set hT[MT]=value
+5424: set MT=MT+1
+5425: set value=-10.0000
+5426: set vT[MT]=$4130464d
+5427: set OT[MT]=1
+5428: set rT[MT]=1
+5429: set QT[MT]=$42303131
+5430: set hT[MT]=value
+5431: set MT=MT+1
+5432: set value=-3.0000
+5433: set vT[MT]=$4130454f
+5434: set OT[MT]=1
+5435: set rT[MT]=1
+5436: set QT[MT]=$42303247
+5437: set hT[MT]=value
+5438: set MT=MT+1
+5439: set value=-20.0000
+5440: set vT[MT]=$4130444e
+5441: set OT[MT]=1
+5442: set rT[MT]=1
+5443: set QT[MT]=$42303242
+5444: set hT[MT]=value
+5445: set MT=MT+1
+5446: set value=-11.0000
+5447: set vT[MT]=$41304446
+5448: set OT[MT]=1
+5449: set rT[MT]=1
+5450: set QT[MT]=$42303239
+5451: set hT[MT]=value
+5452: set MT=MT+1
+5453: set value=-18.0000
+5454: set vT[MT]=$41304355
+5455: set OT[MT]=1
+5456: set rT[MT]=1
+5457: set QT[MT]=$42303235
+5458: set hT[MT]=value
+5459: set MT=MT+1
+5460: set value=-60.0000
+5461: set vT[MT]=$41304346
+5462: set OT[MT]=1
+5463: set rT[MT]=1
+5464: set QT[MT]=$42303231
+5465: set hT[MT]=value
+5466: set MT=MT+1
+5467: set value=-10.0000
+5468: set vT[MT]=$41304255
+5469: set OT[MT]=1
+5470: set rT[MT]=1
+5471: set QT[MT]=$42303846
+5472: set hT[MT]=value
+5473: set MT=MT+1
+5474: set value=-20.0000
+5475: set vT[MT]=$41304245
+5476: set OT[MT]=1
+5477: set rT[MT]=1
+5478: set QT[MT]=$42303155
+5479: set hT[MT]=value
+5480: set MT=MT+1
+5481: set value=-45.0000
+5482: set vT[MT]=$41304230
+5483: set OT[MT]=1
+5484: set rT[MT]=1
+5485: set QT[MT]=$42303151
+5486: set hT[MT]=value
+5487: set MT=MT+1
+5488: set value=-33.0000
+5489: set vT[MT]=$41304150
+5490: set OT[MT]=1
+5491: set rT[MT]=1
+5492: set QT[MT]=$4230314c
+5493: set hT[MT]=value
+5494: set MT=MT+1
+5495: set value=-45.0000
+5496: set vT[MT]=$41303950
+5497: set OT[MT]=1
+5498: set rT[MT]=1
+5499: set QT[MT]=$42303631
+5500: set hT[MT]=value
+5501: set MT=MT+1
+5502: set value=-10.0000
+5503: set vT[MT]=$4130394b
+5504: set OT[MT]=1
+5505: set rT[MT]=1
+5506: set QT[MT]=$42303144
+5507: set hT[MT]=value
+5508: set MT=MT+1
+5509: set value=-12.0000
+5510: set vT[MT]=$41303948
+5511: set OT[MT]=1
+5512: set rT[MT]=1
+5513: set QT[MT]=$42303142
+5514: set hT[MT]=value
+5515: set MT=MT+1
+5516: set value=-25.0000
+5517: set vT[MT]=$41303857
+5518: set OT[MT]=1
+5519: set rT[MT]=1
+5520: set QT[MT]=$42303137
+5521: set hT[MT]=value
+5522: set MT=MT+1
+5523: set value=-30.0000
+5524: set vT[MT]=$41303855
+5525: set OT[MT]=1
+5526: set rT[MT]=1
+5527: set QT[MT]=$42303136
+5528: set hT[MT]=value
+5529: set MT=MT+1
+5530: set value=-3.0000
+5531: set vT[MT]=$4130384e
+5532: set OT[MT]=1
+5533: set rT[MT]=1
+5534: set QT[MT]=$42303131
+5535: set hT[MT]=value
+5536: set MT=MT+1
+5537: set value=-20.0000
+5538: set vT[MT]=$41303758
+5539: set OT[MT]=1
+5540: set rT[MT]=1
+5541: set QT[MT]=$41303758
+5542: set hT[MT]=value
+5543: set MT=MT+1
+5544: set value=-25.0000
+5545: set vT[MT]=$41303758
+5546: set OT[MT]=1
+5547: set rT[MT]=2
+5548: set QT[MT]=$41303758
+5549: set hT[MT]=value
+5550: set MT=MT+1
+5551: set value=-20.0000
+5552: set vT[MT]=$41303651
+5553: set OT[MT]=1
+5554: set rT[MT]=1
+5555: set QT[MT]=$42303055
+5556: set hT[MT]=value
+5557: set MT=MT+1
+5558: set value=-15.0000
+5559: set vT[MT]=$41303649
+5560: set OT[MT]=1
+5561: set rT[MT]=1
+5562: set QT[MT]=$42303050
+5563: set hT[MT]=value
+5564: set MT=MT+1
+5565: set value=-27.0000
+5566: set vT[MT]=$41303645
+5567: set OT[MT]=1
+5568: set rT[MT]=1
+5569: set QT[MT]=$4230304e
+5570: set hT[MT]=value
+5571: set MT=MT+1
+5572: set value=-20.0000
+5573: set vT[MT]=$41303630
+5574: set OT[MT]=1
+5575: set rT[MT]=1
+5576: set QT[MT]=$4230304b
+5577: set hT[MT]=value
+5578: set MT=MT+1
+5579: set value=-10.0000
+5580: set vT[MT]=$41303559
+5581: set OT[MT]=1
+5582: set rT[MT]=1
+5583: set QT[MT]=$42303044
+5584: set hT[MT]=value
+5585: set MT=MT+1
+5586: set value=-20.0000
+5587: set vT[MT]=$41303558
+5588: set OT[MT]=1
+5589: set rT[MT]=1
+5590: set QT[MT]=$42303659
+5591: set hT[MT]=value
+5592: set MT=MT+1
+5593: set value=-40.0000
+5594: set vT[MT]=$41303334
+5595: set OT[MT]=1
+5596: set rT[MT]=1
+5597: set QT[MT]=$42303838
+5598: set hT[MT]=value
+5599: set MT=MT+1
+5600: set value=-25.0000
+5601: set vT[MT]=$41303331
+5602: set OT[MT]=1
+5603: set rT[MT]=1
+5604: set QT[MT]=$42303030
+5605: set hT[MT]=value
+5606: set MT=MT+1
+5607: set vT[MT]=$41313849
+5608: set OT[MT]=2
+5609: set rT[MT]=1
+5610: set QT[MT]=$42303238
+5611: set hT[MT]=99.0000
+5612: set MT=MT+1
+5613: set vT[MT]=$41313733
+5614: set OT[MT]=2
+5615: set rT[MT]=1
+5616: set QT[MT]=$41313733
+5617: set hT[MT]=45.0000
+5618: set MT=MT+1
+5619: set vT[MT]=$41313733
+5620: set OT[MT]=2
+5621: set rT[MT]=2
+5622: set QT[MT]=$41313733
+5623: set hT[MT]=60.0000
+5624: set MT=MT+1
+5625: set vT[MT]=$4131345a
+5626: set OT[MT]=2
+5627: set rT[MT]=1
+5628: set QT[MT]=$4230324e
+5629: set hT[MT]=25.0000
+5630: set MT=MT+1
+5631: set vT[MT]=$41313431
+5632: set OT[MT]=2
+5633: set rT[MT]=1
+5634: set QT[MT]=$42303833
+5635: set hT[MT]=30.0000
+5636: set MT=MT+1
+5637: set vT[MT]=$41313255
+5638: set OT[MT]=2
+5639: set rT[MT]=1
+5640: set QT[MT]=$4230334f
+5641: set hT[MT]=20.0000
+5642: set MT=MT+1
+5643: set vT[MT]=$4131304e
+5644: set OT[MT]=2
+5645: set rT[MT]=1
+5646: set QT[MT]=$4230374d
+5647: set hT[MT]=40.0000
+5648: set MT=MT+1
+5649: set vT[MT]=$41313044
+5650: set OT[MT]=2
+5651: set rT[MT]=1
+5652: set QT[MT]=$42303034
+5653: set hT[MT]=35.0000
+5654: set MT=MT+1
+5655: set vT[MT]=$41313039
+5656: set OT[MT]=2
+5657: set rT[MT]=1
+5658: set QT[MT]=$42303744
+5659: set hT[MT]=20.0000
+5660: set MT=MT+1
+5661: set vT[MT]=$41313030
+5662: set OT[MT]=2
+5663: set rT[MT]=1
+5664: set QT[MT]=$42303651
+5665: set hT[MT]=10.0000
+5666: set MT=MT+1
+5667: set vT[MT]=$41305a55
+5668: set OT[MT]=2
+5669: set rT[MT]=1
+5670: set QT[MT]=$42303743
+5671: set hT[MT]=30.0000
+5672: set MT=MT+1
+5673: set vT[MT]=$41305a39
+5674: set OT[MT]=2
+5675: set rT[MT]=1
+5676: set QT[MT]=$4230374c
+5677: set hT[MT]=45.0000
+5678: set MT=MT+1
+5679: set vT[MT]=$41305954
+5680: set OT[MT]=2
+5681: set rT[MT]=1
+5682: set QT[MT]=$42303356
+5683: set hT[MT]=20.0000
+5684: set MT=MT+1
+5685: set vT[MT]=$41305856
+5686: set OT[MT]=2
+5687: set rT[MT]=1
+5688: set QT[MT]=$42303157
+5689: set hT[MT]=30.0000
+5690: set MT=MT+1
+5691: set vT[MT]=$41305839
+5692: set OT[MT]=2
+5693: set rT[MT]=1
+5694: set QT[MT]=$42303058
+5695: set hT[MT]=40.0000
+5696: set MT=MT+1
+5697: set vT[MT]=$41305757
+5698: set OT[MT]=2
+5699: set rT[MT]=1
+5700: set QT[MT]=$42303658
+5701: set hT[MT]=50.0000
+5702: set MT=MT+1
+5703: set vT[MT]=$41305756
+5704: set OT[MT]=2
+5705: set rT[MT]=1
+5706: set QT[MT]=$42303655
+5707: set hT[MT]=20.0000
+5708: set MT=MT+1
+5709: set vT[MT]=$41305742
+5710: set OT[MT]=2
+5711: set rT[MT]=1
+5712: set QT[MT]=$4230364c
+5713: set hT[MT]=20.0000
+5714: set MT=MT+1
+5715: set vT[MT]=$4130564b
+5716: set OT[MT]=2
+5717: set rT[MT]=1
+5718: set QT[MT]=$42303638
+5719: set hT[MT]=7.0000
+5720: set MT=MT+1
+5721: set vT[MT]=$4130554a
+5722: set OT[MT]=2
+5723: set rT[MT]=1
+5724: set QT[MT]=$42303450
+5725: set hT[MT]=30.0000
+5726: set MT=MT+1
+5727: set vT[MT]=$41305437
+5728: set OT[MT]=2
+5729: set rT[MT]=1
+5730: set QT[MT]=$42303635
+5731: set hT[MT]=40.0000
+5732: set MT=MT+1
+5733: set vT[MT]=$41305352
+5734: set OT[MT]=2
+5735: set rT[MT]=1
+5736: set QT[MT]=$42303444
+5737: set hT[MT]=15.0000
+5738: set MT=MT+1
+5739: set vT[MT]=$4130534b
+5740: set OT[MT]=2
+5741: set rT[MT]=1
+5742: set QT[MT]=$42303651
+5743: set hT[MT]=10.0000
+5744: set MT=MT+1
+5745: set vT[MT]=$41305259
+5746: set OT[MT]=2
+5747: set rT[MT]=1
+5748: set QT[MT]=$41305259
+5749: set hT[MT]=70.0000
+5750: set MT=MT+1
+5751: set vT[MT]=$41305259
+5752: set OT[MT]=2
+5753: set rT[MT]=2
+5754: set QT[MT]=$41305259
+5755: set hT[MT]=40.0000
+5756: set MT=MT+1
+5757: set vT[MT]=$41305239
+5758: set OT[MT]=2
+5759: set rT[MT]=1
+5760: set QT[MT]=$42303552
+5761: set hT[MT]=25.0000
+5762: set MT=MT+1
+5763: set vT[MT]=$41305237
+5764: set OT[MT]=2
+5765: set rT[MT]=1
+5766: set QT[MT]=$42303550
+5767: set hT[MT]=20.0000
+5768: set MT=MT+1
+5769: set vT[MT]=$41305154
+5770: set OT[MT]=2
+5771: set rT[MT]=1
+5772: set QT[MT]=$4230354e
+5773: set hT[MT]=35.0000
+5774: set MT=MT+1
+5775: set vT[MT]=$41305143
+5776: set OT[MT]=2
+5777: set rT[MT]=1
+5778: set QT[MT]=$41305143
+5779: set hT[MT]=30.0000
+5780: set MT=MT+1
+5781: set vT[MT]=$41305143
+5782: set OT[MT]=2
+5783: set rT[MT]=2
+5784: set QT[MT]=$41305143
+5785: set hT[MT]=35.0000
+5786: set MT=MT+1
+5787: set vT[MT]=$41305143
+5788: set OT[MT]=2
+5789: set rT[MT]=3
+5790: set QT[MT]=$41305143
+5791: set hT[MT]=42.0000
+5792: set MT=MT+1
+5793: set vT[MT]=$41305137
+5794: set OT[MT]=2
+5795: set rT[MT]=1
+5796: set QT[MT]=$42303358
+5797: set hT[MT]=5.0000
+5798: set MT=MT+1
+5799: set vT[MT]=$4130504f
+5800: set OT[MT]=2
+5801: set rT[MT]=1
+5802: set QT[MT]=$42303543
+5803: set hT[MT]=7.0000
+5804: set MT=MT+1
+5805: set vT[MT]=$41305039
+5806: set OT[MT]=2
+5807: set rT[MT]=1
+5808: set QT[MT]=$42303536
+5809: set hT[MT]=10.0000
+5810: set MT=MT+1
+5811: set vT[MT]=$41304f51
+5812: set OT[MT]=2
+5813: set rT[MT]=1
+5814: set QT[MT]=$41304f51
+5815: set hT[MT]=30.0000
+5816: set MT=MT+1
+5817: set vT[MT]=$41304f42
+5818: set OT[MT]=2
+5819: set rT[MT]=1
+5820: set QT[MT]=$42303458
+5821: set hT[MT]=45.0000
+5822: set MT=MT+1
+5823: set vT[MT]=$41304f31
+5824: set OT[MT]=2
+5825: set rT[MT]=1
+5826: set QT[MT]=$4230344f
+5827: set hT[MT]=7.0000
+5828: set MT=MT+1
+5829: set vT[MT]=$41304e50
+5830: set OT[MT]=2
+5831: set rT[MT]=1
+5832: set QT[MT]=$41304e50
+5833: set hT[MT]=50.0000
+5834: set MT=MT+1
+5835: set vT[MT]=$41304e33
+5836: set OT[MT]=2
+5837: set rT[MT]=1
+5838: set QT[MT]=$42303443
+5839: set hT[MT]=25.0000
+5840: set MT=MT+1
+5841: set vT[MT]=$41304e30
+5842: set OT[MT]=2
+5843: set rT[MT]=1
+5844: set QT[MT]=$41304e30
+5845: set hT[MT]=70.0000
+5846: set MT=MT+1
+5847: set vT[MT]=$41304d54
+5848: set OT[MT]=2
+5849: set rT[MT]=1
+5850: set QT[MT]=$41304d54
+5851: set hT[MT]=45.0000
+5852: set MT=MT+1
+5853: set vT[MT]=$41304d4d
+5854: set OT[MT]=2
+5855: set rT[MT]=1
+5856: set QT[MT]=$42303434
+5857: set hT[MT]=30.0000
+5858: set MT=MT+1
+5859: set vT[MT]=$41304d48
+5860: set OT[MT]=2
+5861: set rT[MT]=1
+5862: set QT[MT]=$41304d48
+5863: set hT[MT]=200.0000
+5864: set MT=MT+1
+5865: set vT[MT]=$41304d37
+5866: set OT[MT]=2
+5867: set rT[MT]=1
+5868: set QT[MT]=$41304d37
+5869: set hT[MT]=25.0000
+5870: set MT=MT+1
+5871: set vT[MT]=$41304d35
+5872: set OT[MT]=2
+5873: set rT[MT]=1
+5874: set QT[MT]=$42303243
+5875: set hT[MT]=35.0000
+5876: set MT=MT+1
+5877: set vT[MT]=$41304d30
+5878: set OT[MT]=2
+5879: set rT[MT]=1
+5880: set QT[MT]=$41304d30
+5881: set hT[MT]=50.0000
+5882: set MT=MT+1
+5883: set vT[MT]=$41304c58
+5884: set OT[MT]=2
+5885: set rT[MT]=1
+5886: set QT[MT]=$41304c58
+5887: set hT[MT]=30.0000
+5888: set MT=MT+1
+5889: set vT[MT]=$41304c35
+5890: set OT[MT]=2
+5891: set rT[MT]=1
+5892: set QT[MT]=$41304c35
+5893: set hT[MT]=250.0000
+5894: set MT=MT+1
+5895: set vT[MT]=$41304c34
+5896: set OT[MT]=2
+5897: set rT[MT]=1
+5898: set QT[MT]=$41304c34
+5899: set hT[MT]=40.0000
+5900: set MT=MT+1
+5901: set vT[MT]=$41304b59
+5902: set OT[MT]=2
+5903: set rT[MT]=1
+5904: set QT[MT]=$4230334d
+5905: set hT[MT]=7.0000
+5906: set MT=MT+1
+5907: set vT[MT]=$41304b53
+5908: set OT[MT]=2
+5909: set rT[MT]=1
+5910: set QT[MT]=$42303348
+5911: set hT[MT]=30.0000
+5912: set MT=MT+1
+5913: set vT[MT]=$41304b4f
+5914: set OT[MT]=2
+5915: set rT[MT]=1
+5916: set QT[MT]=$42303346
+5917: set hT[MT]=45.0000
+5918: set MT=MT+1
+5919: set vT[MT]=$41304b4a
+5920: set OT[MT]=2
+5921: set rT[MT]=1
+5922: set QT[MT]=$41304b4a
+5923: set hT[MT]=75.0000
+5924: set MT=MT+1
+5925: set vT[MT]=$41304a51
+5926: set OT[MT]=2
+5927: set rT[MT]=1
+5928: set QT[MT]=$42303342
+5929: set hT[MT]=50.0000
+5930: set MT=MT+1
+5931: set vT[MT]=$41304a46
+5932: set OT[MT]=2
+5933: set rT[MT]=1
+5934: set QT[MT]=$41304a46
+5935: set hT[MT]=33.0000
+5936: set MT=MT+1
+5937: set vT[MT]=$41304a30
+5938: set OT[MT]=2
+5939: set rT[MT]=1
+5940: set QT[MT]=$42303430
+5941: set hT[MT]=45.0000
+5942: set MT=MT+1
+5943: set vT[MT]=$41304949
+5944: set OT[MT]=2
+5945: set rT[MT]=1
+5946: set QT[MT]=$42303335
+5947: set hT[MT]=7.0000
+5948: set MT=MT+1
+5949: set vT[MT]=$41304941
+5950: set OT[MT]=2
+5951: set rT[MT]=1
+5952: set QT[MT]=$42303332
+5953: set hT[MT]=45.0000
+5954: set MT=MT+1
+5955: set vT[MT]=$41304933
+5956: set OT[MT]=2
+5957: set rT[MT]=1
+5958: set QT[MT]=$41304933
+5959: set hT[MT]=50.0000
+5960: set MT=MT+1
+5961: set vT[MT]=$41304854
+5962: set OT[MT]=2
+5963: set rT[MT]=1
+5964: set QT[MT]=$41304854
+5965: set hT[MT]=45.0000
+5966: set MT=MT+1
+5967: set vT[MT]=$41304854
+5968: set OT[MT]=2
+5969: set rT[MT]=2
+5970: set QT[MT]=$41304854
+5971: set hT[MT]=45.0000
+5972: set MT=MT+1
+5973: set vT[MT]=$41304848
+5974: set OT[MT]=2
+5975: set rT[MT]=1
+5976: set QT[MT]=$41304848
+5977: set hT[MT]=35.0000
+5978: set MT=MT+1
+5979: set vT[MT]=$41304846
+5980: set OT[MT]=2
+5981: set rT[MT]=1
+5982: set QT[MT]=$41304846
+5983: set hT[MT]=25.0000
+5984: set MT=MT+1
+5985: set vT[MT]=$41304841
+5986: set OT[MT]=2
+5987: set rT[MT]=1
+5988: set QT[MT]=$41304841
+5989: set hT[MT]=30.0000
+5990: set MT=MT+1
+5991: set vT[MT]=$41304754
+5992: set OT[MT]=2
+5993: set rT[MT]=1
+5994: set QT[MT]=$41304754
+5995: set hT[MT]=50.0000
+5996: set MT=MT+1
+5997: set vT[MT]=$4130474c
+5998: set OT[MT]=2
+5999: set rT[MT]=1
+6000: set QT[MT]=$4230324e
+6001: set hT[MT]=20.0000
+6002: set MT=MT+1
+6003: set vT[MT]=$41304746
+6004: set OT[MT]=2
+6005: set rT[MT]=1
+6006: set QT[MT]=$42303158
+6007: set hT[MT]=10.0000
+6008: set MT=MT+1
+6009: set vT[MT]=$41304739
+6010: set OT[MT]=2
+6011: set rT[MT]=1
+6012: set QT[MT]=$42303032
+6013: set hT[MT]=35.0000
+6014: set MT=MT+1
+6015: set vT[MT]=$41304652
+6016: set OT[MT]=2
+6017: set rT[MT]=1
+6018: set QT[MT]=$41304652
+6019: set hT[MT]=70.0000
+6020: set MT=MT+1
+6021: set vT[MT]=$41304652
+6022: set OT[MT]=2
+6023: set rT[MT]=2
+6024: set QT[MT]=$41304652
+6025: set hT[MT]=80.0000
+6026: set MT=MT+1
+6027: set vT[MT]=$4130444f
+6028: set OT[MT]=2
+6029: set rT[MT]=1
+6030: set QT[MT]=$42303243
+6031: set hT[MT]=25.0000
+6032: set MT=MT+1
+6033: set vT[MT]=$41304353
+6034: set OT[MT]=2
+6035: set rT[MT]=1
+6036: set QT[MT]=$42303234
+6037: set hT[MT]=99.0000
+6038: set MT=MT+1
+6039: set vT[MT]=$4130434e
+6040: set OT[MT]=2
+6041: set rT[MT]=1
+6042: set QT[MT]=$42303047
+6043: set hT[MT]=55.0000
+6044: set MT=MT+1
+6045: set vT[MT]=$41304348
+6046: set OT[MT]=2
+6047: set rT[MT]=1
+6048: set QT[MT]=$41304348
+6049: set hT[MT]=70.0000
+6050: set MT=MT+1
+6051: set vT[MT]=$41304331
+6052: set OT[MT]=2
+6053: set rT[MT]=1
+6054: set QT[MT]=$4230315a
+6055: set hT[MT]=40.0000
+6056: set MT=MT+1
+6057: set vT[MT]=$4130424e
+6058: set OT[MT]=2
+6059: set rT[MT]=1
+6060: set QT[MT]=$42303158
+6061: set hT[MT]=12.0000
+6062: set MT=MT+1
+6063: set vT[MT]=$4130424c
+6064: set OT[MT]=2
+6065: set rT[MT]=1
+6066: set QT[MT]=$42303035
+6067: set hT[MT]=45.0000
+6068: set MT=MT+1
+6069: set vT[MT]=$41304154
+6070: set OT[MT]=2
+6071: set rT[MT]=1
+6072: set QT[MT]=$4230314d
+6073: set hT[MT]=30.0000
+6074: set MT=MT+1
+6075: set vT[MT]=$41304148
+6076: set OT[MT]=2
+6077: set rT[MT]=1
+6078: set QT[MT]=$4230314b
+6079: set hT[MT]=30.0000
+6080: set MT=MT+1
+6081: set vT[MT]=$41304134
+6082: set OT[MT]=2
+6083: set rT[MT]=1
+6084: set QT[MT]=$42303147
+6085: set hT[MT]=30.0000
+6086: set MT=MT+1
+6087: set vT[MT]=$4130394e
+6088: set OT[MT]=2
+6089: set rT[MT]=1
+6090: set QT[MT]=$42303146
+6091: set hT[MT]=10.0000
+6092: set MT=MT+1
+6093: set vT[MT]=$41303932
+6094: set OT[MT]=2
+6095: set rT[MT]=1
+6096: set QT[MT]=$42303139
+6097: set hT[MT]=35.0000
+6098: set MT=MT+1
+6099: set vT[MT]=$41303848
+6100: set OT[MT]=2
+6101: set rT[MT]=1
+6102: set QT[MT]=$42303034
+6103: set hT[MT]=5.0000
+6104: set MT=MT+1
+6105: set vT[MT]=$41303846
+6106: set OT[MT]=2
+6107: set rT[MT]=1
+6108: set QT[MT]=$42303132
+6109: set hT[MT]=5.0000
+6110: set MT=MT+1
+6111: set vT[MT]=$41303845
+6112: set OT[MT]=2
+6113: set rT[MT]=1
+6114: set QT[MT]=$42303031
+6115: set hT[MT]=5.0000
+6116: set MT=MT+1
+6117: set vT[MT]=$41303839
+6118: set OT[MT]=2
+6119: set rT[MT]=1
+6120: set QT[MT]=$42303130
+6121: set hT[MT]=5.0000
+6122: set MT=MT+1
+6123: set vT[MT]=$41303732
+6124: set OT[MT]=2
+6125: set rT[MT]=1
+6126: set QT[MT]=$42303057
+6127: set hT[MT]=20.0000
+6128: set MT=MT+1
+6129: set vT[MT]=$41303658
+6130: set OT[MT]=2
+6131: set rT[MT]=1
+6132: set QT[MT]=$42303132
+6133: set hT[MT]=50.0000
+6134: set MT=MT+1
+6135: set vT[MT]=$41303650
+6136: set OT[MT]=2
+6137: set rT[MT]=1
+6138: set QT[MT]=$42303637
+6139: set hT[MT]=35.0000
+6140: set MT=MT+1
+6141: set vT[MT]=$4130364e
+6142: set OT[MT]=2
+6143: set rT[MT]=1
+6144: set QT[MT]=$42303053
+6145: set hT[MT]=10.0000
+6146: set MT=MT+1
+6147: set vT[MT]=$4130364d
+6148: set OT[MT]=2
+6149: set rT[MT]=1
+6150: set QT[MT]=$42303052
+6151: set hT[MT]=25.0000
+6152: set MT=MT+1
+6153: set vT[MT]=$41303557
+6154: set OT[MT]=2
+6155: set rT[MT]=1
+6156: set QT[MT]=$42303048
+6157: set hT[MT]=10.0000
+6158: set MT=MT+1
+6159: set vT[MT]=$4130354b
+6160: set OT[MT]=2
+6161: set rT[MT]=1
+6162: set QT[MT]=$42303047
+6163: set hT[MT]=25.0000
+6164: set MT=MT+1
+6165: set vT[MT]=$41303547
+6166: set OT[MT]=2
+6167: set rT[MT]=1
+6168: set QT[MT]=$42303844
+6169: set hT[MT]=40.0000
+6170: set MT=MT+1
+6171: set vT[MT]=$41303435
+6172: set OT[MT]=2
+6173: set rT[MT]=1
+6174: set QT[MT]=$42303130
+6175: set hT[MT]=42.0000
+6176: set MT=MT+1
+6177: set vT[MT]=$41303357
+6178: set OT[MT]=2
+6179: set rT[MT]=1
+6180: set QT[MT]=$42303031
+6181: set hT[MT]=15.0000
+6182: set MT=MT+1
+6183: set vT[MT]=$41303353
+6184: set OT[MT]=2
+6185: set rT[MT]=1
+6186: set QT[MT]=$42303034
+6187: set hT[MT]=15.0000
+6188: set MT=MT+1
+6189: set vT[MT]=$41303352
+6190: set OT[MT]=2
+6191: set rT[MT]=1
+6192: set QT[MT]=$42303035
+6193: set hT[MT]=20.0000
+6194: set MT=MT+1
+6195: set vT[MT]=$41303255
+6196: set OT[MT]=2
+6197: set rT[MT]=1
+6198: set QT[MT]=$42303031
+6199: set hT[MT]=40.0000
+6200: set MT=MT+1
+6201: set vT[MT]=$41303233
+6202: set OT[MT]=2
+6203: set rT[MT]=1
+6204: set QT[MT]=$42303032
+6205: set hT[MT]=10.0000
+6206: set MT=MT+1
+6207: set vT[MT]=$41303230
+6208: set OT[MT]=2
+6209: set rT[MT]=1
+6210: set QT[MT]=$41303230
+6211: set hT[MT]=10.0000
+6212: set MT=MT+1
+6213: set vT[MT]=$41303443
+6214: set OT[MT]=3
+6215: set rT[MT]=1
+6216: set QT[MT]=$41303443
+6217: set hT[MT]=33.0000
+6218: set MT=MT+1
+6219: set vT[MT]=$41303455
+6220: set OT[MT]=3
+6221: set rT[MT]=1
+6222: set QT[MT]=$41303455
+6223: set hT[MT]=50.0000
+6224: set MT=MT+1
+6225: set vT[MT]=$41303455
+6226: set OT[MT]=3
+6227: set rT[MT]=2
+6228: set QT[MT]=$41303455
+6229: set hT[MT]=50.0000
+6230: set MT=MT+1
+6231: set vT[MT]=$41303648
+6232: set OT[MT]=3
+6233: set rT[MT]=1
+6234: set QT[MT]=$42303050
+6235: set hT[MT]=35.0000
+6236: set MT=MT+1
+6237: set vT[MT]=$41303838
+6238: set OT[MT]=3
+6239: set rT[MT]=1
+6240: set QT[MT]=$42303130
+6241: set hT[MT]=5.0000
+6242: set MT=MT+1
+6243: set vT[MT]=$4130414c
+6244: set OT[MT]=3
+6245: set rT[MT]=1
+6246: set QT[MT]=$42303130
+6247: set hT[MT]=42.0000
+6248: set MT=MT+1
+6249: set vT[MT]=$41304248
+6250: set OT[MT]=3
+6251: set rT[MT]=1
+6252: set QT[MT]=$41304248
+6253: set hT[MT]=30.0000
+6254: set MT=MT+1
+6255: set vT[MT]=$41304346
+6256: set OT[MT]=3
+6257: set rT[MT]=1
+6258: set QT[MT]=$42303231
+6259: set hT[MT]=325.0000
+6260: set MT=MT+1
+6261: set vT[MT]=$4130434d
+6262: set OT[MT]=3
+6263: set rT[MT]=1
+6264: set QT[MT]=$4130434d
+6265: set hT[MT]=99.0000
+6266: set MT=MT+1
+6267: set vT[MT]=$41304538
+6268: set OT[MT]=3
+6269: set rT[MT]=1
+6270: set QT[MT]=$41304538
+6271: set hT[MT]=12.0000
+6272: set MT=MT+1
+6273: set vT[MT]=$41304743
+6274: set OT[MT]=3
+6275: set rT[MT]=1
+6276: set QT[MT]=$41304743
+6277: set hT[MT]=10.0000
+6278: set MT=MT+1
+6279: set vT[MT]=$4130474a
+6280: set OT[MT]=3
+6281: set rT[MT]=1
+6282: set QT[MT]=$4230324d
+6283: set hT[MT]=20.0000
+6284: set MT=MT+1
+6285: set vT[MT]=$41304936
+6286: set OT[MT]=3
+6287: set rT[MT]=1
+6288: set QT[MT]=$41304936
+6289: set hT[MT]=45.0000
+6290: set MT=MT+1
+6291: set vT[MT]=$41304937
+6292: set OT[MT]=3
+6293: set rT[MT]=1
+6294: set QT[MT]=$41304937
+6295: set hT[MT]=45.0000
+6296: set MT=MT+1
+6297: set vT[MT]=$4130495a
+6298: set OT[MT]=3
+6299: set rT[MT]=1
+6300: set QT[MT]=$4130495a
+6301: set hT[MT]=45.0000
+6302: set MT=MT+1
+6303: set vT[MT]=$4130495a
+6304: set OT[MT]=3
+6305: set rT[MT]=2
+6306: set QT[MT]=$4130495a
+6307: set hT[MT]=45.0000
+6308: set MT=MT+1
+6309: set vT[MT]=$41304b44
+6310: set OT[MT]=3
+6311: set rT[MT]=1
+6312: set QT[MT]=$41304b44
+6313: set hT[MT]=40.0000
+6314: set MT=MT+1
+6315: set vT[MT]=$41304b44
+6316: set OT[MT]=3
+6317: set rT[MT]=2
+6318: set QT[MT]=$41304b44
+6319: set hT[MT]=40.0000
+6320: set MT=MT+1
+6321: set vT[MT]=$41304d31
+6322: set OT[MT]=3
+6323: set rT[MT]=1
+6324: set QT[MT]=$41304d31
+6325: set hT[MT]=30.0000
+6326: set MT=MT+1
+6327: set vT[MT]=$41304d36
+6328: set OT[MT]=3
+6329: set rT[MT]=1
+6330: set QT[MT]=$41304d36
+6331: set hT[MT]=30.0000
+6332: set MT=MT+1
+6333: set vT[MT]=$41304e4f
+6334: set OT[MT]=3
+6335: set rT[MT]=1
+6336: set QT[MT]=$41304e4f
+6337: set hT[MT]=60.0000
+6338: set MT=MT+1
+6339: set vT[MT]=$41305034
+6340: set OT[MT]=3
+6341: set rT[MT]=1
+6342: set QT[MT]=$41305034
+6343: set hT[MT]=50.0000
+6344: set MT=MT+1
+6345: set vT[MT]=$41305345
+6346: set OT[MT]=3
+6347: set rT[MT]=1
+6348: set QT[MT]=$41305345
+6349: set hT[MT]=55.0000
+6350: set MT=MT+1
+6351: set vT[MT]=$41305434
+6352: set OT[MT]=3
+6353: set rT[MT]=1
+6354: set QT[MT]=$41305434
+6355: set hT[MT]=35.0000
+6356: set MT=MT+1
+6357: set vT[MT]=$41305434
+6358: set OT[MT]=3
+6359: set rT[MT]=2
+6360: set QT[MT]=$41305434
+6361: set hT[MT]=35.0000
+6362: set MT=MT+1
+6363: set vT[MT]=$41305434
+6364: set OT[MT]=3
+6365: set rT[MT]=3
+6366: set QT[MT]=$41305434
+6367: set hT[MT]=35.0000
+6368: set MT=MT+1
+6369: set vT[MT]=$41305434
+6370: set OT[MT]=3
+6371: set rT[MT]=4
+6372: set QT[MT]=$41305434
+6373: set hT[MT]=35.0000
+6374: set MT=MT+1
+6375: set vT[MT]=$41305448
+6376: set OT[MT]=3
+6377: set rT[MT]=1
+6378: set QT[MT]=$41305448
+6379: set hT[MT]=60.0000
+6380: set MT=MT+1
+6381: set vT[MT]=$41305947
+6382: set OT[MT]=3
+6383: set rT[MT]=1
+6384: set QT[MT]=$41305947
+6385: set hT[MT]=70.0000
+6386: set MT=MT+1
+6387: set vT[MT]=$41305a4b
+6388: set OT[MT]=3
+6389: set rT[MT]=1
+6390: set QT[MT]=$41305a4b
+6391: set hT[MT]=50.0000
+6392: set MT=MT+1
+6393: set vT[MT]=$4131304a
+6394: set OT[MT]=3
+6395: set rT[MT]=1
+6396: set QT[MT]=$42303747
+6397: set hT[MT]=30.0000
+6398: set MT=MT+1
+6399: set vT[MT]=$41313154
+6400: set OT[MT]=3
+6401: set rT[MT]=1
+6402: set QT[MT]=$41313154
+6403: set hT[MT]=50.0000
+6404: set MT=MT+1
+6405: set vT[MT]=$41313433
+6406: set OT[MT]=3
+6407: set rT[MT]=1
+6408: set QT[MT]=$41313433
+6409: set hT[MT]=30.0000
+6410: set MT=MT+1
+6411: set vT[MT]=$41313547
+6412: set OT[MT]=3
+6413: set rT[MT]=1
+6414: set QT[MT]=$4230324d
+6415: set hT[MT]=25.0000
+6416: set MT=MT+1
+6417: set vT[MT]=$4131354a
+6418: set OT[MT]=3
+6419: set rT[MT]=1
+6420: set QT[MT]=$4131354a
+6421: set hT[MT]=25.0000
+6422: set MT=MT+1
+6423: set vT[MT]=$4131354a
+6424: set OT[MT]=3
+6425: set rT[MT]=2
+6426: set QT[MT]=$4131354a
+6427: set hT[MT]=25.0000
+6428: set MT=MT+1
+6429: set vT[MT]=$41313951
+6430: set OT[MT]=3
+6431: set rT[MT]=2
+6432: set QT[MT]=$41313951
+6433: set hT[MT]=35.0000
+6434: set MT=MT+1
+6435: set value=-15.0000
+6436: set vT[MT]=$41304747
+6437: set OT[MT]=4
+6438: set rT[MT]=1
+6439: set QT[MT]=$41304747
+6440: set hT[MT]=value
+6441: set MT=MT+1
+6442: set value=-30.0000
+6443: set vT[MT]=$41313332
+6444: set OT[MT]=4
+6445: set rT[MT]=1
+6446: set QT[MT]=$42303043
+6447: set hT[MT]=value
+6448: set MT=MT+1
+6449: set value=-20.0000
+6450: set vT[MT]=$41303734
+6451: set OT[MT]=4
+6452: set rT[MT]=1
+6453: set QT[MT]=$41303734
+6454: set hT[MT]=value
+6455: set MT=MT+1
+6456: set value=-30.0000
+6457: set vT[MT]=$41304838
+6458: set OT[MT]=4
+6459: set rT[MT]=1
+6460: set QT[MT]=$41304838
+6461: set hT[MT]=value
+6462: set MT=MT+1
+6463: endfunction
+
+7754: function AVT takes nothing returns nothing
+7755: local integer SmT
+7756: local unit bVT
+7757: local location TVT
+7758: local player yVT
+7759: local real FVT
+7760: local real gVT
+7761: call Toy()
+7762: set Ty=GetTriggerPlayer()
+7763: set by=$54523137
+7764: set yVT=GetTriggerPlayer()
+7765: set FVT=GetStartLocationX(GetPlayerStartLocation(yVT))
+7766: set yVT=GetTriggerPlayer()
+7767: set gVT=GetStartLocationY(GetPlayerStartLocation(yVT))
+7768: set Ay=FVT
+7769: set cy=gVT
+7770: set gy=true
+7771: if not EDT() then
+7772: set bVT=null
+7773: set TVT=null
+7774: set yVT=null
+7775: return
+7776: endif
+7777: set bVT=FirstOfGroup(dy)
+7778: set SmT=GetPlayerId(GetOwningPlayer(bVT))
+7779: set TVT=GetStartLocationLoc(SmT)
+7780: if nP[SmT]==null then
+7781: set nP[SmT]=CreateUnitAtLoc(Player(SmT),$68303456,TVT,bj_UNIT_FACING)
+7782: call UnitAddAbility(nP[SmT],$41304d37)
+7783: call UnitAddAbility(nP[SmT],$41305646)
+7784: set NP[SmT]=CreateUnitAtLoc(Player(SmT),$68304635,TVT,bj_UNIT_FACING)
+7785: call UnitAddAbility(NP[SmT],$41313653)
+7786: call UnitAddAbility(NP[SmT],$41313552)
+7787: endif
+7788: set sP[SmT]=CreateItemLoc($49303034,GetStartLocationLoc(GetPlayerStartLocation(Player(SmT))))
+7789: call SetItemUserData(bj_lastCreatedItem,SmT)
+7790: call SetItemCharges(bj_lastCreatedItem,1)
+7791: call UnitAddItemSwapped(sP[SmT],bVT)
+7792: call StartSound(tyy("SE\\ryokugyu.mp3",null,$7f,1.,false,0.,0.))
+7793: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0료쿠규 : |r|cff00fa9a롸하하! 누님이 앙하고 해주면 먹을텐데 말야... 롸하하하하하!|r")
+7794: call RemoveLocation(TVT)
+7795: set bVT=null
+7796: set TVT=null
+7797: set yVT=null
+7798: endfunction
+
+7799: function AZT takes nothing returns nothing
+7800: local integer gZT
+7801: if GetUnitAbilityLevel(GetTriggerUnit(),$41303952)>=1 then
+7802: set gZT=1
+7803: elseif GetUnitAbilityLevel(GetTriggerUnit(),$41305437)>=1 then
+7804: set gZT=2
+7805: elseif GetUnitAbilityLevel(GetTriggerUnit(),$41305436)>=1 then
+7806: set gZT=3
+7807: endif
+7808: if gZT==1 then
+7809: call UnitRemoveAbility(GetTriggerUnit(),$41303952)
+7810: call UnitAddAbility(GetTriggerUnit(),$41305437)
+7811: call DisplayTimedTextToPlayer(GetTriggerPlayer(),0.,0.,5.,"|cffCDA4DE(블랙마리아)|r '멈춰서란 마리아' 로 변경")
+7812: elseif gZT==2 then
+7813: call UnitRemoveAbility(GetTriggerUnit(),$41305437)
+7814: call UnitAddAbility(GetTriggerUnit(),$41305436)
+7815: call DisplayTimedTextToPlayer(GetTriggerPlayer(),0.,0.,5.,"|cffCDA4DE(블랙마리아)|r '타오르란 마리아' 로 변경")
+7816: elseif gZT==3 then
+7817: call UnitRemoveAbility(GetTriggerUnit(),$41305436)
+7818: call UnitAddAbility(GetTriggerUnit(),$41303952)
+7819: call DisplayTimedTextToPlayer(GetTriggerPlayer(),0.,0.,5.,"|cffCDA4DE(블랙마리아)|r '꼼짝말란 마리아' 로 변경")
+7820: endif
+7821: endfunction
+
+9044: function B5T takes nothing returns nothing
+9045: local unit f5T
+9046: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+9047: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+9048: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+9049: set f5T=null
+9050: return
+9051: endif
+9052: set f5T=GetTriggerUnit()
+9053: call IncUnitAbilityLevel(f5T,$41313734)
+9054: call UnitMakeAbilityPermanent(GetTriggerUnit(),true,$41313734)
+9055: set f5T=GetTriggerUnit()
+9056: call IncUnitAbilityLevel(f5T,$41313733)
+9057: call UnitMakeAbilityPermanent(GetTriggerUnit(),true,$41313733)
+9058: call SetPlayerAbilityAvailable(GetOwningPlayer(GetTriggerUnit()),GetSpellAbilityId(),false)
+9059: call SetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+9060: set f5T=null
+9061: endfunction
+
+9336: function Tny takes integer bny returns nothing
+9337: set uc[bny]=LeaderboardGetItemCount(jc[bny])
+9338: if pc[bny]then
+9339: call LeaderboardAddItem(jc[bny],"|cffffcc00[유틸리티 정보 - 수동 갱신]|r",0,Player(bny))
+9340: else
+9341: call LeaderboardAddItem(jc[bny],"|cffffcc00[유틸 갱신 버튼을 눌러주세요]|r",0,Player(bny))
+9342: endif
+9343: call LeaderboardAddItem(jc[bny],"방어력 감소 합계 : |cffffcc00"+R2SW(oT[bny],1,1)+"|r",0,Player(bny))
+9344: call LeaderboardAddItem(jc[bny],"발동형 방어력 감소 : |cffffcc00"+R2SW(jT[bny],1,1)+"|r",0,Player(bny))
+9345: call LeaderboardAddItem(jc[bny],"오라형 이동속도 감소 : |cffffcc00"+R2SW(kT[bny],1,1)+"%|r",0,Player(bny))
+9346: call LeaderboardAddItem(jc[bny],"발동형 이동속도 감소 : |cffffcc00"+R2SW(LT[bny],1,1)+"%|r",0,Player(bny))
+9347: endfunction
+
+9348: function RHb takes integer BHb returns nothing
+9349: call Tny(BHb)
+9350: call LeaderboardSetSizeByItemCount(jc[BHb],LeaderboardGetItemCount(jc[BHb]))
+9351: if GetLocalPlayer()==Player(BHb) then
+9352: call LeaderboardDisplay(jc[BHb],Uy[BHb])
+9353: endif
+9354: endfunction
+
+9355: function phb takes integer uhb returns nothing
+9356: if jc[uhb]==null then
+9357: set jc[uhb]=CreateLeaderboard()
+9358: call LeaderboardSetStyle(jc[uhb],true,true,false,false)
+9359: endif
+9360: call PlayerSetLeaderboard(Player(uhb),jc[uhb])
+9361: endfunction
+
+9362: function h_F takes integer r_F,string Q_F returns nothing
+9363: call phb(r_F)
+9364: call LeaderboardSetLabel(jc[r_F],"유틸보드 - "+Q_F)
+9365: call LeaderboardClear(jc[r_F])
+9366: call LeaderboardAddItem(jc[r_F],"|cffffcc00[스토리 기여도]|r",0,Player(r_F))
+9367: endfunction
+
+9368: function j0y takes integer L0y returns nothing
+9369: if jc[L0y]!=null and GetLocalPlayer()==Player(L0y) then
+9370: call LeaderboardDisplay(jc[L0y],false)
+9371: endif
+9372: endfunction
+
+9373: function BNT takes nothing returns nothing
+9374: local integer qNT=0
+9375: local real KNT
+9376: local integer ZNT
+9377: local integer fNT
+9378: if sB<=0. then
+9379: return
+9380: endif
+9381: set ZNT=0
+9382: set fNT=0
+9383: loop
+9384: exitwhen ZNT>=4
+9385: if Zy[ZNT] and GetPlayerSlotState(Player(ZNT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(ZNT))==MAP_CONTROL_USER then
+9386: set fNT=fNT+1
+9387: endif
+9388: set ZNT=ZNT+1
+9389: endloop
+9390: if fNT==2 then
+9391: set KB=30
+9392: elseif fNT==3 then
+9393: set KB=25
+9394: else
+9395: set KB=20
+9396: endif
+9397: loop
+9398: exitwhen qNT>=4
+9399: if Uy[qNT]then
+9400: call h_F(qNT,GetObjectName($6e303031))
+9401: set ZNT=0
+9402: loop
+9403: exitwhen ZNT>=4
+9404: if Zy[ZNT]then
+9405: set KNT=100.*NB[ZNT]/sB
+9406: if KNT>=I2R(KB) then
+9407: call LeaderboardAddItem(jc[qNT],GetPlayerName(Player(ZNT))+By[ZNT]+" [|cff00ff22"+R2SW(KNT,1,2)+"%|r"+By[ZNT]+" / |cff00ced1"+I2S(KB)+"%|r"+By[ZNT]+"]|r",0,Player(ZNT))
+9408: else
+9409: call LeaderboardAddItem(jc[qNT],GetPlayerName(Player(ZNT))+By[ZNT]+" ["+R2SW(KNT,1,2)+"% / |cff00ced1"+I2S(KB)+"%|r"+By[ZNT]+"]|r",0,Player(ZNT))
+9410: endif
+9411: endif
+9412: set ZNT=ZNT+1
+9413: endloop
+9414: call RHb(qNT)
+9415: else
+9416: call j0y(qNT)
+9417: endif
+9418: set qNT=qNT+1
+9419: endloop
+9420: endfunction
+
+9988: function C7T takes nothing returns nothing
+9989: local integer I7T
+9990: call jNy(0)
+9991: if mv[Yg]==0 then
+9992: call hFF(Yg,0,GetAttacker())
+9993: call hFF(Yg,1,GetTriggerUnit())
+9994: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+9995: call jyy(Yg,0,0)
+9996: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+9997: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),GetRandomReal(0.,360.)))
+9998: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.50)
+9999: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41304941)
+10000: set I7T=d7b()
+10001: call bnb(I7T,500.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(dY),mY)
+10002: call qny(I7T)
+10003: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65303939,LoadLocationHandle(lO,0,Yg*$1f4+1),GetRandomReal(0.,360.)))
+10004: call UnitDamagePointLoc(LoadUnitHandle(UO,0,Yg*$1f4),0.,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),675000.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+10005: call IssuePointOrderById(oG[LoadInteger(br,0,Yg*$1f4+8)],OrderId("blizzard"),GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1)),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1)))
+10006: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65303941,LoadLocationHandle(lO,0,Yg*$1f4+1),GetRandomReal(0.,360.)))
+10007: call UnitDamagePointLoc(LoadUnitHandle(UO,0,Yg*$1f4),0.,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),675000.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+10008: call IssuePointOrderById(kG[LoadInteger(br,0,Yg*$1f4+8)],OrderId("blizzard"),GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1)),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1)))
+10009: if GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4),$41313037)>0 then
+10010: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304b4f,LoadLocationHandle(lO,0,Yg*$1f4+1),GetRandomReal(0.,360.)))
+10011: call UnitDamagePointLoc(LoadUnitHandle(UO,0,Yg*$1f4),0.,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),350000.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+10012: endif
+10013: call Sny(Yg,.11,1)
+10014: elseif mv[Yg]==1 then
+10015: call hXT(Yg,0,b0b(15.,75.))
+10016: call hXT(Yg,1,b0b(0.,360.))
+10017: call hFF(Yg,10,CreateUnit(Vy,$65303939,GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1))+LoadReal(yr,0,Yg*$1f4)*Cos(LoadReal(yr,0,Yg*$1f4+1)*bj_DEGTORAD),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1))+LoadReal(yr,0,Yg*$1f4)*Sin(LoadReal(yr,0,Yg*$1f4+1)*bj_DEGTORAD),GetRandomReal(0.,360.)))
+10018: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.28,1.,1.)
+10019: call hFF(Yg,10,CreateUnit(Vy,$65303941,GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1))+LoadReal(yr,0,Yg*$1f4)*Cos(LoadReal(yr,0,Yg*$1f4+1)*bj_DEGTORAD),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1))+LoadReal(yr,0,Yg*$1f4)*Sin(LoadReal(yr,0,Yg*$1f4+1)*bj_DEGTORAD),GetRandomReal(0.,360.)))
+10020: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.28,1.,1.)
+10021: if LoadInteger(br,0,Yg*$1f4)==3 then
+10022: call ewb(Yg)
+10023: else
+10024: call jyy(Yg,0,LoadInteger(br,0,Yg*$1f4)+1)
+10025: call TYT(Yg,.13,1)
+10026: endif
+10027: endif
+10028: endfunction
+
+10700: function D8T takes nothing returns nothing
+10701: local integer g8T
+10702: local unit A8T
+10703: local location c8T
+10704: local player d8T
+10705: local real m8T
+10706: local real V8T
+10707: call Toy()
+10708: set Ty=GetTriggerPlayer()
+10709: set by=$494d3039
+10710: set d8T=GetTriggerPlayer()
+10711: set m8T=GetStartLocationX(GetPlayerStartLocation(d8T))
+10712: set d8T=GetTriggerPlayer()
+10713: set V8T=GetStartLocationY(GetPlayerStartLocation(d8T))
+10714: set Ay=m8T
+10715: set cy=V8T
+10716: set gy=true
+10717: if not EDT() then
+10718: set A8T=null
+10719: set c8T=null
+10720: set d8T=null
+10721: return
+10722: endif
+10723: set A8T=FirstOfGroup(dy)
+10724: set g8T=GetPlayerId(GetOwningPlayer(A8T))
+10725: set c8T=GetStartLocationLoc(g8T)
+10726: if js[g8T]==null then
+10727: set js[g8T]=CreateUnitAtLoc(Player(g8T),$68303456,c8T,bj_UNIT_FACING)
+10728: call UnitAddAbility(js[g8T],$41313741)
+10729: call UnitAddAbility(js[g8T],$41304d54)
+10730: set us[g8T]=CreateUnitAtLoc(Player(g8T),$68303456,c8T,bj_UNIT_FACING)
+10731: call UnitAddAbility(us[g8T],$41313738)
+10732: endif
+10733: call uJT(A8T)
+10734: call StartSound(tyy("SE\\Siro.mp3",null,$7f,1.,false,0.,0.))
+10735: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|c00ff8f79흰수염 : |r|c00cc3337원피스는 실존한다!")
+10736: call RemoveLocation(c8T)
+10737: set A8T=null
+10738: set c8T=null
+10739: set d8T=null
+10740: endfunction
+
+11672: function Drb takes nothing returns nothing
+11673: local integer crb=0
+11674: local real drb
+11675: local integer mrb
+11676: local integer Vrb
+11677: if gR<=0. then
+11678: return
+11679: endif
+11680: set mrb=0
+11681: set Vrb=0
+11682: loop
+11683: exitwhen mrb>=4
+11684: if Zy[mrb] and GetPlayerSlotState(Player(mrb))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(mrb))==MAP_CONTROL_USER then
+11685: set Vrb=Vrb+1
+11686: endif
+11687: set mrb=mrb+1
+11688: endloop
+11689: if Vrb==2 then
+11690: set VR=30
+11691: elseif Vrb==3 then
+11692: set VR=25
+11693: else
+11694: set VR=20
+11695: endif
+11696: loop
+11697: exitwhen crb>=4
+11698: if Uy[crb]then
+11699: call h_F(crb,GetObjectName($6e303042))
+11700: set mrb=0
+11701: loop
+11702: exitwhen mrb>=4
+11703: if Zy[mrb]then
+11704: set drb=100.*cR[mrb]/gR
+11705: if drb>=I2R(VR) then
+11706: call LeaderboardAddItem(jc[crb],GetPlayerName(Player(mrb))+By[mrb]+" [|cff00ff22"+R2SW(drb,1,2)+"%|r"+By[mrb]+" / |cff00ced1"+I2S(VR)+"%|r"+By[mrb]+"]|r",0,Player(mrb))
+11707: else
+11708: call LeaderboardAddItem(jc[crb],GetPlayerName(Player(mrb))+By[mrb]+" ["+R2SW(drb,1,2)+"% / |cff00ced1"+I2S(VR)+"%|r"+By[mrb]+"]|r",0,Player(mrb))
+11709: endif
+11710: endif
+11711: set mrb=mrb+1
+11712: endloop
+11713: call RHb(crb)
+11714: else
+11715: call j0y(crb)
+11716: endif
+11717: set crb=crb+1
+11718: endloop
+11719: endfunction
+
+12348: function Ecy takes nothing returns nothing
+12349: local integer Wcy=0
+12350: local real wcy
+12351: local integer Ycy
+12352: local integer Ucy
+12353: if vf<=0. then
+12354: return
+12355: endif
+12356: set Ycy=0
+12357: set Ucy=0
+12358: loop
+12359: exitwhen Ycy>=4
+12360: if Zy[Ycy] and GetPlayerSlotState(Player(Ycy))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(Ycy))==MAP_CONTROL_USER then
+12361: set Ucy=Ucy+1
+12362: endif
+12363: set Ycy=Ycy+1
+12364: endloop
+12365: if Ucy==2 then
+12366: set tf=30
+12367: elseif Ucy==3 then
+12368: set tf=25
+12369: else
+12370: set tf=20
+12371: endif
+12372: loop
+12373: exitwhen Wcy>=4
+12374: if Uy[Wcy]then
+12375: call h_F(Wcy,GetObjectName($6e303037))
+12376: set Ycy=0
+12377: loop
+12378: exitwhen Ycy>=4
+12379: if Zy[Ycy]then
+12380: set wcy=100.*rf[Ycy]/vf
+12381: if wcy>=I2R(tf) then
+12382: call LeaderboardAddItem(jc[Wcy],GetPlayerName(Player(Ycy))+By[Ycy]+" [|cff00ff22"+R2SW(wcy,1,2)+"%|r"+By[Ycy]+" / |cff00ced1"+I2S(tf)+"%|r"+By[Ycy]+"]|r",0,Player(Ycy))
+12383: else
+12384: call LeaderboardAddItem(jc[Wcy],GetPlayerName(Player(Ycy))+By[Ycy]+" ["+R2SW(wcy,1,2)+"% / |cff00ced1"+I2S(tf)+"%|r"+By[Ycy]+"]|r",0,Player(Ycy))
+12385: endif
+12386: endif
+12387: set Ycy=Ycy+1
+12388: endloop
+12389: call RHb(Wcy)
+12390: else
+12391: call j0y(Wcy)
+12392: endif
+12393: set Wcy=Wcy+1
+12394: endloop
+12395: endfunction
+
+12883: function F5F takes nothing returns nothing
+12884: local unit E1F=GetAttacker()
+12885: local unit l1F=GetTriggerUnit()
+12886: local location C1F=GetUnitLoc(l1F)
+12887: local player S1F=GetOwningPlayer(E1F)
+12888: local unit b5F=gg[GetPlayerId(S1F)]
+12889: local unit I1F
+12890: local real T5F
+12891: local integer y5F
+12892: call TriggerExecute(Pa)
+12893: call CreateUnitAtLoc(Vy,$65304251,C1F,GetRandomReal(0.,360.))
+12894: if ptT(1,$64)<=15 then
+12895: call CreateUnitAtLoc(Vy,$65304250,C1F,GetRandomReal(0.,360.))
+12896: call CreateUnitAtLoc(Vy,$65304250,C1F,GetRandomReal(0.,360.))
+12897: set T5F=I2R(GetHeroStatBJ(bj_HEROSTAT_STR,E1F,true))*10000.
+12898: call Ymy(b5F,.0,525.,C1F,750000.+T5F,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_NORMAL)
+12899: endif
+12900: if ptT(1,$64)<=20 then
+12901: set I1F=CreateUnitAtLoc(Vy,$65303237,C1F,GetRandomReal(0.,360.))
+12902: call SetUnitScale(I1F,4.,1.,1.)
+12903: call SetUnitFlyHeight(I1F,150.,0.)
+12904: call CreateUnitAtLoc(Vy,$65304253,C1F,GetRandomReal(0.,360.))
+12905: set I1F=CreateUnitAtLoc(Vy,$68304335,C1F,GetRandomReal(0.,360.))
+12906: call UnitAddAbility(I1F,$41304348)
+12907: call UnitApplyTimedLife(I1F,$42487765,2.)
+12908: set y5F=d7b()
+12909: call bnb(y5F,525.,C1F,Condition(XU),PU)
+12910: call qny(y5F)
+12911: endif
+12912: if ptT(1,$64)<=10 then
+12913: call TriggerExecute(sa)
+12914: endif
+12915: call RemoveLocation(C1F)
+12916: set E1F=null
+12917: set l1F=null
+12918: set I1F=null
+12919: set C1F=null
+12920: set S1F=null
+12921: set b5F=null
+12922: endfunction
+
+15099: function GYy takes nothing returns nothing
+15100: local integer eYy
+15101: call jNy(0)
+15102: if mv[Yg]==0 then
+15103: call hFF(Yg,0,GetAttacker())
+15104: call hFF(Yg,1,GetTriggerUnit())
+15105: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+15106: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+15107: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65304150,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+15108: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65303432,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+15109: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+15110: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,2.)
+15111: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+3),75.,10000.)
+15112: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+3),2.92,1.,1.)
+15113: set bj_lastPlayedSound=tyy("SE\\siki_mana.wav",null,$7f,1.,true,2000.,2500.)
+15114: call StopSound(bj_lastPlayedSound,false,false)
+15115: call lHT(LoadUnitHandle(UO,0,Yg*$1f4),bj_lastPlayedSound)
+15116: call hFF(Yg,3,CreateUnit(Vy,$65303336,GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4))+50.*Cos(b0b(0.,360.)*bj_DEGTORAD),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4))+50.*Sin(b0b(0.,360.)*bj_DEGTORAD),bj_UNIT_FACING))
+15117: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,1.)
+15118: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+3),85.,10000.)
+15119: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+3),4.1,1.,1.)
+15120: call hFF(Yg,3,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4),GetUnitFacing(LoadUnitHandle(UO,0,Yg*$1f4))))
+15121: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+3),$4130534b)
+15122: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,2.)
+15123: set eYy=d7b()
+15124: call bnb(eYy,650.,LoadLocationHandle(lO,0,Yg*$1f4),Condition(jY),pY)
+15125: call qny(eYy)
+15126: call ewb(Yg)
+15127: endif
+15128: endfunction
+
+15174: function GmT takes nothing returns nothing
+15175: local integer mmT=0
+15176: local real VmT
+15177: local integer DmT
+15178: local integer emT
+15179: if iR<=0. then
+15180: return
+15181: endif
+15182: set DmT=0
+15183: set emT=0
+15184: loop
+15185: exitwhen DmT>=4
+15186: if Zy[DmT] and GetPlayerSlotState(Player(DmT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(DmT))==MAP_CONTROL_USER then
+15187: set emT=emT+1
+15188: endif
+15189: set DmT=DmT+1
+15190: endloop
+15191: if emT==2 then
+15192: set BR=30
+15193: elseif emT==3 then
+15194: set BR=25
+15195: else
+15196: set BR=20
+15197: endif
+15198: loop
+15199: exitwhen mmT>=4
+15200: if Uy[mmT]then
+15201: call h_F(mmT,GetObjectName($6e303039))
+15202: set DmT=0
+15203: loop
+15204: exitwhen DmT>=4
+15205: if Zy[DmT]then
+15206: set VmT=100.*KR[DmT]/iR
+15207: if VmT>=I2R(BR) then
+15208: call LeaderboardAddItem(jc[mmT],GetPlayerName(Player(DmT))+By[DmT]+" [|cff00ff22"+R2SW(VmT,1,2)+"%|r"+By[DmT]+" / |cff00ced1"+I2S(BR)+"%|r"+By[DmT]+"]|r",0,Player(DmT))
+15209: else
+15210: call LeaderboardAddItem(jc[mmT],GetPlayerName(Player(DmT))+By[DmT]+" ["+R2SW(VmT,1,2)+"% / |cff00ced1"+I2S(BR)+"%|r"+By[DmT]+"]|r",0,Player(DmT))
+15211: endif
+15212: endif
+15213: set DmT=DmT+1
+15214: endloop
+15215: call RHb(mmT)
+15216: else
+15217: call j0y(mmT)
+15218: endif
+15219: set mmT=mmT+1
+15220: endloop
+15221: endfunction
+
+15705: function jib takes integer Lib returns nothing
+15706: if jc[Lib]==null then
+15707: set jc[Lib]=CreateLeaderboard()
+15708: call LeaderboardSetStyle(jc[Lib],true,true,false,false)
+15709: endif
+15710: call PlayerSetLeaderboard(Player(Lib),jc[Lib])
+15711: call LeaderboardSetLabel(jc[Lib],"유틸보드")
+15712: call LeaderboardClear(jc[Lib])
+15713: call LeaderboardAddItem(jc[Lib],"|cffaaaaaa현재 진행 중인 스토리 기여도 없음|r",0,Player(Lib))
+15714: call Tny(Lib)
+15715: call LeaderboardSetSizeByItemCount(jc[Lib],LeaderboardGetItemCount(jc[Lib]))
+15716: if GetLocalPlayer()==Player(Lib) then
+15717: call LeaderboardDisplay(jc[Lib],Uy[Lib])
+15718: endif
+15719: endfunction
+
+15720: function m0y takes integer c0y,boolean d0y returns nothing
+15721: if d0y then
+15722: if GetLocalPlayer()==Player(c0y) then
+15723: call DisplayTimedTextToPlayer(Player(c0y),0.,0.,3.,"|cffF15F5F[시스템]|r 유틸보드를 숨깁니다.")
+15724: if ""!="" then
+15725: call CZy(UQ[4],"")
+15726: endif
+15727: call rvT(EQ[4],"유틸보드 |cffff0000OFF|r")
+15728: endif
+15729: set Uy[c0y]=false
+15730: call j0y(c0y)
+15731: else
+15732: if GetLocalPlayer()==Player(c0y) then
+15733: call DisplayTimedTextToPlayer(Player(c0y),0.,0.,3.,"|cffF15F5F[시스템]|r 유틸보드를 표시합니다.")
+15734: if ""!="" then
+15735: call CZy(UQ[4],"")
+15736: endif
+15737: call rvT(EQ[4],"유틸보드 |cff00ff22ON|r")
+15738: endif
+15739: set Uy[c0y]=true
+15740: call jib(c0y)
+15741: endif
+15742: endfunction
+
+15764: function HQb takes nothing returns nothing
+15765: local integer eQb=S2I(BlzGetTriggerSyncData())
+15766: local integer GQb=GetPlayerId(GetTriggerPlayer())
+15767: local real XQb
+15768: local integer aQb
+15769: local group PQb
+15770: local unit sQb
+15771: local integer nQb
+15772: local integer NQb
+15773: local integer iQb
+15774: local integer qQb
+15775: local integer KQb
+15776: local integer ZQb
+15777: local boolean fQb
+15778: local boolean BQb
+15779: local boolean RQb
+15780: local boolean xQb
+15781: local real MQb
+15782: local boolean vQb
+15783: local real OQb
+15784: local real rQb
+15785: local boolean QQb
+15786: local real hQb
+15787: local boolean tQb
+15788: local boolean JQb
+15789: if eQb==1 then
+15790: call YGT(GQb,Wy[GQb])
+15791: elseif eQb==2 then
+15792: call DsT(GQb,wy[GQb])
+15793: elseif eQb==3 then
+15794: call mjy(GQb,Yy[GQb])
+15795: elseif eQb==4 then
+15796: call m0y(GQb,Uy[GQb])
+15797: elseif eQb==5 then
+15798: if li[GQb]==null then
+15799: set li[GQb]=CreateTimer()
+15800: endif
+15801: set XQb=TimerGetRemaining(li[GQb])
+15802: if XQb>.0 then
+15803: if GetLocalPlayer()==Player(GQb) then
+15804: call DisplayTimedTextToPlayer(Player(GQb),0.,0.,3.,"|cffF15F5F[시스템]|r 유틸 갱신 대기시간이 |cffffcc00"+R2SW(XQb,1,1)+"초|r 남았습니다.")
+15805: endif
+15806: else
+15807: set eQb=GQb
+15808: set aQb=GQb
+15809: set PQb=CreateGroup()
+15810: set NQb=1
+15811: loop
+15812: exitwhen NQb>4
+15813: call FlushChildHashtable(JT,NQb)
+15814: call FlushChildHashtable(HT,NQb)
+15815: set NQb=NQb+1
+15816: endloop
+15817: set nQb=0
+15818: loop
+15819: exitwhen nQb>=MT
+15820: set tT[nQb]=false
+15821: set nQb=nQb+1
+15822: endloop
+15823: call GroupEnumUnitsOfPlayer(PQb,Player(aQb),null)
+15824: loop
+15825: set sQb=FirstOfGroup(PQb)
+15826: exitwhen sQb==null
+15827: call GroupRemoveUnit(PQb,sQb)
+15828: if GetWidgetLife(sQb)>.405 then
+15829: set RQb=false
+15830: set qQb=GetUnitTypeId(sQb)
+15831: if sQb==SF[aQb] or qQb==$6830384c then
+15832: set xQb=true
+15833: set RQb=true
+15834: endif
+15835: if not RQb then
+15836: if IsUnitType(sQb,UNIT_TYPE_GIANT) then
+15837: set KQb=qQb
+15838: set fQb=false
+15839: set ZQb=1
+15840: loop
+15841: exitwhen fQb
+15842: exitwhen (not fQb)and ZQb>9
+15843: if not fQb then
+15844: if KQb==sx[ZQb]then
+15845: if not fQb then
+15846: set BQb=true
+15847: set fQb=true
+15848: endif
+15849: endif
+15850: endif
+15851: if not fQb then
+15852: set ZQb=ZQb+1
+15853: endif
+15854: endloop
+15855: if not fQb then
+15856: set ZQb=0
+15857: endif
+15858: if not fQb then
+15859: loop
+15860: exitwhen fQb
+15861: exitwhen (not fQb)and ZQb>12
+15862: if not fQb then
+15863: if KQb==nx[ZQb]then
+15864: if not fQb then
+15865: set BQb=true
+15866: set fQb=true
+15867: endif
+15868: endif
+15869: endif
+15870: if not fQb then
+15871: set ZQb=ZQb+1
+15872: endif
+15873: endloop
+15874: endif
+15875: if not fQb then
+15876: set BQb=false
+15877: set fQb=true
+15878: endif
+15879: if not fQb then
+15880: set BQb=false
+15881: endif
+15882: set tQb=not BQb
+15883: else
+15884: set tQb=false
+15885: endif
+15886: set xQb=tQb
+15887: set RQb=true
+15888: endif
+15889: if not RQb then
+15890: set xQb=false
+15891: endif
+15892: set JQb=xQb
+15893: else
+15894: set JQb=false
+15895: endif
+15896: if JQb then
+15897: set nQb=0
+15898: loop
+15899: exitwhen nQb>=MT
+15900: set NQb=OT[nQb]
+15901: if GetUnitAbilityLevel(sQb,vT[nQb])==rT[nQb]then
+15902: set tT[nQb]=true
+15903: if LoadInteger(HT,NQb,vT[nQb])==0 or rT[nQb]<LoadInteger(HT,NQb,vT[nQb]) then
+15904: call SaveInteger(HT,NQb,vT[nQb],rT[nQb])
+15905: endif
+15906: endif
+15907: set nQb=nQb+1
+15908: endloop
+15909: endif
+15910: endloop
+15911: call DestroyGroup(PQb)
+15912: set oT[aQb]=.0
+15913: set kT[aQb]=.0
+15914: set LT[aQb]=.0
+15915: set jT[aQb]=.0
+15916: set nQb=0
+15917: loop
+15918: exitwhen nQb>=MT
+15919: set NQb=OT[nQb]
+15920: if tT[nQb] and rT[nQb]==LoadInteger(HT,NQb,vT[nQb]) then
+15921: set iQb=LoadInteger(JT,NQb,QT[nQb])
+15922: if iQb==0 then
+15923: call SaveInteger(JT,NQb,QT[nQb],nQb+1)
+15924: else
+15925: set MQb=hT[nQb]
+15926: set vQb=false
+15927: if MQb<.0 then
+15928: set OQb=-MQb
+15929: set vQb=true
+15930: endif
+15931: if not vQb then
+15932: set OQb=MQb
+15933: set vQb=true
+15934: endif
+15935: if not vQb then
+15936: set OQb=0.
+15937: endif
+15938: set rQb=hT[iQb-1]
+15939: set QQb=false
+15940: if rQb<.0 then
+15941: set hQb=-rQb
+15942: set QQb=true
+15943: endif
+15944: if not QQb then
+15945: set hQb=rQb
+15946: set QQb=true
+15947: endif
+15948: if not QQb then
+15949: set hQb=0.
+15950: endif
+15951: if OQb<hQb then
+15952: call SaveInteger(JT,NQb,QT[nQb],nQb+1)
+15953: endif
+15954: endif
+15955: endif
+15956: set nQb=nQb+1
+15957: endloop
+15958: set nQb=0
+15959: loop
+15960: exitwhen nQb>=MT
+15961: set NQb=OT[nQb]
+15962: if LoadInteger(JT,NQb,QT[nQb])==nQb+1 then
+15963: if NQb==1 then
+15964: set oT[aQb]=oT[aQb]-hT[nQb]
+15965: elseif NQb==2 then
+15966: set kT[aQb]=kT[aQb]+hT[nQb]
+15967: elseif NQb==3 then
+15968: set LT[aQb]=LT[aQb]+hT[nQb]
+15969: elseif NQb==4 then
+15970: set jT[aQb]=jT[aQb]-hT[nQb]
+15971: endif
+15972: endif
+15973: set nQb=nQb+1
+15974: endloop
+15975: set NQb=1
+15976: loop
+15977: exitwhen NQb>4
+15978: call FlushChildHashtable(JT,NQb)
+15979: call FlushChildHashtable(HT,NQb)
+15980: set NQb=NQb+1
+15981: endloop
+15982: set pc[eQb]=true
+15983: if jc[eQb]!=null then
+15984: set aQb=LeaderboardGetItemCount(jc[eQb])-1
+15985: loop
+15986: exitwhen aQb<uc[eQb]
+15987: call LeaderboardRemoveItem(jc[eQb],aQb)
+15988: set aQb=aQb-1
+15989: endloop
+15990: call Tny(eQb)
+15991: call LeaderboardSetSizeByItemCount(jc[eQb],LeaderboardGetItemCount(jc[eQb]))
+15992: endif
+15993: call TimerStart(li[GQb],5.,false,null)
+15994: if GetLocalPlayer()==Player(GQb) then
+15995: call DisplayTimedTextToPlayer(Player(GQb),0.,0.,3.,"|cffF15F5F[시스템]|r 유틸리티 정보를 갱신했습니다.")
+15996: endif
+15997: endif
+15998: endif
+15999: set PQb=null
+16000: set sQb=null
+16001: endfunction
+
+16274: function Hgy takes nothing returns nothing
+16275: local integer Ogy
+16276: local unit rgy
+16277: local location Qgy
+16278: local player hgy
+16279: local real tgy
+16280: local real Jgy
+16281: call Toy()
+16282: set Ty=GetTriggerPlayer()
+16283: set by=$54523232
+16284: set hgy=GetTriggerPlayer()
+16285: set tgy=GetStartLocationX(GetPlayerStartLocation(hgy))
+16286: set hgy=GetTriggerPlayer()
+16287: set Jgy=GetStartLocationY(GetPlayerStartLocation(hgy))
+16288: set Ay=tgy
+16289: set cy=Jgy
+16290: set gy=true
+16291: if not EDT() then
+16292: set rgy=null
+16293: set Qgy=null
+16294: set hgy=null
+16295: return
+16296: endif
+16297: set rgy=FirstOfGroup(dy)
+16298: set Ogy=GetPlayerId(GetOwningPlayer(rgy))
+16299: set Qgy=GetStartLocationLoc(Ogy)
+16300: if Ya[Ogy]==null then
+16301: set Ya[Ogy]=CreateUnitAtLoc(Player(Ogy),$68303456,Qgy,bj_UNIT_FACING)
+16302: call UnitAddAbility(Ya[Ogy],$41313649)
+16303: call UnitAddAbility(Ya[Ogy],$41304d30)
+16304: call UnitAddAbility(Ya[Ogy],$41313155)
+16305: endif
+16306: call uJT(rgy)
+16307: call StartSound(tyy("SE\\jinbe.mp3",null,$7f,1.,false,0.,0.))
+16308: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0징베 : |r|cff00fa9a미래의 해적왕의 선원이 될 남자가 사황 따위에게 겁먹을 것 같으냐!|r")
+16309: call RemoveLocation(Qgy)
+16310: set rgy=null
+16311: set Qgy=null
+16312: set hgy=null
+16313: endfunction
+
+16392: function i0y takes player s0y,integer n0y returns nothing
+16393: local integer N0y=GetPlayerId(s0y)
+16394: if n0y==$41493030 then
+16395: call UnitAddAbility(SF[N0y],$41304b4d)
+16396: elseif n0y==$41493031 then
+16397: call UnitAddAbility(SF[N0y],$41304e58)
+16398: elseif n0y==$41493032 then
+16399: call UnitAddAbility(SF[N0y],$41304e5a)
+16400: elseif n0y==$41493033 then
+16401: call UnitAddAbility(SF[N0y],$41304f30)
+16402: elseif n0y==$41493034 then
+16403: call UnitAddAbility(SF[N0y],$41304f31)
+16404: elseif n0y==$41493035 then
+16405: call UnitAddAbility(SF[N0y],$41304f32)
+16406: elseif n0y==$41493036 then
+16407: call UnitAddAbility(SF[N0y],$41304f33)
+16408: elseif n0y==$41493037 then
+16409: call UnitAddAbility(SF[N0y],$41304f34)
+16410: elseif n0y==$41493038 then
+16411: call UnitAddAbility(SF[N0y],$41304f35)
+16412: elseif n0y==$41493039 then
+16413: call UnitAddAbility(SF[N0y],$41304f36)
+16414: elseif n0y==$41493130 then
+16415: call IncUnitAbilityLevel(Tg[N0y],$41303544)
+16416: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r |cffff8200기록지침 :: |r|ce32bb454[탐색]|r 스킬이 강화되었습니다.")
+16417: elseif n0y==$41493133 then
+16418: set Jy[N0y]=Jy[N0y]+1.
+16419: set qF[N0y]=qF[N0y]+2
+16420: if $68303843==GetUnitTypeId(Fg[N0y]) then
+16421: call AddUnitToStock(Fg[N0y],$6830414b,qF[N0y],7)
+16422: endif
+16423: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r 라인존 골드 획득량이 |cffffd700100%|r 증가했습니다.")
+16424: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r 목재 구입 재고량이 |cffffd7002|r 증가합니다.")
+16425: elseif n0y==$41493134 then
+16426: call UnitAddAbility(SF[N0y],$41304f37)
+16427: elseif n0y==$41493135 then
+16428: call SetPlayerTechResearched(Player(N0y),$52303335,1)
+16429: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r '도움소' 마나 재생이 |cffffd700초당 0.2|r 증가합니다.")
+16430: elseif n0y==$41493138 then
+16431: call SetPlayerTechResearched(Player(N0y),$52303341,1)
+16432: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r '도움소' 마나 재생이 |cffffd700초당 0.5|r 증가합니다.")
+16433: elseif n0y==$41493139 then
+16434: set Qy[N0y]=Qy[N0y]+5
+16435: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r 자신의 라인존 |cff87cefa마법방어력 5%|r 감소합니다.")
+16436: elseif n0y==$41493230 then
+16437: set hy[N0y]=hy[N0y]+5
+16438: call DisplayTimedTextToPlayer(s0y,0.,0.,5.,"|cffa548fc[아이템]|r 자신의 라인존 |cff66cdaa폭발형 데미지 5%|r 증가합니다.")
+16439: endif
+16440: endfunction
+
+17277: function ICy takes nothing returns nothing
+17278: local player wCy=GetTriggerPlayer()
+17279: local item YCy=GetManipulatedItem()
+17280: local unit UCy=GetTriggerUnit()
+17281: local integer ECy=GetPlayerId(GetTriggerPlayer())
+17282: local integer lCy
+17283: if Bn[ECy]==3 then
+17284: set wCy=null
+17285: set YCy=null
+17286: set UCy=null
+17287: return
+17288: endif
+17289: call SetItemCharges(YCy,GetItemCharges(YCy)+1)
+17290: if ptT(1,5)<=2 then
+17291: set lCy=1
+17292: else
+17293: set lCy=2
+17294: endif
+17295: call SetItemCharges(YCy,GetItemCharges(YCy)+lCy)
+17296: if GetItemCharges(YCy)>=30 then
+17297: call SetItemCharges(YCy,30)
+17298: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cffFF0000[시스템]|r '유니언 아르마다 :: 방어력감소' 스택이 최대치에 도달했습니다.")
+17299: else
+17300: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cffFF0000[시스템]|r '유니언 아르마다 :: 방어력감소' 스택이 "+I2S(lCy)+"개 상승했습니다.")
+17301: endif
+17302: if Bn[ECy]==1 then
+17303: if GetItemCharges(YCy)>=15 then
+17304: call SetUnitAbilityLevel(UCy,$4130574b,2)
+17305: call SetUnitAbilityLevel(UCy,$4130574e,2)
+17306: call UnitAddAbility(UCy,$41305756)
+17307: set Bn[ECy]=2
+17308: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cffFF0000[레벨업]|r 유니크로 등급 업!")
+17309: if Zn[ECy]>=2 and fn[ECy]>=2 and Bn[ECy]>=2 then
+17310: call SetUnitAbilityLevel(UCy,$41305755,2)
+17311: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cffffe100[유니크]|r 모든 스킬이 유니크 달성! '데어 슈테르크슈테 스트라이크' 레벨업")
+17312: endif
+17313: endif
+17314: elseif Bn[ECy]==2 then
+17315: if GetItemCharges(YCy)>=30 then
+17316: call SetUnitAbilityLevel(UCy,$4130574b,3)
+17317: call SetUnitAbilityLevel(UCy,$4130574e,3)
+17318: set Bn[ECy]=3
+17319: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cffFF0000[레벨업]|r 레전더리로 등급 업!")
+17320: if Zn[ECy]==3 and fn[ECy]==3 and Bn[ECy]==3 then
+17321: call SetUnitAbilityLevel(UCy,$41305755,3)
+17322: call DisplayTimedTextToPlayer(wCy,0.,0.,5.,"|cff5eff00[레전더리]|r 모든 스킬이 레전더리 달성! '데어 슈테르크슈테 스트라이크' 레벨업")
+17323: endif
+17324: call UnitRemoveItemFromSlot(UCy,4)
+17325: call RemoveItem(YCy)
+17326: call UnitAddItemToSlotById(UCy,$49303038,4)
+17327: endif
+17328: endif
+17329: set wCy=null
+17330: set YCy=null
+17331: set UCy=null
+17332: endfunction
+
+17336: function IKT takes nothing returns nothing
+17337: local integer UKT=0
+17338: local real EKT
+17339: local integer lKT
+17340: if nZ<=0. then
+17341: return
+17342: endif
+17343: set lKT=0
+17344: loop
+17345: exitwhen lKT>=4
+17346: set lKT=lKT+1
+17347: endloop
+17348: loop
+17349: exitwhen UKT>=4
+17350: if Uy[UKT]then
+17351: call h_F(UKT,GetObjectName($6e303032))
+17352: set lKT=0
+17353: loop
+17354: exitwhen lKT>=4
+17355: if Zy[lKT]then
+17356: set EKT=100.*iZ[lKT]/nZ
+17357: call LeaderboardAddItem(jc[UKT],GetPlayerName(Player(lKT))+By[lKT]+" [|cff00ff22"+R2SW(EKT,1,2)+"%|r"+By[lKT]+"]|r",0,Player(lKT))
+17358: endif
+17359: set lKT=lKT+1
+17360: endloop
+17361: call RHb(UKT)
+17362: else
+17363: call j0y(UKT)
+17364: endif
+17365: set UKT=UKT+1
+17366: endloop
+17367: endfunction
+
+18996: function JJT takes nothing returns nothing
+18997: local integer rJT=0
+18998: local real QJT
+18999: local integer hJT
+19000: local integer tJT
+19001: if WB<=0. then
+19002: return
+19003: endif
+19004: set hJT=0
+19005: set tJT=0
+19006: loop
+19007: exitwhen hJT>=4
+19008: if Zy[hJT] and GetPlayerSlotState(Player(hJT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(hJT))==MAP_CONTROL_USER then
+19009: set tJT=tJT+1
+19010: endif
+19011: set hJT=hJT+1
+19012: endloop
+19013: if tJT==2 then
+19014: set lB=30
+19015: elseif tJT==3 then
+19016: set lB=25
+19017: else
+19018: set lB=20
+19019: endif
+19020: loop
+19021: exitwhen rJT>=4
+19022: if Uy[rJT]then
+19023: call h_F(rJT,GetObjectName($6e303044))
+19024: set hJT=0
+19025: loop
+19026: exitwhen hJT>=4
+19027: if Zy[hJT]then
+19028: set QJT=100.*YB[hJT]/WB
+19029: if QJT>=I2R(lB) then
+19030: call LeaderboardAddItem(jc[rJT],GetPlayerName(Player(hJT))+By[hJT]+" [|cff00ff22"+R2SW(QJT,1,2)+"%|r"+By[hJT]+" / |cff00ced1"+I2S(lB)+"%|r"+By[hJT]+"]|r",0,Player(hJT))
+19031: else
+19032: call LeaderboardAddItem(jc[rJT],GetPlayerName(Player(hJT))+By[hJT]+" ["+R2SW(QJT,1,2)+"% / |cff00ced1"+I2S(lB)+"%|r"+By[hJT]+"]|r",0,Player(hJT))
+19033: endif
+19034: endif
+19035: set hJT=hJT+1
+19036: endloop
+19037: call RHb(rJT)
+19038: else
+19039: call j0y(rJT)
+19040: endif
+19041: set rJT=rJT+1
+19042: endloop
+19043: endfunction
+
+19194: function JPy takes nothing returns nothing
+19195: local integer vPy
+19196: local unit OPy
+19197: local location rPy
+19198: local player QPy
+19199: local real hPy
+19200: local real tPy
+19201: call Toy()
+19202: set Ty=GetTriggerPlayer()
+19203: set by=$54523039
+19204: set QPy=GetTriggerPlayer()
+19205: set hPy=GetStartLocationX(GetPlayerStartLocation(QPy))
+19206: set QPy=GetTriggerPlayer()
+19207: set tPy=GetStartLocationY(GetPlayerStartLocation(QPy))
+19208: set Ay=hPy
+19209: set cy=tPy
+19210: set gy=true
+19211: if not EDT() then
+19212: set OPy=null
+19213: set rPy=null
+19214: set QPy=null
+19215: return
+19216: endif
+19217: set OPy=FirstOfGroup(dy)
+19218: set vPy=GetPlayerId(GetOwningPlayer(OPy))
+19219: set rPy=GetStartLocationLoc(vPy)
+19220: set CG[vPy]=CreateUnitAtLoc(Player(vPy),$68304635,rPy,bj_UNIT_FACING)
+19221: call UnitAddAbility(CG[vPy],$4130534c)
+19222: call UnitAddAbility(CG[vPy],$41303447)
+19223: call UnitAddAbility(CG[vPy],$41313634)
+19224: call UnitAddAbility(CG[vPy],$4130344b)
+19225: set SG[vPy]=CreateUnitAtLoc(Player(vPy),$68303456,rPy,bj_UNIT_FACING)
+19226: call UnitAddAbility(SG[vPy],$41303432)
+19227: call UnitAddAbility(SG[vPy],$41313633)
+19228: call UnitAddAbility(SG[vPy],$41304a46)
+19229: call StartSound(tyy("SE\\Luffy.mp3",null,$7f,1.,false,0.,0.))
+19230: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0몽키.D.루피 : |r|cff00fa9a나 해적왕이 될게!|r")
+19231: call RemoveLocation(rPy)
+19232: set OPy=null
+19233: set rPy=null
+19234: set QPy=null
+19235: endfunction
+
+21712: function L7b takes nothing returns nothing
+21713: local integer k7b
+21714: call jNy(0)
+21715: if mv[Yg]==0 then
+21716: call hFF(Yg,0,GetAttacker())
+21717: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+21718: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+21719: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65304150,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+21720: set bj_lastPlayedSound=tyy("SE\\dark_effect2.wav",null,$7f,1.,true,2000.,2500.)
+21721: call lHT(LoadUnitHandle(UO,0,Yg*$1f4),bj_lastPlayedSound)
+21722: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65303432,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+21723: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,2.)
+21724: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+3),75.,10000.)
+21725: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+3),2.92,1.,1.)
+21726: call hFF(Yg,3,CreateUnit(Vy,$65303336,GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4))+50.*Cos(b0b(0.,360.)*bj_DEGTORAD),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4))+50.*Sin(b0b(0.,360.)*bj_DEGTORAD),bj_UNIT_FACING))
+21727: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+3),85.,10000.)
+21728: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+3),4.1,1.,1.)
+21729: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65304151,LoadLocationHandle(lO,0,Yg*$1f4),GetUnitFacing(LoadUnitHandle(UO,0,Yg*$1f4))))
+21730: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65304152,LoadLocationHandle(lO,0,Yg*$1f4),GetUnitFacing(LoadUnitHandle(UO,0,Yg*$1f4))))
+21731: call hFF(Yg,3,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4),GetUnitFacing(LoadUnitHandle(UO,0,Yg*$1f4))))
+21732: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+3),$4130534b)
+21733: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,2.)
+21734: set k7b=d7b()
+21735: call bnb(k7b,700.,LoadLocationHandle(lO,0,Yg*$1f4),Condition(jY),uY)
+21736: call qny(k7b)
+21737: call ewb(Yg)
+21738: endif
+21739: endfunction
+
+22266: function Ldy takes nothing returns nothing
+22267: local integer Jdy=0
+22268: local real Hdy
+22269: local integer ody
+22270: local integer kdy
+22271: if FB<=0. then
+22272: return
+22273: endif
+22274: set ody=0
+22275: set kdy=0
+22276: loop
+22277: exitwhen ody>=4
+22278: if Zy[ody] and GetPlayerSlotState(Player(ody))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(ody))==MAP_CONTROL_USER then
+22279: set kdy=kdy+1
+22280: endif
+22281: set ody=ody+1
+22282: endloop
+22283: if kdy==2 then
+22284: set mB=30
+22285: elseif kdy==3 then
+22286: set mB=25
+22287: else
+22288: set mB=20
+22289: endif
+22290: loop
+22291: exitwhen Jdy>=4
+22292: if Uy[Jdy]then
+22293: call h_F(Jdy,GetObjectName($6e303041))
+22294: set ody=0
+22295: loop
+22296: exitwhen ody>=4
+22297: if Zy[ody]then
+22298: set Hdy=100.*AB[ody]/FB
+22299: if Hdy>=I2R(mB) then
+22300: call LeaderboardAddItem(jc[Jdy],GetPlayerName(Player(ody))+By[ody]+" [|cff00ff22"+R2SW(Hdy,1,2)+"%|r"+By[ody]+" / |cff00ced1"+I2S(mB)+"%|r"+By[ody]+"]|r",0,Player(ody))
+22301: else
+22302: call LeaderboardAddItem(jc[Jdy],GetPlayerName(Player(ody))+By[ody]+" ["+R2SW(Hdy,1,2)+"% / |cff00ced1"+I2S(mB)+"%|r"+By[ody]+"]|r",0,Player(ody))
+22303: endif
+22304: endif
+22305: set ody=ody+1
+22306: endloop
+22307: call RHb(Jdy)
+22308: else
+22309: call j0y(Jdy)
+22310: endif
+22311: set Jdy=Jdy+1
+22312: endloop
+22313: endfunction
+
+26851: function G1y takes integer c1y,integer d1y returns nothing
+26852: local player m1y
+26853: local player V1y
+26854: local player D1y
+26855: local real e1y
+26856: if c1y==1 then
+26857: if not cq[d1y]then
+26858: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 최대출력|r 을(를) 선택하셨습니다.")
+26859: endif
+26860: call SetPlayerTechResearched(Player(d1y),$52303337,1)
+26861: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소 스킬이 강화됩니다.")
+26862: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소에 |cff51ddf5마나포션|r 스킬이 추가됩니다.")
+26863: call SetUnitAbilityLevel(Ag[d1y],$4130425a,2)
+26864: call SetUnitAbilityLevel(Ag[d1y],$41304259,2)
+26865: call SetUnitAbilityLevel(Ag[d1y],$41303754,2)
+26866: call SetUnitAbilityLevel(Ag[d1y],$41303758,2)
+26867: call SetUnitAbilityLevel(Ag[d1y],$41303757,2)
+26868: call UnitAddAbility(Ag[d1y],$41305559)
+26869: set xM=ANy()
+26870: set BM[xM]=Player(d1y)
+26871: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNBookOfSummoning.blp"
+26872: call YTy(xM)
+26873: set Rg[d1y]="최대출력"
+26874: set Ry[d1y]=true
+26875: elseif c1y==2 then
+26876: if not cq[d1y]then
+26877: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 연금술|r 을(를) 선택하셨습니다.")
+26878: endif
+26879: call SetPlayerTechResearched(Player(d1y),$52303337,1)
+26880: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 연금술|r 항법효과로 도움소에 |cffff0000'연금술'|r 스킬이 추가됩니다.")
+26881: call UnitAddAbility(Ag[d1y],$41304a32)
+26882: set xM=ANy()
+26883: set BM[xM]=Player(d1y)
+26884: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNBookOfSummoning.blp"
+26885: call YTy(xM)
+26886: set Rg[d1y]="연금술"
+26887: set Ry[d1y]=true
+26888: elseif c1y==3 then
+26889: if not cq[d1y]then
+26890: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 역발상|r 을(를) 선택하셨습니다.")
+26891: endif
+26892: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 도움소 마나소모가 |cffff0000150|r 이하 스킬 사용 가능")
+26893: call UnitRemoveAbility(Ag[d1y],$4130425a)
+26894: call UnitRemoveAbility(Ag[d1y],$41304259)
+26895: call UnitRemoveAbility(Ag[d1y],$41303758)
+26896: call UnitRemoveAbility(Ag[d1y],$41303754)
+26897: call UnitRemoveAbility(Ag[d1y],$41303755)
+26898: set D1y=Player(d1y)
+26899: set m1y=Player(d1y)
+26900: set e1y=GetStartLocationX(GetPlayerStartLocation(m1y))
+26901: set V1y=Player(d1y)
+26902: set bj_lastCreatedUnit=CreateUnit(D1y,$68303558,e1y,GetStartLocationY(GetPlayerStartLocation(V1y)),bj_UNIT_FACING)
+26903: call DisplayTimedTextToPlayer(Player(d1y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 "+GetUnitName(bj_lastCreatedUnit)+" 획득!")
+26904: call dly(Player(d1y),1,1)
+26905: set xM=ANy()
+26906: set BM[xM]=Player(d1y)
+26907: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNBookOfSummoning.blp"
+26908: call YTy(xM)
+26909: set Rg[d1y]="역발상"
+26910: set Ry[d1y]=true
+26911: endif
+26912: set Bg[d1y]="최고의도움"
+26913: set m1y=null
+26914: set V1y=null
+26915: set D1y=null
+26916: endfunction
+
+26995: function m7y takes integer T7y,integer y7y returns nothing
+26996: local integer F7y
+26997: local player g7y
+26998: local player A7y
+26999: local player c7y
+27000: local real d7y
+27001: if T7y==1 then
+27002: if oy[y7y]>=1 then
+27003: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cffff0000[오류]|r 최상위 유닛을 보유중일 경우 선택하실 수 없습니다.")
+27004: set g7y=null
+27005: set A7y=null
+27006: set c7y=null
+27007: return
+27008: endif
+27009: set Aq[y7y]=true
+27010: if not cq[y7y]then
+27011: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 계엄령|r 을(를) 선택하셨습니다.")
+27012: endif
+27013: set vg[y7y]=1
+27014: set xM=ANy()
+27015: set BM[xM]=Player(y7y)
+27016: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNIceCrownObelisk.blp"
+27017: call YTy(xM)
+27018: set Rg[y7y]="계엄령"
+27019: set Ry[y7y]=true
+27020: elseif T7y==2 then
+27021: if oy[y7y]>=2 then
+27022: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유중일 경우 선택하실 수 없습니다.")
+27023: set g7y=null
+27024: set A7y=null
+27025: set c7y=null
+27026: return
+27027: endif
+27028: set Aq[y7y]=true
+27029: if not cq[y7y]then
+27030: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 바운티헌터|r 을(를) 선택하셨습니다.")
+27031: endif
+27032: set vg[y7y]=2
+27033: set xM=ANy()
+27034: set BM[xM]=Player(y7y)
+27035: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNIceCrownObelisk.blp"
+27036: call YTy(xM)
+27037: set Rg[y7y]="바운티헌터"
+27038: set Ry[y7y]=true
+27039: elseif T7y==3 then
+27040: if oy[y7y]>=2 then
+27041: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유 중일 경우 선택하실 수 없습니다.")
+27042: set g7y=null
+27043: set A7y=null
+27044: set c7y=null
+27045: return
+27046: endif
+27047: set Aq[y7y]=true
+27048: if not cq[y7y]then
+27049: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 로얄로더|r 을(를) 선택하셨습니다.")
+27050: endif
+27051: set vg[y7y]=3
+27052: set F7y=d7b()
+27053: call GroupEnumUnitsOfPlayer(Hc[F7y],Player(y7y),Condition(r3))
+27054: call qny(F7y)
+27055: set xM=ANy()
+27056: set BM[xM]=Player(y7y)
+27057: set RM[xM]="ReplaceableTextures\\CommandButtons\\BTNIceCrownObelisk.blp"
+27058: call YTy(xM)
+27059: set Rg[y7y]="로얄로더"
+27060: set Ry[y7y]=true
+27061: endif
+27062: set c7y=Player(y7y)
+27063: set g7y=Player(y7y)
+27064: set d7y=GetStartLocationX(GetPlayerStartLocation(g7y))
+27065: set A7y=Player(y7y)
+27066: set bj_lastCreatedUnit=CreateUnit(c7y,$68304338,d7y,GetStartLocationY(GetPlayerStartLocation(A7y)),bj_UNIT_FACING)
+27067: if T7y==1 then
+27068: call SetUnitAbilityLevel(bj_lastCreatedUnit,$41304949,2)
+27069: endif
+27070: call IssueImmediateOrder(bj_lastCreatedUnit,"holdposition")
+27071: call DisplayTimedTextToPlayer(Player(y7y),0.,0.,3.,"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법 기본효과로 "+GetUnitName(bj_lastCreatedUnit)+" 획득!")
+27072: set Bg[y7y]="패왕의길"
+27073: set g7y=null
+27074: set A7y=null
+27075: set c7y=null
+27076: endfunction
+
+27395: function Ptb takes nothing returns nothing
+27396: local unit atb=GetTriggerUnit()
+27397: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+27398: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+27399: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+27400: set atb=null
+27401: return
+27402: endif
+27403: call UnitAddAbility(GetTriggerUnit(),$41305434)
+27404: call UnitAddAbility(GetTriggerUnit(),$41305953)
+27405: call UnitRemoveAbility(atb,$41305433)
+27406: call SetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+27407: set atb=null
+27408: endfunction
+
+28344: function QTT takes nothing returns nothing
+28345: local integer MTT=0
+28346: local real vTT
+28347: local integer OTT
+28348: local integer rTT
+28349: if AZ<=0. then
+28350: return
+28351: endif
+28352: set OTT=0
+28353: set rTT=0
+28354: loop
+28355: exitwhen OTT>=4
+28356: if Zy[OTT] and GetPlayerSlotState(Player(OTT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(OTT))==MAP_CONTROL_USER then
+28357: set rTT=rTT+1
+28358: endif
+28359: set OTT=OTT+1
+28360: endloop
+28361: if rTT==2 then
+28362: set DZ=30
+28363: elseif rTT==3 then
+28364: set DZ=25
+28365: else
+28366: set DZ=20
+28367: endif
+28368: loop
+28369: exitwhen MTT>=4
+28370: if Uy[MTT]then
+28371: call h_F(MTT,GetObjectName($6e303030))
+28372: set OTT=0
+28373: loop
+28374: exitwhen OTT>=4
+28375: if Zy[OTT]then
+28376: set vTT=100.*dZ[OTT]/AZ
+28377: if TZ<=2 then
+28378: call LeaderboardAddItem(jc[MTT],GetPlayerName(Player(OTT))+By[OTT]+" [|cff00ff22"+R2SW(vTT,1,2)+"%|r"+By[OTT]+"]|r",0,Player(OTT))
+28379: elseif vTT>=I2R(DZ) then
+28380: call LeaderboardAddItem(jc[MTT],GetPlayerName(Player(OTT))+By[OTT]+" [|cff00ff22"+R2SW(vTT,1,2)+"%|r"+By[OTT]+" / |cff00ced1"+I2S(DZ)+"%|r"+By[OTT]+"]|r",0,Player(OTT))
+28381: else
+28382: call LeaderboardAddItem(jc[MTT],GetPlayerName(Player(OTT))+By[OTT]+" ["+R2SW(vTT,1,2)+"% / |cff00ced1"+I2S(DZ)+"%|r"+By[OTT]+"]|r",0,Player(OTT))
+28383: endif
+28384: endif
+28385: set OTT=OTT+1
+28386: endloop
+28387: call RHb(MTT)
+28388: else
+28389: call j0y(MTT)
+28390: endif
+28391: set MTT=MTT+1
+28392: endloop
+28393: endfunction
+
+28394: function QTy takes nothing returns nothing
+28395: local integer MTy=0
+28396: local real vTy
+28397: local integer OTy
+28398: local integer rTy
+28399: if pf<=0. then
+28400: return
+28401: endif
+28402: set OTy=0
+28403: set rTy=0
+28404: loop
+28405: exitwhen OTy>=4
+28406: if Zy[OTy] and GetPlayerSlotState(Player(OTy))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(OTy))==MAP_CONTROL_USER then
+28407: set rTy=rTy+1
+28408: endif
+28409: set OTy=OTy+1
+28410: endloop
+28411: if rTy==2 then
+28412: set Ef=30
+28413: elseif rTy==3 then
+28414: set Ef=25
+28415: else
+28416: set Ef=20
+28417: endif
+28418: loop
+28419: exitwhen MTy>=4
+28420: if Uy[MTy]then
+28421: call h_F(MTy,GetObjectName($6e303038))
+28422: set OTy=0
+28423: loop
+28424: exitwhen OTy>=4
+28425: if Zy[OTy]then
+28426: set vTy=100.*wf[OTy]/pf
+28427: if vTy>=I2R(Ef) then
+28428: call LeaderboardAddItem(jc[MTy],GetPlayerName(Player(OTy))+By[OTy]+" [|cff00ff22"+R2SW(vTy,1,2)+"%|r"+By[OTy]+" / |cff00ced1"+I2S(Ef)+"%|r"+By[OTy]+"]|r",0,Player(OTy))
+28429: else
+28430: call LeaderboardAddItem(jc[MTy],GetPlayerName(Player(OTy))+By[OTy]+" ["+R2SW(vTy,1,2)+"% / |cff00ced1"+I2S(Ef)+"%|r"+By[OTy]+"]|r",0,Player(OTy))
+28431: endif
+28432: endif
+28433: set OTy=OTy+1
+28434: endloop
+28435: call RHb(MTy)
+28436: else
+28437: call j0y(MTy)
+28438: endif
+28439: set MTy=MTy+1
+28440: endloop
+28441: endfunction
+
+31685: function SKy takes nothing returns nothing
+31686: local unit EKy=GetTriggerUnit()
+31687: local player lKy=GetOwningPlayer(EKy)
+31688: local integer CKy=GetResearched()
+31689: local integer IKy=GetResearched()
+31690: call SetPlayerTechResearched(lKy,CKy,GetPlayerTechCount(lKy,IKy,true)+1)
+31691: if GetResearched()==$52303034 then
+31692: call SetPlayerTechResearched(lKy,$52303232,GetPlayerTechCount(lKy,$52303232,true)+1)
+31693: call SetPlayerTechResearched(lKy,$52303036,GetPlayerTechCount(lKy,$52303036,true)+1)
+31694: call SetPlayerTechResearched(lKy,$52303251,GetPlayerTechCount(lKy,$52303251,true)+1)
+31695: call SetPlayerTechResearched(lKy,$52303154,GetPlayerTechCount(lKy,$52303154,true)+1)
+31696: call SetPlayerTechResearched(lKy,$52303155,GetPlayerTechCount(lKy,$52303155,true)+1)
+31697: endif
+31698: if GetResearched()==$52303032 then
+31699: call SetPlayerTechResearched(lKy,$52303233,GetPlayerTechCount(lKy,$52303233,true)+1)
+31700: call SetPlayerTechResearched(lKy,$52303230,GetPlayerTechCount(lKy,$52303230,true)+1)
+31701: endif
+31702: if GetResearched()==$52303030 then
+31703: call SetPlayerTechResearched(lKy,$52303256,GetPlayerTechCount(lKy,$52303256,true)+1)
+31704: call SetPlayerTechResearched(lKy,$52303158,GetPlayerTechCount(lKy,$52303158,true)+1)
+31705: call SetPlayerTechResearched(lKy,$5230314a,GetPlayerTechCount(lKy,$5230314a,true)+1)
+31706: call SetPlayerTechResearched(lKy,$5230315a,GetPlayerTechCount(lKy,$5230315a,true)+1)
+31707: call SetPlayerTechResearched(lKy,$52303242,GetPlayerTechCount(lKy,$52303242,true)+1)
+31708: call SetPlayerTechResearched(lKy,$52303253,GetPlayerTechCount(lKy,$52303253,true)+1)
+31709: call SetPlayerTechResearched(lKy,$52303159,GetPlayerTechCount(lKy,$52303159,true)+1)
+31710: call SetPlayerTechResearched(lKy,$52303031,GetPlayerTechCount(lKy,$52303031,true)+1)
+31711: endif
+31712: if GetResearched()==$52303033 then
+31713: call SetPlayerTechResearched(lKy,$52303043,GetPlayerTechCount(lKy,$52303043,true)+1)
+31714: call SetPlayerTechResearched(lKy,$52303035,GetPlayerTechCount(lKy,$52303035,true)+1)
+31715: call SetPlayerTechResearched(lKy,$52303257,GetPlayerTechCount(lKy,$52303035,true)+1)
+31716: call SetPlayerTechResearched(lKy,$52303044,GetPlayerTechCount(lKy,$52303044,true)+1)
+31717: call SetPlayerTechResearched(lKy,$5230324a,GetPlayerTechCount(lKy,$5230324a,true)+1)
+31718: endif
+31719: if GetResearched()==$52686663 then
+31720: call UnitAddAbility(SF[GetPlayerId(lKy)],$41305039)
+31721: elseif GetResearched()==$52687074 then
+31722: call UnitAddAbility(SF[GetPlayerId(lKy)],$41305042)
+31723: elseif GetResearched()==$52687261 then
+31724: call UnitAddAbility(SF[GetPlayerId(lKy)],$41305038)
+31725: elseif GetResearched()==$52686762 then
+31726: call UnitAddAbility(SF[GetPlayerId(lKy)],$41305041)
+31727: endif
+31728: set EKy=null
+31729: set lKy=null
+31730: endfunction
+
+32028: function ShT takes nothing returns nothing
+32029: local unit ChT
+32030: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+32031: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+32032: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+32033: set ChT=null
+32034: return
+32035: endif
+32036: call AddSpecialEffectTarget("chargeflame2.mdx",GetTriggerUnit(),"origin")
+32037: set ChT=GetTriggerUnit()
+32038: call IncUnitAbilityLevel(ChT,$41304854)
+32039: call UnitRemoveAbility(GetTriggerUnit(),GetSpellAbilityId())
+32040: call SetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+32041: set ChT=null
+32042: endfunction
+
+32586: function TMy takes nothing returns nothing
+32587: local integer wxy=GetPlayerId(GetTriggerPlayer())
+32588: local unit Yxy
+32589: local location Uxy
+32590: local player Exy
+32591: local player lxy
+32592: local unit Ixy
+32593: local real Cxy
+32594: local real Sxy
+32595: local location bMy
+32596: if Oi[wxy]then
+32597: call DisplayTextToPlayer(GetTriggerPlayer(),0.,0.,"'샌즈 - 신비' 는 한개만 조합할 수 있습니다.")
+32598: set Yxy=null
+32599: set Uxy=null
+32600: set Exy=null
+32601: set lxy=null
+32602: set Ixy=null
+32603: set bMy=null
+32604: return
+32605: endif
+32606: call Toy()
+32607: set Ty=GetOwningPlayer(GetSpellAbilityUnit())
+32608: set Exy=GetOwningPlayer(GetSpellAbilityUnit())
+32609: set Cxy=GetStartLocationX(GetPlayerStartLocation(Exy))
+32610: set lxy=GetOwningPlayer(GetSpellAbilityUnit())
+32611: set Sxy=GetStartLocationY(GetPlayerStartLocation(lxy))
+32612: set Ay=Cxy
+32613: set cy=Sxy
+32614: set gy=true
+32615: set by=GetSpellAbilityId()
+32616: set Ixy=GetSpellAbilityUnit()
+32617: set yy=Ixy
+32618: set Fy=GetUnitTypeId(Ixy)
+32619: if not EDT() then
+32620: set Yxy=null
+32621: set Uxy=null
+32622: set Exy=null
+32623: set lxy=null
+32624: set Ixy=null
+32625: set bMy=null
+32626: return
+32627: endif
+32628: set Yxy=FirstOfGroup(dy)
+32629: set Uxy=GetStartLocationLoc(wxy)
+32630: if ri[wxy]==null then
+32631: set ri[wxy]=CreateUnitAtLoc(Player(wxy),$68303456,Uxy,bj_UNIT_FACING)
+32632: call UnitAddAbility(ri[wxy],$41313141)
+32633: call UnitAddAbility(ri[wxy],$41313058)
+32634: endif
+32635: set bMy=GetStartLocationLoc(GetPlayerStartLocation(Player(wxy)))
+32636: set bj_lastCreatedItem=CreateItem($49303035,GetLocationX(bMy),GetLocationY(bMy))
+32637: set Mi[wxy]=bj_lastCreatedItem
+32638: call SetItemUserData(bj_lastCreatedItem,wxy)
+32639: call SetItemCharges(bj_lastCreatedItem,1)
+32640: call UnitAddItemSwapped(Mi[wxy],Yxy)
+32641: call SetPlayerTechResearched(GetOwningPlayer(Yxy),$52303051,1)
+32642: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffdc143c샌즈 : |r|cff4FC9DE좋아. 여기 더 괜찮은 질문이 있어. 끔찍한 시간을 보내고 싶어?|r")
+32643: call StartSound(tyy("SE\\Sans.mp3",null,$7f,1.,false,0.,0.))
+32644: set Oi[wxy]=true
+32645: call RemoveLocation(Uxy)
+32646: set Yxy=null
+32647: set Uxy=null
+32648: set Exy=null
+32649: set lxy=null
+32650: set Ixy=null
+32651: set bMy=null
+32652: endfunction
+
+33338: function Twb takes nothing returns nothing
+33339: local unit LWb=GetEnteringUnit()
+33340: local integer jWb=GetPlayerId(GetOwningPlayer(LWb))
+33341: local timer uWb
+33342: local integer pWb
+33343: local unit WWb
+33344: local unit wWb
+33345: local location YWb
+33346: local location UWb
+33347: local player EWb
+33348: local player lWb
+33349: local location IWb
+33350: local location CWb
+33351: local player SWb
+33352: local location bwb
+33353: if GetUnitAbilityLevel(LWb,$416c6f63)>0 then
+33354: set LWb=null
+33355: set uWb=null
+33356: set WWb=null
+33357: set wWb=null
+33358: set YWb=null
+33359: set UWb=null
+33360: set EWb=null
+33361: set lWb=null
+33362: set IWb=null
+33363: set CWb=null
+33364: set SWb=null
+33365: set bwb=null
+33366: return
+33367: endif
+33368: if jWb==7 then
+33369: set LWb=null
+33370: set uWb=null
+33371: set WWb=null
+33372: set wWb=null
+33373: set YWb=null
+33374: set UWb=null
+33375: set EWb=null
+33376: set lWb=null
+33377: set IWb=null
+33378: set CWb=null
+33379: set SWb=null
+33380: set bwb=null
+33381: return
+33382: endif
+33383: if iy[jWb]!=0 and IsUnitType(GetTriggerUnit(),UNIT_TYPE_GIANT) then
+33384: set pWb=iy[jWb]
+33385: call v2F(pWb,LWb,GetUnitTypeId(LWb))
+33386: set WWb=LWb
+33387: set wWb=LWb
+33388: set pWb=0
+33389: loop
+33390: exitwhen pWb>=7
+33391: if GetUnitAbilityLevel(wWb,$41393035)>0 then
+33392: call UnitRemoveAbility(wWb,aHb(GetUnitTypeId(wWb)))
+33393: else
+33394: call UnitRemoveAbility(wWb,Sg[pWb])
+33395: endif
+33396: set pWb=pWb+1
+33397: endloop
+33398: call WuT(WWb,GetPlayerId(GetOwningPlayer(WWb)),GetUnitTypeId(WWb))
+33399: call dJy(WWb)
+33400: call QgT(WWb)
+33401: endif
+33402: if GetUnitTypeId(LWb)==$68303438 then
+33403: set hy[jWb]=hy[jWb]+10
+33404: set uWb=QAF(jWb)
+33405: call TimerStart(uWb,.01,false,f3)
+33406: set LWb=null
+33407: set uWb=null
+33408: set WWb=null
+33409: set wWb=null
+33410: set YWb=null
+33411: set UWb=null
+33412: set EWb=null
+33413: set lWb=null
+33414: set IWb=null
+33415: set CWb=null
+33416: set SWb=null
+33417: set bwb=null
+33418: return
+33419: endif
+33420: if GetUnitTypeId(LWb)==$68303431 then
+33421: set hy[jWb]=hy[jWb]+10
+33422: set uWb=QAF(jWb)
+33423: call TimerStart(uWb,.01,false,B3)
+33424: set LWb=null
+33425: set uWb=null
+33426: set WWb=null
+33427: set wWb=null
+33428: set YWb=null
+33429: set UWb=null
+33430: set EWb=null
+33431: set lWb=null
+33432: set IWb=null
+33433: set CWb=null
+33434: set SWb=null
+33435: set bwb=null
+33436: return
+33437: endif
+33438: if GetUnitTypeId(LWb)==$68303748 then
+33439: call cZb(LWb,GetRectCenterX(EF[jWb]),GetRectCenterY(EF[jWb]))
+33440: call UnitRemoveAbility(LWb,$416d6f76)
+33441: set LWb=null
+33442: set uWb=null
+33443: set WWb=null
+33444: set wWb=null
+33445: set YWb=null
+33446: set UWb=null
+33447: set EWb=null
+33448: set lWb=null
+33449: set IWb=null
+33450: set CWb=null
+33451: set SWb=null
+33452: set bwb=null
+33453: return
+33454: endif
+33455: if GetUnitTypeId(LWb)==$68303335 then
+33456: set YWb=GetStartLocationLoc(GetPlayerStartLocation(Player(jWb)))
+33457: if Be[jWb]==null then
+33458: set Be[jWb]=CreateUnitAtLoc(Player(jWb),$68303456,YWb,bj_UNIT_FACING)
+33459: call UnitAddAbility(Be[jWb],$41304354)
+33460: endif
+33461: set fe=LWb
+33462: call TriggerExecute(Ze)
+33463: call RemoveLocation(YWb)
+33464: set LWb=null
+33465: set uWb=null
+33466: set WWb=null
+33467: set wWb=null
+33468: set YWb=null
+33469: set UWb=null
+33470: set EWb=null
+33471: set lWb=null
+33472: set IWb=null
+33473: set CWb=null
+33474: set SWb=null
+33475: set bwb=null
+33476: return
+33477: endif
+33478: if GetUnitTypeId(LWb)==$68303837 then
+33479: set UWb=GetStartLocationLoc(GetPlayerStartLocation(Player(jWb)))
+33480: set ve[jWb]=CreateUnitAtLoc(Player(jWb),$68303456,UWb,bj_UNIT_FACING)
+33481: call UnitAddAbility(ve[jWb],$41303747)
+33482: set Me=LWb
+33483: call TriggerExecute(xe)
+33484: call RemoveLocation(UWb)
+33485: set EWb=Player(jWb)
+33486: call SetPlayerTechResearched(EWb,$52303343,1)
+33487: set LWb=null
+33488: set uWb=null
+33489: set WWb=null
+33490: set wWb=null
+33491: set YWb=null
+33492: set UWb=null
+33493: set EWb=null
+33494: set lWb=null
+33495: set IWb=null
+33496: set CWb=null
+33497: set SWb=null
+33498: set bwb=null
+33499: return
+33500: endif
+33501: if GetUnitTypeId(LWb)==$68303250 then
+33502: if Ve[jWb]then
+33503: call DisplayTimedTextToPlayer(Player(jWb),0.,0.,5.,"|cffff0000[오류]|r 이미 '도둑 고양이 나미' 스킬이 적용 중입니다.")
+33504: else
+33505: call DisplayTimedTextToPlayer(Player(jWb),0.,0.,5.,"|cffff0000[시스템]|r '도둑 고양이 나미' 스킬이 적용됩니다.")
+33506: if fF[jWb]then
+33507: set KF[jWb]=1125.
+33508: else
+33509: set KF[jWb]=978.
+33510: endif
+33511: set Jy[jWb]=Jy[jWb]+.6
+33512: set ZF[jWb]=true
+33513: set Ve[jWb]=true
+33514: endif
+33515: set LWb=null
+33516: set uWb=null
+33517: set WWb=null
+33518: set wWb=null
+33519: set YWb=null
+33520: set UWb=null
+33521: set EWb=null
+33522: set lWb=null
+33523: set IWb=null
+33524: set CWb=null
+33525: set SWb=null
+33526: set bwb=null
+33527: return
+33528: endif
+33529: if GetUnitTypeId(LWb)==$68303432 then
+33530: set lWb=Player(jWb)
+33531: call SetPlayerTechResearched(lWb,$52303331,1)
+33532: call uJT(LWb)
+33533: set LWb=null
+33534: set uWb=null
+33535: set WWb=null
+33536: set wWb=null
+33537: set YWb=null
+33538: set UWb=null
+33539: set EWb=null
+33540: set lWb=null
+33541: set IWb=null
+33542: set CWb=null
+33543: set SWb=null
+33544: set bwb=null
+33545: return
+33546: endif
+33547: if GetUnitTypeId(LWb)==$68303254 then
+33548: call uJT(LWb)
+33549: set LWb=null
+33550: set uWb=null
+33551: set WWb=null
+33552: set wWb=null
+33553: set YWb=null
+33554: set UWb=null
+33555: set EWb=null
+33556: set lWb=null
+33557: set IWb=null
+33558: set CWb=null
+33559: set SWb=null
+33560: set bwb=null
+33561: return
+33562: endif
+33563: if GetUnitTypeId(LWb)==$68303342 then
+33564: set IWb=GetStartLocationLoc(GetPlayerStartLocation(Player(jWb)))
+33565: if re[jWb]==null then
+33566: set re[jWb]=CreateUnitAtLoc(Player(jWb),$68303456,IWb,bj_UNIT_FACING)
+33567: call UnitAddAbility(re[jWb],$41304846)
+33568: call UnitAddAbility(re[jWb],$41313553)
+33569: endif
+33570: call RemoveLocation(IWb)
+33571: set LWb=null
+33572: set uWb=null
+33573: set WWb=null
+33574: set wWb=null
+33575: set YWb=null
+33576: set UWb=null
+33577: set EWb=null
+33578: set lWb=null
+33579: set IWb=null
+33580: set CWb=null
+33581: set SWb=null
+33582: set bwb=null
+33583: return
+33584: endif
+33585: if GetUnitTypeId(LWb)==$68303358 then
+33586: set CWb=GetStartLocationLoc(GetPlayerStartLocation(Player(jWb)))
+33587: if de[jWb]==null then
+33588: set de[jWb]=CreateUnitAtLoc(Player(jWb),$68303456,CWb,bj_UNIT_FACING)
+33589: call UnitAddAbility(de[jWb],$41304841)
+33590: call UnitAddAbility(de[jWb],$41313544)
+33591: endif
+33592: call RemoveLocation(CWb)
+33593: set LWb=null
+33594: set uWb=null
+33595: set WWb=null
+33596: set wWb=null
+33597: set YWb=null
+33598: set UWb=null
+33599: set EWb=null
+33600: set lWb=null
+33601: set IWb=null
+33602: set CWb=null
+33603: set SWb=null
+33604: set bwb=null
+33605: return
+33606: endif
+33607: if GetUnitTypeId(LWb)==$68303535 then
+33608: call uJT(LWb)
+33609: set LWb=null
+33610: set uWb=null
+33611: set WWb=null
+33612: set wWb=null
+33613: set YWb=null
+33614: set UWb=null
+33615: set EWb=null
+33616: set lWb=null
+33617: set IWb=null
+33618: set CWb=null
+33619: set SWb=null
+33620: set bwb=null
+33621: return
+33622: endif
+33623: if GetUnitTypeId(LWb)==$68303550 then
+33624: set SWb=Player(jWb)
+33625: call SetPlayerTechResearched(SWb,$52303052,1)
+33626: set LWb=null
+33627: set uWb=null
+33628: set WWb=null
+33629: set wWb=null
+33630: set YWb=null
+33631: set UWb=null
+33632: set EWb=null
+33633: set lWb=null
+33634: set IWb=null
+33635: set CWb=null
+33636: set SWb=null
+33637: set bwb=null
+33638: return
+33639: endif
+33640: if GetUnitTypeId(LWb)==$68304247 then
+33641: if Hn[jWb]then
+33642: call DisplayTimedTextToPlayer(Player(jWb),0.,0.,5.,"|cffff0000[오류]|r 이미 '가이몬의 꿈' 스킬이 적용 중입니다.")
+33643: else
+33644: call DisplayTimedTextToPlayer(Player(jWb),0.,0.,5.,"|cffff0000[시스템]|r '가이몬의 꿈' 스킬이 적용됩니다.")
+33645: if ZF[jWb]then
+33646: set KF[jWb]=1125.
+33647: else
+33648: set KF[jWb]=978.
+33649: endif
+33650: set fF[jWb]=true
+33651: set Hn[jWb]=true
+33652: endif
+33653: set LWb=null
+33654: set uWb=null
+33655: set WWb=null
+33656: set wWb=null
+33657: set YWb=null
+33658: set UWb=null
+33659: set EWb=null
+33660: set lWb=null
+33661: set IWb=null
+33662: set CWb=null
+33663: set SWb=null
+33664: set bwb=null
+33665: return
+33666: endif
+33667: if GetUnitTypeId(LWb)==$68303732 then
+33668: set bwb=GetStartLocationLoc(GetPlayerStartLocation(Player(jWb)))
+33669: if Yn[jWb]==null then
+33670: set Yn[jWb]=CreateUnitAtLoc(Player(jWb),$68303456,bwb,bj_UNIT_FACING)
+33671: call UnitAddAbility(Yn[jWb],$41304e30)
+33672: endif
+33673: call RemoveLocation(bwb)
+33674: set LWb=null
+33675: set uWb=null
+33676: set WWb=null
+33677: set wWb=null
+33678: set YWb=null
+33679: set UWb=null
+33680: set EWb=null
+33681: set lWb=null
+33682: set IWb=null
+33683: set CWb=null
+33684: set SWb=null
+33685: set bwb=null
+33686: return
+33687: endif
+33688: set LWb=null
+33689: set uWb=null
+33690: set WWb=null
+33691: set wWb=null
+33692: set YWb=null
+33693: set UWb=null
+33694: set EWb=null
+33695: set lWb=null
+33696: set IWb=null
+33697: set CWb=null
+33698: set SWb=null
+33699: set bwb=null
+33700: endfunction
+
+33701: function Txb takes nothing returns nothing
+33702: local integer ERb
+33703: local unit lRb
+33704: local location IRb
+33705: local player CRb
+33706: local real SRb
+33707: local real bxb
+33708: call Toy()
+33709: set Ty=GetTriggerPlayer()
+33710: set by=$54523134
+33711: set CRb=GetTriggerPlayer()
+33712: set SRb=GetStartLocationX(GetPlayerStartLocation(CRb))
+33713: set CRb=GetTriggerPlayer()
+33714: set bxb=GetStartLocationY(GetPlayerStartLocation(CRb))
+33715: set Ay=SRb
+33716: set cy=bxb
+33717: set gy=true
+33718: if not EDT() then
+33719: set lRb=null
+33720: set IRb=null
+33721: set CRb=null
+33722: return
+33723: endif
+33724: set lRb=FirstOfGroup(dy)
+33725: set ERb=GetPlayerId(GetOwningPlayer(lRb))
+33726: set IRb=GetStartLocationLoc(ERb)
+33727: if KG[ERb]==null then
+33728: set KG[ERb]=CreateUnitAtLoc(Player(ERb),$68303456,IRb,bj_UNIT_FACING)
+33729: call UnitAddAbility(KG[ERb],$41304933)
+33730: endif
+33731: call StartSound(tyy("SE\\Sanji.mp3",null,$7f,1.,false,0.,0.))
+33732: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0상디 : |r|cff00fa9a사나이 상디! 지금 지옥에서 귀환했습니다!|r")
+33733: call RemoveLocation(IRb)
+33734: set lRb=null
+33735: set IRb=null
+33736: set CRb=null
+33737: endfunction
+
+33828: function U5F takes nothing returns nothing
+33829: local integer j5F
+33830: local unit u5F
+33831: local location p5F
+33832: local real W5F
+33833: local real w5F
+33834: local unit Y5F
+33835: call Toy()
+33836: set Ty=GetOwningPlayer(GetSpellAbilityUnit())
+33837: set W5F=GetUnitX(GetSpellAbilityUnit())
+33838: set w5F=GetUnitY(GetSpellAbilityUnit())
+33839: set Ay=W5F
+33840: set cy=w5F
+33841: set gy=true
+33842: set by=GetSpellAbilityId()
+33843: set Y5F=GetSpellAbilityUnit()
+33844: set yy=Y5F
+33845: set Fy=GetUnitTypeId(Y5F)
+33846: if not EDT() then
+33847: set u5F=null
+33848: set p5F=null
+33849: set Y5F=null
+33850: return
+33851: endif
+33852: set u5F=FirstOfGroup(dy)
+33853: set j5F=GetPlayerId(GetOwningPlayer(u5F))
+33854: set p5F=GetStartLocationLoc(j5F)
+33855: if eG[j5F]==null then
+33856: set eG[j5F]=CreateUnitAtLoc(Player(j5F),$68303456,p5F,bj_UNIT_FACING)
+33857: call UnitAddAbility(eG[j5F],$41305339)
+33858: call UnitAddAbility(eG[j5F],$41303558)
+33859: endif
+33860: call StartSound(tyy("SE\\King.mp3",null,$7f,1.,false,0.,0.))
+33861: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cff5997c9킹 : |r|cffdf9d30이 세상에 왕은 하나로 충분해!|r")
+33862: call RemoveLocation(p5F)
+33863: set u5F=null
+33864: set p5F=null
+33865: set Y5F=null
+33866: endfunction
+
+36060: function UpT takes nothing returns nothing
+36061: local integer ppT=0
+36062: local real WpT
+36063: local integer wpT
+36064: local integer YpT
+36065: if af<=0. then
+36066: return
+36067: endif
+36068: set wpT=0
+36069: set YpT=0
+36070: loop
+36071: exitwhen wpT>=4
+36072: if Zy[wpT] and GetPlayerSlotState(Player(wpT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(wpT))==MAP_CONTROL_USER then
+36073: set YpT=YpT+1
+36074: endif
+36075: set wpT=wpT+1
+36076: endloop
+36077: if YpT==2 then
+36078: set qf=30
+36079: elseif YpT==3 then
+36080: set qf=25
+36081: else
+36082: set qf=20
+36083: endif
+36084: loop
+36085: exitwhen ppT>=4
+36086: if Uy[ppT]then
+36087: call h_F(ppT,GetObjectName($6e303036))
+36088: set wpT=0
+36089: loop
+36090: exitwhen wpT>=4
+36091: if Zy[wpT]then
+36092: set WpT=100.*sf[wpT]/af
+36093: if WpT>=I2R(qf) then
+36094: call LeaderboardAddItem(jc[ppT],GetPlayerName(Player(wpT))+By[wpT]+" [|cff00ff22"+R2SW(WpT,1,2)+"%|r"+By[wpT]+" / |cff00ced1"+I2S(qf)+"%|r"+By[wpT]+"]|r",0,Player(wpT))
+36095: else
+36096: call LeaderboardAddItem(jc[ppT],GetPlayerName(Player(wpT))+By[wpT]+" ["+R2SW(WpT,1,2)+"% / |cff00ced1"+I2S(qf)+"%|r"+By[wpT]+"]|r",0,Player(wpT))
+36097: endif
+36098: endif
+36099: set wpT=wpT+1
+36100: endloop
+36101: call RHb(ppT)
+36102: else
+36103: call j0y(ppT)
+36104: endif
+36105: set ppT=ppT+1
+36106: endloop
+36107: endfunction
+
+36358: function V4b takes nothing returns nothing
+36359: local unit y4b=GetTriggerUnit()
+36360: local integer F4b=GetHeroXP(y4b)
+36361: local integer g4b=GetHeroStatBJ(bj_HEROSTAT_STR,y4b,false)
+36362: local integer A4b=GetHeroStatBJ(bj_HEROSTAT_AGI,y4b,false)
+36363: local integer c4b=GetHeroStatBJ(bj_HEROSTAT_INT,y4b,false)
+36364: local integer d4b=GetPlayerId(GetOwningPlayer(y4b))
+36365: local location m4b=GetUnitLoc(y4b)
+36366: local unit T4b
+36367: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+36368: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+36369: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+36370: set T4b=null
+36371: set y4b=null
+36372: set m4b=null
+36373: return
+36374: endif
+36375: call RemoveUnit(y4b)
+36376: set T4b=CreateUnitAtLoc(GetOwningPlayer(y4b),$48304231,m4b,bj_UNIT_FACING)
+36377: call SetHeroXP(T4b,F4b,false)
+36378: call GroupAddUnit(Hc[Hg[d4b]],T4b)
+36379: call ModifyHeroStat(bj_HEROSTAT_STR,T4b,bj_MODIFYMETHOD_SET,g4b)
+36380: call ModifyHeroStat(bj_HEROSTAT_AGI,T4b,bj_MODIFYMETHOD_SET,A4b)
+36381: call ModifyHeroStat(bj_HEROSTAT_INT,T4b,bj_MODIFYMETHOD_SET,c4b)
+36382: call IncUnitAbilityLevel(T4b,$41305a47)
+36383: call IncUnitAbilityLevel(T4b,$41304652)
+36384: call qkb(T4b)
+36385: call SetPlayerState(GetOwningPlayer(y4b),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+36386: call RemoveLocation(m4b)
+36387: set T4b=null
+36388: set y4b=null
+36389: set m4b=null
+36390: endfunction
+
+36560: function VHb takes nothing returns nothing
+36561: local unit FHb=GetTriggerUnit()
+36562: local player gHb=GetOwningPlayer(FHb)
+36563: local integer AHb=GetPlayerId(gHb)
+36564: local location cHb=GetStartLocationLoc(AHb)
+36565: local playerstate dHb
+36566: local integer mHb
+36567: if GetPlayerState(gHb,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+36568: call DisplayTimedTextToPlayer(gHb,0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+36569: call IssueImmediateOrder(FHb,"stop")
+36570: set FHb=null
+36571: set gHb=null
+36572: set cHb=null
+36573: set dHb=null
+36574: return
+36575: endif
+36576: set PP=FHb
+36577: call TriggerExecute(aP)
+36578: call SetUnitAbilityLevel(FHb,$4131354a,2)
+36579: call SetPlayerAbilityAvailable(gHb,$41313159,false)
+36580: set dHb=PLAYER_STATE_RESOURCE_FOOD_USED
+36581: set AHb=GetPlayerState(gHb,PLAYER_STATE_RESOURCE_FOOD_USED)-4
+36582: set mHb=GetPlayerState(gHb,dHb)
+36583: call AdjustPlayerStateBJ(AHb-mHb,gHb,dHb)
+36584: call RemoveLocation(cHb)
+36585: set FHb=null
+36586: set gHb=null
+36587: set cHb=null
+36588: set dHb=null
+36589: endfunction
+
+37633: function WDT takes nothing returns nothing
+37634: local integer oDT
+37635: local unit kDT
+37636: local location LDT
+37637: local player jDT
+37638: local real uDT
+37639: local real pDT
+37640: call Toy()
+37641: set Ty=GetTriggerPlayer()
+37642: set by=$54523034
+37643: set jDT=GetTriggerPlayer()
+37644: set uDT=GetStartLocationX(GetPlayerStartLocation(jDT))
+37645: set jDT=GetTriggerPlayer()
+37646: set pDT=GetStartLocationY(GetPlayerStartLocation(jDT))
+37647: set Ay=uDT
+37648: set cy=pDT
+37649: set gy=true
+37650: if not EDT() then
+37651: set kDT=null
+37652: set LDT=null
+37653: set jDT=null
+37654: return
+37655: endif
+37656: set kDT=FirstOfGroup(dy)
+37657: set oDT=GetPlayerId(GetOwningPlayer(kDT))
+37658: set LDT=GetStartLocationLoc(oDT)
+37659: if Na[oDT]==null then
+37660: set Na[oDT]=CreateUnitAtLoc(Player(oDT),$68303456,LDT,bj_UNIT_FACING)
+37661: call UnitAddAbility(Na[oDT],$4130524a)
+37662: call UnitAddAbility(Na[oDT],$41304c35)
+37663: endif
+37664: call StartSound(tyy("SE\\DP.mp3",null,$7f,1.,false,0.,0.))
+37665: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0돈키호테 도플라밍고 : |r|cff00fa9a승자만이 정의다!|r")
+37666: call RemoveLocation(LDT)
+37667: set kDT=null
+37668: set LDT=null
+37669: set jDT=null
+37670: endfunction
+
+38820: function X5T takes nothing returns nothing
+38821: local integer V5T=0
+38822: local real D5T
+38823: local integer e5T
+38824: local integer G5T
+38825: if jZ<=0. then
+38826: return
+38827: endif
+38828: set e5T=0
+38829: set G5T=0
+38830: loop
+38831: exitwhen e5T>=4
+38832: if Zy[e5T] and GetPlayerSlotState(Player(e5T))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(e5T))==MAP_CONTROL_USER then
+38833: set G5T=G5T+1
+38834: endif
+38835: set e5T=e5T+1
+38836: endloop
+38837: if G5T==2 then
+38838: set YZ=30
+38839: elseif G5T==3 then
+38840: set YZ=25
+38841: else
+38842: set YZ=20
+38843: endif
+38844: loop
+38845: exitwhen V5T>=4
+38846: if Uy[V5T]then
+38847: call h_F(V5T,GetObjectName($6e303034))
+38848: set e5T=0
+38849: loop
+38850: exitwhen e5T>=4
+38851: if Zy[e5T]then
+38852: set D5T=100.*pZ[e5T]/jZ
+38853: if D5T>=I2R(YZ) then
+38854: call LeaderboardAddItem(jc[V5T],GetPlayerName(Player(e5T))+By[e5T]+" [|cff00ff22"+R2SW(D5T,1,2)+"%|r"+By[e5T]+" / |cff00ced1"+I2S(YZ)+"%|r"+By[e5T]+"]|r",0,Player(e5T))
+38855: else
+38856: call LeaderboardAddItem(jc[V5T],GetPlayerName(Player(e5T))+By[e5T]+" ["+R2SW(D5T,1,2)+"% / |cff00ced1"+I2S(YZ)+"%|r"+By[e5T]+"]|r",0,Player(e5T))
+38857: endif
+38858: endif
+38859: set e5T=e5T+1
+38860: endloop
+38861: call RHb(V5T)
+38862: else
+38863: call j0y(V5T)
+38864: endif
+38865: set V5T=V5T+1
+38866: endloop
+38867: endfunction
+
+40661: function YKT takes nothing returns nothing
+40662: local integer LKT
+40663: local unit jKT
+40664: local location uKT
+40665: local player pKT
+40666: local real WKT
+40667: local real wKT
+40668: call Toy()
+40669: set Ty=GetTriggerPlayer()
+40670: set by=$54523236
+40671: set pKT=GetTriggerPlayer()
+40672: set WKT=GetStartLocationX(GetPlayerStartLocation(pKT))
+40673: set pKT=GetTriggerPlayer()
+40674: set wKT=GetStartLocationY(GetPlayerStartLocation(pKT))
+40675: set Ay=WKT
+40676: set cy=wKT
+40677: set gy=true
+40678: if not EDT() then
+40679: set jKT=null
+40680: set uKT=null
+40681: set pKT=null
+40682: return
+40683: endif
+40684: set jKT=FirstOfGroup(dy)
+40685: set LKT=GetPlayerId(GetOwningPlayer(jKT))
+40686: set uKT=GetStartLocationLoc(LKT)
+40687: if Da[LKT]==null then
+40688: set Da[LKT]=CreateUnitAtLoc(Player(LKT),$68303456,uKT,bj_UNIT_FACING)
+40689: call UnitAddAbility(Da[LKT],$41304c34)
+40690: call UnitAddAbility(Da[LKT],$41313057)
+40691: set ea[LKT]=CreateUnitAtLoc(Player(LKT),$68304635,uKT,bj_UNIT_FACING)
+40692: call UnitAddAbility(ea[LKT],$41304a31)
+40693: endif
+40694: call uJT(jKT)
+40695: call StartSound(tyy("SE\\Law.mp3",null,$7f,1.,false,0.,0.))
+40696: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0트라팔가 로우 : |r|cff00fa9a지금부터 무슨 일이 일어나도 도망칠 곳은 없어! 정신 똑바로 차려, 너희들!|r")
+40697: call RemoveLocation(uKT)
+40698: set jKT=null
+40699: set uKT=null
+40700: set pKT=null
+40701: endfunction
+
+40806: function YOT takes nothing returns nothing
+40807: local unit WOT=GetTriggerUnit()
+40808: local player wOT=GetOwningPlayer(WOT)
+40809: if GetPlayerState(wOT,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+40810: call DisplayTimedTextToPlayer(wOT,0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+40811: call IssueImmediateOrder(WOT,"stop")
+40812: set WOT=null
+40813: set wOT=null
+40814: return
+40815: endif
+40816: call IncUnitAbilityLevel(WOT,$41305259)
+40817: call IncUnitAbilityLevel(WOT,$41305258)
+40818: call IncUnitAbilityLevel(WOT,$4130525a)
+40819: call UnitAddAbility(WOT,$41313137)
+40820: call SetPlayerAbilityAvailable(wOT,$41313136,false)
+40821: call SetPlayerState(wOT,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(wOT,PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+40822: set WOT=null
+40823: set wOT=null
+40824: endfunction
+
+41687: function ZXT takes nothing returns nothing
+41688: local integer KXT
+41689: call jNy(0)
+41690: if mv[Yg]==0 then
+41691: call hFF(Yg,0,GetAttacker())
+41692: call hFF(Yg,1,GetTriggerUnit())
+41693: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+41694: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+41695: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+41696: call gwy(Yg,3,CreateGroup())
+41697: call jyy(Yg,6,0)
+41698: call jyy(Yg,10,GetUnitCurrentOrder(LoadUnitHandle(UO,0,Yg*$1f4)))
+41699: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),true)
+41700: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4),"spell one")
+41701: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4),200.,LoadReal(yr,0,Yg*$1f4)))
+41702: call hFF(Yg,2,CreateUnitAtLoc(Vy,$65304d4c,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4)))
+41703: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+2),"stand")
+41704: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+2),1.2)
+41705: call Sny(Yg,.24,1)
+41706: elseif mv[Yg]==1 then
+41707: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+2),"spell one")
+41708: set bj_lastPlayedSound=tyy("SE\\franky_beamsound.wav",null,$7f,1.,true,1000.,2200.)
+41709: call lHT(LoadUnitHandle(UO,0,Yg*$1f4),bj_lastPlayedSound)
+41710: call Sny(Yg,.01,1)
+41711: elseif mv[Yg]==2 then
+41712: call jyy(Yg,6,LoadInteger(br,0,Yg*$1f4+6)+1)
+41713: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4),200.+110.*I2R(LoadInteger(br,0,Yg*$1f4+6)-1),LoadReal(yr,0,Yg*$1f4)))
+41714: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304137,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4)))
+41715: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),(50.+2.5*I2R(LoadInteger(br,0,Yg*$1f4+6)))*.01,1.,1.)
+41716: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),180.,0.)
+41717: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,.5)
+41718: if LoadInteger(br,0,Yg*$1f4+6)==4 then
+41719: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+2),"spell two")
+41720: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+41721: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41313431)
+41722: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,4.)
+41723: set KXT=d7b()
+41724: call bnb(KXT,725.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(RS),xS)
+41725: call qny(KXT)
+41726: if wAF(LoadUnitHandle(UO,0,Yg*$1f4+1)) then
+41727: call OeT(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),GetUnitState(LoadUnitHandle(UO,0,Yg*$1f4+1),UNIT_STATE_MAX_LIFE)*.05,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+41728: elseif GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4+1),$41393033)>0 then
+41729: call OeT(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),GetUnitState(LoadUnitHandle(UO,0,Yg*$1f4+1),UNIT_STATE_MAX_LIFE)*.30,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+41730: endif
+41731: endif
+41732: if LoadInteger(br,0,Yg*$1f4+6)==8 then
+41733: call TYT(Yg,.10,3)
+41734: else
+41735: call TYT(Yg,.05,2)
+41736: endif
+41737: elseif mv[Yg]==3 then
+41738: call KillUnit(LoadUnitHandle(UO,0,Yg*$1f4+2))
+41739: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),false)
+41740: call FyF(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),LoadInteger(br,0,Yg*$1f4+10))
+41741: call ewb(Yg)
+41742: endif
+41743: endfunction
+
+41887: function Zib takes nothing returns nothing
+41888: call jNy(0)
+41889: if mv[Yg]==0 then
+41890: call hFF(Yg,0,GetAttacker())
+41891: call hFF(Yg,1,GetTriggerUnit())
+41892: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+41893: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+41894: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+41895: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4),700.,LoadReal(yr,0,Yg*$1f4)+GetRandomReal(150.,210.)))
+41896: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65305034,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4)))
+41897: call U1F(Yg,0,KPy("AZ_BHSickle_J_right1.mdx",LoadUnitHandle(UO,0,Yg*$1f4+10),"origin"))
+41898: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.5)
+41899: call ndF(Yg,1.)
+41900: elseif mv[Yg]==1 then
+41901: call awT("cf2.mdx",LoadUnitHandle(UO,0,Yg*$1f4+10),"origin")
+41902: call awT("Mr.War3_JSSXL.mdx",LoadUnitHandle(UO,0,Yg*$1f4+10),"origin")
+41903: call x4b(LoadUnitHandle(UO,0,Yg*$1f4+10),LoadLocationHandle(lO,0,Yg*$1f4+1),.33,.01)
+41904: call ndF(Yg,.43)
+41905: elseif mv[Yg]==2 then
+41906: call DestroyEffect(LoadEffectHandle(pO,0,Yg*$1f4))
+41907: call Ymy(LoadUnitHandle(UO,0,Yg*$1f4),0.,800.,LoadLocationHandle(lO,0,Yg*$1f4+1),1500000.,1.,1.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+41908: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65305037,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+41909: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+41910: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+41911: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41313039)
+41912: call ewb(Yg)
+41913: endif
+41914: endfunction
+
+42004: function ZoT takes nothing returns nothing
+42005: local integer soT
+42006: local unit noT
+42007: local location NoT
+42008: local player ioT
+42009: local real qoT
+42010: local real KoT
+42011: call Toy()
+42012: set Ty=GetTriggerPlayer()
+42013: set by=$54523038
+42014: set ioT=GetTriggerPlayer()
+42015: set qoT=GetStartLocationX(GetPlayerStartLocation(ioT))
+42016: set ioT=GetTriggerPlayer()
+42017: set KoT=GetStartLocationY(GetPlayerStartLocation(ioT))
+42018: set Ay=qoT
+42019: set cy=KoT
+42020: set gy=true
+42021: if not EDT() then
+42022: set noT=null
+42023: set NoT=null
+42024: set ioT=null
+42025: return
+42026: endif
+42027: set noT=FirstOfGroup(dy)
+42028: set soT=GetPlayerId(GetOwningPlayer(noT))
+42029: set NoT=GetStartLocationLoc(soT)
+42030: if hX[soT]==null then
+42031: set hX[soT]=CreateUnitAtLoc(Player(soT),$68303456,NoT,bj_UNIT_FACING)
+42032: call UnitAddAbility(hX[soT],$41304b4a)
+42033: call UnitAddAbility(hX[soT],$41304132)
+42034: endif
+42035: call StartSound(tyy("SE\\Teach.mp3",null,$7f,1.,false,0.,0.))
+42036: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0검은수염 : |r|cff00fa9a제하하하하! 그래, 이제부터는 나의 시대다!|r")
+42037: call RemoveLocation(NoT)
+42038: set noT=null
+42039: set NoT=null
+42040: set ioT=null
+42041: endfunction
+
+43791: function b9y takes nothing returns nothing
+43792: local integer Y6y
+43793: local unit U6y
+43794: local location E6y
+43795: local player l6y
+43796: local unit I6y
+43797: local real C6y
+43798: local real S6y
+43799: call Toy()
+43800: set Ty=GetOwningPlayer(GetSpellAbilityUnit())
+43801: set l6y=GetOwningPlayer(GetSpellAbilityUnit())
+43802: set C6y=GetStartLocationX(GetPlayerStartLocation(l6y))
+43803: set l6y=GetOwningPlayer(GetSpellAbilityUnit())
+43804: set S6y=GetStartLocationY(GetPlayerStartLocation(l6y))
+43805: set Ay=C6y
+43806: set cy=S6y
+43807: set gy=true
+43808: set by=GetSpellAbilityId()
+43809: set I6y=GetSpellAbilityUnit()
+43810: set yy=I6y
+43811: set Fy=GetUnitTypeId(I6y)
+43812: if not EDT() then
+43813: set U6y=null
+43814: set E6y=null
+43815: set l6y=null
+43816: set I6y=null
+43817: return
+43818: endif
+43819: set U6y=FirstOfGroup(dy)
+43820: set Y6y=GetPlayerId(GetOwningPlayer(U6y))
+43821: set E6y=GetStartLocationLoc(Y6y)
+43822: if Ki[Y6y]==null then
+43823: set Ki[Y6y]=CreateUnitAtLoc(Player(Y6y),$68303456,E6y,bj_UNIT_FACING)
+43824: call UnitAddAbility(Ki[Y6y],$41304f51)
+43825: endif
+43826: set qi=U6y
+43827: call TriggerExecute(ii)
+43828: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffdc143c아냐 포저 : |r|cff4FC9DE스파이? 암살자? 아냐는... 두근두근!|r")
+43829: call StartSound(tyy("SE\\Anya.mp3",null,$7f,1.,false,0.,0.))
+43830: set U6y=null
+43831: set E6y=null
+43832: set l6y=null
+43833: set I6y=null
+43834: endfunction
+
+44151: function bQy takes nothing returns nothing
+44152: local integer Iry=0
+44153: local real Cry
+44154: local integer Sry
+44155: if vZ<=0. then
+44156: return
+44157: endif
+44158: set Sry=0
+44159: loop
+44160: exitwhen Sry>=4
+44161: set Sry=Sry+1
+44162: endloop
+44163: loop
+44164: exitwhen Iry>=4
+44165: if Uy[Iry]then
+44166: call h_F(Iry,GetObjectName($6e303033))
+44167: set Sry=0
+44168: loop
+44169: exitwhen Sry>=4
+44170: if Zy[Sry]then
+44171: set Cry=100.*rZ[Sry]/vZ
+44172: call LeaderboardAddItem(jc[Iry],GetPlayerName(Player(Sry))+By[Sry]+" [|cff00ff22"+R2SW(Cry,1,2)+"%|r"+By[Sry]+"]|r",0,Player(Sry))
+44173: endif
+44174: set Sry=Sry+1
+44175: endloop
+44176: call RHb(Iry)
+44177: else
+44178: call j0y(Iry)
+44179: endif
+44180: set Iry=Iry+1
+44181: endloop
+44182: endfunction
+
+45367: function cvT takes nothing returns nothing
+45368: local integer AvT
+45369: call jNy(0)
+45370: if mv[Yg]==0 then
+45371: call hFF(Yg,0,GetAttacker())
+45372: call hFF(Yg,1,GetTriggerUnit())
+45373: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+45374: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+45375: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+45376: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+45377: if $68304156==GetUnitTypeId(LoadUnitHandle(UO,0,Yg*$1f4)) then
+45378: call jyy(Yg,0,1)
+45379: else
+45380: call jyy(Yg,0,2)
+45381: endif
+45382: call TYT(Yg,.04,LoadInteger(br,0,Yg*$1f4))
+45383: elseif mv[Yg]==1 then
+45384: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),550.,LoadReal(yr,0,Yg*$1f4)+90.))
+45385: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303757,LoadLocationHandle(lO,0,Yg*$1f4+2),.0))
+45386: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5)
+45387: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5,1.,1.)
+45388: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6830344e,LoadLocationHandle(lO,0,Yg*$1f4+2),AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1))))
+45389: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5,1.,1.)
+45390: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303758,LoadLocationHandle(lO,0,Yg*$1f4+2),AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1))))
+45391: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.5,1.,1.)
+45392: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),-550.,LoadReal(yr,0,Yg*$1f4)+90.))
+45393: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303757,LoadLocationHandle(lO,0,Yg*$1f4+2),.0))
+45394: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5)
+45395: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5,1.,1.)
+45396: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6830344e,LoadLocationHandle(lO,0,Yg*$1f4+2),AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1))))
+45397: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5,1.,1.)
+45398: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303758,LoadLocationHandle(lO,0,Yg*$1f4+2),AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1))))
+45399: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.5,1.,1.)
+45400: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303759,LoadLocationHandle(lO,0,Yg*$1f4+1),.0))
+45401: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.,1.,1.)
+45402: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+45403: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68303743,LoadLocationHandle(lO,0,Yg*$1f4+1),.0))
+45404: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.,1.,1.)
+45405: call UnitDamagePointLoc(LoadUnitHandle(UO,0,Yg*$1f4),.0,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),900000.,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+45406: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),.0))
+45407: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+45408: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$4130534b)
+45409: set AvT=d7b()
+45410: call bnb(AvT,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(RI),vI)
+45411: call qny(AvT)
+45412: call TYT(Yg,1.,3)
+45413: elseif mv[Yg]==2 then
+45414: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),550.,LoadReal(yr,0,Yg*$1f4)+90.))
+45415: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304855,LoadLocationHandle(lO,0,Yg*$1f4+2),.0))
+45416: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5)
+45417: call IssuePointOrderLoc(LoadUnitHandle(UO,0,Yg*$1f4+10),"carrionswarm",LoadLocationHandle(lO,0,Yg*$1f4+1))
+45418: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),-550.,LoadReal(yr,0,Yg*$1f4)+90.))
+45419: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304855,LoadLocationHandle(lO,0,Yg*$1f4+2),.0))
+45420: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.5)
+45421: call IssuePointOrderLoc(LoadUnitHandle(UO,0,Yg*$1f4+10),"carrionswarm",LoadLocationHandle(lO,0,Yg*$1f4+1))
+45422: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65303432,LoadLocationHandle(lO,0,Yg*$1f4+1),.0))
+45423: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),3.25,1.,1.)
+45424: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+45425: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),50.,.0)
+45426: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),.0))
+45427: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+45428: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$4130534b)
+45429: set AvT=d7b()
+45430: call bnb(AvT,600.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(RI),vI)
+45431: call qny(AvT)
+45432: call TYT(Yg,1.,3)
+45433: elseif mv[Yg]==3 then
+45434: call ewb(Yg)
+45435: endif
+45436: endfunction
+
+46915: function eTy takes nothing returns nothing
+46916: local integer dTy=0
+46917: local real mTy
+46918: local integer VTy
+46919: local integer DTy
+46920: if OB<=0. then
+46921: return
+46922: endif
+46923: set VTy=0
+46924: set DTy=0
+46925: loop
+46926: exitwhen VTy>=4
+46927: if Zy[VTy] and GetPlayerSlotState(Player(VTy))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(VTy))==MAP_CONTROL_USER then
+46928: set DTy=DTy+1
+46929: endif
+46930: set VTy=VTy+1
+46931: endloop
+46932: if DTy==2 then
+46933: set JB=30
+46934: elseif DTy==3 then
+46935: set JB=25
+46936: else
+46937: set JB=20
+46938: endif
+46939: loop
+46940: exitwhen dTy>=4
+46941: if Uy[dTy]then
+46942: call h_F(dTy,GetObjectName($6e303043))
+46943: set VTy=0
+46944: loop
+46945: exitwhen VTy>=4
+46946: if Zy[VTy]then
+46947: set mTy=100.*QB[VTy]/OB
+46948: if mTy>=I2R(JB) then
+46949: call LeaderboardAddItem(jc[dTy],GetPlayerName(Player(VTy))+By[VTy]+" [|cff00ff22"+R2SW(mTy,1,2)+"%|r"+By[VTy]+" / |cff00ced1"+I2S(JB)+"%|r"+By[VTy]+"]|r",0,Player(VTy))
+46950: else
+46951: call LeaderboardAddItem(jc[dTy],GetPlayerName(Player(VTy))+By[VTy]+" ["+R2SW(mTy,1,2)+"% / |cff00ced1"+I2S(JB)+"%|r"+By[VTy]+"]|r",0,Player(VTy))
+46952: endif
+46953: endif
+46954: set VTy=VTy+1
+46955: endloop
+46956: call RHb(dTy)
+46957: else
+46958: call j0y(dTy)
+46959: endif
+46960: set dTy=dTy+1
+46961: endloop
+46962: endfunction
+
+47343: function efb takes nothing returns nothing
+47344: local unit Ffb=GetTriggerUnit()
+47345: local integer gfb=GetHeroXP(Ffb)
+47346: local integer Afb=GetHeroStatBJ(bj_HEROSTAT_STR,Ffb,false)
+47347: local integer cfb=GetHeroStatBJ(bj_HEROSTAT_AGI,Ffb,false)
+47348: local integer dfb=GetHeroStatBJ(bj_HEROSTAT_INT,Ffb,false)
+47349: local player mfb=GetOwningPlayer(Ffb)
+47350: local integer Vfb=GetPlayerId(mfb)
+47351: local location Dfb=GetUnitLoc(Ffb)
+47352: local unit yfb
+47353: if GetPlayerState(mfb,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+47354: call DisplayTimedTextToPlayer(mfb,0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+47355: call IssueImmediateOrder(Ffb,"stop")
+47356: set yfb=null
+47357: set Ffb=null
+47358: set mfb=null
+47359: set Dfb=null
+47360: return
+47361: endif
+47362: call StartSound(tyy("SE\\Sanji_2.mp3",null,$7f,1.,false,0.,0.))
+47363: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffc0c0c0상디 : |r|cff00fa9a여자의 눈물이 떨어지는 소리가 들렸다.|r")
+47364: set yfb=CreateUnitAtLoc(mfb,$48303947,Dfb,bj_UNIT_FACING)
+47365: call SetHeroXP(yfb,gfb,false)
+47366: call GroupAddUnit(Hc[Hg[Vfb]],yfb)
+47367: call ModifyHeroStat(bj_HEROSTAT_STR,yfb,bj_MODIFYMETHOD_SET,Afb)
+47368: call ModifyHeroStat(bj_HEROSTAT_AGI,yfb,bj_MODIFYMETHOD_SET,cfb)
+47369: call ModifyHeroStat(bj_HEROSTAT_INT,yfb,bj_MODIFYMETHOD_SET,dfb)
+47370: call IncUnitAbilityLevel(yfb,$41303455)
+47371: call IncUnitAbilityLevel(yfb,$41303454)
+47372: call IncUnitAbilityLevel(yfb,$41303453)
+47373: call qkb(yfb)
+47374: call SetPlayerState(mfb,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(mfb,PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+47375: call RemoveLocation(Dfb)
+47376: call RemoveUnit(Ffb)
+47377: set yfb=null
+47378: set Ffb=null
+47379: set mfb=null
+47380: set Dfb=null
+47381: endfunction
+
+47630: function eoT takes nothing returns nothing
+47631: local integer AoT
+47632: local unit coT
+47633: local location doT
+47634: local real moT
+47635: local real VoT
+47636: local unit DoT
+47637: call Toy()
+47638: set Ty=GetOwningPlayer(GetSpellAbilityUnit())
+47639: set moT=GetUnitX(GetSpellAbilityUnit())
+47640: set VoT=GetUnitY(GetSpellAbilityUnit())
+47641: set Ay=moT
+47642: set cy=VoT
+47643: set gy=true
+47644: set by=GetSpellAbilityId()
+47645: set DoT=GetSpellAbilityUnit()
+47646: set yy=DoT
+47647: set Fy=GetUnitTypeId(DoT)
+47648: if not EDT() then
+47649: set coT=null
+47650: set doT=null
+47651: set DoT=null
+47652: return
+47653: endif
+47654: set coT=FirstOfGroup(dy)
+47655: set AoT=GetPlayerId(GetOwningPlayer(coT))
+47656: set doT=GetStartLocationLoc(AoT)
+47657: set je=coT
+47658: call TriggerExecute(Le)
+47659: if pe[AoT]==null then
+47660: set pe[AoT]=CreateUnitAtLoc(Player(AoT),$68303456,doT,bj_UNIT_FACING)
+47661: call UnitAddAbility(pe[AoT],$41313555)
+47662: call UnitAddAbility(pe[AoT],$41304848)
+47663: endif
+47664: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cff5997c9에넬 : |r|cffdf9d30아마르 (뇌신)|r")
+47665: call StartSound(tyy("SE\\Enel.mp3",null,$7f,1.,false,0.,0.))
+47666: call RemoveLocation(doT)
+47667: set coT=null
+47668: set doT=null
+47669: set DoT=null
+47670: endfunction
+
+48207: function fLy takes nothing returns nothing
+48208: local unit ZLy
+48209: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+48210: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+48211: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+48212: set ZLy=null
+48213: return
+48214: endif
+48215: set ZLy=GetTriggerUnit()
+48216: call IncUnitAbilityLevel(ZLy,$41313951)
+48217: call UnitRemoveAbility(GetTriggerUnit(),GetSpellAbilityId())
+48218: call SetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+48219: set ZLy=null
+48220: endfunction
+
+49067: function fey takes nothing returns nothing
+49068: local unit Ney=GetTriggerUnit()
+49069: local player iey=GetOwningPlayer(Ney)
+49070: local playerstate qey
+49071: local integer Key
+49072: local integer Zey
+49073: if GetPlayerState(iey,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+49074: call DisplayTimedTextToPlayer(iey,0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+49075: call IssueImmediateOrder(Ney,"stop")
+49076: set Ney=null
+49077: set iey=null
+49078: set qey=null
+49079: return
+49080: endif
+49081: call UnitAddAbility(Ney,$41313154)
+49082: call UnitRemoveAbility(Ney,$41313151)
+49083: set qey=PLAYER_STATE_RESOURCE_FOOD_USED
+49084: set Key=GetPlayerState(iey,PLAYER_STATE_RESOURCE_FOOD_USED)-4
+49085: set Zey=GetPlayerState(iey,qey)
+49086: call AdjustPlayerStateBJ(Key-Zey,iey,qey)
+49087: set Ney=null
+49088: set iey=null
+49089: set qey=null
+49090: endfunction
+
+49305: function fwy takes nothing returns nothing
+49306: local unit Zwy
+49307: if GetUnitTypeId(GetSpellTargetUnit())==$68303630 then
+49308: set Zwy=GetTriggerUnit()
+49309: if GetUnitAbilityLevel(Zwy,$41305434)<5 then
+49310: call RemoveUnit(GetSpellTargetUnit())
+49311: set Zwy=GetTriggerUnit()
+49312: call IncUnitAbilityLevel(Zwy,$41305434)
+49313: set Zwy=GetTriggerUnit()
+49314: if GetUnitAbilityLevel(Zwy,$41305434)==4 then
+49315: call UnitRemoveAbility(GetTriggerUnit(),$41305953)
+49316: endif
+49317: endif
+49318: else
+49319: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffFF8200자신 소유의 해적선에게만 시전 가능합니다!|r")
+49320: endif
+49321: set Zwy=null
+49322: endfunction
+
+49804: function gXT takes nothing returns nothing
+49805: local unit yXT=GetTriggerUnit()
+49806: local player FXT=GetOwningPlayer(yXT)
+49807: if GetPlayerState(FXT,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+49808: call DisplayTimedTextToPlayer(FXT,0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+49809: call IssueImmediateOrder(yXT,"stop")
+49810: set yXT=null
+49811: set FXT=null
+49812: return
+49813: endif
+49814: call IncUnitAbilityLevel(yXT,$41304e53)
+49815: call IncUnitAbilityLevel(yXT,$41304e52)
+49816: call UnitRemoveAbility(yXT,$4130524e)
+49817: call SetPlayerState(FXT,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(FXT,PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+49818: set yXT=null
+49819: set FXT=null
+49820: endfunction
+
+50078: function gjy takes nothing returns nothing
+50079: local unit WLy
+50080: local integer wLy
+50081: local integer YLy
+50082: local integer ULy
+50083: local integer ELy
+50084: local location lLy
+50085: local unit ILy
+50086: local string CLy
+50087: local integer SLy
+50088: local player bjy
+50089: local integer Tjy
+50090: local integer yjy
+50091: local boolean Fjy
+50092: if GetOwningPlayer(GetTriggerUnit())!=GetOwningPlayer(GetSpellTargetUnit()) then
+50093: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffFF8200내 소유 유닛에게만 사용할 수 있습니다.|r")
+50094: set ILy=GetTriggerUnit()
+50095: call IssueImmediateOrder(ILy,"stop")
+50096: set WLy=null
+50097: set lLy=null
+50098: set ILy=null
+50099: set bjy=null
+50100: return
+50101: endif
+50102: if GetUnitTypeId(GetSpellTargetUnit())==$48304254 then
+50103: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffFF8200이미 '조로 초월' 을 강화했습니다.|r")
+50104: set ILy=GetTriggerUnit()
+50105: call IssueImmediateOrder(ILy,"stop")
+50106: set WLy=null
+50107: set lLy=null
+50108: set ILy=null
+50109: set bjy=null
+50110: return
+50111: endif
+50112: if GetUnitTypeId(GetSpellTargetUnit())==$48303946 then
+50113: set ILy=GetSpellTargetUnit()
+50114: if GetUnitAbilityLevel(ILy,$41305142)!=2 then
+50115: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffFF8200'조로 초월' 의 특성강화가 필요합니다.|r")
+50116: set WLy=null
+50117: set lLy=null
+50118: set ILy=null
+50119: set bjy=null
+50120: return
+50121: endif
+50122: set ILy=GetSpellTargetUnit()
+50123: set SLy=GetHeroXP(ILy)
+50124: set ELy=GetPlayerId(GetOwningPlayer(ILy))
+50125: set wLy=GetHeroStatBJ(bj_HEROSTAT_STR,ILy,false)
+50126: set YLy=GetHeroStatBJ(bj_HEROSTAT_AGI,ILy,false)
+50127: set ULy=GetHeroStatBJ(bj_HEROSTAT_INT,ILy,false)
+50128: set lLy=GetUnitLoc(ILy)
+50129: call StartSound(tyy("SE\\Zoro_2.mp3",null,$7f,1.,false,0.,0.))
+50130: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,3.,"|cffc0c0c0롤로노아 조로 : |r|cff00fa9a지옥의 왕이 되어주겠다!|r")
+50131: set WLy=CreateUnitAtLoc(GetTriggerPlayer(),$48304254,lLy,bj_UNIT_FACING)
+50132: set bjy=GetTriggerPlayer()
+50133: set Tjy=$41493033
+50134: set Fjy=false
+50135: if (not HaveSavedBoolean(Zc,GetPlayerId(bjy),$41493033))or(not LoadBoolean(Zc,GetPlayerId(bjy),$41493033)) then
+50136: set CLy="|cffff0000[오류] 아이템이 존재하지 않는데 사용하려 했습니다"
+50137: set yjy=0
+50138: loop
+50139: call DisplayTimedTextToPlayer(Player(yjy),0.,0.,60.,CLy)
+50140: set yjy=yjy+1
+50141: exitwhen yjy==bj_MAX_PLAYERS
+50142: endloop
+50143: set Fjy=true
+50144: endif
+50145: if not Fjy then
+50146: call SetPlayerAbilityAvailable(bjy,Tjy,false)
+50147: call SaveBoolean(Zc,GetPlayerId(bjy),Tjy,false)
+50148: endif
+50149: call UnitAddItemToSlotById(WLy,$49303033,0)
+50150: call SetHeroXP(WLy,SLy,false)
+50151: call GroupAddUnit(Hc[Hg[ELy]],WLy)
+50152: call ModifyHeroStat(bj_HEROSTAT_STR,WLy,bj_MODIFYMETHOD_SET,wLy)
+50153: call ModifyHeroStat(bj_HEROSTAT_AGI,WLy,bj_MODIFYMETHOD_SET,YLy)
+50154: call ModifyHeroStat(bj_HEROSTAT_INT,WLy,bj_MODIFYMETHOD_SET,ULy)
+50155: call SetUnitAbilityLevel(WLy,$41305143,3)
+50156: call SetUnitAbilityLevel(WLy,$41305145,3)
+50157: call SetUnitAbilityLevel(WLy,$41305142,2)
+50158: call qkb(WLy)
+50159: call RemoveUnit(ILy)
+50160: call RemoveLocation(lLy)
+50161: else
+50162: if GetUnitTypeId(GetSpellTargetUnit())==$6830434a then
+50163: else
+50164: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffFF8200'조로 초월' 또는 '류마 영원' 에게만 사용할 수 있습니다.|r")
+50165: endif
+50166: set ILy=GetTriggerUnit()
+50167: call IssueImmediateOrder(ILy,"stop")
+50168: endif
+50169: set WLy=null
+50170: set lLy=null
+50171: set ILy=null
+50172: set bjy=null
+50173: endfunction
+
+50754: function hgT takes nothing returns nothing
+50755: call jNy(0)
+50756: if mv[Yg]==0 then
+50757: call hFF(Yg,0,GetAttacker())
+50758: call hFF(Yg,1,GetTriggerUnit())
+50759: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+50760: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+50761: call jyy(Yg,0,0)
+50762: call hXT(Yg,3,I2R(GetHeroStatBJ(bj_HEROSTAT_INT,LoadUnitHandle(UO,0,Yg*$1f4),true))*3500.)
+50763: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),GetRandomReal(0.,360.)))
+50764: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,5.)
+50765: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41304941)
+50766: call hFF(Yg,2,CreateUnitAtLoc(Vy,$65303730,LoadLocationHandle(lO,0,Yg*$1f4+1),bj_UNIT_FACING))
+50767: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+2),1.40)
+50768: call SetUnitVertexColorBJ(LoadUnitHandle(UO,0,Yg*$1f4+2),100.,100.,100.,15.)
+50769: call Sny(Yg,.10,1)
+50770: elseif mv[Yg]==1 then
+50771: call jyy(Yg,0,LoadInteger(br,0,Yg*$1f4)+1)
+50772: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),b0b(100.,375.),GetRandomReal(0.,360.)))
+50773: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+2),GetRandomReal(0.,360.)))
+50774: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+50775: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),25.,.0)
+50776: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.75,1.,1.)
+50777: call SetUnitAnimationByIndex(LoadUnitHandle(UO,0,Yg*$1f4+10),80)
+50778: call awT("Thunder_nami7.mdx",LoadUnitHandle(UO,0,Yg*$1f4+10),"origin")
+50779: call Ymy(LoadUnitHandle(UO,0,Yg*$1f4),0.,525.,LoadLocationHandle(lO,0,Yg*$1f4+1),300000.+LoadReal(yr,0,Yg*$1f4+3),1.,1.50,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+50780: if LoadInteger(br,0,Yg*$1f4)==8 then
+50781: call TYT(Yg,.10,2)
+50782: else
+50783: call TYT(Yg,b0b(.25,.60),1)
+50784: endif
+50785: elseif mv[Yg]==2 then
+50786: call KillUnit(LoadUnitHandle(UO,0,Yg*$1f4+2))
+50787: if GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4),$41313037)>0 then
+50788: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530364e,LoadLocationHandle(lO,0,Yg*$1f4+2),GetRandomReal(0.,360.)))
+50789: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),100.,10000.)
+50790: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),2.,1.,1.)
+50791: set bj_lastPlayedSound=tyy("SE\\thunder_22.wav",null,$7f,1.,true,2000.,2500.)
+50792: call StopSound(bj_lastPlayedSound,false,false)
+50793: call lHT(LoadUnitHandle(UO,0,Yg*$1f4),bj_lastPlayedSound)
+50794: call Ymy(LoadUnitHandle(UO,0,Yg*$1f4),0.,525.,LoadLocationHandle(lO,0,Yg*$1f4+1),450000.+LoadReal(yr,0,Yg*$1f4+3)*1.50,1.,1.50,ATTACK_TYPE_NORMAL,DAMAGE_TYPE_UNIVERSAL)
+50795: endif
+50796: call ewb(Yg)
+50797: endif
+50798: endfunction
+
+50803: function hiT takes nothing returns nothing
+50804: local unit niT=GetAttacker()
+50805: local unit NiT=GetTriggerUnit()
+50806: local real BiT=GetUnitFacing(niT)
+50807: local player RiT=GetOwningPlayer(niT)
+50808: local unitstate OiT=UNIT_STATE_MANA
+50809: local unitstate MiT=UNIT_STATE_MANA
+50810: local unit iiT
+50811: local location qiT
+50812: local location KiT
+50813: local location ZiT
+50814: local location fiT
+50815: local integer xiT
+50816: local integer viT
+50817: local integer riT
+50818: local integer QiT
+50819: call SetUnitState(niT,OiT,GetUnitState(niT,MiT)+1.)
+50820: if GetUnitAbilityLevel(niT,$41305434)==4 then
+50821: set viT=4
+50822: elseif GetUnitAbilityLevel(niT,$41305434)==3 then
+50823: set viT=3
+50824: else
+50825: set viT=2
+50826: endif
+50827: set OiT=UNIT_STATE_MANA
+50828: if GetUnitState(niT,OiT)==125. then
+50829: call SetUnitState(niT,UNIT_STATE_MANA,.0)
+50830: call TriggerExecute(Es)
+50831: endif
+50832: if ptT(1,$64)<=10 then
+50833: set KiT=GetUnitLoc(NiT)
+50834: set iiT=CreateUnitAtLoc(Vy,$65303236,KiT,bj_UNIT_FACING)
+50835: call UnitApplyTimedLife(iiT,$42487765,3.)
+50836: call IssuePointOrderById(iiT,OrderId("dreadlordinferno"),GetLocationX(KiT),GetLocationY(KiT))
+50837: set xiT=d7b()
+50838: call bnb(xiT,600.,KiT,Condition(wI),YI)
+50839: call qny(xiT)
+50840: call RemoveLocation(KiT)
+50841: set bj_lastPlayedSound=tyy("SE\\shiki_wave3.wav",null,$64,1.,true,1500.,2000.)
+50842: call StopSound(bj_lastPlayedSound,false,false)
+50843: call lHT(niT,bj_lastPlayedSound)
+50844: endif
+50845: if ptT(1,$3e8)<=75 then
+50846: call TriggerExecute(ls)
+50847: endif
+50848: if GetUnitAbilityLevel(niT,$41305434)>=1 then
+50849: set riT=ptT(1,$7d0)
+50850: if riT<=56+4*GetUnitAbilityLevel(niT,$41305434) then
+50851: set bj_forLoopAIndex=1
+50852: set bj_forLoopAIndexEnd=viT
+50853: loop
+50854: exitwhen bj_forLoopAIndex>bj_forLoopAIndexEnd
+50855: set qiT=GetUnitLoc(niT)
+50856: set ZiT=PolarProjectionBJ(qiT,275.,b0b(170.,210.)+bj_forLoopAIndex*40)
+50857: set iiT=CreateUnitAtLoc(RiT,$68303752,ZiT,BiT)
+50858: call RemoveLocation(qiT)
+50859: call RemoveLocation(ZiT)
+50860: call SetUnitAbilityLevel(iiT,$41305a37,GetUnitAbilityLevel(niT,$41305434))
+50861: call UnitApplyTimedLife(iiT,$42487765,2.25)
+50862: call IssueTargetOrderById(iiT,OrderId("attack"),NiT)
+50863: set bj_forLoopAIndex=bj_forLoopAIndex+1
+50864: endloop
+50865: endif
+50866: endif
+50867: if ptT(1,$7d0)<=$6f then
+50868: set KiT=GetUnitLoc(NiT)
+50869: set ZiT=PolarProjectionBJ(KiT,333.,GetRandomReal(0.,360.))
+50870: set iiT=CreateUnitAtLoc(Vy,$68304248,ZiT,AngleBetweenPoints(ZiT,KiT))
+50871: call UnitApplyTimedLife(iiT,$42487765,1.05)
+50872: call SetUnitUserData(iiT,GetPlayerId(RiT))
+50873: call IssueTargetOrderById(iiT,OrderId("attack"),NiT)
+50874: set fiT=PolarProjectionBJ(ZiT,-55.,GetUnitFacing(iiT)+b0b(-45.,45.))
+50875: set iiT=CreateUnitAtLoc(Vy,$68304249,fiT,AngleBetweenPoints(fiT,KiT))
+50876: call UnitApplyTimedLife(iiT,$42487765,1.05)
+50877: call SetUnitUserData(iiT,GetPlayerId(RiT))
+50878: call IssueTargetOrderById(iiT,OrderId("attack"),NiT)
+50879: set iiT=CreateUnitAtLoc(Vy,$6830424a,fiT,AngleBetweenPoints(fiT,KiT))
+50880: call UnitApplyTimedLife(iiT,$42487765,1.05)
+50881: call SetUnitUserData(iiT,GetPlayerId(RiT))
+50882: call IssueTargetOrderById(iiT,OrderId("attack"),NiT)
+50883: call RemoveLocation(KiT)
+50884: call RemoveLocation(ZiT)
+50885: call RemoveLocation(fiT)
+50886: endif
+50887: if GetUnitAbilityLevel(niT,$41305434)>=1 then
+50888: set QiT=ptT(1,$3e8)
+50889: if QiT<=26+4*GetUnitAbilityLevel(niT,$41305434) then
+50890: call TriggerExecute(Is)
+50891: endif
+50892: endif
+50893: set niT=null
+50894: set NiT=null
+50895: set iiT=null
+50896: set qiT=null
+50897: set KiT=null
+50898: set ZiT=null
+50899: set fiT=null
+50900: set RiT=null
+50901: set MiT=null
+50902: set OiT=null
+50903: endfunction
+
+51082: function hvy takes nothing returns nothing
+51083: local unit Qvy=GetTriggerUnit()
+51084: if GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+51085: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+51086: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+51087: set Qvy=null
+51088: return
+51089: endif
+51090: call SetUnitAbilityLevel(Qvy,$41305141,2)
+51091: call SetUnitAbilityLevel(Qvy,$41305143,2)
+51092: call SetUnitAbilityLevel(Qvy,$41305145,2)
+51093: call SetUnitAbilityLevel(Qvy,$41305142,2)
+51094: call UnitRemoveAbility(Qvy,$41305138)
+51095: call SetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetOwningPlayer(GetTriggerUnit()),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+51096: set Qvy=null
+51097: endfunction
+
+52382: function ZIb takes integer iIb,integer qIb,unit KIb returns nothing
+52383: if GetItemCharges(Mi[iIb])==30 then
+52384: return
+52385: endif
+52386: if GetItemCharges(Mi[iIb])+qIb>=30 then
+52387: call SetItemCharges(Mi[iIb],30)
+52388: call SetPlayerTechResearched(Player(iIb),$52303051,30)
+52389: else
+52390: call SetItemCharges(Mi[iIb],GetItemCharges(Mi[iIb])+qIb)
+52391: call SetPlayerTechResearched(Player(iIb),$52303051,GetItemCharges(Mi[iIb]))
+52392: endif
+52393: if GetItemCharges(Mi[iIb])>=30 and vi[iIb]==0 then
+52394: set vi[iIb]=1
+52395: call UnitAddAbility(KIb,$4131305a)
+52396: call UnitAddAbility(KIb,$41313131)
+52397: call UnitAddAbility(KIb,$41313132)
+52398: call UnitRemoveAbility(KIb,$41305842)
+52399: call UnitRemoveAbility(KIb,$41305838)
+52400: call SetUnitAbilityLevel(KIb,$41305841,2)
+52401: if GetLocalPlayer()==Player(iIb) then
+52402: call SetCineFilterTexture("ReplaceableTextures\\CameraMasks\\Black_mask.blp")
+52403: call SetCineFilterBlendMode(BLEND_MODE_BLEND)
+52404: call SetCineFilterStartUV(0.,0.,2.,2.)
+52405: call SetCineFilterEndUV(0.,0.,2.,2.)
+52406: call SetCineFilterStartColor($ff,$ff,$ff,$ff)
+52407: call SetCineFilterEndColor($ff,$ff,$ff,0)
+52408: call SetCineFilterDuration(3.)
+52409: call DisplayCineFilter(true)
+52410: endif
+52411: call ycT(Player(iIb),"|cffff0000당신은 죄악이 등을 타고 오르는 것을 느꼈다|r",0.,-50.,0.,3.,3.)
+52412: call StartSound(tyy("SE\\SansAwaken2.mp3",null,$7f,1.,false,0.,0.))
+52413: else
+52414: call ygy(xi[ptT(1,29)],KIb,iIb)
+52415: call ZBT(Player(iIb),"SE\\SansTalker.wav",null,$7f,1.)
+52416: endif
+52417: endfunction
+
+53356: function k4y takes nothing returns nothing
+53357: local integer o4y
+53358: call jNy(0)
+53359: if mv[Yg]==0 then
+53360: call hFF(Yg,0,GetTriggerUnit())
+53361: call hFF(Yg,1,GetSpellTargetUnit())
+53362: call CGy(Yg,0,GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4)))
+53363: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+53364: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+53365: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+53366: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+53367: if (not wAF(LoadUnitHandle(UO,0,Yg*$1f4+1)))and GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4+1),$41393034)<=0 then
+53368: call IssueImmediateOrder(LoadUnitHandle(UO,0,Yg*$1f4),"stop")
+53369: call DisplayTimedTextToPlayer(LoadPlayerHandle(tO,0,Yg*$1f4),0.,0.,6.,"|cffFF0000보스/스토리에만\n사용할 수 있습니다!|r")
+53370: call ewb(Yg)
+53371: endif
+53372: call IssuePointOrderById(xX[LoadInteger(br,0,Yg*$1f4+8)],OrderId("dreadlordinferno"),GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1)),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1)))
+53373: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),bj_UNIT_FACING))
+53374: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41313849)
+53375: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,3.)
+53376: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530414b,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+53377: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65303858,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+53378: call SetUnitVertexColor(LoadUnitHandle(UO,0,Yg*$1f4+10),$ff,$7d,$7d,$ff)
+53379: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.,1.,1.)
+53380: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+53381: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),30.,0.)
+53382: call StartSound(tyy("Abilities\\Spells\\Human\\ThunderClap\\ThunderClapCaster.wav",null,$7f,1.,false,0.,0.))
+53383: call jyy(Yg,10,GetUnitCurrentOrder(LoadUnitHandle(UO,0,Yg*$1f4)))
+53384: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),true)
+53385: call ndF(Yg,1.)
+53386: elseif mv[Yg]==1 then
+53387: call ShowUnitHide(LoadUnitHandle(UO,0,Yg*$1f4))
+53388: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530355a,LoadLocationHandle(lO,0,Yg*$1f4),LoadReal(yr,0,Yg*$1f4)))
+53389: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.,1.,1.)
+53390: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+53391: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),-10.,0.)
+53392: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),-300.,LoadReal(yr,0,Yg*$1f4)))
+53393: call hXT(Yg,1,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+53394: call hFF(Yg,2,CreateUnitAtLoc(Vy,$65425332,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4+1)))
+53395: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+2),"Spell Channel")
+53396: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+2),.52)
+53397: call StartSound(tyy("SE\\shanks_kamusari_1_voice.mp3",null,$7f,1.,false,0.,0.))
+53398: call ndF(Yg,1.5)
+53399: elseif mv[Yg]==2 then
+53400: call StartSound(tyy("SE\\shanks_kamusari_2_sword.mp3",null,$7f,1.,false,0.,0.))
+53401: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304146,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+53402: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+53403: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304147,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+53404: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.10)
+53405: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),.8)
+53406: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304149,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+53407: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530414a,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+53408: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),.7)
+53409: set o4y=d7b()
+53410: call bnb(o4y,800.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(oY),LY)
+53411: call qny(o4y)
+53412: call kHT(LoadPlayerHandle(tO,0,Yg*$1f4),1.,4.)
+53413: call RemoveUnit(LoadUnitHandle(UO,0,Yg*$1f4+2))
+53414: call ndF(Yg,.2)
+53415: elseif mv[Yg]==3 then
+53416: call ShowUnitShow(LoadUnitHandle(UO,0,Yg*$1f4))
+53417: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),false)
+53418: call FyF(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),LoadInteger(br,0,Yg*$1f4+10))
+53419: call ewb(Yg)
+53420: endif
+53421: endfunction
+
+54741: function lIT takes nothing returns nothing
+54742: local unit WIT=GetTriggerUnit()
+54743: local player wIT=GetOwningPlayer(WIT)
+54744: local playerstate YIT
+54745: local integer UIT
+54746: local integer EIT
+54747: if GetPlayerState(wIT,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+54748: call DisplayTimedTextToPlayer(wIT,0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+54749: call IssueImmediateOrder(WIT,"stop")
+54750: set WIT=null
+54751: set wIT=null
+54752: set YIT=null
+54753: return
+54754: endif
+54755: if $4830425a==GetUnitTypeId(WIT) then
+54756: call SetUnitAbilityLevel(WIT,$41304f43,2)
+54757: else
+54758: call SetUnitAbilityLevel(WIT,$41313242,2)
+54759: endif
+54760: call SetUnitAbilityLevel(WIT,$41313241,2)
+54761: call UnitRemoveAbility(WIT,GetSpellAbilityId())
+54762: set YIT=PLAYER_STATE_RESOURCE_FOOD_USED
+54763: set UIT=GetPlayerState(wIT,PLAYER_STATE_RESOURCE_FOOD_USED)-4
+54764: set EIT=GetPlayerState(wIT,YIT)
+54765: call AdjustPlayerStateBJ(UIT-EIT,wIT,YIT)
+54766: set WIT=null
+54767: set wIT=null
+54768: set YIT=null
+54769: endfunction
+
+55104: function FaT takes integer TaT returns nothing
+55105: local integer yaT=GetPlayerId(GetTriggerPlayer())
+55106: if TaT==0 then
+55107: if wc[yaT]then
+55108: if GetLocalPlayer()==GetTriggerPlayer() then
+55109: call EVy(Wc,false)
+55110: endif
+55111: set wc[yaT]=false
+55112: else
+55113: if GetLocalPlayer()==GetTriggerPlayer() then
+55114: call EVy(Wc,true)
+55115: endif
+55116: set wc[yaT]=true
+55117: endif
+55118: elseif GetLocalPlayer()==GetTriggerPlayer() then
+55119: call BlzSendSyncData("CMBT_INDX",I2S(TaT))
+55120: endif
+55121: endfunction
+
+55122: function lay takes nothing returns nothing
+55123: local hashtable Eay=yb
+55124: local framehandle Uay=BlzGetTriggerFrame()
+55125: local integer Yay
+55126: call SaveFrameHandle(Fb,0,GetHandleId(Uay),Uay)
+55127: set Yay=LoadInteger(Eay,0,GetHandleId(Uay))
+55128: set Uay=BlzGetTriggerFrame()
+55129: call SaveFrameHandle(Fb,0,GetHandleId(Uay),Uay)
+55130: call K8T(GetHandleId(Uay),false)
+55131: set Uay=BlzGetTriggerFrame()
+55132: call SaveFrameHandle(Fb,0,GetHandleId(Uay),Uay)
+55133: call K8T(GetHandleId(Uay),true)
+55134: call FaT(Yay)
+55135: set Uay=null
+55136: set Eay=null
+55137: endfunction
+
+55183: function lfT takes nothing returns nothing
+55184: local integer ufT
+55185: local unit pfT
+55186: local location WfT
+55187: local player wfT
+55188: local unit YfT
+55189: local real UfT
+55190: local real EfT
+55191: call Toy()
+55192: set Ty=GetOwningPlayer(GetSpellAbilityUnit())
+55193: set wfT=GetOwningPlayer(GetSpellAbilityUnit())
+55194: set UfT=GetStartLocationX(GetPlayerStartLocation(wfT))
+55195: set wfT=GetOwningPlayer(GetSpellAbilityUnit())
+55196: set EfT=GetStartLocationY(GetPlayerStartLocation(wfT))
+55197: set Ay=UfT
+55198: set cy=EfT
+55199: set gy=true
+55200: set by=GetSpellAbilityId()
+55201: set YfT=GetSpellAbilityUnit()
+55202: set yy=YfT
+55203: set Fy=GetUnitTypeId(YfT)
+55204: if not EDT() then
+55205: set pfT=null
+55206: set WfT=null
+55207: set wfT=null
+55208: set YfT=null
+55209: return
+55210: endif
+55211: set pfT=FirstOfGroup(dy)
+55212: set ufT=GetPlayerId(GetOwningPlayer(pfT))
+55213: set WfT=GetStartLocationLoc(ufT)
+55214: if Vi[ufT]==null then
+55215: set Vi[ufT]=CreateUnitAtLoc(Player(ufT),$68303456,WfT,bj_UNIT_FACING)
+55216: call UnitAddAbility(Vi[ufT],$41313755)
+55217: call UnitAddAbility(Vi[ufT],$41304e50)
+55218: call UnitAddAbility(Vi[ufT],$41305a4f)
+55219: endif
+55220: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|cffdc143c콘파쿠 요우무 : |r|cff4FC9DE요괴가 담금질한 이 누관검에 베지 못하는 건 없다!|r")
+55221: call StartSound(tyy("SE\\Konpaku.mp3",null,$7f,1.,false,0.,0.))
+55222: call RemoveLocation(WfT)
+55223: set pfT=null
+55224: set WfT=null
+55225: set wfT=null
+55226: set YfT=null
+55227: endfunction
+
+55366: function lsT takes nothing returns nothing
+55367: local integer usT=GetPlayerId(GetTriggerPlayer())
+55368: local integer psT=ptT(1,$64)
+55369: local unit wsT=GetTriggerUnit()
+55370: local integer WsT
+55371: local integer YsT
+55372: local string UsT
+55373: local integer EsT
+55374: call ShowUnit(wsT,false)
+55375: call KillUnit(wsT)
+55376: if psT<=40 and psT>20 then
+55377: call DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,"보물상자에서 위습을 발견했습니다.\n|cffffd700랜덤위습 1개|r 획득!")
+55378: call uTT(Player(usT),1)
+55379: elseif psT<=20 then
+55380: call DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,"보물상자에서 목재를 발견했습니다.\n|cff7ad8231 목재|r 획득!")
+55381: call SetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_LUMBER)+1)
+55382: elseif psT>=96 and tg[usT]!=0 then
+55383: set tg[usT]=tg[usT]-1
+55384: if tg[usT]==0 then
+55385: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(usT))+"|r 님이 모든 |cff00ced1보물지도|r를 찾으셨습니다!")
+55386: call DisplayTimedTextToPlayer(Player(usT),0.,0.,10.,"|cffff8200★|r 기록지침에 |cffff69b4원피스|r 능력이 추가됩니다!")
+55387: call MVy(Tg[usT],$41304b56,true)
+55388: call UnitAddAbility(SF[usT],$41304b54)
+55389: call UnitAddAbility(SF[usT],$41304b55)
+55390: call UnitAddAbility(SF[usT],$41304b53)
+55391: call UnitAddAbility(SF[usT],$41304b52)
+55392: set hy[usT]=hy[usT]+10
+55393: set Qy[usT]=Qy[usT]+10
+55394: else
+55395: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,GetPlayerName(Player(usT))+"|r 님이 |cff00ced1보물지도|r를 찾으셨습니다! 남은 보물지도 : "+I2S(tg[usT])+"개\n추가적으로 탐색 가능한 '보물' 이 3개 추가됩니다.")
+55396: set YsT=3
+55397: set UsT="(보물지도)"
+55398: set EsT=0
+55399: loop
+55400: exitwhen EsT>=YsT
+55401: set xA[RA]=b0b(GetRectMinX(YV),GetRectMaxX(YV))
+55402: set MA[RA]=b0b(GetRectMinY(YV),GetRectMaxY(YV))
+55403: set RA=RA+1
+55404: set EsT=EsT+1
+55405: endloop
+55406: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,5.,"|cff04ffc4[알림]|r 보물이 "+I2S(YsT)+"개 스폰되었습니다. "+UsT)
+55407: endif
+55408: else
+55409: set WsT=ptT($7d0,$1388)
+55410: call DisplayTimedTextToPlayer(Player(usT),0.,0.,5.,"보물상자에서 금화를 발견했습니다.\n|cffffd700"+I2S(WsT)+" 골드|r 획득!")
+55411: call SetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(Player(usT),PLAYER_STATE_RESOURCE_GOLD)+WsT)
+55412: endif
+55413: set wsT=null
+55414: endfunction
+
+57556: function ncT takes nothing returns nothing
+57557: local integer XcT=0
+57558: local real acT
+57559: local integer PcT
+57560: local integer scT
+57561: if Tf<=0. then
+57562: return
+57563: endif
+57564: set PcT=0
+57565: set scT=0
+57566: loop
+57567: exitwhen PcT>=4
+57568: if Zy[PcT] and GetPlayerSlotState(Player(PcT))==PLAYER_SLOT_STATE_PLAYING and GetPlayerController(Player(PcT))==MAP_CONTROL_USER then
+57569: set scT=scT+1
+57570: endif
+57571: set PcT=PcT+1
+57572: endloop
+57573: if scT==2 then
+57574: set cf=30
+57575: elseif scT==3 then
+57576: set cf=25
+57577: else
+57578: set cf=20
+57579: endif
+57580: loop
+57581: exitwhen XcT>=4
+57582: if Uy[XcT]then
+57583: call h_F(XcT,GetObjectName($6e303035))
+57584: set PcT=0
+57585: loop
+57586: exitwhen PcT>=4
+57587: if Zy[PcT]then
+57588: set acT=100.*Ff[PcT]/Tf
+57589: if acT>=I2R(cf) then
+57590: call LeaderboardAddItem(jc[XcT],GetPlayerName(Player(PcT))+By[PcT]+" [|cff00ff22"+R2SW(acT,1,2)+"%|r"+By[PcT]+" / |cff00ced1"+I2S(cf)+"%|r"+By[PcT]+"]|r",0,Player(PcT))
+57591: else
+57592: call LeaderboardAddItem(jc[XcT],GetPlayerName(Player(PcT))+By[PcT]+" ["+R2SW(acT,1,2)+"% / |cff00ced1"+I2S(cf)+"%|r"+By[PcT]+"]|r",0,Player(PcT))
+57593: endif
+57594: endif
+57595: set PcT=PcT+1
+57596: endloop
+57597: call RHb(XcT)
+57598: else
+57599: call j0y(XcT)
+57600: endif
+57601: set XcT=XcT+1
+57602: endloop
+57603: endfunction
+
+69592: function pXy takes nothing returns nothing
+69593: local unit QXy=GetAttacker()
+69594: local unit hXy=GetTriggerUnit()
+69595: local location JXy=GetUnitLoc(hXy)
+69596: local player HXy=GetOwningPlayer(QXy)
+69597: local unit oXy=gg[GetPlayerId(HXy)]
+69598: local integer LXy=GetUnitCurrentOrder(QXy)
+69599: local integer rXy
+69600: local unit tXy
+69601: local real kXy
+69602: local unitstate jXy
+69603: local unitstate uXy
+69604: call TriggerExecute(aa)
+69605: set jXy=UNIT_STATE_MANA
+69606: if GetUnitState(QXy,jXy)==150. then
+69607: set tXy=CreateUnit(GetOwningPlayer(QXy),$68303452,GetUnitX(QXy),GetUnitY(QXy),GetUnitFacing(QXy))
+69608: call UnitApplyTimedLife(tXy,$42487765,1.)
+69609: call IssueImmediateOrderById(QXy,OrderId("metamorphosis"))
+69610: if GetUnitAbilityLevel(QXy,$4130424d)==2 then
+69611: call TriggerExecute(na)
+69612: endif
+69613: call FyF(QXy,hXy,LXy)
+69614: else
+69615: set jXy=UNIT_STATE_MANA
+69616: set uXy=UNIT_STATE_MANA
+69617: call SetUnitState(QXy,jXy,GetUnitState(QXy,uXy)+1.)
+69618: endif
+69619: if ptT(1,$3e8)<=$7d then
+69620: call CreateUnitAtLoc(Vy,$65304250,JXy,GetRandomReal(0.,360.))
+69621: call CreateUnitAtLoc(Vy,$65304250,JXy,GetRandomReal(0.,360.))
+69622: set kXy=I2R(GetHeroStatBJ(bj_HEROSTAT_STR,QXy,true))*10000.
+69623: call Ymy(oXy,.0,525.,JXy,750000.+kXy,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_NORMAL)
+69624: endif
+69625: if ptT(1,$64)<=18 then
+69626: call CreateUnitAtLoc(Vy,$65304252,JXy,bj_UNIT_FACING)
+69627: set tXy=CreateUnitAtLoc(Vy,$65303649,JXy,bj_UNIT_FACING)
+69628: call SetUnitScale(tXy,2.95,1.,1.)
+69629: call SetUnitFlyHeight(tXy,85.,0.)
+69630: set tXy=CreateUnitAtLoc(Vy,$68304335,JXy,GetRandomReal(0.,360.))
+69631: call UnitAddAbility(tXy,$41304348)
+69632: call UnitApplyTimedLife(tXy,$42487765,2.)
+69633: set rXy=d7b()
+69634: call bnb(rXy,525.,JXy,Condition(XU),aU)
+69635: call qny(rXy)
+69636: endif
+69637: if ptT(1,$64)<=10 then
+69638: call TriggerExecute(sa)
+69639: endif
+69640: call RemoveLocation(JXy)
+69641: set QXy=null
+69642: set hXy=null
+69643: set tXy=null
+69644: set JXy=null
+69645: set HXy=null
+69646: set oXy=null
+69647: set jXy=null
+69648: set uXy=null
+69649: endfunction
+
+71533: function r7T takes nothing returns nothing
+71534: local framehandle O7T=BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI,0)
+71535: local integer M7T
+71536: local integer v7T
+71537: call SaveFrameHandle(Fb,0,GetHandleId(O7T),O7T)
+71538: set M7T=GetHandleId(O7T)
+71539: call ARb(0,M7T,80.,60.,95.,48.,false)
+71540: if "Interface\\SettingButtonOff.tga"!="" then
+71541: call CZy(UQ[0],"Interface\\SettingButtonOff.tga")
+71542: endif
+71543: call rvT(EQ[0],"")
+71544: call EVy(UQ[0],false)
+71545: set Wc=Dfy(M7T,"GUICommandBackGroundMain")
+71546: call CZy(Wc,"Interface\\BlackBackGround.tga")
+71547: call oCb(Wc,M7T,115.,138.)
+71548: call l6b(Wc,440.,140.)
+71549: call EVy(Wc,false)
+71550: set v7T=Ifb(Wc,"GUICommandBackGroundPanel")
+71551: call oCb(v7T,Wc,0.,0.)
+71552: call l6b(v7T,440.,140.)
+71553: call ARb(1,Wc,120.,40.,20.,20.,true)
+71554: if ""!="" then
+71555: call CZy(UQ[1],"")
+71556: endif
+71557: call rvT(EQ[1],"조합식 |cff00ff22ON|r")
+71558: call ARb(2,Wc,120.,40.,160.,20.,true)
+71559: if ""!="" then
+71560: call CZy(UQ[2],"")
+71561: endif
+71562: call rvT(EQ[2],"진동 |cffff0000OFF|r")
+71563: call ARb(3,Wc,120.,40.,300.,20.,true)
+71564: if ""!="" then
+71565: call CZy(UQ[3],"")
+71566: endif
+71567: call rvT(EQ[3],"알람 |cff00ff22ON|r")
+71568: call ARb(4,Wc,120.,40.,20.,80.,true)
+71569: if ""!="" then
+71570: call CZy(UQ[4],"")
+71571: endif
+71572: call rvT(EQ[4],"유틸보드 |cffff0000OFF|r")
+71573: call ARb(5,Wc,120.,40.,160.,80.,true)
+71574: if ""!="" then
+71575: call CZy(UQ[5],"")
+71576: endif
+71577: call rvT(EQ[5],"유틸 갱신")
+71578: set O7T=null
+71579: endfunction
+
+72524: function sJT takes nothing returns nothing
+72525: if GetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+72526: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+72527: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+72528: return
+72529: endif
+72530: call SetPlayerAbilityAvailable(GetOwningPlayer(GetTriggerUnit()),$41304d49,false)
+72531: call UnitAddAbility(GetTriggerUnit(),$41304d36)
+72532: call SetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+72533: endfunction
+
+72864: function siT takes nothing returns nothing
+72865: local unit ViT=GetAttacker()
+72866: local unit DiT=GetTriggerUnit()
+72867: local location GiT=GetUnitLoc(DiT)
+72868: local unitstate aiT=UNIT_STATE_LIFE
+72869: local unitstate XiT=UNIT_STATE_LIFE
+72870: local integer miT
+72871: local unit eiT
+72872: local boolean PiT
+72873: call SetUnitState(ViT,aiT,GetUnitState(ViT,XiT)+1.)
+72874: if GetUnitPropWindow(DiT)*bj_RADTODEG!=64. then
+72875: set PiT=GetUnitAbilityLevel(DiT,$41393032)>0 or GetUnitAbilityLevel(DiT,$41393131)>0 or GetUnitAbilityLevel(DiT,$41393033)>0
+72876: else
+72877: set PiT=false
+72878: endif
+72879: if PiT then
+72880: call SetUnitPropWindowBJ(DiT,64.)
+72881: call TriggerExecute(Oe)
+72882: else
+72883: set aiT=UNIT_STATE_LIFE
+72884: if GetUnitState(ViT,aiT)==115. then
+72885: call SetUnitState(ViT,UNIT_STATE_LIFE,1.)
+72886: call TriggerExecute(Oe)
+72887: endif
+72888: endif
+72889: if ptT(1,$64)<=11 then
+72890: set eiT=CreateUnitAtLoc(Vy,$65303131,GiT,bj_UNIT_FACING)
+72891: call UnitAddAbility(eiT,$4130364e)
+72892: call UnitApplyTimedLife(eiT,$42487765,1.)
+72893: set miT=d7b()
+72894: call bnb(miT,600.,GiT,Condition(dw),mw)
+72895: call qny(miT)
+72896: endif
+72897: call RemoveLocation(GiT)
+72898: set ViT=null
+72899: set DiT=null
+72900: set eiT=null
+72901: set GiT=null
+72902: set XiT=null
+72903: set aiT=null
+72904: endfunction
+
+74339: function uIy takes nothing returns nothing
+74340: local unit kIy=GetTriggerUnit()
+74341: local player LIy=GetOwningPlayer(kIy)
+74342: local integer jIy=GetPlayerId(LIy)
+74343: if GetPlayerState(LIy,PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+74344: call DisplayTimedTextToPlayer(LIy,0.,0.,5.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+74345: call IssueImmediateOrder(kIy,"stop")
+74346: set kIy=null
+74347: set LIy=null
+74348: return
+74349: endif
+74350: call UnitRemoveAbility(ea[jIy],$41304a31)
+74351: call UnitAddAbility(ea[jIy],$41304a33)
+74352: call UnitRemoveAbility(kIy,$41304459)
+74353: call UnitAddAbility(kIy,$41313053)
+74354: call IncUnitAbilityLevel(kIy,$4130495a)
+74355: call IncUnitAbilityLevel(kIy,$41304b44)
+74356: call SetPlayerAbilityAvailable(LIy,$41313054,false)
+74357: call SetPlayerState(LIy,PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(LIy,PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+74358: set kIy=null
+74359: set LIy=null
+74360: endfunction
+
+75529: function uxb takes nothing returns nothing
+75530: local integer Jxb
+75531: local unit Hxb
+75532: local location oxb
+75533: local player kxb
+75534: local real Lxb
+75535: local real jxb
+75536: call Toy()
+75537: set Ty=GetTriggerPlayer()
+75538: set by=$494d3031
+75539: set kxb=GetTriggerPlayer()
+75540: set Lxb=GetStartLocationX(GetPlayerStartLocation(kxb))
+75541: set kxb=GetTriggerPlayer()
+75542: set jxb=GetStartLocationY(GetPlayerStartLocation(kxb))
+75543: set Ay=Lxb
+75544: set cy=jxb
+75545: set gy=true
+75546: if not EDT() then
+75547: set Hxb=null
+75548: set oxb=null
+75549: set kxb=null
+75550: return
+75551: endif
+75552: set Hxb=FirstOfGroup(dy)
+75553: set Jxb=GetPlayerId(GetOwningPlayer(Hxb))
+75554: set oxb=GetStartLocationLoc(Jxb)
+75555: if Ms[Jxb]==null then
+75556: set Ms[Jxb]=CreateUnitAtLoc(Player(Jxb),$68303456,oxb,bj_UNIT_FACING)
+75557: call UnitAddAbility(Ms[Jxb],$41313456)
+75558: call UnitAddAbility(Ms[Jxb],$41304d48)
+75559: call UnitAddAbility(Ms[Jxb],$41304a53)
+75560: endif
+75561: call StartSound(tyy("SE\\Roger.mp3",null,$7f,1.,false,0.,0.))
+75562: call DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS,10.,"|c00ff8f79골.D.로져 : |r|c00cc3337내 보물 말인가? 원한다면 주도록 하지. 찾아라! 나의 모든 것을 그곳에 두고왔다!|r")
+75563: call RemoveLocation(oxb)
+75564: set Hxb=null
+75565: set oxb=null
+75566: set kxb=null
+75567: endfunction
+
+75568: function uyy takes nothing returns nothing
+75569: call jNy(0)
+75570: if mv[Yg]==0 then
+75571: call hFF(Yg,0,GetTriggerUnit())
+75572: call hFF(Yg,1,GetSpellTargetUnit())
+75573: call CGy(Yg,0,GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4)))
+75574: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+75575: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+75576: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+75577: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+75578: if (not wAF(LoadUnitHandle(UO,0,Yg*$1f4+1)))and GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4+1),$41393034)<=0 then
+75579: call IssueImmediateOrder(LoadUnitHandle(UO,0,Yg*$1f4),"stop")
+75580: call DisplayTimedTextToPlayer(LoadPlayerHandle(tO,0,Yg*$1f4),0.,0.,6.,"|cffFF0000보스/스토리에만\n사용할 수 있습니다!|r")
+75581: call ewb(Yg)
+75582: endif
+75583: call IssuePointOrderById(Ms[LoadInteger(br,0,Yg*$1f4+8)],OrderId("dreadlordinferno"),GetLocationX(LoadLocationHandle(lO,0,Yg*$1f4+1)),GetLocationY(LoadLocationHandle(lO,0,Yg*$1f4+1)))
+75584: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),bj_UNIT_FACING))
+75585: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41313849)
+75586: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,3.)
+75587: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530414b,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+75588: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65303858,LoadLocationHandle(lO,0,Yg*$1f4),bj_UNIT_FACING))
+75589: call SetUnitVertexColor(LoadUnitHandle(UO,0,Yg*$1f4+10),$ff,$7d,$7d,$ff)
+75590: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.,1.,1.)
+75591: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+75592: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),30.,0.)
+75593: call StartSound(tyy("Abilities\\Spells\\Human\\ThunderClap\\ThunderClapCaster.wav",null,$7f,1.,false,0.,0.))
+75594: call jyy(Yg,10,GetUnitCurrentOrder(LoadUnitHandle(UO,0,Yg*$1f4)))
+75595: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),true)
+75596: call ndF(Yg,1.)
+75597: elseif mv[Yg]==1 then
+75598: call ShowUnitHide(LoadUnitHandle(UO,0,Yg*$1f4))
+75599: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530355a,LoadLocationHandle(lO,0,Yg*$1f4),LoadReal(yr,0,Yg*$1f4)))
+75600: call SetUnitScale(LoadUnitHandle(UO,0,Yg*$1f4+10),1.,1.,1.)
+75601: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+75602: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+10),-10.,0.)
+75603: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+1),-300.,LoadReal(yr,0,Yg*$1f4)))
+75604: call hXT(Yg,1,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+75605: call hFF(Yg,2,CreateUnitAtLoc(Vy,$65425333,LoadLocationHandle(lO,0,Yg*$1f4+2),LoadReal(yr,0,Yg*$1f4+1)))
+75606: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+2),.47)
+75607: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+2),"spell throw")
+75608: call StartSound(tyy("SE\\roger_kamusari_1_voice.wav",null,$7f,1.,false,0.,0.))
+75609: call ndF(Yg,1.2)
+75610: elseif mv[Yg]==2 then
+75611: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+2),1.4)
+75612: call StartSound(tyy("SE\\shanks_kamusari_2_sword.mp3",null,$7f,1.,false,0.,0.))
+75613: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304146,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+75614: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+75615: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304147,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+75616: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.10)
+75617: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),.8)
+75618: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65304149,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+75619: call hFF(Yg,10,CreateUnitAtLoc(Vy,$6530414a,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+75620: call SetUnitTimeScale(LoadUnitHandle(UO,0,Yg*$1f4+10),.7)
+75621: call Ymy(LoadUnitHandle(UO,0,Yg*$1f4),0.,800.,LoadLocationHandle(lO,0,Yg*$1f4+1),4000000.,1.,2.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_NORMAL)
+75622: if wAF(LoadUnitHandle(UO,0,Yg*$1f4+1)) then
+75623: call OeT(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),GetUnitStateSwap(UNIT_STATE_LIFE,LoadUnitHandle(UO,0,Yg*$1f4+1))*.01*40.,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)
+75624: elseif GetUnitAbilityLevel(LoadUnitHandle(UO,0,Yg*$1f4+1),$41393034)>0 then
+75625: call OeT(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),GetUnitStateSwap(UNIT_STATE_MAX_LIFE,LoadUnitHandle(UO,0,Yg*$1f4+1))*.01*25.,1.,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_UNIVERSAL)
+75626: endif
+75627: call kHT(LoadPlayerHandle(tO,0,Yg*$1f4),1.,4.)
+75628: call ndF(Yg,.50)
+75629: elseif mv[Yg]==3 then
+75630: call RemoveUnit(LoadUnitHandle(UO,0,Yg*$1f4+2))
+75631: call ShowUnitShow(LoadUnitHandle(UO,0,Yg*$1f4))
+75632: call BlzPauseUnitEx(LoadUnitHandle(UO,0,Yg*$1f4),false)
+75633: call FyF(LoadUnitHandle(UO,0,Yg*$1f4),LoadUnitHandle(UO,0,Yg*$1f4+1),LoadInteger(br,0,Yg*$1f4+10))
+75634: call ewb(Yg)
+75635: endif
+75636: endfunction
+
+77254: function wbF takes nothing returns nothing
+77255: local unit HbF=GetAttacker()
+77256: local unit obF=GetTriggerUnit()
+77257: local location LbF=GetUnitLoc(HbF)
+77258: local location jbF=GetUnitLoc(obF)
+77259: local integer ubF=GetPlayerId(GetOwningPlayer(HbF))
+77260: local unitstate WbF=UNIT_STATE_MANA
+77261: local unitstate pbF=UNIT_STATE_MANA
+77262: local unit kbF
+77263: call SetUnitState(HbF,WbF,GetUnitState(HbF,pbF)+1.)
+77264: set WbF=UNIT_STATE_MANA
+77265: if GetUnitState(HbF,WbF)==100. then
+77266: call TriggerExecute(Zi)
+77267: call SetUnitState(HbF,UNIT_STATE_MANA,0.)
+77268: endif
+77269: if ptT(1,$64)<=12 then
+77270: call TriggerExecute(fi)
+77271: endif
+77272: if vi[ubF]==1 then
+77273: if ptT(1,$64)<=7 then
+77274: set bj_lastPlayedSound=tyy("SE\\SansAwaken.wav",null,$64,1.,true,1000.,3000.)
+77275: call lHT(HbF,bj_lastPlayedSound)
+77276: set kbF=CreateUnitAtLoc(Vy,$68304335,jbF,GetRandomReal(0.,360.))
+77277: call UnitApplyTimedLife(kbF,$42487765,1.)
+77278: call awT("ZK_BM_Red knife shine4-Blue-1.mdx",kbF,"origin")
+77279: call SetUnitAnimationByIndex(kbF,15)
+77280: call SetUnitScale(kbF,1.2,1.,1.)
+77281: set kbF=CreateUnitAtLoc(Vy,$68304335,jbF,GetRandomReal(0.,360.))
+77282: call UnitApplyTimedLife(kbF,$42487765,1.)
+77283: call awT("ZK_BM_Red knife shine4-Blue-1.mdx",kbF,"origin")
+77284: call SetUnitAnimationByIndex(kbF,90)
+77285: call SetUnitScale(kbF,1.2,1.,1.)
+77286: set kbF=CreateUnitAtLoc(Vy,$68304335,jbF,GetRandomReal(0.,360.))
+77287: call UnitApplyTimedLife(kbF,$42487765,1.)
+77288: call awT("ZK_BM_Red knife shine4-Blue-1.mdx",kbF,"origin")
+77289: call SetUnitAnimationByIndex(kbF,1)
+77290: call SetUnitScale(kbF,1.2,1.,1.)
+77291: set kbF=CreateUnitAtLoc(Vy,$65305051,jbF,bj_UNIT_FACING)
+77292: call UnitApplyTimedLife(kbF,$42487765,1.)
+77293: set kbF=CreateUnitAtLoc(Vy,$6530504b,jbF,bj_UNIT_FACING)
+77294: call UnitApplyTimedLife(kbF,$42487765,1.)
+77295: call OeT(HbF,obF,99999999.,.1,1.,ATTACK_TYPE_CHAOS,DAMAGE_TYPE_NORMAL)
+77296: endif
+77297: elseif GetUnitUserData(HbF)>20 then
+77298: set kbF=CreateUnitAtLoc(Player(ubF),$68304335,LbF,bj_UNIT_FACING)
+77299: call UnitAddAbility(kbF,$41313059)
+77300: call UnitApplyTimedLife(kbF,$42487765,5.)
+77301: call IssueTargetOrderById(ri[ubF],OrderId("sleep"),HbF)
+77302: call SetUnitUserData(HbF,0)
+77303: else
+77304: call SetUnitUserData(HbF,GetUnitUserData(HbF)+1)
+77305: endif
+77306: set HbF=null
+77307: set obF=null
+77308: set kbF=null
+77309: set LbF=null
+77310: set jbF=null
+77311: set pbF=null
+77312: set WbF=null
+77313: endfunction
+
+77317: function wey takes nothing returns nothing
+77318: local integer Wey
+77319: call jNy(0)
+77320: if mv[Yg]==0 then
+77321: call hFF(Yg,0,GetAttacker())
+77322: call hFF(Yg,1,GetTriggerUnit())
+77323: call lAF(Yg,0,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4)))
+77324: call lAF(Yg,1,GetUnitLoc(LoadUnitHandle(UO,0,Yg*$1f4+1)))
+77325: call jyy(Yg,8,GetPlayerId(GetOwningPlayer(LoadUnitHandle(UO,0,Yg*$1f4))))
+77326: call hXT(Yg,0,AngleBetweenPoints(LoadLocationHandle(lO,0,Yg*$1f4),LoadLocationHandle(lO,0,Yg*$1f4+1)))
+77327: call lAF(Yg,2,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4),700.,LoadReal(yr,0,Yg*$1f4)+180.))
+77328: call lAF(Yg,3,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+2),300.,LoadReal(yr,0,Yg*$1f4)+90.))
+77329: call lAF(Yg,4,PolarProjectionBJ(LoadLocationHandle(lO,0,Yg*$1f4+2),300.,LoadReal(yr,0,Yg*$1f4)-90.))
+77330: set bj_lastPlayedSound=tyy("SE\\Gojo_Murasaki.wav",null,$7f,1.,true,1000.,3000.)
+77331: call lHT(LoadUnitHandle(UO,0,Yg*$1f4),bj_lastPlayedSound)
+77332: call IssueTargetOrder(Pi[LoadInteger(br,0,Yg*$1f4+8)],"frostarmor",LoadUnitHandle(UO,0,Yg*$1f4))
+77333: call hFF(Yg,2,CreateUnitAtLoc(Vy,$65305032,LoadLocationHandle(lO,0,Yg*$1f4+3),LoadReal(yr,0,Yg*$1f4)-180.))
+77334: call SetUnitFlyHeight(LoadUnitHandle(UO,0,Yg*$1f4+2),30.,0.)
+77335: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+2),$42487765,.5)
+77336: call x4b(LoadUnitHandle(UO,0,Yg*$1f4+2),LoadLocationHandle(lO,0,Yg*$1f4+2),.50,.01)
+77337: call hFF(Yg,3,CreateUnitAtLoc(Vy,$65305034,LoadLocationHandle(lO,0,Yg*$1f4+4),LoadReal(yr,0,Yg*$1f4)-180.))
+77338: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+3),$42487765,1.)
+77339: call x4b(LoadUnitHandle(UO,0,Yg*$1f4+3),LoadLocationHandle(lO,0,Yg*$1f4+2),.50,.01)
+77340: call ndF(Yg,.40)
+77341: elseif mv[Yg]==1 then
+77342: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65305038,LoadLocationHandle(lO,0,Yg*$1f4+2),bj_UNIT_FACING))
+77343: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,1.)
+77344: call ndF(Yg,.40)
+77345: elseif mv[Yg]==2 then
+77346: call awT("cf2.mdx",LoadUnitHandle(UO,0,Yg*$1f4+10),"origin")
+77347: call x4b(LoadUnitHandle(UO,0,Yg*$1f4+10),LoadLocationHandle(lO,0,Yg*$1f4+1),.33,.01)
+77348: call ndF(Yg,.33)
+77349: elseif mv[Yg]==3 then
+77350: call SetUnitAnimation(LoadUnitHandle(UO,0,Yg*$1f4+10),"death")
+77351: call hFF(Yg,10,CreateUnitAtLoc(Vy,$65305039,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+77352: set Wey=d7b()
+77353: call bnb(Wey,800.,LoadLocationHandle(lO,0,Yg*$1f4+1),Condition(m3),V3)
+77354: call qny(Wey)
+77355: call hFF(Yg,10,CreateUnitAtLoc(Vy,$68304335,LoadLocationHandle(lO,0,Yg*$1f4+1),LoadReal(yr,0,Yg*$1f4)))
+77356: call UnitApplyTimedLife(LoadUnitHandle(UO,0,Yg*$1f4+10),$42487765,2.)
+77357: call UnitAddAbility(LoadUnitHandle(UO,0,Yg*$1f4+10),$41313039)
+77358: call ewb(Yg)
+77359: endif
+77360: endfunction
+
+78876: function xlb takes nothing returns nothing
+78877: local integer Rlb=GetPlayerId(GetTriggerPlayer())
+78878: if GetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED)<4 then
+78879: call DisplayTimedTextToPlayer(GetOwningPlayer(GetTriggerUnit()),0.,0.,6.,"|cffff0000[오류]|r|cff1e90ff특성포인트|r가 부족합니다!")
+78880: call IssueImmediateOrder(GetTriggerUnit(),"stop")
+78881: return
+78882: endif
+78883: call UnitRemoveAbility(GetTriggerUnit(),$41305333)
+78884: call UnitRemoveAbility(eG[Rlb],$41303558)
+78885: call UnitAddAbility(GetTriggerUnit(),$41305338)
+78886: call UnitAddAbility(eG[Rlb],$41305337)
+78887: call AddUnitAnimationProperties(GetTriggerUnit(),"alternate",true)
+78888: call UnitRemoveAbility(GetTriggerUnit(),GetSpellAbilityId())
+78889: call SetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(GetTriggerPlayer(),PLAYER_STATE_RESOURCE_FOOD_USED)-4)
+78890: endfunction

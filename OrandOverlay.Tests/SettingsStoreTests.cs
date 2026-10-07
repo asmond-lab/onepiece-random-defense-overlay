@@ -14,7 +14,7 @@ public sealed class SettingsStoreTests : IDisposable
     private string PathFor(string name) => Path.Combine(_dir, name);
 
     [Fact]
-    public void SaveLoad_RoundTrip_PreservesValues()
+    public void SaveLoad_PreservesValuesAndNormalizesAutomaticNavigation()
     {
         var path = PathFor("settings.json");
         Directory.CreateDirectory(_dir);
@@ -32,7 +32,8 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.Equal("yamato_transcendent", loaded.GoalUnitId);
         Assert.False(loaded.TelemetryEnabled);
         Assert.Equal(2, loaded.TelemetryDisclosureVersion);
-        Assert.False(loaded.AutoRecommendNavigation);
+        Assert.True(loaded.AutoRecommendNavigation);
+        Assert.Equal(PlayMode.Beginner, PlayModes.Current(loaded));
     }
 
     [Fact]
@@ -75,6 +76,34 @@ public sealed class SettingsStoreTests : IDisposable
 
         Assert.True(File.Exists(path));
         Assert.Empty(Directory.GetFiles(_dir, "settings.json.corrupt-*"));
+    }
+
+    [Fact]
+    public void Load_MigrationWriteBlocked_PreservesLoadedValuesAndOriginalFile()
+    {
+        var path = PathFor("settings.json");
+        Directory.CreateDirectory(_dir);
+        const string original = """{"SettingsSchemaVersion":1,"GoalUnitId":"rawcode:F40h","AutoScanEnabled":false}""";
+        File.WriteAllText(path, original);
+
+        using (var locked = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            var loaded = SettingsStore.Load(path);
+
+            Assert.Equal("rawcode:F40h", loaded.GoalUnitId);
+            Assert.False(loaded.AutoScanEnabled);
+            Assert.Equal(original, File.ReadAllText(path));
+            Assert.False(File.Exists(path + ".tmp"));
+            Assert.Empty(Directory.GetFiles(_dir, "settings.json.corrupt-*"));
+        }
+
+        var migrated = SettingsStore.Load(path);
+        Assert.Equal("rawcode:F40h", migrated.GoalUnitId);
+        Assert.False(migrated.AutoScanEnabled);
+        using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(path));
+        Assert.Equal(LegacySettingsMigration.CurrentSchemaVersion,
+            document.RootElement.GetProperty("SettingsSchemaVersion").GetInt32());
+        Assert.False(File.Exists(path + ".tmp"));
     }
 
     [Fact]

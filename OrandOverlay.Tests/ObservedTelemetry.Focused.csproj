@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup><BaseIntermediateOutputPath>obj/observed-telemetry/</BaseIntermediateOutputPath><MSBuildProjectExtensionsPath>obj/observed-telemetry/</MSBuildProjectExtensionsPath></PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable><IsTestProject>true</IsTestProject><EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <OutputPath>bin/observed-telemetry/</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <Compile Include="../GlobalUsings.cs" Link="GlobalUsings.cs" />
+    <Compile Include="../ObservedTelemetry*.cs" Link="%(Filename)%(Extension)" />
+    <Compile Include="ObservedTelemetry*Tests.cs" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

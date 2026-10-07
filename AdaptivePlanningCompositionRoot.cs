@@ -56,6 +56,7 @@ public sealed class AdaptivePlanningCompositionRoot
         _coordinator.ScheduleApply(computed, schedule, mutate);
 
     public void LatchManualGoalOverride() => _coordinator.LatchManualGoalOverride();
+    public void ClearManualGoalOverride() => _coordinator.ClearManualGoalOverride();
     public void LatchManualNavigationOverride() =>
         _coordinator.LatchManualNavigationOverride();
     public void ClearManualNavigationOverride() =>

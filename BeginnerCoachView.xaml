@@ -1,0 +1,173 @@
+<UserControl x:Class="OrandOverlay.BeginnerCoachView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OrandOverlay"
+             Foreground="{x:Static local:OverlayTheme.WhiteBrush}"
+             FontFamily="Malgun Gothic" UseLayoutRounding="True"
+             AutomationProperties.Name="초보자 자동 안내">
+  <UserControl.Resources>
+    <Style x:Key="CoachLabel" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="{x:Static local:OverlayTheme.CoachMetaTypeSize}"/>
+      <Setter Property="Foreground" Value="{x:Static local:OverlayTheme.PlanSecondary}"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="Margin" Value="{x:Static local:OverlayTheme.PlannerRowMargin}"/>
+    </Style>
+    <Style x:Key="CoachValue" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="{x:Static local:OverlayTheme.CoachBodyTypeSize}"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="Margin" Value="{x:Static local:OverlayTheme.CoachSectionSpacing}"/>
+    </Style>
+    <Style x:Key="CoachButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+      <Setter Property="FontSize" Value="{x:Static local:OverlayTheme.CoachMetaTypeSize}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="Body" Background="{TemplateBinding Background}"
+                    BorderBrush="{x:Static local:OverlayTheme.HairlineBrush}"
+                    BorderThickness="{x:Static local:OverlayTheme.WellBorderThickness}"
+                    CornerRadius="{x:Static local:OverlayTheme.WellCornerRadius}"
+                    Padding="{TemplateBinding Padding}">
+              <ContentPresenter x:Name="ButtonContent" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                TextElement.Foreground="{TemplateBinding Foreground}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Body" Property="Background" Value="{StaticResource ControlHoverBrush}"/>
+                <Setter TargetName="ButtonContent" Property="TextElement.Foreground" Value="{x:Static local:RandyPickTheme.Text}"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Body" Property="Background" Value="{StaticResource ControlPressedBrush}"/>
+                <Setter TargetName="ButtonContent" Property="TextElement.Foreground" Value="{x:Static local:RandyPickTheme.Text}"/>
+              </Trigger>
+              <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="Body" Property="BorderBrush" Value="{x:Static local:OverlayTheme.FocusBrush}"/>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <StackPanel Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}">
+      <TextBlock x:Name="ModeTitle" Foreground="{x:Static local:OverlayTheme.GoldBrush}"
+                 FontSize="{x:Static local:OverlayTheme.CoachMetaTypeSize}" FontWeight="SemiBold"/>
+      <TextBlock x:Name="StatusText" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-status"/>
+      <ComboBox x:Name="GuideChoice" DisplayMemberPath="Name" Visibility="Collapsed"
+                MaxWidth="{x:Static local:OverlayTheme.PlanActionWidth}" HorizontalAlignment="Left"
+                SelectionChanged="GuideChoice_OnChanged" AutomationProperties.AutomationId="coach-guide-choice"
+                AutomationProperties.Name="따라 할 공략 선택"/>
+      <Button x:Name="PresentationButton" Content="설명 간단히" Visibility="Collapsed" Click="Advanced_OnClick"
+              Style="{StaticResource CoachButton}" AutomationProperties.AutomationId="coach-advanced"/>
+    </StackPanel>
+    <ScrollViewer x:Name="CoachScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled" CanContentScroll="False"
+                  AutomationProperties.AutomationId="coach-scroll" AutomationProperties.Name="초보자 안내 내용">
+      <Grid x:Name="WorkspaceBody">
+        <Grid.ColumnDefinitions><ColumnDefinition x:Name="PlanColumn"/><ColumnDefinition x:Name="ActionColumn" Width="0"/></Grid.ColumnDefinitions>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <local:CoachPlanView x:Name="PlanView"/>
+        <StackPanel x:Name="ActionBody" Grid.Row="1">
+        <TextBlock x:Name="NavigationAlertText" Style="{StaticResource CoachLabel}"
+                   Foreground="{x:Static local:OverlayTheme.WarnBrush}" AutomationProperties.AutomationId="coach-navigation-alert"/>
+        <Border Background="{x:Static local:OverlayTheme.PlanSurface}"
+                BorderBrush="{x:Static local:OverlayTheme.OutlineBrush}"
+                BorderThickness="{x:Static local:OverlayTheme.WellBorderThickness}"
+                CornerRadius="{x:Static local:OverlayTheme.WellCornerRadius}"
+                Padding="{x:Static local:OverlayTheme.CoachPanelPadding}"
+                Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}">
+          <StackPanel>
+            <TextBlock Text="지금 할 일" Style="{StaticResource CoachLabel}" Foreground="{x:Static local:OverlayTheme.PlanAccent}"/>
+            <Grid Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <ContentControl x:Name="ActionIcon" Margin="{x:Static local:OverlayTheme.PlanIconGap}" VerticalAlignment="Top"/>
+              <TextBlock x:Name="ActionText" Grid.Column="1" FontSize="{x:Static local:OverlayTheme.CoachTitleTypeSize}"
+                         FontWeight="Bold" TextWrapping="Wrap" AutomationProperties.AutomationId="coach-action"/>
+            </Grid>
+            <StackPanel x:Name="CraftCountPanel" Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}" Visibility="Collapsed">
+              <TextBlock x:Name="CraftCountText" Style="{StaticResource CoachValue}" Foreground="{x:Static local:OverlayTheme.PlanAccent}" AutomationProperties.AutomationId="coach-craft-count"/>
+              <ProgressBar x:Name="CraftCountBar" Height="{x:Static local:OverlayTheme.PlanTrackHeight}" BorderThickness="0"
+                           Foreground="{x:Static local:OverlayTheme.PlanAccent}" Background="{x:Static local:OverlayTheme.PlanLine}" AutomationProperties.AutomationId="coach-craft-progress"/>
+            </StackPanel>
+            <TextBlock x:Name="CraftRecipeText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-craft-recipe"/>
+            <TextBlock x:Name="ControlsText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-controls"/>
+            <TextBlock x:Name="ConstraintText" Style="{StaticResource CoachValue}"
+                       Foreground="{x:Static local:OverlayTheme.WarnBrush}" AutomationProperties.AutomationId="coach-constraint"/>
+            <TextBlock x:Name="ReasonLabel" Text="추천 이유" Style="{StaticResource CoachLabel}"/>
+            <TextBlock x:Name="ReasonText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-reason"/>
+            <TextBlock x:Name="ConfirmationLabel" Text="확인 후 진행" Style="{StaticResource CoachLabel}"/>
+            <TextBlock x:Name="ConfirmationText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-confirmation"/>
+            <TextBlock x:Name="InteractionHint" Style="{StaticResource CoachLabel}" Visibility="Collapsed"
+                       Foreground="{x:Static local:OverlayTheme.WarnBrush}" AutomationProperties.AutomationId="coach-interaction"/>
+            <ComboBox x:Name="NavigationChoice" DisplayMemberPath="Name" Visibility="Collapsed"
+                      SelectionChanged="NavigationChoice_OnChanged" AutomationProperties.AutomationId="coach-navigation-choice"
+                      AutomationProperties.Name="내 게임에 표시된 항법"/>
+            <Button x:Name="ConfirmButton" Content="게임에서 선택 완료" Click="Confirm_OnClick" HorizontalAlignment="Left"
+                    Style="{StaticResource CoachButton}" AutomationProperties.AutomationId="coach-confirm"/>
+          </StackPanel>
+        </Border>
+        <StackPanel Margin="{x:Static local:OverlayTheme.PlanInset}">
+          <TextBlock x:Name="NextTargetText" Style="{StaticResource CoachValue}" Foreground="{x:Static local:OverlayTheme.PlanAccent}" AutomationProperties.AutomationId="coach-next-target"/>
+          <StackPanel x:Name="RecentPanel" Visibility="Collapsed" Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}">
+            <TextBlock Text="이번 판 최근 기록" Style="{StaticResource CoachLabel}"/>
+            <TextBlock x:Name="RecentText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-recent-events"/>
+          </StackPanel>
+          <TextBlock x:Name="PreserveLabel" Text="남겨둘 재료" Style="{StaticResource CoachLabel}"/>
+          <TextBlock x:Name="PreserveText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-preserve"/>
+          <TextBlock x:Name="AlternativeText" Style="{StaticResource CoachValue}" Foreground="{x:Static local:OverlayTheme.WarnBrush}"
+                     AutomationProperties.AutomationId="coach-alternative"/>
+          <TextBlock x:Name="CompletedText" Style="{StaticResource CoachValue}" Foreground="{x:Static local:OverlayTheme.OkBrush}"
+                     AutomationProperties.AutomationId="coach-completed"/>
+          <TextBlock x:Name="BountyPreparationText" Style="{StaticResource CoachValue}"
+                     Foreground="{x:Static local:OverlayTheme.PlanSecondary}" Visibility="Collapsed"
+                     AutomationProperties.AutomationId="coach-bounty-preparation"/>
+          <Expander x:Name="DetailsPanel" IsExpanded="False" IsTabStop="True"
+                    Header="자세히 · 조합 계획과 확인할 것" Foreground="{x:Static local:OverlayTheme.WhiteBrush}"
+                    AutomationProperties.Name="자세히 · 조합 계획과 확인할 것" AutomationProperties.AutomationId="coach-details" Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}">
+            <StackPanel Margin="{x:Static local:OverlayTheme.PlanDetailInset}">
+              <ComboBox x:Name="QueenCondition" Visibility="Collapsed" SelectedValuePath="Tag"
+                        SelectionChanged="QueenCondition_OnChanged" AutomationProperties.AutomationId="coach-queen-condition"
+                        AutomationProperties.Name="킹을 퀸으로 바꿀 때만 선택">
+                <ComboBoxItem Content="킹 → 퀸 전환 (선택 사항)" Tag="{x:Static local:QueenConversionInput.Unknown}"/>
+                <ComboBoxItem Content="킹을 그대로 사용" Tag="{x:Static local:QueenConversionInput.KeepKing}"/>
+                <ComboBoxItem Content="킹으로 마린포드 완료 · 퀸으로 바꾸기 허용" Tag="{x:Static local:QueenConversionInput.UserConfirmedMissionsComplete}"/>
+                <ComboBoxItem Content="스토리 진행이 느림 · 퀸으로 바꾸기 허용" Tag="{x:Static local:QueenConversionInput.UserConfirmedStoryTooSlow}"/>
+              </ComboBox>
+            <TextBlock x:Name="MaterialText" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-material"/>
+              <TextBlock x:Name="StageText" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-stage"/>
+              <TextBlock x:Name="DecisionDetailsText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-decision-details"/>
+              <TextBlock x:Name="NavigationSummary" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-navigation"/>
+              <TextBlock x:Name="NavigationTiming" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-navigation-timing"/>
+              <TextBlock x:Name="RecipePreviewLabel" Text="나중에 필요한 조합 순서 (지금 조합하지 마세요)" Style="{StaticResource CoachLabel}"/>
+              <TextBlock x:Name="RecipePreviewText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-recipe-preview"/>
+              <TextBlock x:Name="MilestoneLabel" Text="다음 목표" Style="{StaticResource CoachLabel}"/>
+              <TextBlock x:Name="MilestoneText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-milestone"/>
+              <TextBlock x:Name="ReadinessSummary" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-readiness"/>
+              <TextBlock x:Name="ManualSummaryText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-manual-goals"/>
+              <TextBlock x:Name="ChangeText" Style="{StaticResource CoachLabel}" AutomationProperties.AutomationId="coach-change"/>
+              <Expander x:Name="ClearRewardsPanel" Foreground="{x:Static local:OverlayTheme.WhiteBrush}"
+                        FontSize="{x:Static local:OverlayTheme.CoachMetaTypeSize}" Margin="{x:Static local:OverlayTheme.CoachSectionSpacing}"
+                        AutomationProperties.AutomationId="coach-clear-rewards">
+                <Expander.Header><TextBlock Text="클리어 횟수 보상 기준" Foreground="{x:Static local:OverlayTheme.WhiteBrush}"/></Expander.Header>
+                <TextBlock x:Name="ClearRewardsText" Style="{StaticResource CoachValue}"/>
+              </Expander>
+              <TextBlock Text="운영 도움말" Style="{StaticResource CoachLabel}"/>
+              <TextBlock x:Name="OperationText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-operation"/>
+              <TextBlock x:Name="UnknownText" Style="{StaticResource CoachValue}" AutomationProperties.AutomationId="coach-unknown"/>
+              <TextBlock Text="추천과 확인한 패 기록은 이 PC에만 저장됩니다." Style="{StaticResource CoachLabel}"/>
+            </StackPanel>
+          </Expander>
+        </StackPanel>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+          <WrapPanel Grid.Row="2">
+            <Button x:Name="PauseButton" Content="안내 일시정지" Click="Pause_OnClick" Style="{StaticResource CoachButton}"
+                    AutomationProperties.AutomationId="coach-pause"/>
+            <Button Content="이번 판 기록 보기" Click="Review_OnClick" Style="{StaticResource CoachButton}"
+                    AutomationProperties.AutomationId="coach-review"/>
+          </WrapPanel>
+  </Grid>
+</UserControl>

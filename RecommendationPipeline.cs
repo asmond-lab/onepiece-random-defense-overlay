@@ -2,19 +2,26 @@ namespace OrandOverlay;
 
 internal sealed record RecommendationPipelineRequest
 {
+    public PlayMode Mode { get; init; } = PlayMode.Beginner;
+    public BulletGuidePlan? GuidePlan { get; init; }
     public required RecommendationEngine Engine { get; init; }
     public required UnitDefinition Goal { get; init; }
     public required IReadOnlyList<InventoryEntry> Inventory { get; init; }
     public required RecommendationSurface InitialSurface { get; init; }
     public StoryRewardSequenceDecision? StorySequence { get; init; }
     public required string NavigationMode { get; init; }
+    public NativeNavigationSnapshot NativeNavigation { get; init; } = NativeNavigationSnapshot.Unknown;
     public required GoroseiMode Gorosei { get; init; }
     public required string BuildVariant { get; init; }
     public required string Difficulty { get; init; }
+    public int Round { get; init; }
+    public int CompletedStoryStage { get; init; }
     public bool SuppressSeraphim { get; init; }
     public bool PrioritizeTargetRare { get; init; }
     public bool SuppressFirstRareShip { get; init; }
     public int CandidateCount { get; init; } = 8;
+    public ManualGoalPlan? ManualPlan { get; init; }
+    public string? CommittedCraftUnitId { get; init; }
 }
 
 internal sealed record RecommendationPipelineCandidates(
@@ -40,8 +47,23 @@ internal static class RecommendationPipeline
         ArgumentNullException.ThrowIfNull(request);
         if (request.CandidateCount < 1)
             throw new ArgumentOutOfRangeException(nameof(request));
+        if (request.NativeNavigation.Status == NativeNavigationStatus.Conflict)
+            return new(request.InitialSurface, [], null);
+        request = request with { NavigationMode = request.NativeNavigation.Resolve(request.NavigationMode) ?? "Unselected" };
+        if (request.Mode == PlayMode.Guide)
+            return new RecommendationPipelineCandidates(RecommendationSurface.TopAndNavigation,
+                request.GuidePlan?.TargetUnitId is { } guideTarget
+                    ? request.Engine.RecommendGuideCraft(guideTarget, request.Inventory, request.GuidePlan,
+                        request.Round, request.CompletedStoryStage) : [], request.GuidePlan is null ? null : request.StorySequence);
 
-        var surface = request.StorySequence is null
+        if (request.ManualPlan is { } plan && plan.ActiveGoalId != request.Goal.Id)
+            throw new ArgumentException("The active goal must match the manual plan.", nameof(request));
+        // An observed selected top has already passed the opening recipe sequence.
+        // Missing/late story recognition must not replace its support plan with a first legend.
+        var ownedGoal = TopGradePolicy.IsTopGrade(request.Goal.Tier) && request.Inventory.Any(entry =>
+            entry.Count > 0 && entry.UnitId.Equals(request.Goal.Id, StringComparison.OrdinalIgnoreCase));
+        var surface = request.ManualPlan is not null || ownedGoal ? RecommendationSurface.TopAndNavigation
+            : request.StorySequence is null
             ? request.InitialSurface
             : RecommendationSequencePolicy.Surface(request.StorySequence);
         IReadOnlyList<Recommendation> recommendations = surface switch
@@ -58,7 +80,9 @@ internal static class RecommendationPipeline
                     request.Gorosei,
                     request.BuildVariant,
                     request.SuppressSeraphim,
-                    difficulty: request.Difficulty),
+                    difficulty: request.Difficulty,
+                    round: request.Round,
+                    completedStoryStage: request.CompletedStoryStage),
             RecommendationSurface.StoryLegend => [],
             _ => request.Engine.RecommendNearestCrafts(
                 request.Goal.Id,
@@ -70,10 +94,22 @@ internal static class RecommendationPipeline
                 request.SuppressSeraphim,
                 request.PrioritizeTargetRare,
                 request.SuppressFirstRareShip,
-                difficulty: request.Difficulty)
+                suppressSecondaryTopCandidates: request.ManualPlan is not null,
+                difficulty: request.Difficulty,
+                round: request.Round,
+                completedStoryStage: request.CompletedStoryStage,
+                committedCraftUnitId: request.CommittedCraftUnitId)
         };
+        if (request.ManualPlan is { } manual)
+        {
+            recommendations = request.Engine.Recascade(recommendations.Where(item =>
+                    !TopGradePolicy.IsTopGrade(item.CompositionUnits.FirstOrDefault()?.Tier ?? "") ||
+                    manual.CanCraftNewTop && manual.GoalIds.Contains(item.Route.GoalUnitId)).ToList(),
+                manual.RecipeInventory.Select(pair => new InventoryEntry { UnitId = pair.Key, Count = pair.Value }),
+                null);
+        }
         return new RecommendationPipelineCandidates(
-            surface, recommendations, request.StorySequence);
+            surface, recommendations, request.ManualPlan is null && !ownedGoal ? request.StorySequence : null);
     }
 
     public static RecommendationPipelineResult Finalize(

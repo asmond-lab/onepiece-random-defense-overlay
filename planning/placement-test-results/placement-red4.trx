@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="da9c62e5-eb73-45f8-b80a-32f506df853e" name="123@DESKTOP-SR3Q9NW 2026-09-07 12:22:47" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T12:22:47.7862562+09:00" queuing="2026-09-07T12:22:47.7862565+09:00" start="2026-09-07T12:22:47.2003799+09:00" finish="2026-09-07T12:22:47.7906412+09:00" />
+  <TestSettings name="default" id="23b0319f-8725-4be2-a4d4-f8db6bd4c561">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_12_22_47" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="41bf3528-8406-4899-8f8b-2a8dd97217f7" testId="a24ba0c5-cd92-bd46-e33f-55c1fd1b33a3" testName="OrandOverlay.Tests.BulletGuidePlacementTests.RequiresExactlyOneValidAliveLocalBullet" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0015249" startTime="2026-09-07T12:22:47.7182886+09:00" endTime="2026-09-07T12:22:47.7182888+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="41bf3528-8406-4899-8f8b-2a8dd97217f7">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Null() Failure: Value is not null&#xD;
+Expected: null&#xD;
+Actual:   "일반 라운드 생성 중심 (-4960, 5632) · 현재 거리 500 · 원문 목표 약 4"···</Message>
+          <StackTrace>   at OrandOverlay.Tests.BulletGuidePlacementTests.RequiresExactlyOneValidAliveLocalBullet() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\BulletGuidePlacementTests.cs:line 66&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="25f38586-5e7c-4f42-af62-1160f12a6a37" testId="9218bf62-4ccb-99f7-b49d-12238577f41a" testName="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 2, left: -5024, bottom: 480, right: -4896, top: 544)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0002438" startTime="2026-09-07T12:22:47.7185305+09:00" endTime="2026-09-07T12:22:47.7185305+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="25f38586-5e7c-4f42-af62-1160f12a6a37" />
+    <UnitTestResult executionId="ca1d99e8-b6c3-401c-9460-bb02ceb9af77" testId="d91c2ce6-5f57-3990-d352-9994e32febde" testName="OrandOverlay.Tests.BulletGuidePlacementTests.SuppressesFramesWithoutCurrentUsableGuideContext" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0001903" startTime="2026-09-07T12:22:47.7183930+09:00" endTime="2026-09-07T12:22:47.7183930+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca1d99e8-b6c3-401c-9460-bb02ceb9af77" />
+    <UnitTestResult executionId="93153035-46c5-4451-a25e-6a6892419499" testId="6b09555a-7747-671a-d904-199326aaa4a0" testName="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 1, left: 992, bottom: 5600, right: 1120, top: 5664)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0008493" startTime="2026-09-07T12:22:47.7185176+09:00" endTime="2026-09-07T12:22:47.7185176+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="93153035-46c5-4451-a25e-6a6892419499" />
+    <UnitTestResult executionId="5ad8e216-b63c-43b7-8fe1-44f78ec596c0" testId="19a05979-f821-a8f1-2e5e-b576a7545eaf" testName="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 3, left: 992, bottom: 480, right: 1120, top: 544)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0000078" startTime="2026-09-07T12:22:47.7185559+09:00" endTime="2026-09-07T12:22:47.7185560+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5ad8e216-b63c-43b7-8fe1-44f78ec596c0" />
+    <UnitTestResult executionId="40b64607-1337-4455-a8c5-39ea2c5e0bf6" testId="2d4d804d-8c1e-6e22-4ea7-66441e27bdba" testName="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 0, left: -5024, bottom: 5600, right: -4896, top: 5664)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0000117" startTime="2026-09-07T12:22:47.7185421+09:00" endTime="2026-09-07T12:22:47.7185421+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="40b64607-1337-4455-a8c5-39ea2c5e0bf6" />
+    <UnitTestResult executionId="d1b5c9ed-af66-4e8d-a80b-ab755b9bf2c5" testId="54fd5edf-b396-1905-750b-d90bf807000b" testName="OrandOverlay.Tests.BulletGuidePlacementTests.ReportsCurrentDistanceSeparatelyFromSourceTarget" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0071296" startTime="2026-09-07T12:22:47.7100656+09:00" endTime="2026-09-07T12:22:47.7100733+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1b5c9ed-af66-4e8d-a80b-ab755b9bf2c5" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.SuppressesFramesWithoutCurrentUsableGuideContext" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="d91c2ce6-5f57-3990-d352-9994e32febde">
+      <Execution id="ca1d99e8-b6c3-401c-9460-bb02ceb9af77" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="SuppressesFramesWithoutCurrentUsableGuideContext" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 1, left: 992, bottom: 5600, right: 1120, top: 5664)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="6b09555a-7747-671a-d904-199326aaa4a0">
+      <Execution id="93153035-46c5-4451-a25e-6a6892419499" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="UsesPinnedSwRectCenters" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 3, left: 992, bottom: 480, right: 1120, top: 544)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="19a05979-f821-a8f1-2e5e-b576a7545eaf">
+      <Execution id="5ad8e216-b63c-43b7-8fe1-44f78ec596c0" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="UsesPinnedSwRectCenters" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 0, left: -5024, bottom: 5600, right: -4896, top: 5664)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="2d4d804d-8c1e-6e22-4ea7-66441e27bdba">
+      <Execution id="40b64607-1337-4455-a8c5-39ea2c5e0bf6" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="UsesPinnedSwRectCenters" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.UsesPinnedSwRectCenters(owner: 2, left: -5024, bottom: 480, right: -4896, top: 544)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="9218bf62-4ccb-99f7-b49d-12238577f41a">
+      <Execution id="25f38586-5e7c-4f42-af62-1160f12a6a37" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="UsesPinnedSwRectCenters" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.RequiresExactlyOneValidAliveLocalBullet" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="a24ba0c5-cd92-bd46-e33f-55c1fd1b33a3">
+      <Execution id="41bf3528-8406-4899-8f8b-2a8dd97217f7" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="RequiresExactlyOneValidAliveLocalBullet" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.BulletGuidePlacementTests.ReportsCurrentDistanceSeparatelyFromSourceTarget" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\orandoverlay.tests\debug\orandoverlay.tests.dll" id="54fd5edf-b396-1905-750b-d90bf807000b">
+      <Execution id="d1b5c9ed-af66-4e8d-a80b-ab755b9bf2c5" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\obj\placement-artifacts\bin\OrandOverlay.Tests\debug\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.BulletGuidePlacementTests" name="ReportsCurrentDistanceSeparatelyFromSourceTarget" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="a24ba0c5-cd92-bd46-e33f-55c1fd1b33a3" executionId="41bf3528-8406-4899-8f8b-2a8dd97217f7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9218bf62-4ccb-99f7-b49d-12238577f41a" executionId="25f38586-5e7c-4f42-af62-1160f12a6a37" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d91c2ce6-5f57-3990-d352-9994e32febde" executionId="ca1d99e8-b6c3-401c-9460-bb02ceb9af77" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b09555a-7747-671a-d904-199326aaa4a0" executionId="93153035-46c5-4451-a25e-6a6892419499" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="19a05979-f821-a8f1-2e5e-b576a7545eaf" executionId="5ad8e216-b63c-43b7-8fe1-44f78ec596c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2d4d804d-8c1e-6e22-4ea7-66441e27bdba" executionId="40b64607-1337-4455-a8c5-39ea2c5e0bf6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="54fd5edf-b396-1905-750b-d90bf807000b" executionId="d1b5c9ed-af66-4e8d-a80b-ab755b9bf2c5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="7" executed="7" passed="6" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.05]   Discovering: OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.17]   Discovered:  OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.17]   Starting:    OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.20]       Assert.Null() Failure: Value is not null&#xD;
+[xUnit.net 00:00:00.20]       Expected: null&#xD;
+[xUnit.net 00:00:00.20]       Actual:   "일반 라운드 생성 중심 (-4960, 5632) · 현재 거리 500 · 원문 목표 약 4"···&#xD;
+[xUnit.net 00:00:00.20]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.20]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\BulletGuidePlacementTests.cs(66,0): at OrandOverlay.Tests.BulletGuidePlacementTests.RequiresExactlyOneValidAliveLocalBullet()&#xD;
+[xUnit.net 00:00:00.20]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.20]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.21]   Finished:    OrandOverlay.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T12:22:47.7175823+09:00">
+        <Text>[xUnit.net 00:00:00.20]     OrandOverlay.Tests.BulletGuidePlacementTests.RequiresExactlyOneValidAliveLocalBullet [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

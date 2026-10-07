@@ -7,7 +7,7 @@ public static class OverlayLayoutPolicy
     public const double ScrollableBoardMinimumHeight = 0;
 
     public static StatsOverlayLayout StatsLayout(OverlayDisplayMode mode) =>
-        new(228, 700, true);
+        new(326, 440, true);
 }
 
 public sealed record StatsOverlayLayout(

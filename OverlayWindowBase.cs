@@ -32,6 +32,7 @@ public abstract class OverlayWindowBase : Window
     private bool _edgePanPassThrough;
     private bool _dragging;
     private bool _allowClose;
+    private bool _resolutionScaleApplied;
     private readonly DispatcherTimer _edgePanTimer = new()
     {
         Interval = EdgePanPollInterval
@@ -39,6 +40,10 @@ public abstract class OverlayWindowBase : Window
 
     protected OverlayWindowBase()
     {
+        OverlayChrome.EnsureOpaqueDefaults();
+        OverlayChrome.ApplyTranslucent(Resources);
+        ForegroundGameWatcher.Changed += ApplyFocusGate;
+        Loaded += (_, _) => ApplyFocusGate();
         _edgePanTimer.Tick += (_, _) => UpdateEdgePanPassThrough();
         SourceInitialized += (_, _) => ApplyClickThroughStyle();
         Loaded += (_, _) =>
@@ -69,6 +74,7 @@ public abstract class OverlayWindowBase : Window
         Closed += (_, _) =>
         {
             _edgePanTimer.Stop();
+            ForegroundGameWatcher.Changed -= ApplyFocusGate;
             SystemEvents.DisplaySettingsChanged -= DisplaySettingsChanged;
         };
         SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
@@ -77,6 +83,9 @@ public abstract class OverlayWindowBase : Window
     /// <summary>배율 계산 기준이 되는 설계 크기.</summary>
     protected abstract double DesignWidth { get; }
     protected abstract double DesignHeight { get; }
+    protected virtual bool SupportsUserResize => false;
+    protected virtual double MinimumDesignWidth => DesignWidth;
+    protected virtual double MinimumDesignHeight => DesignHeight;
 
     /// <summary>클릭 통과 중임을 알리는 표시(없으면 null).</summary>
     protected virtual UIElement? ClickThroughIndicator => null;
@@ -115,12 +124,18 @@ public abstract class OverlayWindowBase : Window
         ApplyClickThroughStyle();
     }
 
+    private void ApplyFocusGate()
+    {
+        Opacity = ForegroundGameWatcher.IsGameForeground ? 1 : 0;
+        ApplyClickThroughStyle();
+    }
+
     private void ApplyClickThroughStyle()
     {
         var handle = new WindowInteropHelper(this).Handle;
         if (handle == IntPtr.Zero) return;
         var style = GetWindowLong(handle, GwlExStyle);
-        var passThrough = _clickThrough || _edgePanPassThrough;
+        var passThrough = _clickThrough || _edgePanPassThrough || !ForegroundGameWatcher.IsGameForeground;
         style = passThrough
             ? style | WsExTransparent | WsExToolWindow
             : (style & ~WsExTransparent) | WsExToolWindow;
@@ -194,13 +209,30 @@ public abstract class OverlayWindowBase : Window
     }
 
     // 오버레이가 놓인 모니터 해상도(FHD~8K)에 맞춰 창 전체를 비례 확대한다.
-    protected void ApplyResolutionScale() => UiScale.Apply(this, DesignWidth, DesignHeight);
+    protected void ApplyResolutionScale()
+    {
+        var scale = UiScale.Apply(this, DesignWidth, DesignHeight,
+            resizeWindow: !SupportsUserResize || !_resolutionScaleApplied);
+        if (SupportsUserResize)
+        {
+            MinWidth = MinimumDesignWidth * scale;
+            MinHeight = MinimumDesignHeight * scale;
+            _resolutionScaleApplied = true;
+        }
+    }
 
     protected void ClampToVisibleMonitor()
     {
         var scale = VisualTreeHelper.GetDpi(this);
         var scaleX = scale.DpiScaleX > 0 ? scale.DpiScaleX : 1;
         var scaleY = scale.DpiScaleY > 0 ? scale.DpiScaleY : 1;
+        if (SupportsUserResize)
+        {
+            var screen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(
+                (int)Math.Round(Left * scaleX), (int)Math.Round(Top * scaleY)));
+            Width = Math.Min(Width, screen.WorkingArea.Width / scaleX);
+            Height = Math.Min(Height, screen.WorkingArea.Height / scaleY);
+        }
         var width = (ActualWidth > 0 ? ActualWidth : Width) * scaleX;
         var height = (ActualHeight > 0 ? ActualHeight : Height) * scaleY;
         var workAreas = System.Windows.Forms.Screen.AllScreens

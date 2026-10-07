@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="4f7c39e2-6e62-449c-8993-424e3fe2c01e" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:18:15" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:18:15.0496150+09:00" queuing="2026-09-07T19:18:15.0496151+09:00" start="2026-09-07T19:18:14.6473851+09:00" finish="2026-09-07T19:18:15.0530706+09:00" />
+  <TestSettings name="default" id="0668d88d-d1cb-4867-bbf6-8b0d086f56a8">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_18_15" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="d1ca4d99-71ff-4322-81f9-1cd42a764107" testId="15a6d1c2-bc5b-c039-9599-f98f7a710f58" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.OutputWritesAreCreateNewAndContained" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0057197" startTime="2026-09-07T19:18:14.9960472+09:00" endTime="2026-09-07T19:18:14.9960543+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1ca4d99-71ff-4322-81f9-1cd42a764107">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value is null</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.OutputWritesAreCreateNewAndContained() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 77&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.OutputWritesAreCreateNewAndContained" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="15a6d1c2-bc5b-c039-9599-f98f7a710f58">
+      <Execution id="d1ca4d99-71ff-4322-81f9-1cd42a764107" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="OutputWritesAreCreateNewAndContained" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="15a6d1c2-bc5b-c039-9599-f98f7a710f58" executionId="d1ca4d99-71ff-4322-81f9-1cd42a764107" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.09]       Assert.NotNull() Failure: Value is null&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(77,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.OutputWritesAreCreateNewAndContained()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.09]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:18:14.9951986+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.OutputWritesAreCreateNewAndContained [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

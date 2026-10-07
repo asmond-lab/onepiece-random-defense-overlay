@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="fb5bc2e9-2578-4028-ae51-aaa3e2f8fa6c" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:49:15" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:49:15.2001802+09:00" queuing="2026-09-07T19:49:15.2001803+09:00" start="2026-09-07T19:49:14.2997201+09:00" finish="2026-09-07T19:49:15.2050427+09:00" />
+  <TestSettings name="default" id="ea1b3e45-8b8a-401e-87da-6c612383f49a">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_49_15" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="bef72648-cd49-430a-b950-b590800fdb8a" testId="11d45351-d1cf-0b26-8041-f1852aefa518" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--coach-app&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0023794" startTime="2026-09-07T19:49:14.6445259+09:00" endTime="2026-09-07T19:49:14.6445330+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bef72648-cd49-430a-b950-b590800fdb8a">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs:line 27&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4e8033a0-8850-4f05-9613-257fece926fc" testId="c40b947d-6a84-09df-4891-ece8762f5611" testName="PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests.JournalCapturesUseFixtureJournalSeamWithoutPathReinjection" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0073034" startTime="2026-09-07T19:49:14.6463585+09:00" endTime="2026-09-07T19:49:14.6463586+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e8033a0-8850-4f05-9613-257fece926fc">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Contains() Failure: Sub-string not found&#xD;
+String:    "using System.Collections.Immutable;\nusing"···&#xD;
+Not found: "FixtureJournalContext("</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests.JournalCapturesUseFixtureJournalSeamWithoutPathReinjection() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureIsolationSourceTests.cs:line 45&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c032e033-2555-44b2-86e4-68650080d42b" testId="7ae547ed-1ec8-7a32-2471-9d8c71d7d9e7" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--coach-finished-rewards&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0002252" startTime="2026-09-07T19:49:14.6459946+09:00" endTime="2026-09-07T19:49:14.6459947+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c032e033-2555-44b2-86e4-68650080d42b">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs:line 27&#xD;
+   at InvokeStub_CapturePreflight.ValidateArguments(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bf2b0726-800e-4d18-80d6-61e49c21a43f" testId="e0fda1dc-a855-69a7-1c33-3f561400c7ed" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--four-modes&quot;)" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0000427" startTime="2026-09-07T19:49:14.6462283+09:00" endTime="2026-09-07T19:49:14.6462283+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bf2b0726-800e-4d18-80d6-61e49c21a43f">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs:line 27&#xD;
+   at InvokeStub_CapturePreflight.ValidateArguments(Object, Span`1)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7f3d92ca-c45c-480f-a5c0-1c5df1df1e94" testId="66c21e0c-c331-4c96-70c6-c8d5cfc85be9" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.FixtureJournalContext_SuppliesMemoryJournalWithoutPath" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.4914228" startTime="2026-09-07T19:49:15.1347739+09:00" endTime="2026-09-07T19:49:15.1347741+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f3d92ca-c45c-480f-a5c0-1c5df1df1e94">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value is null</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CapturePreflightTests.FixtureJournalContext_SuppliesMemoryJournalWithoutPath() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs:line 69&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests.JournalCapturesUseFixtureJournalSeamWithoutPathReinjection" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="c40b947d-6a84-09df-4891-ece8762f5611">
+      <Execution id="4e8033a0-8850-4f05-9613-257fece926fc" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests" name="JournalCapturesUseFixtureJournalSeamWithoutPathReinjection" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--coach-finished-rewards&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="7ae547ed-1ec8-7a32-2471-9d8c71d7d9e7">
+      <Execution id="c032e033-2555-44b2-86e4-68650080d42b" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="JournalModesAreAcceptedAfterFixtureSeam" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--four-modes&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="e0fda1dc-a855-69a7-1c33-3f561400c7ed">
+      <Execution id="bf2b0726-800e-4d18-80d6-61e49c21a43f" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="JournalModesAreAcceptedAfterFixtureSeam" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: &quot;--coach-app&quot;)" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="11d45351-d1cf-0b26-8041-f1852aefa518">
+      <Execution id="bef72648-cd49-430a-b950-b590800fdb8a" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="JournalModesAreAcceptedAfterFixtureSeam" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.FixtureJournalContext_SuppliesMemoryJournalWithoutPath" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="66c21e0c-c331-4c96-70c6-c8d5cfc85be9">
+      <Execution id="7f3d92ca-c45c-480f-a5c0-1c5df1df1e94" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="FixtureJournalContext_SuppliesMemoryJournalWithoutPath" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="11d45351-d1cf-0b26-8041-f1852aefa518" executionId="bef72648-cd49-430a-b950-b590800fdb8a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c40b947d-6a84-09df-4891-ece8762f5611" executionId="4e8033a0-8850-4f05-9613-257fece926fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ae547ed-1ec8-7a32-2471-9d8c71d7d9e7" executionId="c032e033-2555-44b2-86e4-68650080d42b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e0fda1dc-a855-69a7-1c33-3f561400c7ed" executionId="bf2b0726-800e-4d18-80d6-61e49c21a43f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="66c21e0c-c331-4c96-70c6-c8d5cfc85be9" executionId="7f3d92ca-c45c-480f-a5c0-1c5df1df1e94" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="5" executed="5" passed="0" failed="5" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.09]       System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs(27,0): at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args)&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.09]       System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs(27,0): at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args)&#xD;
+[xUnit.net 00:00:00.09]            at InvokeStub_CapturePreflight.ValidateArguments(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.09]       System.ArgumentException : Unapproved mode: live readers and path-based journals are not permitted in this fixture harness.&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CapturePreflight.cs(27,0): at PlannerEvidenceCapture.CapturePreflight.ValidateArguments(String[] args)&#xD;
+[xUnit.net 00:00:00.09]            at InvokeStub_CapturePreflight.ValidateArguments(Object, Span`1)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)&#xD;
+[xUnit.net 00:00:00.09]       Assert.Contains() Failure: Sub-string not found&#xD;
+[xUnit.net 00:00:00.09]       String:    "using System.Collections.Immutable;\nusing"···&#xD;
+[xUnit.net 00:00:00.09]       Not found: "FixtureJournalContext("&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureIsolationSourceTests.cs(45,0): at PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests.JournalCapturesUseFixtureJournalSeamWithoutPathReinjection()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.58]       Assert.NotNull() Failure: Value is null&#xD;
+[xUnit.net 00:00:00.58]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.58]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs(69,0): at PlannerEvidenceCapture.Tests.CapturePreflightTests.FixtureJournalContext_SuppliesMemoryJournalWithoutPath()&#xD;
+[xUnit.net 00:00:00.58]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.58]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.58]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:49:14.6437112+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: "--coach-app") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:49:14.6459703+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: "--coach-finished-rewards") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:49:14.6461989+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CapturePreflightTests.JournalModesAreAcceptedAfterFixtureSeam(flag: "--four-modes") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:49:14.6463129+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CaptureIsolationSourceTests.JournalCapturesUseFixtureJournalSeamWithoutPathReinjection [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:49:15.1348428+09:00">
+        <Text>[xUnit.net 00:00:00.58]     PlannerEvidenceCapture.Tests.CapturePreflightTests.FixtureJournalContext_SuppliesMemoryJournalWithoutPath [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

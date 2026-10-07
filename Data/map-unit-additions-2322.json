@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "sourceSha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d",
+  "units": [
+    {
+      "rawcode": "2C0h",
+      "sourceRawcode": "h0C2",
+      "name": "한마 유지로",
+      "tier": "신비",
+      "recipeId": "A0QG",
+      "ingredients": [
+        { "kind": "UNIT", "sourceId": "h06T", "id": "T60h", "name": "페이몬", "count": 1 },
+        { "kind": "UNIT", "sourceId": "h02Y", "id": "Y20h", "name": "루피 나이트메어", "count": 1 },
+        { "kind": "UNIT", "sourceId": "h03Y", "id": "Y30h", "name": "엠포리오 이완코브", "count": 1 },
+        { "kind": "UNIT", "sourceId": "h06G", "id": "G60h", "name": "행운의 토큰", "count": 1 },
+        { "kind": "GOLD", "id": "GOLD", "count": 10000 },
+        { "kind": "WOOD", "id": "LUMBER", "count": 7 }
+      ],
+      "conditions": [
+        { "kind": "KING", "id": "h0C2", "count": 1, "sourceLine": 61995 },
+        { "kind": "PICK", "id": "A800", "count": 1, "sourceLine": 62000, "label": "랜덤전용유닛 1기", "requiresObservedTargetAbility": true, "consumesSelectedInstance": true }
+      ]
+    }
+  ]
+}

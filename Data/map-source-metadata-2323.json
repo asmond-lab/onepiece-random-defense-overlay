@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.323",
+  "archive": {
+    "archive": "ORDR_S2_2.323[R].w3x",
+    "archiveBytes": 119514351,
+    "archiveSha256": "eac74a90a967473196c84446b880387857f50a828083c0e1b5fc02b325663535"
+  },
+  "members": [
+    {
+      "name": "war3map.j",
+      "bytes": 3079470,
+      "sha256": "9ecc275f549eadc565c7474f7d4449d9c856687e16a8108ef2ba7b586de13785"
+    },
+    {
+      "name": "war3map.w3u",
+      "bytes": 886731,
+      "sha256": "afa89e899cf28aee99f12341f2826464c2bbe153eeada128ec13941135770b69"
+    },
+    {
+      "name": "war3map.w3a",
+      "bytes": 658850,
+      "sha256": "ab8c85cd4ffea81cd0f448b8c5476076383e74124238ed6613739b5f2b9b0bcb"
+    },
+    {
+      "name": "war3map.w3t",
+      "bytes": 3948,
+      "sha256": "65e06dd4c8aa1483bb97a1f363b788e9bcea54c68611364b4b3f85aa2a788191"
+    },
+    {
+      "name": "war3map.w3q",
+      "bytes": 62682,
+      "sha256": "082691a6e94be8510ac813e37fe09649e75aadd8e26a643d8888497945e1a094"
+    },
+    {
+      "name": "war3map.wts",
+      "bytes": 1846442,
+      "sha256": "0435c0673d8224cec6f2232261248dfd5fed515f872b85cba190c1051466ec2d"
+    },
+    {
+      "name": "war3map.w3i",
+      "bytes": 649,
+      "sha256": "efb80440694ab7a152dd1874b3e8350c7967e912e7c7c11807490046d279d2ed"
+    },
+    {
+      "name": "war3mapMisc.txt",
+      "bytes": 1183,
+      "sha256": "8428c5e040ac9a75ce37209145b25b6640c560f5d96e5f068e589946317bf140"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "startLine": 31523,
+      "endLine": 31593,
+      "sha256": "a7e5f1c74f9f1747c158abd45f641f573c0bec35f7139f08297a800cd3cea12b"
+    },
+    {
+      "startLine": 32096,
+      "endLine": 32144,
+      "sha256": "011736f654da9d6acb7816a6973c15df6d50b0f7f5e5f3f2dd5e7d6c5f2fb69e"
+    },
+    {
+      "startLine": 62340,
+      "endLine": 62365,
+      "sha256": "c3ad214e8a358b969d3c7ff8fa44ea0ad585d5ea876bffbb0b784d8abdf797c6"
+    }
+  ]
+}

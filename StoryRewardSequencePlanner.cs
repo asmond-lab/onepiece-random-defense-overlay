@@ -222,7 +222,7 @@ public static class StoryRewardSequencePlanner
         var upcoming = CurrentStageLegendRewardCount(input);
         var value = selected.MissingLeaves == 0
             ? "즉시 완성 가능 · 보상보다 스토리 속도 우선"
-            : $"{selected.Name} 결손 기대 {Percent(selected.ExpectedUsefulBp)} 감소 · " +
+            : $"{selected.Name} 부족 재료가 평균 {Percent(selected.ExpectedUsefulBp)} 줄어들 것으로 예상 · " +
               selected.UsefulOutcomeSummary;
         if (observed > 0)
             return Decision(RecommendationSequenceStage.StoryReward,
@@ -269,7 +269,7 @@ public static class StoryRewardSequencePlanner
         if (rareWisps > 0)
             return Decision(RecommendationSequenceStage.RareReward,
                 StorySequenceAction.SpendRareWisps, storyLabel, rewardSummary,
-                $"희귀위습 {rareWisps}개 결과가 상위 결손을 바꿀 수 있습니다.",
+                $"희귀위습 {rareWisps}개에서 나온 패에 따라 상위 조합의 부족 재료가 달라집니다.",
                 "희귀위습을 사용하고 실제 결과를 반영한 뒤 상위를 계산하세요.");
 
         var activeOrdinal = currentStage?.Ordinal ?? input.ActiveStoryStage ??
@@ -285,7 +285,7 @@ public static class StoryRewardSequencePlanner
             "스토리 희귀 보상 사용 결과가 현재 패에 반영됐습니다.",
             input.Round < 20
                 ? "20라운드까지 현재 패를 유지하며 상위 후보를 계속 갱신합니다."
-                : "상위 경로와 항법의 안전한 승자를 계산하는 중입니다.",
+                : "현재 패에 맞는 상위 조합과 항법을 고르는 중입니다.",
             topNavigationUnlocked: true);
     }
 
@@ -390,10 +390,10 @@ public static class StoryRewardSequencePlanner
                 continue;
             var names = string.Join(", ", useful.Take(3).Select(unit => unit.Name));
             if (useful.Count > 3) names += $" 외 {useful.Count - 3}";
-            summaries.Add($"{TierLabel(tier)} 유효 {names} ({useful.Count}/{pool.Length})");
+            summaries.Add($"{TierLabel(tier)}에서 나오면 도움이 되는 패: {names} ({useful.Count}/{pool.Length})");
         }
         return summaries.Count == 0
-            ? "현재 보상 유효 후보 없음"
+            ? "현재 보상에서 조합에 도움이 되는 패를 찾지 못했습니다."
             : string.Join(" · ", summaries);
     }
 

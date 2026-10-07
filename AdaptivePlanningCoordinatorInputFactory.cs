@@ -37,7 +37,9 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         var routeInput = BuildRouteInput(source, inventory, observedLegends);
         var routes = new AdaptiveRouteEvaluator().Evaluate(routeInput);
         var bestRoute = routes.Selected ?? routes.BestPhysical ?? routes.BestMagic;
-        var beforeBuild = bestRoute?.FinalLowerBp ?? 0;
+        var goalBundle = RouteQuestEvaluation.Evaluate(source);
+        var beforeBuild = source.PlannedGoalUnitIds.IsDefaultOrEmpty
+            ? bestRoute?.FinalLowerBp ?? 0 : goalBundle.PlannedBuildBp;
         var beforeCore = bestRoute?.GoalBp ?? 0;
         var beforeCombat = bestRoute?.PackageBp ?? 0;
         var batch = AdaptivePlanningCoordinatorSimulationFactory.Create(
@@ -45,7 +47,7 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         var options = NavigationIntervalSimulationAdapter.Adapt(batch,
             new AdaptivePlanningCoordinatorOutcomeProjector(
                 beforeBuild, beforeCore, beforeCombat));
-        options = RouteQuestEvaluation.Evaluate(source).Apply(options);
+        options = goalBundle.Apply(options);
         var canonical = new AdaptivePlanningInput(source.MatchGeneration, source.Round,
             source.Phase, new StorySignal(source.ActiveStoryStage ?? 0,
                 source.CompletedStoryMilestones, !source.IsTransient),
@@ -157,6 +159,8 @@ public sealed class AdaptivePlanningCoordinatorInputFactory
         };
         values.AddRange(inventory.Select(pair =>
             PlanningValue.Known($"inventory:{pair.Key}", pair.Value)));
+        values.AddRange(source.PlannedGoalUnitIds.Select((id, index) =>
+            PlanningValue.Known($"planned-goal:{index}:{id}", 1)));
         values.AddRange(RouteQuestCatalog.All.Select(quest =>
             PlanningValue.Known($"route-quest:{quest.Id}", (int)source.RouteQuests.Status(quest.Id))));
         values.AddRange(source.CompletedTopUnitIds.Select(id =>

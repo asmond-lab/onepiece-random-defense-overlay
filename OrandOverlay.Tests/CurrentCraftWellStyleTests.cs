@@ -36,7 +36,7 @@ public sealed class CurrentCraftWellStyleTests
 
         Assert.Equal("{x:Static local:OverlayTheme.FeaturedBrush}",
             setters["Background"]);
-        Assert.Equal("{x:Static local:OverlayTheme.GoldBrush}",
+        Assert.Equal("{x:Static local:OverlayTheme.OutlineBrush}",
             setters["BorderBrush"]);
         Assert.Equal("{x:Static local:OverlayTheme.WellCornerRadius}",
             setters["CornerRadius"]);

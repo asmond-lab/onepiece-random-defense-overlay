@@ -1,0 +1,3251 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "sourceSha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d",
+  "abilitySha256": "05686321b4a7f6fbdc365f222bf5bb9cbcb6a9851ccc87c9211e112befa28ef2",
+  "unitSha256": "9890b21a7474d2005f9452526da57360fddbfa00c70c5b6752a09103b9a98822",
+  "stringsSha256": "848edaf8bbe96a274e76d95f535de51bd8c479b5921ebc3267cf3e8a89f4d690",
+  "entries": [
+    {
+      "result": "O00h",
+      "ability": "A006",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51849,
+      "hotkeyOffset": 632645,
+      "hosts": [
+        {
+          "rawcode": "100h",
+          "abilityOffset": 356605
+        }
+      ],
+      "hotkeyStringId": 8401
+    },
+    {
+      "result": "C00h",
+      "ability": "A00E",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52150,
+      "hotkeyOffset": 629022,
+      "hosts": [
+        {
+          "rawcode": "800h",
+          "abilityOffset": 350929
+        }
+      ],
+      "hotkeyStringId": 8367
+    },
+    {
+      "result": "D00h",
+      "ability": "A00W",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51888,
+      "hotkeyOffset": 620971,
+      "hosts": [
+        {
+          "rawcode": "200h",
+          "abilityOffset": 355737
+        }
+      ],
+      "hotkeyStringId": 8273
+    },
+    {
+      "result": "M00h",
+      "ability": "A0N5",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52024,
+      "hotkeyOffset": 322552,
+      "hosts": [
+        {
+          "rawcode": "900h",
+          "abilityOffset": 350134
+        }
+      ],
+      "hotkeyStringId": 5326
+    },
+    {
+      "result": "K00h",
+      "ability": "A00D",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51815,
+      "hotkeyOffset": 629443,
+      "hosts": [
+        {
+          "rawcode": "300h",
+          "abilityOffset": 354990
+        }
+      ],
+      "hotkeyStringId": 8362
+    },
+    {
+      "result": "N00h",
+      "ability": "A00V",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52053,
+      "hotkeyOffset": 621425,
+      "hosts": [
+        {
+          "rawcode": "700h",
+          "abilityOffset": 351763
+        }
+      ],
+      "hotkeyStringId": 8278
+    },
+    {
+      "result": "I00h",
+      "ability": "A00P",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51951,
+      "hotkeyOffset": 624098,
+      "hosts": [
+        {
+          "rawcode": "400h",
+          "abilityOffset": 354090
+        }
+      ],
+      "hotkeyStringId": 8303
+    },
+    {
+      "result": "G00h",
+      "ability": "A02I",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52082,
+      "hotkeyOffset": 597341,
+      "hosts": [
+        {
+          "rawcode": "800h",
+          "abilityOffset": 350929
+        }
+      ],
+      "hotkeyStringId": 7999
+    },
+    {
+      "result": "E00h",
+      "ability": "A01R",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52218,
+      "hotkeyOffset": 608295,
+      "hosts": [
+        {
+          "rawcode": "600h",
+          "abilityOffset": 352586
+        }
+      ],
+      "hotkeyStringId": 8124
+    },
+    {
+      "result": "J00h",
+      "ability": "A00L",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51922,
+      "hotkeyOffset": 625860,
+      "hosts": [
+        {
+          "rawcode": "500h",
+          "abilityOffset": 353333
+        }
+      ],
+      "hotkeyStringId": 8327
+    },
+    {
+      "result": "L00h",
+      "ability": "A01H",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52111,
+      "hotkeyOffset": 612262,
+      "hosts": [
+        {
+          "rawcode": "700h",
+          "abilityOffset": 351763
+        }
+      ],
+      "hotkeyStringId": 8174
+    },
+    {
+      "result": "F00h",
+      "ability": "A01L",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52189,
+      "hotkeyOffset": 610674,
+      "hosts": [
+        {
+          "rawcode": "900h",
+          "abilityOffset": 350134
+        }
+      ],
+      "hotkeyStringId": 8154
+    },
+    {
+      "result": "A00h",
+      "ability": "A0N7",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 51985,
+      "hotkeyOffset": 321640,
+      "hosts": [
+        {
+          "rawcode": "600h",
+          "abilityOffset": 352586
+        }
+      ],
+      "hotkeyStringId": 5316
+    },
+    {
+      "result": "D10h",
+      "ability": "A00B",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53081,
+      "hotkeyOffset": 630362,
+      "hosts": [
+        {
+          "rawcode": "G00h",
+          "abilityOffset": 345040
+        }
+      ],
+      "hotkeyStringId": 8377
+    },
+    {
+      "result": "C10h",
+      "ability": "A0NA",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52554,
+      "hotkeyOffset": 320265,
+      "hosts": [
+        {
+          "rawcode": "A00h",
+          "abilityOffset": 349428
+        }
+      ],
+      "hotkeyStringId": 5302
+    },
+    {
+      "result": "P00h",
+      "ability": "A015",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52296,
+      "hotkeyOffset": 617074,
+      "hosts": [
+        {
+          "rawcode": "100h",
+          "abilityOffset": 356605
+        }
+      ],
+      "hotkeyStringId": 8234
+    },
+    {
+      "result": "G10h",
+      "ability": "A02Y",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53379,
+      "hotkeyOffset": 590177,
+      "hosts": [
+        {
+          "rawcode": "L00h",
+          "abilityOffset": 341377
+        }
+      ],
+      "hotkeyStringId": 7922
+    },
+    {
+      "result": "E10h",
+      "ability": "A014",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53125,
+      "hotkeyOffset": 617475,
+      "hosts": [
+        {
+          "rawcode": "G00h",
+          "abilityOffset": 345040
+        }
+      ],
+      "hotkeyStringId": 8239
+    },
+    {
+      "result": "S00h",
+      "ability": "A03E",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52642,
+      "hotkeyOffset": 583515,
+      "hosts": [
+        {
+          "rawcode": "O00h",
+          "abilityOffset": 339166
+        }
+      ],
+      "hotkeyStringId": 7851
+    },
+    {
+      "result": "H10h",
+      "ability": "A01X",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52676,
+      "hotkeyOffset": 605591,
+      "hosts": [
+        {
+          "rawcode": "C00h",
+          "abilityOffset": 347948
+        }
+      ],
+      "hotkeyStringId": 8071
+    },
+    {
+      "result": "R00h",
+      "ability": "A01O",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52598,
+      "hotkeyOffset": 609482,
+      "hosts": [
+        {
+          "rawcode": "A00h",
+          "abilityOffset": 349428
+        }
+      ],
+      "hotkeyStringId": 8139
+    },
+    {
+      "result": "U00h",
+      "ability": "A012",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52257,
+      "hotkeyOffset": 618269,
+      "hosts": [
+        {
+          "rawcode": "300h",
+          "abilityOffset": 354990
+        }
+      ],
+      "hotkeyStringId": 8249
+    },
+    {
+      "result": "T00h",
+      "ability": "A024",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52476,
+      "hotkeyOffset": 603540,
+      "hosts": [
+        {
+          "rawcode": "M00h",
+          "abilityOffset": 340678
+        }
+      ],
+      "hotkeyStringId": 8066
+    },
+    {
+      "result": "610h",
+      "ability": "A01N",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53247,
+      "hotkeyOffset": 609879,
+      "hosts": [
+        {
+          "rawcode": "J00h",
+          "abilityOffset": 342857
+        }
+      ],
+      "hotkeyStringId": 8144
+    },
+    {
+      "result": "510h",
+      "ability": "A018",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52364,
+      "hotkeyOffset": 615888,
+      "hosts": [
+        {
+          "rawcode": "500h",
+          "abilityOffset": 353333
+        }
+      ],
+      "hotkeyStringId": 8219
+    },
+    {
+      "result": "410h",
+      "ability": "A01I",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52876,
+      "hotkeyOffset": 611865,
+      "hosts": [
+        {
+          "rawcode": "I00h",
+          "abilityOffset": 343607
+        }
+      ],
+      "hotkeyStringId": 8169
+    },
+    {
+      "result": "310h",
+      "ability": "A01B",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52398,
+      "hotkeyOffset": 614697,
+      "hosts": [
+        {
+          "rawcode": "400h",
+          "abilityOffset": 354090
+        }
+      ],
+      "hotkeyStringId": 8204
+    },
+    {
+      "result": "F10h",
+      "ability": "A19Z",
+      "key": "C",
+      "outputCount": 1,
+      "recipeLine": 52432,
+      "hotkeyOffset": 35306,
+      "hosts": [
+        {
+          "rawcode": "900h",
+          "abilityOffset": 350134
+        }
+      ],
+      "hotkeyStringId": 2868
+    },
+    {
+      "result": "210h",
+      "ability": "A1A1",
+      "key": "C",
+      "outputCount": 1,
+      "recipeLine": 53169,
+      "hotkeyOffset": 34497,
+      "hosts": [
+        {
+          "rawcode": "G00h",
+          "abilityOffset": 345040
+        }
+      ],
+      "hotkeyStringId": 2858
+    },
+    {
+      "result": "110h",
+      "ability": "A01P",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53501,
+      "hotkeyOffset": 609086,
+      "hosts": [
+        {
+          "rawcode": "F00h",
+          "abilityOffset": 345776
+        }
+      ],
+      "hotkeyStringId": 8134
+    },
+    {
+      "result": "010h",
+      "ability": "A029",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53540,
+      "hotkeyOffset": 601263,
+      "hosts": [
+        {
+          "rawcode": "H00h",
+          "abilityOffset": 344277
+        }
+      ],
+      "hotkeyStringId": 8042
+    },
+    {
+      "result": "Q00h",
+      "ability": "A01D",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52915,
+      "hotkeyOffset": 613872,
+      "hosts": [
+        {
+          "rawcode": "N00h",
+          "abilityOffset": 339916
+        }
+      ],
+      "hotkeyStringId": 8119
+    },
+    {
+      "result": "J10h",
+      "ability": "A00S",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53296,
+      "hotkeyOffset": 622788,
+      "hosts": [
+        {
+          "rawcode": "K00h",
+          "abilityOffset": 342121
+        }
+      ],
+      "hotkeyStringId": 8293
+    },
+    {
+      "result": "Z00h",
+      "ability": "A01K",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52959,
+      "hotkeyOffset": 611069,
+      "hosts": [
+        {
+          "rawcode": "N00h",
+          "abilityOffset": 339916
+        }
+      ],
+      "hotkeyStringId": 8159
+    },
+    {
+      "result": "X00h",
+      "ability": "A00Z",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52842,
+      "hotkeyOffset": 619606,
+      "hosts": [
+        {
+          "rawcode": "I00h",
+          "abilityOffset": 343607
+        }
+      ],
+      "hotkeyStringId": 8258
+    },
+    {
+      "result": "W00h",
+      "ability": "A032",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52330,
+      "hotkeyOffset": 588430,
+      "hosts": [
+        {
+          "rawcode": "200h",
+          "abilityOffset": 355737
+        }
+      ],
+      "hotkeyStringId": 7908
+    },
+    {
+      "result": "810h",
+      "ability": "A01E",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53335,
+      "hotkeyOffset": 613450,
+      "hosts": [
+        {
+          "rawcode": "K00h",
+          "abilityOffset": 342121
+        }
+      ],
+      "hotkeyStringId": 8189
+    },
+    {
+      "result": "910h",
+      "ability": "A01A",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52515,
+      "hotkeyOffset": 615093,
+      "hosts": [
+        {
+          "rawcode": "M00h",
+          "abilityOffset": 340678
+        }
+      ],
+      "hotkeyStringId": 8209
+    },
+    {
+      "result": "710h",
+      "ability": "A017",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52720,
+      "hotkeyOffset": 616283,
+      "hosts": [
+        {
+          "rawcode": "C00h",
+          "abilityOffset": 347948
+        }
+      ],
+      "hotkeyStringId": 8224
+    },
+    {
+      "result": "V00h",
+      "ability": "A0N8",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53457,
+      "hotkeyOffset": 321184,
+      "hosts": [
+        {
+          "rawcode": "F00h",
+          "abilityOffset": 345776
+        }
+      ],
+      "hotkeyStringId": 5311
+    },
+    {
+      "result": "A10h",
+      "ability": "A01Q",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53413,
+      "hotkeyOffset": 608691,
+      "hosts": [
+        {
+          "rawcode": "L00h",
+          "abilityOffset": 341377
+        }
+      ],
+      "hotkeyStringId": 8129
+    },
+    {
+      "result": "Y00h",
+      "ability": "A030",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53208,
+      "hotkeyOffset": 589268,
+      "hosts": [
+        {
+          "rawcode": "J00h",
+          "abilityOffset": 342857
+        }
+      ],
+      "hotkeyStringId": 7895
+    },
+    {
+      "result": "B10h",
+      "ability": "A01C",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53042,
+      "hotkeyOffset": 614301,
+      "hosts": [
+        {
+          "rawcode": "E00h",
+          "abilityOffset": 346491
+        }
+      ],
+      "hotkeyStringId": 8199
+    },
+    {
+      "result": "I10h",
+      "ability": "A019",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 52798,
+      "hotkeyOffset": 615492,
+      "hosts": [
+        {
+          "rawcode": "D00h",
+          "abilityOffset": 347160
+        }
+      ],
+      "hotkeyStringId": 8214
+    },
+    {
+      "result": "K10h",
+      "ability": "A02B",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52993,
+      "hotkeyOffset": 600352,
+      "hosts": [
+        {
+          "rawcode": "E00h",
+          "abilityOffset": 346491
+        }
+      ],
+      "hotkeyStringId": 8032
+    },
+    {
+      "result": "B00h",
+      "ability": "A00K",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 52759,
+      "hotkeyOffset": 626315,
+      "hosts": [
+        {
+          "rawcode": "D00h",
+          "abilityOffset": 347160
+        }
+      ],
+      "hotkeyStringId": 8332
+    },
+    {
+      "result": "X90h",
+      "ability": "A0XP",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53564,
+      "hotkeyOffset": 186809,
+      "hosts": [
+        {
+          "rawcode": "K10h",
+          "abilityOffset": 316002
+        }
+      ],
+      "hotkeyStringId": 3972
+    },
+    {
+      "result": "Q10h",
+      "ability": "A02W",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53603,
+      "hotkeyOffset": 591086,
+      "hosts": [
+        {
+          "rawcode": "F10h",
+          "abilityOffset": 319625
+        }
+      ],
+      "hotkeyStringId": 7932
+    },
+    {
+      "result": "520h",
+      "ability": "A016",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53642,
+      "hotkeyOffset": 616679,
+      "hosts": [
+        {
+          "rawcode": "B00h",
+          "abilityOffset": 348655
+        }
+      ],
+      "hotkeyStringId": 8229
+    },
+    {
+      "result": "L10h",
+      "ability": "A02M",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53701,
+      "hotkeyOffset": 595552,
+      "hosts": [
+        {
+          "rawcode": "D10h",
+          "abilityOffset": 321049
+        }
+      ],
+      "hotkeyStringId": 7984
+    },
+    {
+      "result": "F20h",
+      "ability": "A02R",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53745,
+      "hotkeyOffset": 593297,
+      "hosts": [
+        {
+          "rawcode": "W00h",
+          "abilityOffset": 333215
+        }
+      ],
+      "hotkeyStringId": 7956
+    },
+    {
+      "result": "220h",
+      "ability": "A00I",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53789,
+      "hotkeyOffset": 627230,
+      "hosts": [
+        {
+          "rawcode": "T00h",
+          "abilityOffset": 335479
+        }
+      ],
+      "hotkeyStringId": 8342
+    },
+    {
+      "result": "120h",
+      "ability": "A01F",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53828,
+      "hotkeyOffset": 613054,
+      "hosts": [
+        {
+          "rawcode": "J10h",
+          "abilityOffset": 316668
+        }
+      ],
+      "hotkeyStringId": 8184
+    },
+    {
+      "result": "020h",
+      "ability": "A028",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53872,
+      "hotkeyOffset": 601717,
+      "hosts": [
+        {
+          "rawcode": "B00h",
+          "abilityOffset": 348655
+        }
+      ],
+      "hotkeyStringId": 8047
+    },
+    {
+      "result": "Z10h",
+      "ability": "A01M",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 53906,
+      "hotkeyOffset": 610278,
+      "hosts": [
+        {
+          "rawcode": "810h",
+          "abilityOffset": 324514
+        }
+      ],
+      "hotkeyStringId": 8149
+    },
+    {
+      "result": "Y10h",
+      "ability": "A02K",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53950,
+      "hotkeyOffset": 596432,
+      "hosts": [
+        {
+          "rawcode": "810h",
+          "abilityOffset": 324514
+        }
+      ],
+      "hotkeyStringId": 7989
+    },
+    {
+      "result": "X10h",
+      "ability": "A00F",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 53989,
+      "hotkeyOffset": 628595,
+      "hosts": [
+        {
+          "rawcode": "U00h",
+          "abilityOffset": 334720
+        }
+      ],
+      "hotkeyStringId": 8357
+    },
+    {
+      "result": "W10h",
+      "ability": "A02F",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54028,
+      "hotkeyOffset": 598710,
+      "hosts": [
+        {
+          "rawcode": "V00h",
+          "abilityOffset": 334016
+        }
+      ],
+      "hotkeyStringId": 8014
+    },
+    {
+      "result": "V10h",
+      "ability": "A013",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 54072,
+      "hotkeyOffset": 617873,
+      "hosts": [
+        {
+          "rawcode": "610h",
+          "abilityOffset": 325929
+        }
+      ],
+      "hotkeyStringId": 8244
+    },
+    {
+      "result": "U10h",
+      "ability": "A0IO",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54116,
+      "hotkeyOffset": 383123,
+      "hosts": [
+        {
+          "rawcode": "610h",
+          "abilityOffset": 325929
+        }
+      ],
+      "hotkeyStringId": 5737
+    },
+    {
+      "result": "T10h",
+      "ability": "A03G",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54155,
+      "hotkeyOffset": 582788,
+      "hosts": [
+        {
+          "rawcode": "110h",
+          "abilityOffset": 329590
+        }
+      ],
+      "hotkeyStringId": 7846
+    },
+    {
+      "result": "M20h",
+      "ability": "A00A",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54204,
+      "hotkeyOffset": 630817,
+      "hosts": [
+        {
+          "rawcode": "G10h",
+          "abilityOffset": 318873
+        }
+      ],
+      "hotkeyStringId": 8382
+    },
+    {
+      "result": "S10h",
+      "ability": "A00Q",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 54253,
+      "hotkeyOffset": 623674,
+      "hosts": [
+        {
+          "rawcode": "Z00h",
+          "abilityOffset": 331015
+        }
+      ],
+      "hotkeyStringId": 8308
+    },
+    {
+      "result": "R10h",
+      "ability": "A0N6",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54292,
+      "hotkeyOffset": 322096,
+      "hosts": [
+        {
+          "rawcode": "I10h",
+          "abilityOffset": 317463
+        }
+      ],
+      "hotkeyStringId": 5321
+    },
+    {
+      "result": "M10h",
+      "ability": "A0ND",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54331,
+      "hotkeyOffset": 318898,
+      "hosts": [
+        {
+          "rawcode": "P00h",
+          "abilityOffset": 338428
+        }
+      ],
+      "hotkeyStringId": 5287
+    },
+    {
+      "result": "N10h",
+      "ability": "A1A0",
+      "key": "C",
+      "outputCount": 1,
+      "recipeLine": 54375,
+      "hotkeyOffset": 34901,
+      "hosts": [
+        {
+          "rawcode": "D00h",
+          "abilityOffset": 347160
+        }
+      ],
+      "hotkeyStringId": 2863
+    },
+    {
+      "result": "O10h",
+      "ability": "A02J",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54419,
+      "hotkeyOffset": 596886,
+      "hosts": [
+        {
+          "rawcode": "910h",
+          "abilityOffset": 323818
+        }
+      ],
+      "hotkeyStringId": 7994
+    },
+    {
+      "result": "L50h",
+      "ability": "A00X",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54463,
+      "hotkeyOffset": 620516,
+      "hosts": [
+        {
+          "rawcode": "X00h",
+          "abilityOffset": 332528
+        }
+      ],
+      "hotkeyStringId": 8268
+    },
+    {
+      "result": "P10h",
+      "ability": "A00R",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54502,
+      "hotkeyOffset": 623244,
+      "hosts": [
+        {
+          "rawcode": "J10h",
+          "abilityOffset": 316668
+        }
+      ],
+      "hotkeyStringId": 8298
+    },
+    {
+      "result": "I20h",
+      "ability": "A0NF",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54546,
+      "hotkeyOffset": 317986,
+      "hosts": [
+        {
+          "rawcode": "310h",
+          "abilityOffset": 328099
+        }
+      ],
+      "hotkeyStringId": 5277
+    },
+    {
+      "result": "920h",
+      "ability": "A03B",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54590,
+      "hotkeyOffset": 584887,
+      "hosts": [
+        {
+          "rawcode": "510h",
+          "abilityOffset": 326649
+        }
+      ],
+      "hotkeyStringId": 7869
+    },
+    {
+      "result": "820h",
+      "ability": "A02V",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54629,
+      "hotkeyOffset": 591546,
+      "hosts": [
+        {
+          "rawcode": "710h",
+          "abilityOffset": 325226
+        }
+      ],
+      "hotkeyStringId": 7937
+    },
+    {
+      "result": "720h",
+      "ability": "A02L",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54678,
+      "hotkeyOffset": 595975,
+      "hosts": [
+        {
+          "rawcode": "E10h",
+          "abilityOffset": 320322
+        }
+      ],
+      "hotkeyStringId": 7979
+    },
+    {
+      "result": "620h",
+      "ability": "A039",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54727,
+      "hotkeyOffset": 585745,
+      "hosts": [
+        {
+          "rawcode": "C10h",
+          "abilityOffset": 321807
+        }
+      ],
+      "hotkeyStringId": 7874
+    },
+    {
+      "result": "A20h",
+      "ability": "A01J",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 54771,
+      "hotkeyOffset": 611467,
+      "hosts": [
+        {
+          "rawcode": "X00h",
+          "abilityOffset": 332528
+        }
+      ],
+      "hotkeyStringId": 8164
+    },
+    {
+      "result": "420h",
+      "ability": "A0NB",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54815,
+      "hotkeyOffset": 319809,
+      "hosts": [
+        {
+          "rawcode": "Q00h",
+          "abilityOffset": 337708
+        }
+      ],
+      "hotkeyStringId": 5297
+    },
+    {
+      "result": "C20h",
+      "ability": "A01W",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54859,
+      "hotkeyOffset": 606045,
+      "hosts": [
+        {
+          "rawcode": "Z00h",
+          "abilityOffset": 331015
+        }
+      ],
+      "hotkeyStringId": 8094
+    },
+    {
+      "result": "D20h",
+      "ability": "A00U",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54908,
+      "hotkeyOffset": 621878,
+      "hosts": [
+        {
+          "rawcode": "Y00h",
+          "abilityOffset": 331738
+        }
+      ],
+      "hotkeyStringId": 8283
+    },
+    {
+      "result": "G20h",
+      "ability": "A008",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54952,
+      "hotkeyOffset": 631732,
+      "hosts": [
+        {
+          "rawcode": "410h",
+          "abilityOffset": 327357
+        }
+      ],
+      "hotkeyStringId": 8392
+    },
+    {
+      "result": "E20h",
+      "ability": "A02A",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 54991,
+      "hotkeyOffset": 600806,
+      "hosts": [
+        {
+          "rawcode": "210h",
+          "abilityOffset": 328889
+        }
+      ],
+      "hotkeyStringId": 8037
+    },
+    {
+      "result": "H40h",
+      "ability": "A02T",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 55035,
+      "hotkeyOffset": 592418,
+      "hosts": [
+        {
+          "rawcode": "W00h",
+          "abilityOffset": 333215
+        }
+      ],
+      "hotkeyStringId": 7951
+    },
+    {
+      "result": "320h",
+      "ability": "A00C",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55074,
+      "hotkeyOffset": 629897,
+      "hosts": [
+        {
+          "rawcode": "R00h",
+          "abilityOffset": 337013
+        }
+      ],
+      "hotkeyStringId": 8372
+    },
+    {
+      "result": "B20h",
+      "ability": "A0NC",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55128,
+      "hotkeyOffset": 319354,
+      "hosts": [
+        {
+          "rawcode": "S00h",
+          "abilityOffset": 336221
+        }
+      ],
+      "hotkeyStringId": 5292
+    },
+    {
+      "result": "H20h",
+      "ability": "A02N",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55172,
+      "hotkeyOffset": 595124,
+      "hosts": [
+        {
+          "rawcode": "A10h",
+          "abilityOffset": 323136
+        }
+      ],
+      "hotkeyStringId": 7974
+    },
+    {
+      "result": "J20h",
+      "ability": "A02S",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55216,
+      "hotkeyOffset": 592843,
+      "hosts": [
+        {
+          "rawcode": "B10h",
+          "abilityOffset": 322416
+        }
+      ],
+      "hotkeyStringId": 7942
+    },
+    {
+      "result": "K20h",
+      "ability": "A010",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55265,
+      "hotkeyOffset": 619150,
+      "hosts": [
+        {
+          "rawcode": "D10h",
+          "abilityOffset": 321049
+        }
+      ],
+      "hotkeyStringId": 8253
+    },
+    {
+      "result": "L20h",
+      "ability": "A02Z",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55309,
+      "hotkeyOffset": 589721,
+      "hosts": [
+        {
+          "rawcode": "H10h",
+          "abilityOffset": 318190
+        }
+      ],
+      "hotkeyStringId": 7917
+    },
+    {
+      "result": "K50h",
+      "ability": "A01V",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55353,
+      "hotkeyOffset": 606501,
+      "hosts": [
+        {
+          "rawcode": "010h",
+          "abilityOffset": 330244
+        }
+      ],
+      "hotkeyStringId": 8099
+    },
+    {
+      "result": "K30h",
+      "ability": "A037",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55426,
+      "hotkeyOffset": 586707,
+      "hosts": [
+        {
+          "rawcode": "K20h",
+          "abilityOffset": 290010
+        }
+      ],
+      "hotkeyStringId": 7880
+    },
+    {
+      "result": "N20h",
+      "ability": "A01G",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 55470,
+      "hotkeyOffset": 612658,
+      "hosts": [
+        {
+          "rawcode": "020h",
+          "abilityOffset": 304605
+        }
+      ],
+      "hotkeyStringId": 8179
+    },
+    {
+      "result": "O20h",
+      "ability": "A00N",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 55514,
+      "hotkeyOffset": 624979,
+      "hosts": [
+        {
+          "rawcode": "220h",
+          "abilityOffset": 303196
+        }
+      ],
+      "hotkeyStringId": 8322
+    },
+    {
+      "result": "P20h",
+      "ability": "A00O",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55553,
+      "hotkeyOffset": 624552,
+      "hosts": [
+        {
+          "rawcode": "O10h",
+          "abilityOffset": 313045
+        }
+      ],
+      "hotkeyStringId": 8313
+    },
+    {
+      "result": "Z90h",
+      "ability": "A0XS",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55592,
+      "hotkeyOffset": 185881,
+      "hosts": [
+        {
+          "rawcode": "D20h",
+          "abilityOffset": 295082
+        }
+      ],
+      "hotkeyStringId": 3959
+    },
+    {
+      "result": "Q20h",
+      "ability": "A03C",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55631,
+      "hotkeyOffset": 584431,
+      "hosts": [
+        {
+          "rawcode": "N10h",
+          "abilityOffset": 313846
+        }
+      ],
+      "hotkeyStringId": 7864
+    },
+    {
+      "result": "R20h",
+      "ability": "A02P",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55670,
+      "hotkeyOffset": 594207,
+      "hosts": [
+        {
+          "rawcode": "320h",
+          "abilityOffset": 302431
+        }
+      ],
+      "hotkeyStringId": 7965
+    },
+    {
+      "result": "S20h",
+      "ability": "A0NH",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55714,
+      "hotkeyOffset": 317075,
+      "hosts": [
+        {
+          "rawcode": "F20h",
+          "abilityOffset": 293666
+        }
+      ],
+      "hotkeyStringId": 5267
+    },
+    {
+      "result": "T20h",
+      "ability": "A02D",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55758,
+      "hotkeyOffset": 599439,
+      "hosts": [
+        {
+          "rawcode": "220h",
+          "abilityOffset": 303196
+        }
+      ],
+      "hotkeyStringId": 8019
+    },
+    {
+      "result": "U20h",
+      "ability": "A036",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55807,
+      "hotkeyOffset": 587162,
+      "hosts": [
+        {
+          "rawcode": "120h",
+          "abilityOffset": 303973
+        }
+      ],
+      "hotkeyStringId": 7890
+    },
+    {
+      "result": "Y20h",
+      "ability": "A00T",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55851,
+      "hotkeyOffset": 622335,
+      "hosts": [
+        {
+          "rawcode": "020h",
+          "abilityOffset": 304605
+        }
+      ],
+      "hotkeyStringId": 8288
+    },
+    {
+      "result": "X20h",
+      "ability": "A03D",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55900,
+      "hotkeyOffset": 583975,
+      "hosts": [
+        {
+          "rawcode": "X10h",
+          "abilityOffset": 306710
+        }
+      ],
+      "hotkeyStringId": 7859
+    },
+    {
+      "result": "W20h",
+      "ability": "A00Y",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55949,
+      "hotkeyOffset": 620062,
+      "hosts": [
+        {
+          "rawcode": "A20h",
+          "abilityOffset": 297491
+        }
+      ],
+      "hotkeyStringId": 8263
+    },
+    {
+      "result": "Z20h",
+      "ability": "A00J",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 55993,
+      "hotkeyOffset": 626775,
+      "hosts": [
+        {
+          "rawcode": "W10h",
+          "abilityOffset": 307363
+        }
+      ],
+      "hotkeyStringId": 8337
+    },
+    {
+      "result": "030h",
+      "ability": "A027",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56037,
+      "hotkeyOffset": 602171,
+      "hosts": [
+        {
+          "rawcode": "820h",
+          "abilityOffset": 298910
+        }
+      ],
+      "hotkeyStringId": 8052
+    },
+    {
+      "result": "230h",
+      "ability": "A0N9",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56081,
+      "hotkeyOffset": 320722,
+      "hosts": [
+        {
+          "rawcode": "M10h",
+          "abilityOffset": 314599
+        }
+      ],
+      "hotkeyStringId": 5306
+    },
+    {
+      "result": "330h",
+      "ability": "A00G",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56125,
+      "hotkeyOffset": 628140,
+      "hosts": [
+        {
+          "rawcode": "Z10h",
+          "abilityOffset": 305329
+        }
+      ],
+      "hotkeyStringId": 8352
+    },
+    {
+      "result": "430h",
+      "ability": "A01U",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56169,
+      "hotkeyOffset": 606956,
+      "hosts": [
+        {
+          "rawcode": "I20h",
+          "abilityOffset": 291398
+        }
+      ],
+      "hotkeyStringId": 8104
+    },
+    {
+      "result": "H30h",
+      "ability": "A02C",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56208,
+      "hotkeyOffset": 599896,
+      "hosts": [
+        {
+          "rawcode": "G20h",
+          "abilityOffset": 292937
+        }
+      ],
+      "hotkeyStringId": 8027
+    },
+    {
+      "result": "530h",
+      "ability": "A025",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56252,
+      "hotkeyOffset": 603084,
+      "hosts": [
+        {
+          "rawcode": "920h",
+          "abilityOffset": 298224
+        }
+      ],
+      "hotkeyStringId": 8062
+    },
+    {
+      "result": "630h",
+      "ability": "A00M",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56301,
+      "hotkeyOffset": 625404,
+      "hosts": [
+        {
+          "rawcode": "P10h",
+          "abilityOffset": 312386
+        }
+      ],
+      "hotkeyStringId": 8317
+    },
+    {
+      "result": "730h",
+      "ability": "A0NI",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56340,
+      "hotkeyOffset": 316621,
+      "hosts": [
+        {
+          "rawcode": "720h",
+          "abilityOffset": 299589
+        }
+      ],
+      "hotkeyStringId": 5262
+    },
+    {
+      "result": "V20h",
+      "ability": "A03H",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56384,
+      "hotkeyOffset": 582332,
+      "hosts": [
+        {
+          "rawcode": "Q10h",
+          "abilityOffset": 311659
+        }
+      ],
+      "hotkeyStringId": 7289
+    },
+    {
+      "result": "240h",
+      "ability": "A0UG",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56428,
+      "hotkeyOffset": 226815,
+      "hosts": [
+        {
+          "rawcode": "520h",
+          "abilityOffset": 301000
+        }
+      ],
+      "hotkeyStringId": 4390
+    },
+    {
+      "result": "830h",
+      "ability": "A009",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56467,
+      "hotkeyOffset": 631278,
+      "hosts": [
+        {
+          "rawcode": "L10h",
+          "abilityOffset": 315317
+        }
+      ],
+      "hotkeyStringId": 8387
+    },
+    {
+      "result": "930h",
+      "ability": "A02X",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56511,
+      "hotkeyOffset": 590632,
+      "hosts": [
+        {
+          "rawcode": "420h",
+          "abilityOffset": 301657
+        }
+      ],
+      "hotkeyStringId": 7927
+    },
+    {
+      "result": "A30h",
+      "ability": "A01S",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56555,
+      "hotkeyOffset": 607865,
+      "hosts": [
+        {
+          "rawcode": "X50h",
+          "abilityOffset": 200206
+        }
+      ],
+      "hotkeyStringId": 8114
+    },
+    {
+      "result": "780h",
+      "ability": "A02Q",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56594,
+      "hotkeyOffset": 593751,
+      "hosts": [
+        {
+          "rawcode": "R10h",
+          "abilityOffset": 310922
+        }
+      ],
+      "hotkeyStringId": 7961
+    },
+    {
+      "result": "B30h",
+      "ability": "A02G",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56633,
+      "hotkeyOffset": 598250,
+      "hosts": [
+        {
+          "rawcode": "E20h",
+          "abilityOffset": 294364
+        }
+      ],
+      "hotkeyStringId": 8009
+    },
+    {
+      "result": "S30h",
+      "ability": "A005",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 56672,
+      "hotkeyOffset": 633072,
+      "hosts": [
+        {
+          "rawcode": "K20h",
+          "abilityOffset": 290010
+        }
+      ],
+      "hotkeyStringId": 8411
+    },
+    {
+      "result": "I30h",
+      "ability": "A0NG",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56716,
+      "hotkeyOffset": 317531,
+      "hosts": [
+        {
+          "rawcode": "V10h",
+          "abilityOffset": 308073
+        }
+      ],
+      "hotkeyStringId": 5272
+    },
+    {
+      "result": "G30h",
+      "ability": "A0NE",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56755,
+      "hotkeyOffset": 318441,
+      "hosts": [
+        {
+          "rawcode": "T10h",
+          "abilityOffset": 309433
+        }
+      ],
+      "hotkeyStringId": 5282
+    },
+    {
+      "result": "F30h",
+      "ability": "A026",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56799,
+      "hotkeyOffset": 602628,
+      "hosts": [
+        {
+          "rawcode": "C20h",
+          "abilityOffset": 295944
+        }
+      ],
+      "hotkeyStringId": 8057
+    },
+    {
+      "result": "E30h",
+      "ability": "A01T",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56843,
+      "hotkeyOffset": 607410,
+      "hosts": [
+        {
+          "rawcode": "620h",
+          "abilityOffset": 300311
+        }
+      ],
+      "hotkeyStringId": 8109
+    },
+    {
+      "result": "HA0h",
+      "ability": "A108",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56892,
+      "hotkeyOffset": 155649,
+      "hosts": [
+        {
+          "rawcode": "X90h",
+          "abilityOffset": 118211
+        }
+      ],
+      "hotkeyStringId": 3638
+    },
+    {
+      "result": "C30h",
+      "ability": "A02H",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56936,
+      "hotkeyOffset": 597794,
+      "hosts": [
+        {
+          "rawcode": "L20h",
+          "abilityOffset": 289253
+        }
+      ],
+      "hotkeyStringId": 8004
+    },
+    {
+      "result": "130h",
+      "ability": "A00H",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 56985,
+      "hotkeyOffset": 627685,
+      "hosts": [
+        {
+          "rawcode": "J20h",
+          "abilityOffset": 290726
+        }
+      ],
+      "hotkeyStringId": 8347
+    },
+    {
+      "result": "MC0h",
+      "ability": "A1CC",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 57029,
+      "hotkeyOffset": 25461,
+      "hosts": [
+        {
+          "rawcode": "M20h",
+          "abilityOffset": 288526
+        }
+      ],
+      "hotkeyStringId": 2770
+    },
+    {
+      "result": "S80h",
+      "ability": "A113",
+      "key": "X",
+      "outputCount": 1,
+      "recipeLine": 57068,
+      "hotkeyOffset": 145907,
+      "hosts": [
+        {
+          "rawcode": "C20h",
+          "abilityOffset": 295944
+        }
+      ],
+      "hotkeyStringId": 3542
+    },
+    {
+      "result": "S50h",
+      "ability": "A0K2",
+      "key": "B",
+      "outputCount": 1,
+      "recipeLine": 57879,
+      "hotkeyOffset": 367202,
+      "hosts": [
+        {
+          "rawcode": "L10h",
+          "abilityOffset": 315317
+        }
+      ],
+      "hotkeyStringId": 5744
+    },
+    {
+      "result": "N70h",
+      "ability": "A0K3",
+      "key": "B",
+      "outputCount": 1,
+      "recipeLine": 57913,
+      "hotkeyOffset": 366767,
+      "hosts": [
+        {
+          "rawcode": "M20h",
+          "abilityOffset": 288526
+        }
+      ],
+      "hotkeyStringId": 5739
+    },
+    {
+      "result": "W50h",
+      "ability": "A0K4",
+      "key": "B",
+      "outputCount": 1,
+      "recipeLine": 57947,
+      "hotkeyOffset": 366337,
+      "hosts": [
+        {
+          "rawcode": "O10h",
+          "abilityOffset": 313045
+        }
+      ],
+      "hotkeyStringId": 5734
+    },
+    {
+      "result": "KC0h",
+      "ability": "A0K6",
+      "key": "B",
+      "outputCount": 1,
+      "recipeLine": 57981,
+      "hotkeyOffset": 365505,
+      "hosts": [
+        {
+          "rawcode": "320h",
+          "abilityOffset": 302431
+        }
+      ],
+      "hotkeyStringId": 5724
+    },
+    {
+      "result": "J70h",
+      "ability": "A0K7",
+      "key": "B",
+      "outputCount": 1,
+      "recipeLine": 58005,
+      "hotkeyOffset": 365076,
+      "hosts": [
+        {
+          "rawcode": "L70h",
+          "abilityOffset": 159267
+        }
+      ],
+      "hotkeyStringId": 5719
+    },
+    {
+      "result": "I50h",
+      "ability": "A007",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58441,
+      "hotkeyOffset": 632189,
+      "hosts": [
+        {
+          "rawcode": "T30h",
+          "abilityOffset": 254859
+        }
+      ],
+      "hotkeyStringId": 8397
+    },
+    {
+      "result": "O80h",
+      "ability": "A011",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58485,
+      "hotkeyOffset": 618692,
+      "hosts": [
+        {
+          "rawcode": "T20h",
+          "abilityOffset": 283144
+        },
+        {
+          "rawcode": "QB0h",
+          "abilityOffset": 826023
+        }
+      ],
+      "hotkeyStringId": 8194
+    },
+    {
+      "result": "I70h",
+      "ability": "A0S0",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58529,
+      "hotkeyOffset": 257449,
+      "hosts": [
+        {
+          "rawcode": "H30h",
+          "abilityOffset": 264624
+        }
+      ],
+      "hotkeyStringId": 4693
+    },
+    {
+      "result": "480h",
+      "ability": "A0UH",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58578,
+      "hotkeyOffset": 226357,
+      "hosts": [
+        {
+          "rawcode": "8A0h",
+          "abilityOffset": 110407
+        },
+        {
+          "rawcode": "240h",
+          "abilityOffset": 247798
+        }
+      ],
+      "hotkeyStringId": 4386
+    },
+    {
+      "result": "040h",
+      "ability": "A0RP",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58622,
+      "hotkeyOffset": 261961,
+      "hosts": [
+        {
+          "rawcode": "B20h",
+          "abilityOffset": 296745
+        }
+      ],
+      "hotkeyStringId": 4743
+    },
+    {
+      "result": "Q80h",
+      "ability": "A18P",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58671,
+      "hotkeyOffset": 41197,
+      "hosts": [
+        {
+          "rawcode": "X20h",
+          "abilityOffset": 280093
+        }
+      ],
+      "hotkeyStringId": 2923
+    },
+    {
+      "result": "E50h",
+      "ability": "A1A5",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58725,
+      "hotkeyOffset": 34112,
+      "hosts": [
+        {
+          "rawcode": "X30h",
+          "abilityOffset": 251669
+        }
+      ],
+      "hotkeyStringId": 2853
+    },
+    {
+      "result": "F50h",
+      "ability": "A02O",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58774,
+      "hotkeyOffset": 594665,
+      "hosts": [
+        {
+          "rawcode": "H20h",
+          "abilityOffset": 292145
+        }
+      ],
+      "hotkeyStringId": 7970
+    },
+    {
+      "result": "IA0h",
+      "ability": "A10A",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58823,
+      "hotkeyOffset": 154793,
+      "hosts": [
+        {
+          "rawcode": "HA0h",
+          "abilityOffset": 105691
+        }
+      ],
+      "hotkeyStringId": 3629
+    },
+    {
+      "result": "G50h",
+      "ability": "A1A6",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 58867,
+      "hotkeyOffset": 33657,
+      "hosts": [
+        {
+          "rawcode": "K30h",
+          "abilityOffset": 261919
+        }
+      ],
+      "hotkeyStringId": 2849
+    },
+    {
+      "result": "M90h",
+      "ability": "A19W",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61354,
+      "hotkeyOffset": 35778,
+      "hosts": [
+        {
+          "rawcode": "U60h",
+          "abilityOffset": 178712
+        }
+      ],
+      "hotkeyStringId": 2873
+    },
+    {
+      "result": "W90h",
+      "ability": "A0Y3",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61413,
+      "hotkeyOffset": 182079,
+      "hosts": [
+        {
+          "rawcode": "V60h",
+          "abilityOffset": 177944
+        }
+      ],
+      "hotkeyStringId": 3916
+    },
+    {
+      "result": "2A0h",
+      "ability": "A0Y9",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61457,
+      "hotkeyOffset": 180046,
+      "hosts": [
+        {
+          "rawcode": "070h",
+          "abilityOffset": 174081
+        }
+      ],
+      "hotkeyStringId": 3892
+    },
+    {
+      "result": "CA0h",
+      "ability": "A19U",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61506,
+      "hotkeyOffset": 36804,
+      "hosts": [
+        {
+          "rawcode": "X60h",
+          "abilityOffset": 176434
+        }
+      ],
+      "hotkeyStringId": 2883
+    },
+    {
+      "result": "N90h",
+      "ability": "A0XT",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61555,
+      "hotkeyOffset": 185426,
+      "hosts": [
+        {
+          "rawcode": "L90h",
+          "abilityOffset": 127400
+        }
+      ],
+      "hotkeyStringId": 3954
+    },
+    {
+      "result": "6A0h",
+      "ability": "A19S",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61604,
+      "hotkeyOffset": 37831,
+      "hosts": [
+        {
+          "rawcode": "370h",
+          "abilityOffset": 171594
+        }
+      ],
+      "hotkeyStringId": 2893
+    },
+    {
+      "result": "CC0h",
+      "ability": "A19V",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61653,
+      "hotkeyOffset": 36292,
+      "hosts": [
+        {
+          "rawcode": "K90h",
+          "abilityOffset": 128202
+        }
+      ],
+      "hotkeyStringId": 2878
+    },
+    {
+      "result": "M80h",
+      "ability": "A1AD",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61702,
+      "hotkeyOffset": 33198,
+      "hosts": [
+        {
+          "rawcode": "Z60h",
+          "abilityOffset": 174821
+        }
+      ],
+      "hotkeyStringId": 2845
+    },
+    {
+      "result": "R90h",
+      "ability": "A0Y6",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61746,
+      "hotkeyOffset": 181057,
+      "hosts": [
+        {
+          "rawcode": "Y60h",
+          "abilityOffset": 175633
+        }
+      ],
+      "hotkeyStringId": 3904
+    },
+    {
+      "result": "I80h",
+      "ability": "A19T",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61795,
+      "hotkeyOffset": 37318,
+      "hosts": [
+        {
+          "rawcode": "170h",
+          "abilityOffset": 173105
+        }
+      ],
+      "hotkeyStringId": 2888
+    },
+    {
+      "result": "FB0h",
+      "ability": "A0YK",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61844,
+      "hotkeyOffset": 176363,
+      "hosts": [
+        {
+          "rawcode": "270h",
+          "abilityOffset": 172340
+        }
+      ],
+      "hotkeyStringId": 3851
+    },
+    {
+      "result": "CB0h",
+      "ability": "A12C",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61942,
+      "hotkeyOffset": 129727,
+      "hosts": [
+        {
+          "rawcode": "W60h",
+          "abilityOffset": 177180
+        }
+      ],
+      "hotkeyStringId": 3406
+    },
+    {
+      "result": "380h",
+      "ability": "A10V",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61893,
+      "hotkeyOffset": 148096,
+      "hosts": [
+        {
+          "rawcode": "560h",
+          "abilityOffset": 195078
+        }
+      ],
+      "hotkeyStringId": 3563
+    },
+    {
+      "result": "2C0h",
+      "ability": "A0QG",
+      "key": "Z",
+      "outputCount": 1,
+      "recipeLine": 61986,
+      "hotkeyOffset": 646812,
+      "hosts": [
+        {
+          "rawcode": "T60h",
+          "abilityOffset": 179491
+        }
+      ],
+      "hotkeyStringId": 8406
+    }
+  ],
+  "commands": [
+    {
+      "result": "090H",
+      "aliases": [
+        "치밀하고비열한어둠",
+        "teach tr"
+      ],
+      "sourceLines": [
+        42616,
+        42619
+      ]
+    },
+    {
+      "result": "140h",
+      "aliases": [
+        "아오키지조합",
+        "aokiji"
+      ],
+      "sourceLines": [
+        42382,
+        42385
+      ]
+    },
+    {
+      "result": "180h",
+      "aliases": [
+        "괴물의후계자",
+        "bullet im"
+      ],
+      "sourceLines": [
+        42922,
+        42925
+      ]
+    },
+    {
+      "result": "190H",
+      "aliases": [
+        "순록의사!",
+        "chopper tr"
+      ],
+      "sourceLines": [
+        42751,
+        42754
+      ]
+    },
+    {
+      "result": "290H",
+      "aliases": [
+        "혁명군참모총장",
+        "sabo tr"
+      ],
+      "sourceLines": [
+        42661,
+        42664
+      ]
+    },
+    {
+      "result": "2B0H",
+      "aliases": [
+        "다섯번째황제",
+        "snakeman tr"
+      ],
+      "sourceLines": [
+        42607,
+        42610
+      ]
+    },
+    {
+      "result": "340h",
+      "aliases": [
+        "검호조합",
+        "mihawk"
+      ],
+      "sourceLines": [
+        42364,
+        42367
+      ]
+    },
+    {
+      "result": "440h",
+      "aliases": [
+        "류마조합",
+        "ryuma"
+      ],
+      "sourceLines": [
+        42229,
+        42232
+      ]
+    },
+    {
+      "result": "490H",
+      "aliases": [
+        "운명의마술사",
+        "hawkins tr"
+      ],
+      "sourceLines": [
+        42634,
+        42637
+      ]
+    },
+    {
+      "result": "4B0H",
+      "aliases": [
+        "신세대의이단아",
+        "kid tr"
+      ],
+      "sourceLines": [
+        42769,
+        42772
+      ]
+    },
+    {
+      "result": "540h",
+      "aliases": [
+        "킬러조합",
+        "killer"
+      ],
+      "sourceLines": [
+        42400,
+        42403
+      ]
+    },
+    {
+      "result": "550h",
+      "aliases": [
+        "스튜시조합",
+        "stussy"
+      ],
+      "sourceLines": [
+        42328,
+        42331
+      ]
+    },
+    {
+      "result": "590H",
+      "aliases": [
+        "해군원수붉은개",
+        "akainu tr"
+      ],
+      "sourceLines": [
+        42706,
+        42709
+      ]
+    },
+    {
+      "result": "5B0H",
+      "aliases": [
+        "해군대장노란원숭이",
+        "kizaru tr"
+      ],
+      "sourceLines": [
+        42643,
+        42646
+      ]
+    },
+    {
+      "result": "640h",
+      "aliases": [
+        "키쿠조합",
+        "kiku"
+      ],
+      "sourceLines": [
+        42391,
+        42394
+      ]
+    },
+    {
+      "result": "690H",
+      "aliases": [
+        "백개의심장을바친자",
+        "law tr"
+      ],
+      "sourceLines": [
+        42778,
+        42781
+      ]
+    },
+    {
+      "result": "740h",
+      "aliases": [
+        "피셔타이거조합",
+        "tiger"
+      ],
+      "sourceLines": [
+        42409,
+        42412
+      ]
+    },
+    {
+      "result": "750h",
+      "aliases": [
+        "파이러츠왕녀",
+        "vivi et"
+      ],
+      "sourceLines": [
+        42931,
+        42934
+      ]
+    },
+    {
+      "result": "760h",
+      "aliases": [
+        "세계의가희",
+        "u-ta et"
+      ],
+      "sourceLines": [
+        42976,
+        42979
+      ]
+    },
+    {
+      "result": "790H",
+      "aliases": [
+        "전해군대장푸른꿩",
+        "aokiji tr"
+      ],
+      "sourceLines": [
+        42760,
+        42763
+      ]
+    },
+    {
+      "result": "840h",
+      "aliases": [
+        "고스트프린세스",
+        "perona"
+      ],
+      "sourceLines": [
+        42496,
+        42499
+      ]
+    },
+    {
+      "result": "850h",
+      "aliases": [
+        "매의눈미호크",
+        "mihawk et"
+      ],
+      "sourceLines": [
+        42985,
+        42988
+      ]
+    },
+    {
+      "result": "890H",
+      "aliases": [
+        "악마의자식",
+        "robin tr"
+      ],
+      "sourceLines": [
+        42562,
+        42565
+      ]
+    },
+    {
+      "result": "940h",
+      "aliases": [
+        "명왕실버즈레일리",
+        "rayleigh im"
+      ],
+      "sourceLines": [
+        42886,
+        42889
+      ]
+    },
+    {
+      "result": "950h",
+      "aliases": [
+        "화권의에이스",
+        "ace et"
+      ],
+      "sourceLines": [
+        43012,
+        43015
+      ]
+    },
+    {
+      "result": "990H",
+      "aliases": [
+        "해적왕이될사나이",
+        "luffy tr"
+      ],
+      "sourceLines": [
+        42625,
+        42628
+      ]
+    },
+    {
+      "result": "A40h",
+      "aliases": [
+        "대해적흰수염",
+        "newgate im"
+      ],
+      "sourceLines": [
+        42895,
+        42898
+      ]
+    },
+    {
+      "result": "A50h",
+      "aliases": [
+        "천냥광대",
+        "buggy et"
+      ],
+      "sourceLines": [
+        42958,
+        42961
+      ]
+    },
+    {
+      "result": "A60h",
+      "aliases": [
+        "최고의엔터테이너",
+        "tesoro et"
+      ],
+      "sourceLines": [
+        43021,
+        43024
+      ]
+    },
+    {
+      "result": "A90H",
+      "aliases": [
+        "바다의협객",
+        "jinbe tr"
+      ],
+      "sourceLines": [
+        42742,
+        42745
+      ]
+    },
+    {
+      "result": "AA0H",
+      "aliases": [
+        "세계최고의과학자",
+        "vegapunk tr"
+      ],
+      "sourceLines": [
+        42814,
+        42817
+      ]
+    },
+    {
+      "result": "B40h",
+      "aliases": [
+        "천신금사자시키",
+        "shiki im"
+      ],
+      "sourceLines": [
+        42832,
+        42835
+      ]
+    },
+    {
+      "result": "B50h",
+      "aliases": [
+        "해적왕자",
+        "cavendish et"
+      ],
+      "sourceLines": [
+        42994,
+        42997
+      ]
+    },
+    {
+      "result": "B90H",
+      "aliases": [
+        "바다의전사",
+        "usopp tr"
+      ],
+      "sourceLines": [
+        42724,
+        42727
+      ]
+    },
+    {
+      "result": "C40h",
+      "aliases": [
+        "해군영웅거프",
+        "garp im"
+      ],
+      "sourceLines": [
+        42841,
+        42844
+      ]
+    },
+    {
+      "result": "C50h",
+      "aliases": [
+        "아마존릴리의여제",
+        "hancock et"
+      ],
+      "sourceLines": [
+        42967,
+        42970
+      ]
+    },
+    {
+      "result": "D40h",
+      "aliases": [
+        "폭풍을몰아오는바람",
+        "dragon im"
+      ],
+      "sourceLines": [
+        42850,
+        42853
+      ]
+    },
+    {
+      "result": "DB0H",
+      "aliases": [
+        "오니히메",
+        "yamato tr"
+      ],
+      "sourceLines": [
+        42715,
+        42718
+      ]
+    },
+    {
+      "result": "E40h",
+      "aliases": [
+        "부처님센고쿠",
+        "Sengoku im"
+      ],
+      "sourceLines": [
+        42868,
+        42871
+      ]
+    },
+    {
+      "result": "E90H",
+      "aliases": [
+        "어둠의조커",
+        "joker tr"
+      ],
+      "sourceLines": [
+        42580,
+        42583
+      ]
+    },
+    {
+      "result": "F40h",
+      "aliases": [
+        "산먹깨비",
+        "gaban im"
+      ],
+      "sourceLines": [
+        42877,
+        42880
+      ]
+    },
+    {
+      "result": "F90H",
+      "aliases": [
+        "최강의검사",
+        "zoro tr"
+      ],
+      "sourceLines": [
+        42598,
+        42601
+      ]
+    },
+    {
+      "result": "G40h",
+      "aliases": [
+        "신념의흑완제트",
+        "z im"
+      ],
+      "sourceLines": [
+        42904,
+        42907
+      ]
+    },
+    {
+      "result": "H90H",
+      "aliases": [
+        "지옥에서돌아온자",
+        "sanji tr"
+      ],
+      "sourceLines": [
+        42670,
+        42673
+      ]
+    },
+    {
+      "result": "I90H",
+      "aliases": [
+        "소울킹",
+        "brook tr"
+      ],
+      "sourceLines": [
+        42652,
+        42655
+      ]
+    },
+    {
+      "result": "IC0h",
+      "aliases": [
+        "역재의사이보그",
+        "queen"
+      ],
+      "sourceLines": [
+        42505,
+        42508
+      ]
+    },
+    {
+      "result": "J30h",
+      "aliases": [
+        "시류조합",
+        "shiryu"
+      ],
+      "sourceLines": [
+        42337,
+        42340
+      ]
+    },
+    {
+      "result": "J40h",
+      "aliases": [
+        "해적왕골D로져",
+        "roger im"
+      ],
+      "sourceLines": [
+        42823,
+        42826
+      ]
+    },
+    {
+      "result": "JC0h",
+      "aliases": [
+        "전설의사무라이",
+        "ryuma et"
+      ],
+      "sourceLines": [
+        42949,
+        42952
+      ]
+    },
+    {
+      "result": "KB0H",
+      "aliases": [
+        "태양의신",
+        "nika et"
+      ],
+      "sourceLines": [
+        42940,
+        42943
+      ]
+    },
+    {
+      "result": "L30h",
+      "aliases": [
+        "써니호조합",
+        "sunny"
+      ],
+      "sourceLines": [
+        42319,
+        42322
+      ]
+    },
+    {
+      "result": "L70h",
+      "aliases": [
+        "캐럿조합",
+        "carrot"
+      ],
+      "sourceLines": [
+        42373,
+        42376
+      ]
+    },
+    {
+      "result": "LB0H",
+      "aliases": [
+        "신해군대장초록소",
+        "ryokugyu tr"
+      ],
+      "sourceLines": [
+        42697,
+        42700
+      ]
+    },
+    {
+      "result": "M30h",
+      "aliases": [
+        "사보조합",
+        "sabo"
+      ],
+      "sourceLines": [
+        42310,
+        42313
+      ]
+    },
+    {
+      "result": "M70h",
+      "aliases": [
+        "백수의제왕카이도",
+        "kaido im"
+      ],
+      "sourceLines": [
+        42913,
+        42916
+      ]
+    },
+    {
+      "result": "N30h",
+      "aliases": [
+        "료쿠규조합",
+        "ryokugyu"
+      ],
+      "sourceLines": [
+        42265,
+        42268
+      ]
+    },
+    {
+      "result": "N50H",
+      "aliases": [
+        "해군의홍일점",
+        "tashigi tr"
+      ],
+      "sourceLines": [
+        42571,
+        42574
+      ]
+    },
+    {
+      "result": "O30h",
+      "aliases": [
+        "봉쿠레조합",
+        "bonkurei"
+      ],
+      "sourceLines": [
+        42301,
+        42304
+      ]
+    },
+    {
+      "result": "OC0H",
+      "aliases": [
+        "해군의미래",
+        "koby tr"
+      ],
+      "sourceLines": [
+        42805,
+        42808
+      ]
+    },
+    {
+      "result": "P30h",
+      "aliases": [
+        "발라티에조합",
+        "baratie"
+      ],
+      "sourceLines": [
+        42292,
+        42295
+      ]
+    },
+    {
+      "result": "Q30h",
+      "aliases": [
+        "모비딕호조합",
+        "mobydick"
+      ],
+      "sourceLines": [
+        42274,
+        42277
+      ]
+    },
+    {
+      "result": "Q40h",
+      "aliases": [
+        "탐식의강철풍선",
+        "bigmom im"
+      ],
+      "sourceLines": [
+        42859,
+        42862
+      ]
+    },
+    {
+      "result": "R30h",
+      "aliases": [
+        "반더데켄조합",
+        "decken"
+      ],
+      "sourceLines": [
+        42283,
+        42286
+      ]
+    },
+    {
+      "result": "R80h",
+      "aliases": [
+        "참된호걸",
+        "oden et"
+      ],
+      "sourceLines": [
+        43003,
+        43006
+      ]
+    },
+    {
+      "result": "T30h",
+      "aliases": [
+        "레베카조합",
+        "rebecca"
+      ],
+      "sourceLines": [
+        42256,
+        42259
+      ]
+    },
+    {
+      "result": "U30h",
+      "aliases": [
+        "레드포스호조합",
+        "redforce"
+      ],
+      "sourceLines": [
+        42247,
+        42250
+      ]
+    },
+    {
+      "result": "U40h",
+      "aliases": [
+        "환혹의마리아네트",
+        "blackmaria"
+      ],
+      "sourceLines": [
+        42514,
+        42517
+      ]
+    },
+    {
+      "result": "U80H",
+      "aliases": [
+        "해왕류를다스리는인어공주",
+        "shirahoshi tr"
+      ],
+      "sourceLines": [
+        42688,
+        42691
+      ]
+    },
+    {
+      "result": "V30h",
+      "aliases": [
+        "혁명군대리사범",
+        "koala"
+      ],
+      "sourceLines": [
+        42487,
+        42490
+      ]
+    },
+    {
+      "result": "V50h",
+      "aliases": [
+        "해적왕의아들",
+        "ace"
+      ],
+      "sourceLines": [
+        42532,
+        42535
+      ]
+    },
+    {
+      "result": "V80H",
+      "aliases": [
+        "날씨는맑음",
+        "nami tr"
+      ],
+      "sourceLines": [
+        42553,
+        42556
+      ]
+    },
+    {
+      "result": "V90h",
+      "aliases": [
+        "괴력의챔피언",
+        "burgess"
+      ],
+      "sourceLines": [
+        42523,
+        42526
+      ]
+    },
+    {
+      "result": "W30h",
+      "aliases": [
+        "베르고조합",
+        "vergo"
+      ],
+      "sourceLines": [
+        42238,
+        42241
+      ]
+    },
+    {
+      "result": "W80H",
+      "aliases": [
+        "검은정의를좇는하얀새",
+        "lucci tr"
+      ],
+      "sourceLines": [
+        42589,
+        42592
+      ]
+    },
+    {
+      "result": "X30h",
+      "aliases": [
+        "방주맥심조합",
+        "maxim"
+      ],
+      "sourceLines": [
+        42220,
+        42223
+      ]
+    },
+    {
+      "result": "X80H",
+      "aliases": [
+        "분노하는맹호",
+        "fujitora tr"
+      ],
+      "sourceLines": [
+        42796,
+        42799
+      ]
+    },
+    {
+      "result": "XB0H",
+      "aliases": [
+        "일그러진미래",
+        "bonney tr"
+      ],
+      "sourceLines": [
+        42733,
+        42736
+      ]
+    },
+    {
+      "result": "Y30h",
+      "aliases": [
+        "이완코브조합",
+        "ivankov"
+      ],
+      "sourceLines": [
+        42355,
+        42358
+      ]
+    },
+    {
+      "result": "Y80H",
+      "aliases": [
+        "무적의아이언파이러츠",
+        "franky tr"
+      ],
+      "sourceLines": [
+        42787,
+        42790
+      ]
+    },
+    {
+      "result": "Z30h",
+      "aliases": [
+        "아카이누조합",
+        "akainu"
+      ],
+      "sourceLines": [
+        42346,
+        42349
+      ]
+    },
+    {
+      "result": "Z80H",
+      "aliases": [
+        "정상해전종결자",
+        "shanks tr"
+      ],
+      "sourceLines": [
+        42679,
+        42682
+      ]
+    }
+  ]
+}

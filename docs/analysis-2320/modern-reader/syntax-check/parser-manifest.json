@@ -1,0 +1,53 @@
+{
+  "parser": "War3Net.CodeAnalysis.Jass",
+  "version": "6.0.2",
+  "repositoryCommit": "48ccced0e7bbf81595505092b62226b480349467",
+  "entryPoint": "JassSyntaxFactory.ParseCompilationUnit(string)",
+  "host": ".NET 10.0.10",
+  "packageHashes": [
+    {
+      "Path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\parser.6.0.2.nupkg",
+      "Hash": "8736D22421ACE11A3138AF633FAAEA419CE16D0796DCBED55A25584C6CCA7998"
+    },
+    {
+      "Path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\pidgin.3.1.0.nupkg",
+      "Hash": "ECBF92AB36E30CCB5BCA55EFA4726B26A475C9A015E4258DC5D13E669492BFC8"
+    },
+    {
+      "Path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\war3net.codeanalysis.6.0.2.nupkg",
+      "Hash": "C63E1DBA73DC6E58647F58DC8D63EAC7595D6E2B083B40086697A677C69B2071"
+    },
+    {
+      "Path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\war3net.common.6.0.2.nupkg",
+      "Hash": "C4BCEBFF8AD7E4AC8B0C1D0BE276047E3F7B9186E4B5E7F63CCD0159180F65D1"
+    }
+  ],
+  "assemblies": [
+    {
+      "name": "System.Collections.Immutable, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "location": "C:\\Users\\123\\.aside\\runtime\\powershell\\System.Collections.Immutable.dll"
+    },
+    {
+      "name": "Pidgin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=cf8803ee5be21175",
+      "location": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\pidgin\\lib\\net5.0\\Pidgin.dll"
+    },
+    {
+      "name": "War3Net.Common, Version=6.0.2.0, Culture=neutral, PublicKeyToken=null",
+      "location": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\war3net.common\\lib\\net6.0\\War3Net.Common.dll"
+    },
+    {
+      "name": "War3Net.CodeAnalysis, Version=6.0.2.0, Culture=neutral, PublicKeyToken=null",
+      "location": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\war3net.codeanalysis\\lib\\net6.0\\War3Net.CodeAnalysis.dll"
+    },
+    {
+      "name": "War3Net.CodeAnalysis.Jass, Version=6.0.2.0, Culture=neutral, PublicKeyToken=null",
+      "location": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\syntax-check\\parser\\lib\\net6.0\\War3Net.CodeAnalysis.Jass.dll"
+    },
+    {
+      "name": "System.Runtime.CompilerServices.Unsafe, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "location": "C:\\Users\\123\\.aside\\runtime\\powershell\\System.Runtime.CompilerServices.Unsafe.dll"
+    }
+  ],
+  "negativeControl": "Valid function followed by @@@ rejected at line 3 col 1",
+  "note": "No source/map/game execution. Input files read only. Direct .NET assembly load after NuGet restore failed. Version 6.0.3 not published for this package; pinned published 6.0.2."
+}

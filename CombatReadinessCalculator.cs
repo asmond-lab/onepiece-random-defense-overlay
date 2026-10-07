@@ -15,7 +15,8 @@ public sealed record CombatReadiness(
     double CurrentArmorReduction,
     double RequiredArmorReduction,
     int CurrentMagicArmorSources,
-    int RequiredMagicArmorSources)
+    int RequiredMagicArmorSources,
+    double RequiredMagicArmorReduction = 0)
 {
     public double MissingStun => Math.Max(0, RequiredStun - CurrentStun);
     public double MissingSlow => Math.Max(0, RequiredSlow - CurrentSlow);
@@ -35,7 +36,12 @@ public static class CombatReadinessCalculator
 {
     public static CombatReadiness Calculate(DataCatalog catalog,
         UnitDefinition goal, IEnumerable<InventoryEntry> inventory,
-        string? difficulty = null)
+        string? difficulty = null) =>
+        Calculate(catalog, goal, inventory, difficulty, strategy: null);
+
+    internal static CombatReadiness Calculate(DataCatalog catalog,
+        UnitDefinition goal, IEnumerable<InventoryEntry> inventory,
+        string? difficulty, GoalStrategyProfile? strategy)
     {
         var counts = inventory
             .Where(entry => entry.Count > 0)
@@ -54,9 +60,10 @@ public static class CombatReadinessCalculator
             .Select(unit => unit.Id)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Count();
-        var strategy = GoalStrategyCalculator.StrategyProfileFor(goal) ??
+        var resolved = strategy ?? GoalStrategyCalculator.StrategyProfileFor(goal) ??
                        new GoalStrategyProfile(0, 0);
-        return FromMetrics(goal, strategy, metrics, magicSourceCount, difficulty);
+        return FromMetrics(goal, resolved, metrics, magicSourceCount,
+            strategy is null ? difficulty : null);
     }
 
     internal static CombatReadiness FromMetrics(UnitDefinition goal,
@@ -64,12 +71,8 @@ public static class CombatReadinessCalculator
         int magicSourceCount, string? difficulty = null)
     {
         var magic = GoalStrategyCalculator.IsMagicDamageTier(goal.Tier);
-        var armorTarget = !magic &&
-                          difficulty?.Equals("신", StringComparison.Ordinal) == true &&
-                          strategy.ArmorReductionTarget >=
-                          GoalStrategyCalculator.FullArmorReductionTarget
-            ? 201d
-            : strategy.ArmorReductionTarget;
+        var armorTarget = GoalStrategyCalculator.ArmorReductionTargetForDifficulty(
+            strategy.ArmorReductionTarget, difficulty);
         return new CombatReadiness(
             magic ? ReadinessDamageType.Magic : ReadinessDamageType.Physical,
             metrics.Stun,
@@ -79,7 +82,7 @@ public static class CombatReadinessCalculator
             metrics.ArmorReduction,
             armorTarget,
             magicSourceCount,
-            magic ? Math.Max(1, (int)Math.Ceiling(
-                strategy.MagicArmorReductionTarget)) : 0);
+            magic ? 1 : 0,
+            strategy.MagicArmorReductionTarget);
     }
 }

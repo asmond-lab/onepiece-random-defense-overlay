@@ -6,12 +6,15 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DefaultItemExcludes>$(DefaultItemExcludes);artifacts/**;**/MemoryDiagnostics/**</DefaultItemExcludes>
     <AssemblyName>OrandOverlay</AssemblyName>
     <RootNamespace>OrandOverlay</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <!-- 자동 업데이트가 릴리스 태그(v0.2.0)와 비교하는 버전 — 릴리스마다 올린다. -->
-    <Version>0.6.70</Version>
-    <InformationalVersion>0.6.70</InformationalVersion>
+    <!-- User-facing releases increment Version. The internal marker preserves existing beta updater routing. -->
+    <Version>1.0.21</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <InformationalVersion>$(Version)-test.1</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
@@ -19,9 +22,19 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="OrandOverlay.Tests" />
+    <InternalsVisibleTo Include="RandyPickLiveValidation" />
     <InternalsVisibleTo Include="PlannerEvidenceCapture" />
+    <InternalsVisibleTo Include="RandypickBetaCapture" />
+    <InternalsVisibleTo Include="Map2322VisualCapture" />
+    <InternalsVisibleTo Include="PlannerEvidenceCapture.Tests" />
     <InternalsVisibleTo Include="OrandSimulator" />
+    <Resource Include="Assets\randypick-logo-64.png" />
+    <Resource Include="Assets\randypick-logo-256.png" />
+    <EmbeddedResource Include="Data\update-trust.json" LogicalName="OrandOverlay.UpdateTrust.json" />
     <Content Include="Data\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="docs\bullet-guide-1-source.md" Link="Data\bullet-guide-1-source.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Remove="SmokeTests\**\*.cs" />
@@ -29,4 +42,17 @@
     <Compile Remove="OrandOverlay.Tests\**\*.cs" />
     <Compile Remove="Tools\**\*.cs" />
   </ItemGroup>
+  <!-- Rename only the published Windows single-file apphost, never managed resources or build output. -->
+  <Target Name="PublishRandyPickExecutable" AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(PublishSingleFile)' == 'true' and '$(PublishDir)' != ''">
+    <PropertyGroup>
+      <_RandyPickPublishDirectory>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</_RandyPickPublishDirectory>
+      <_RandyPickSourceExe>$(_RandyPickPublishDirectory)OrandOverlay.exe</_RandyPickSourceExe>
+      <_RandyPickPublishedExe>$(_RandyPickPublishDirectory)RandyPick.exe</_RandyPickPublishedExe>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(_RandyPickSourceExe)')" Text="Expected published OrandOverlay.exe is missing; RandyPick executable rename aborted." />
+    <Copy SourceFiles="$(_RandyPickSourceExe)" DestinationFiles="$(_RandyPickPublishedExe)" SkipUnchangedFiles="false" />
+    <Error Condition="!Exists('$(_RandyPickPublishedExe)')" Text="RandyPick.exe copy was not verified; original published executable retained." />
+    <Delete Files="$(_RandyPickSourceExe)" Condition="Exists('$(_RandyPickPublishedExe)')" />
+  </Target>
 </Project>

@@ -7,9 +7,9 @@ namespace OrandOverlay.Tests;
 public sealed class NavigationSettingsPresentationTests
 {
     [Fact]
-    public void AutomaticRecommendationHidesOnlyTheManualSelectors()
+    public void ManualRecommendationSelectorsAreNeverShown()
     {
         Assert.Equal(Visibility.Collapsed, MainWindow.NavigationSelectionVisibility(true));
-        Assert.Equal(Visibility.Visible, MainWindow.NavigationSelectionVisibility(false));
+        Assert.Equal(Visibility.Collapsed, MainWindow.NavigationSelectionVisibility(false));
     }
 }

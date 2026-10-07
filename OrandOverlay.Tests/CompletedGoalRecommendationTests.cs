@@ -146,7 +146,9 @@ public sealed class CompletedGoalRecommendationTests
 
         Assert.Equal(55, metrics.ArmorReduction);
         Assert.Equal(1, metrics.ArmorBreak);
-        var displayed = new InventoryStatsCalculator(catalog).Calculate(
+        // This assertion exercises the historical catalog-only conditional rule, not TMO 48784.
+        var displayed = new InventoryStatsCalculator(catalog,
+            HandStatsProfile.CreateForTests("catalog-only legacy conditional fixture", [])).Calculate(
             [Entry("rawcode:G30h"), Entry("rawcode:W30h")]);
         Assert.Equal(55, displayed.TotalArmorReduction);
         Assert.Equal(1, displayed.ArmorBreakProviders);

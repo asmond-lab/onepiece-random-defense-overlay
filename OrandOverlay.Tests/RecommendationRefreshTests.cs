@@ -3,6 +3,7 @@ using Xunit;
 
 namespace OrandOverlay.Tests;
 
+[Collection("Recommendation worker scheduling")]
 public sealed class RecommendationRefreshTests
 {
     [Fact]
@@ -69,18 +70,22 @@ public sealed class RecommendationRefreshTests
 
         var first = coordinator.RunAsync(() =>
             Work("first", firstStarted, releaseFirst));
-        await firstStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
-        var second = coordinator.RunAsync(() => Work("second"));
-        var third = coordinator.RunAsync(() => Work("third", thirdStarted));
-        releaseFirst.SetResult();
+        try
+        {
+            await firstStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            var second = coordinator.RunAsync(() => Work("second"));
+            var third = coordinator.RunAsync(() => Work("third", thirdStarted));
+            releaseFirst.SetResult();
 
-        Assert.Null(await first);
-        Assert.Null(await second);
-        Assert.Equal("third", await third);
-        Assert.Equal(1, maximumRunning);
-        Assert.True(thirdStarted.Task.IsCompleted);
-        Assert.All(priorities,
-            priority => Assert.Equal(ThreadPriority.BelowNormal, priority));
+            Assert.Null(await first);
+            Assert.Null(await second);
+            Assert.Equal("third", await third);
+            Assert.Equal(1, maximumRunning);
+            Assert.True(thirdStarted.Task.IsCompleted);
+            Assert.All(priorities,
+                priority => Assert.Equal(ThreadPriority.BelowNormal, priority));
+        }
+        finally { releaseFirst.TrySetResult(); }
     }
 
     [Fact]
@@ -115,3 +120,8 @@ public sealed class RecommendationRefreshTests
         Assert.Equal(["third"], executed);
     }
 }
+
+// This test asserts real worker priority and serialization, not competition with
+// unrelated tests occupying the shared thread pool.
+[CollectionDefinition("Recommendation worker scheduling", DisableParallelization = true)]
+public sealed class RecommendationWorkerSchedulingCollection { }

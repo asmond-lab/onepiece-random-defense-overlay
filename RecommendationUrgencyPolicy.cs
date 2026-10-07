@@ -13,7 +13,7 @@ internal sealed record RecommendationUrgencyResult(
     string? Reason);
 
 /// <summary>
-/// 맵의 공통 30라운드 보스와 35라운드 스토리 마감에 맞춰 모든 목표의 지원 추천을
+/// 맵의 공통 30라운드 보스와 악몽의 35라운드 스토리 마감에 맞춰 모든 목표의 지원 추천을
 /// 재정렬한다. 목표 자체와 이미 계산된 후보 집합은 보존하고 특정 유닛을 하드코딩하지 않는다.
 /// </summary>
 internal static class RecommendationUrgencyPolicy
@@ -43,20 +43,29 @@ internal static class RecommendationUrgencyPolicy
                        new GoalStrategyProfile(0, 0);
         var bossUrgent = currentMetrics.BossControl < strategy.BossControlTarget ||
                          currentMetrics.BerserkBossControl < strategy.BerserkBossControlTarget;
-        var storyUrgent = completedStoryStage < StoryDeadlineStage;
+        var storyUrgent = difficulty == "악몽" && completedStoryStage < StoryDeadlineStage;
         if (!bossUrgent && !storyUrgent)
             return new RecommendationUrgencyResult(recommendations, RecommendationUrgency.None, null);
 
         var readiness = CombatReadinessCalculator.Calculate(catalog, goal, inventory, difficulty);
+        var counts = inventory.GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count),
+                StringComparer.OrdinalIgnoreCase);
+        var currentCrafts = new CurrentCraftPolicy(catalog.Unit, goal, counts, strategy,
+            round, completedStoryStage, new RecipeCompletionCalculator(catalog.Unit));
         var indexed = recommendations.Select((recommendation, index) => new
         {
             Recommendation = recommendation,
             Index = index,
+            Action = currentCrafts.Assess(catalog.Unit(recommendation.Route.GoalUnitId)),
             Metrics = GoalStrategyCalculator.StrategyMetricsFor(
                 catalog.Unit(recommendation.Route.GoalUnitId))
         });
-        var ordered = indexed
-            .OrderBy(candidate => Priority(candidate.Recommendation, candidate.Metrics,
+        var ordered = recommendations.All(item => item.CurrentCraft is not null)
+            ? recommendations.ToList()
+            : indexed
+            .OrderBy(candidate => candidate.Action.Priority <= 2 ? candidate.Action.Priority : 3)
+            .ThenBy(candidate => Priority(candidate.Recommendation, candidate.Metrics,
                 goal.Id, readiness, bossUrgent, storyUrgent))
             .ThenBy(candidate => candidate.Index)
             .Select(candidate => candidate.Recommendation)

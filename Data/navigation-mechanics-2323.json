@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.323",
+  "sourceSha256": "9ecc275f549eadc565c7474f7d4449d9c856687e16a8108ef2ba7b586de13785",
+  "options": [
+    {
+      "id": "AlliedForces.DoubleBenefit",
+      "name": "일석이조",
+      "category": "AlliedForces",
+      "registrationLines": [
+        16098,
+        16106,
+        16113,
+        32099,
+        32107,
+        44863,
+        57602
+      ],
+      "handler": {
+        "name": "mjv",
+        "source": {
+          "startLine": 32096,
+          "endLine": 32144,
+          "sha256": "011736f654da9d6acb7816a6973c15df6d50b0f7f5e5f3f2dd5e7d6c5f2fb69e"
+        },
+        "rawSource": "function mjv takes integer Wjv,integer ijv returns nothing\nif Wjv==1 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 일석이조|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=1\ncall cTv(ijv)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"일석이조\"\nset Bs[ijv]=true\nelseif Wjv==2 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 긴급소집|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=2\nif GetUnitAbilityLevel(sp[ijv],$41303943)>0 then\ncall SetUnitAbilityLevel(sp[ijv],$41303943,GetUnitAbilityLevel(sp[ijv],$41303943)+3)\nelse\ncall AgR(sp[ijv],$41303943,true)\ncall SetUnitAbilityLevel(sp[ijv],$41303943,3)\nendif\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"긴급소집\"\nset Bs[ijv]=true\nelseif Wjv==3 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 특성공학|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=3\ncall SetPlayerAbilityAvailable(Player(ijv),$41303832,false)\ncall UnitAddAbility(sp[ijv],$41305644)\nset bs[ijv]=bs[ijv]+1\ncall SetUnitAbilityLevel(sp[ijv],$41304b38,bs[ijv]+1)\ncall SetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED)+1)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"특성공학\"\nset Bs[ijv]=true\nendif\nset Up[ijv]=\"연합세력\"\nendfunction"
+      }
+    },
+    {
+      "id": "AlliedForces.EmergencyCall",
+      "name": "긴급소집",
+      "category": "AlliedForces",
+      "registrationLines": [
+        32111,
+        32124,
+        57637
+      ],
+      "handler": {
+        "name": "mjv",
+        "source": {
+          "startLine": 32096,
+          "endLine": 32144,
+          "sha256": "011736f654da9d6acb7816a6973c15df6d50b0f7f5e5f3f2dd5e7d6c5f2fb69e"
+        },
+        "rawSource": "function mjv takes integer Wjv,integer ijv returns nothing\nif Wjv==1 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 일석이조|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=1\ncall cTv(ijv)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"일석이조\"\nset Bs[ijv]=true\nelseif Wjv==2 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 긴급소집|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=2\nif GetUnitAbilityLevel(sp[ijv],$41303943)>0 then\ncall SetUnitAbilityLevel(sp[ijv],$41303943,GetUnitAbilityLevel(sp[ijv],$41303943)+3)\nelse\ncall AgR(sp[ijv],$41303943,true)\ncall SetUnitAbilityLevel(sp[ijv],$41303943,3)\nendif\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"긴급소집\"\nset Bs[ijv]=true\nelseif Wjv==3 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 특성공학|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=3\ncall SetPlayerAbilityAvailable(Player(ijv),$41303832,false)\ncall UnitAddAbility(sp[ijv],$41305644)\nset bs[ijv]=bs[ijv]+1\ncall SetUnitAbilityLevel(sp[ijv],$41304b38,bs[ijv]+1)\ncall SetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED)+1)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"특성공학\"\nset Bs[ijv]=true\nendif\nset Up[ijv]=\"연합세력\"\nendfunction"
+      }
+    },
+    {
+      "id": "AlliedForces.TraitEngineering",
+      "name": "특성공학",
+      "category": "AlliedForces",
+      "registrationLines": [
+        32128,
+        32140,
+        47876,
+        47882,
+        47897,
+        57672,
+        57674
+      ],
+      "handler": {
+        "name": "mjv",
+        "source": {
+          "startLine": 32096,
+          "endLine": 32144,
+          "sha256": "011736f654da9d6acb7816a6973c15df6d50b0f7f5e5f3f2dd5e7d6c5f2fb69e"
+        },
+        "rawSource": "function mjv takes integer Wjv,integer ijv returns nothing\nif Wjv==1 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 일석이조|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=1\ncall cTv(ijv)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"일석이조\"\nset Bs[ijv]=true\nelseif Wjv==2 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 긴급소집|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=2\nif GetUnitAbilityLevel(sp[ijv],$41303943)>0 then\ncall SetUnitAbilityLevel(sp[ijv],$41303943,GetUnitAbilityLevel(sp[ijv],$41303943)+3)\nelse\ncall AgR(sp[ijv],$41303943,true)\ncall SetUnitAbilityLevel(sp[ijv],$41303943,3)\nendif\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"긴급소집\"\nset Bs[ijv]=true\nelseif Wjv==3 then\nif not RV[ijv]then\ncall DisplayTimedTextToPlayer(Player(ijv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00연합세력 :: 특성공학|r 을(를) 선택하셨습니다.\")\nendif\nset op[ijv]=3\ncall SetPlayerAbilityAvailable(Player(ijv),$41303832,false)\ncall UnitAddAbility(sp[ijv],$41305644)\nset bs[ijv]=bs[ijv]+1\ncall SetUnitAbilityLevel(sp[ijv],$41304b38,bs[ijv]+1)\ncall SetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED,GetPlayerState(Player(ijv),PLAYER_STATE_RESOURCE_FOOD_USED)+1)\nset DH=e4s()\nset NH[DH]=Player(ijv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNNightElfCaptureFlag.blp\"\ncall rbv(DH)\nset Bp[ijv]=\"특성공학\"\nset Bs[ijv]=true\nendif\nset Up[ijv]=\"연합세력\"\nendfunction"
+      }
+    },
+    {
+      "id": "PathOfKings.MartialLaw",
+      "name": "계엄령",
+      "category": "PathOfKings",
+      "registrationLines": [
+        29041,
+        29048,
+        35922,
+        57721
+      ],
+      "handler": {
+        "name": "GJs",
+        "source": {
+          "startLine": 29027,
+          "endLine": 29103,
+          "sha256": "ebdf5a59bebed11262e09ad5ce209f65f0c9698442e16e67c5570e9a760d4e3c"
+        },
+        "rawSource": "function GJs takes integer rJs,integer WJs returns nothing\nlocal integer iJs\nlocal player mJs\nlocal player YJs\nlocal real dJs\nif rJs==1 then\nif Ms[WJs]>=1 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 계엄령|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=1\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"계엄령\"\nset Bs[WJs]=true\nelseif rJs==2 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 바운티헌터|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=2\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"바운티헌터\"\nset Bs[WJs]=true\nelseif rJs==3 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유 중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 로얄로더|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=3\nset iJs=XbR()\ncall GroupEnumUnitsOfPlayer(xW[iJs],Player(WJs),Condition(V4))\ncall Vbv(iJs)\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"로얄로더\"\nset Bs[WJs]=true\nendif\nset YJs=Player(WJs)\nset mJs=Player(WJs)\nset dJs=GetStartLocationX(GetPlayerStartLocation(mJs))\nset mJs=Player(WJs)\nset bj_lastCreatedUnit=CreateUnit(YJs,$68304338,dJs,GetStartLocationY(GetPlayerStartLocation(mJs)),bj_UNIT_FACING)\nif rJs==1 then\ncall SetUnitAbilityLevel(bj_lastCreatedUnit,$41304949,2)\nendif\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법 기본효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nset Up[WJs]=\"패왕의길\"\nset mJs=null\nset YJs=null\nendfunction"
+      }
+    },
+    {
+      "id": "PathOfKings.BountyHunter",
+      "name": "바운티헌터",
+      "category": "PathOfKings",
+      "registrationLines": [
+        29059,
+        29066,
+        57756
+      ],
+      "handler": {
+        "name": "GJs",
+        "source": {
+          "startLine": 29027,
+          "endLine": 29103,
+          "sha256": "ebdf5a59bebed11262e09ad5ce209f65f0c9698442e16e67c5570e9a760d4e3c"
+        },
+        "rawSource": "function GJs takes integer rJs,integer WJs returns nothing\nlocal integer iJs\nlocal player mJs\nlocal player YJs\nlocal real dJs\nif rJs==1 then\nif Ms[WJs]>=1 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 계엄령|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=1\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"계엄령\"\nset Bs[WJs]=true\nelseif rJs==2 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 바운티헌터|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=2\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"바운티헌터\"\nset Bs[WJs]=true\nelseif rJs==3 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유 중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 로얄로더|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=3\nset iJs=XbR()\ncall GroupEnumUnitsOfPlayer(xW[iJs],Player(WJs),Condition(V4))\ncall Vbv(iJs)\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"로얄로더\"\nset Bs[WJs]=true\nendif\nset YJs=Player(WJs)\nset mJs=Player(WJs)\nset dJs=GetStartLocationX(GetPlayerStartLocation(mJs))\nset mJs=Player(WJs)\nset bj_lastCreatedUnit=CreateUnit(YJs,$68304338,dJs,GetStartLocationY(GetPlayerStartLocation(mJs)),bj_UNIT_FACING)\nif rJs==1 then\ncall SetUnitAbilityLevel(bj_lastCreatedUnit,$41304949,2)\nendif\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법 기본효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nset Up[WJs]=\"패왕의길\"\nset mJs=null\nset YJs=null\nendfunction"
+      }
+    },
+    {
+      "id": "PathOfKings.RoyalLoader",
+      "name": "로얄로더",
+      "category": "PathOfKings",
+      "registrationLines": [
+        10624,
+        29077,
+        29087,
+        46926,
+        55283,
+        57791,
+        62379,
+        62386,
+        64002
+      ],
+      "handler": {
+        "name": "GJs",
+        "source": {
+          "startLine": 29027,
+          "endLine": 29103,
+          "sha256": "ebdf5a59bebed11262e09ad5ce209f65f0c9698442e16e67c5570e9a760d4e3c"
+        },
+        "rawSource": "function GJs takes integer rJs,integer WJs returns nothing\nlocal integer iJs\nlocal player mJs\nlocal player YJs\nlocal real dJs\nif rJs==1 then\nif Ms[WJs]>=1 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 계엄령|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=1\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"계엄령\"\nset Bs[WJs]=true\nelseif rJs==2 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 바운티헌터|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=2\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"바운티헌터\"\nset Bs[WJs]=true\nelseif rJs==3 then\nif Ms[WJs]>=2 then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffff0000[오류]|r 최상위 유닛을 2개 이상 보유 중일 경우 선택하실 수 없습니다.\")\nset mJs=null\nset YJs=null\nreturn\nendif\nset vV[WJs]=true\nif not RV[WJs]then\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00패왕의길 :: 로얄로더|r 을(를) 선택하셨습니다.\")\nendif\nset jp[WJs]=3\nset iJs=XbR()\ncall GroupEnumUnitsOfPlayer(xW[iJs],Player(WJs),Condition(V4))\ncall Vbv(iJs)\nset DH=e4s()\nset NH[DH]=Player(WJs)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNIceCrownObelisk.blp\"\ncall rbv(DH)\nset Bp[WJs]=\"로얄로더\"\nset Bs[WJs]=true\nendif\nset YJs=Player(WJs)\nset mJs=Player(WJs)\nset dJs=GetStartLocationX(GetPlayerStartLocation(mJs))\nset mJs=Player(WJs)\nset bj_lastCreatedUnit=CreateUnit(YJs,$68304338,dJs,GetStartLocationY(GetPlayerStartLocation(mJs)),bj_UNIT_FACING)\nif rJs==1 then\ncall SetUnitAbilityLevel(bj_lastCreatedUnit,$41304949,2)\nendif\ncall IssueImmediateOrder(bj_lastCreatedUnit,\"holdposition\")\ncall DisplayTimedTextToPlayer(Player(WJs),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00패왕의길|r 항법 기본효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nset Up[WJs]=\"패왕의길\"\nset mJs=null\nset YJs=null\nendfunction"
+      }
+    },
+    {
+      "id": "Gambler.Casino",
+      "name": "카지노",
+      "category": "Gambler",
+      "registrationLines": [
+        21244,
+        39284,
+        39299,
+        39303,
+        57840
+      ],
+      "handler": {
+        "name": "NCv",
+        "source": {
+          "startLine": 39280,
+          "endLine": 39353,
+          "sha256": "bc08fed379c0f7cece3958c2eab3c12e91d206c4233c619f341584120af9eecb"
+        },
+        "rawSource": "function NCv takes integer ZCv,integer yCv returns nothing\nlocal location lCv\nif ZCv==1 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 카지노|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=1\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303642,0)\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303643,0)\nset Dp[yCv]=Dp[yCv]+1\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00001|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 카지노효과로 이세계 도박 횟수가 추가됩니다.\")\nset SP[yCv]=2*SP[yCv]+ZP[yCv]\ncall AddUnitToStock(pp[yCv],$48304157,SP[yCv],16)\nendif\nset Bp[yCv]=\"카지노\"\nset Bs[yCv]=true\nelseif ZCv==2 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 리스크헷지|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=2\nset Dp[yCv]=Dp[yCv]+2\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00002|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"리스크헷지\"\nset Bs[yCv]=true\nelseif ZCv==3 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 환전소|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=3\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303644,0)\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset Jp[yCv]=CreateUnit(Player(yCv),$68304255,GetUnitX(pp[yCv])+220.,GetUnitY(pp[yCv]),270.)\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,false)\nif Ep[yCv]==null then\nset lCv=GetStartLocationLoc(GetPlayerStartLocation(Player(yCv)))\nset bj_lastCreatedItem=CreateItem($49303039,GetLocationX(lCv),GetLocationY(lCv))\nset Ep[yCv]=bj_lastCreatedItem\ncall SetItemUserData(Ep[yCv],yCv)\ncall SetItemCharges(Ep[yCv],0)\ncall UnitAddItemSwapped(Ep[yCv],Jp[yCv])\nendif\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 환전소 효과로 환전소에 랜덤전용 유닛이 입고됩니다.\")\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"환전소\"\nset Bs[yCv]=true\nendif\nset Up[yCv]=\"도박광\"\nset lCv=null\nendfunction"
+      }
+    },
+    {
+      "id": "Gambler.RiskHedge",
+      "name": "리스크헷지",
+      "category": "Gambler",
+      "registrationLines": [
+        17649,
+        21252,
+        39307,
+        39319,
+        57875
+      ],
+      "handler": {
+        "name": "NCv",
+        "source": {
+          "startLine": 39280,
+          "endLine": 39353,
+          "sha256": "bc08fed379c0f7cece3958c2eab3c12e91d206c4233c619f341584120af9eecb"
+        },
+        "rawSource": "function NCv takes integer ZCv,integer yCv returns nothing\nlocal location lCv\nif ZCv==1 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 카지노|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=1\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303642,0)\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303643,0)\nset Dp[yCv]=Dp[yCv]+1\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00001|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 카지노효과로 이세계 도박 횟수가 추가됩니다.\")\nset SP[yCv]=2*SP[yCv]+ZP[yCv]\ncall AddUnitToStock(pp[yCv],$48304157,SP[yCv],16)\nendif\nset Bp[yCv]=\"카지노\"\nset Bs[yCv]=true\nelseif ZCv==2 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 리스크헷지|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=2\nset Dp[yCv]=Dp[yCv]+2\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00002|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"리스크헷지\"\nset Bs[yCv]=true\nelseif ZCv==3 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 환전소|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=3\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303644,0)\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset Jp[yCv]=CreateUnit(Player(yCv),$68304255,GetUnitX(pp[yCv])+220.,GetUnitY(pp[yCv]),270.)\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,false)\nif Ep[yCv]==null then\nset lCv=GetStartLocationLoc(GetPlayerStartLocation(Player(yCv)))\nset bj_lastCreatedItem=CreateItem($49303039,GetLocationX(lCv),GetLocationY(lCv))\nset Ep[yCv]=bj_lastCreatedItem\ncall SetItemUserData(Ep[yCv],yCv)\ncall SetItemCharges(Ep[yCv],0)\ncall UnitAddItemSwapped(Ep[yCv],Jp[yCv])\nendif\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 환전소 효과로 환전소에 랜덤전용 유닛이 입고됩니다.\")\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"환전소\"\nset Bs[yCv]=true\nendif\nset Up[yCv]=\"도박광\"\nset lCv=null\nendfunction"
+      }
+    },
+    {
+      "id": "Gambler.Exchange2322",
+      "name": "환전소",
+      "category": "Gambler",
+      "registrationLines": [
+        14119,
+        18684,
+        32802,
+        33271,
+        39323,
+        39341,
+        39348,
+        44118,
+        48551,
+        57910,
+        57912,
+        62586,
+        64481
+      ],
+      "handler": {
+        "name": "NCv",
+        "source": {
+          "startLine": 39280,
+          "endLine": 39353,
+          "sha256": "bc08fed379c0f7cece3958c2eab3c12e91d206c4233c619f341584120af9eecb"
+        },
+        "rawSource": "function NCv takes integer ZCv,integer yCv returns nothing\nlocal location lCv\nif ZCv==1 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 카지노|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=1\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303642,0)\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303643,0)\nset Dp[yCv]=Dp[yCv]+1\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00001|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 카지노효과로 이세계 도박 횟수가 추가됩니다.\")\nset SP[yCv]=2*SP[yCv]+ZP[yCv]\ncall AddUnitToStock(pp[yCv],$48304157,SP[yCv],16)\nendif\nset Bp[yCv]=\"카지노\"\nset Bs[yCv]=true\nelseif ZCv==2 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 리스크헷지|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=2\nset Dp[yCv]=Dp[yCv]+2\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00도박광|r 항법효과로 희귀 리롤 횟수가 |cffff00002|r회 증가했습니다.\")\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"리스크헷지\"\nset Bs[yCv]=true\nelseif ZCv==3 then\nif not RV[yCv]then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00도박광 :: 환전소|r 을(를) 선택하셨습니다.\")\nendif\nset Kp[yCv]=3\ncall SetPlayerTechMaxAllowed(Player(yCv),$68303644,0)\nif Dp[yCv]>0 then\ncall SetPlayerAbilityAvailable(Player(yCv),$41305945,true)\nendif\nset Jp[yCv]=CreateUnit(Player(yCv),$68304255,GetUnitX(pp[yCv])+220.,GetUnitY(pp[yCv]),270.)\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,false)\nif Ep[yCv]==null then\nset lCv=GetStartLocationLoc(GetPlayerStartLocation(Player(yCv)))\nset bj_lastCreatedItem=CreateItem($49303039,GetLocationX(lCv),GetLocationY(lCv))\nset Ep[yCv]=bj_lastCreatedItem\ncall SetItemUserData(Ep[yCv],yCv)\ncall SetItemCharges(Ep[yCv],0)\ncall UnitAddItemSwapped(Ep[yCv],Jp[yCv])\nendif\nif ys then\ncall DisplayTimedTextToPlayer(Player(yCv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cff4FC9DE[이세계모드] 환전소 효과로 환전소에 랜덤전용 유닛이 입고됩니다.\")\ncall SetPlayerAbilityAvailable(Player(yCv),$41304d41,true)\nendif\nset DH=e4s()\nset NH[DH]=Player(yCv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNGlyph.blp\"\ncall rbv(DH)\nset Bp[yCv]=\"환전소\"\nset Bs[yCv]=true\nendif\nset Up[yCv]=\"도박광\"\nset lCv=null\nendfunction"
+      }
+    },
+    {
+      "id": "BestHelp.MaximumOutput",
+      "name": "최대출력",
+      "category": "BestHelp",
+      "registrationLines": [
+        5128,
+        5131,
+        5132,
+        5143,
+        57959
+      ],
+      "handler": {
+        "name": "jFv",
+        "source": {
+          "startLine": 5122,
+          "endLine": 5185,
+          "sha256": "97ad4905da0d186d12d276f0038e75638d5221ed727a37723ef49c146b0141c8"
+        },
+        "rawSource": "function jFv takes integer QFv,integer UFv returns nothing\nlocal player BFv\nlocal player HFv\nlocal real oFv\nif QFv==1 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 최대출력|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소 스킬이 강화됩니다.\")\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소에 |cff51ddf5마나포션|r 스킬이 추가됩니다.\")\ncall SetUnitAbilityLevel(Wp[UFv],$4130425a,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41304259,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303754,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303758,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303757,2)\ncall UnitAddAbility(Wp[UFv],$41305559)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"최대출력\"\nset Bs[UFv]=true\nelseif QFv==2 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 연금술|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 연금술|r 항법효과로 도움소에 |cffff0000'연금술'|r 스킬이 추가됩니다.\")\ncall UnitAddAbility(Wp[UFv],$41304a32)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"연금술\"\nset Bs[UFv]=true\nelseif QFv==3 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 역발상|r 을(를) 선택하셨습니다.\")\nendif\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 도움소 마나소모가 |cffff0000150|r 이하 스킬 사용 가능\")\ncall UnitRemoveAbility(Wp[UFv],$4130425a)\ncall UnitRemoveAbility(Wp[UFv],$41304259)\ncall UnitRemoveAbility(Wp[UFv],$41303758)\ncall UnitRemoveAbility(Wp[UFv],$41303754)\ncall UnitRemoveAbility(Wp[UFv],$41303755)\nset HFv=Player(UFv)\nset BFv=Player(UFv)\nset oFv=GetStartLocationX(GetPlayerStartLocation(BFv))\nset BFv=Player(UFv)\nset bj_lastCreatedUnit=CreateUnit(HFv,$68303558,oFv,GetStartLocationY(GetPlayerStartLocation(BFv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\ncall bjv(Player(UFv),1,1)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"역발상\"\nset Bs[UFv]=true\nendif\nset Up[UFv]=\"최고의도움\"\nset BFv=null\nset HFv=null\nendfunction"
+      }
+    },
+    {
+      "id": "BestHelp.Alchemy",
+      "name": "연금술",
+      "category": "BestHelp",
+      "registrationLines": [
+        5147,
+        5150,
+        5156,
+        19908,
+        19919,
+        57994,
+        57996,
+        57998
+      ],
+      "handler": {
+        "name": "jFv",
+        "source": {
+          "startLine": 5122,
+          "endLine": 5185,
+          "sha256": "97ad4905da0d186d12d276f0038e75638d5221ed727a37723ef49c146b0141c8"
+        },
+        "rawSource": "function jFv takes integer QFv,integer UFv returns nothing\nlocal player BFv\nlocal player HFv\nlocal real oFv\nif QFv==1 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 최대출력|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소 스킬이 강화됩니다.\")\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소에 |cff51ddf5마나포션|r 스킬이 추가됩니다.\")\ncall SetUnitAbilityLevel(Wp[UFv],$4130425a,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41304259,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303754,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303758,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303757,2)\ncall UnitAddAbility(Wp[UFv],$41305559)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"최대출력\"\nset Bs[UFv]=true\nelseif QFv==2 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 연금술|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 연금술|r 항법효과로 도움소에 |cffff0000'연금술'|r 스킬이 추가됩니다.\")\ncall UnitAddAbility(Wp[UFv],$41304a32)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"연금술\"\nset Bs[UFv]=true\nelseif QFv==3 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 역발상|r 을(를) 선택하셨습니다.\")\nendif\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 도움소 마나소모가 |cffff0000150|r 이하 스킬 사용 가능\")\ncall UnitRemoveAbility(Wp[UFv],$4130425a)\ncall UnitRemoveAbility(Wp[UFv],$41304259)\ncall UnitRemoveAbility(Wp[UFv],$41303758)\ncall UnitRemoveAbility(Wp[UFv],$41303754)\ncall UnitRemoveAbility(Wp[UFv],$41303755)\nset HFv=Player(UFv)\nset BFv=Player(UFv)\nset oFv=GetStartLocationX(GetPlayerStartLocation(BFv))\nset BFv=Player(UFv)\nset bj_lastCreatedUnit=CreateUnit(HFv,$68303558,oFv,GetStartLocationY(GetPlayerStartLocation(BFv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\ncall bjv(Player(UFv),1,1)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"역발상\"\nset Bs[UFv]=true\nendif\nset Up[UFv]=\"최고의도움\"\nset BFv=null\nset HFv=null\nendfunction"
+      }
+    },
+    {
+      "id": "BestHelp.ReverseThinking",
+      "name": "역발상",
+      "category": "BestHelp",
+      "registrationLines": [
+        5160,
+        5162,
+        5173,
+        5179,
+        58029
+      ],
+      "handler": {
+        "name": "jFv",
+        "source": {
+          "startLine": 5122,
+          "endLine": 5185,
+          "sha256": "97ad4905da0d186d12d276f0038e75638d5221ed727a37723ef49c146b0141c8"
+        },
+        "rawSource": "function jFv takes integer QFv,integer UFv returns nothing\nlocal player BFv\nlocal player HFv\nlocal real oFv\nif QFv==1 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 최대출력|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소 스킬이 강화됩니다.\")\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 최대출력|r 항법효과로 도움소에 |cff51ddf5마나포션|r 스킬이 추가됩니다.\")\ncall SetUnitAbilityLevel(Wp[UFv],$4130425a,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41304259,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303754,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303758,2)\ncall SetUnitAbilityLevel(Wp[UFv],$41303757,2)\ncall UnitAddAbility(Wp[UFv],$41305559)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"최대출력\"\nset Bs[UFv]=true\nelseif QFv==2 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 연금술|r 을(를) 선택하셨습니다.\")\nendif\ncall SetPlayerTechResearched(Player(UFv),$52303337,1)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 연금술|r 항법효과로 도움소에 |cffff0000'연금술'|r 스킬이 추가됩니다.\")\ncall UnitAddAbility(Wp[UFv],$41304a32)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"연금술\"\nset Bs[UFv]=true\nelseif QFv==3 then\nif not RV[UFv]then\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cff04ffc4[알림]|r |cffffae00최고의도움 :: 역발상|r 을(를) 선택하셨습니다.\")\nendif\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 도움소 마나소모가 |cffff0000150|r 이하 스킬 사용 가능\")\ncall UnitRemoveAbility(Wp[UFv],$4130425a)\ncall UnitRemoveAbility(Wp[UFv],$41304259)\ncall UnitRemoveAbility(Wp[UFv],$41303758)\ncall UnitRemoveAbility(Wp[UFv],$41303754)\ncall UnitRemoveAbility(Wp[UFv],$41303755)\nset HFv=Player(UFv)\nset BFv=Player(UFv)\nset oFv=GetStartLocationX(GetPlayerStartLocation(BFv))\nset BFv=Player(UFv)\nset bj_lastCreatedUnit=CreateUnit(HFv,$68303558,oFv,GetStartLocationY(GetPlayerStartLocation(BFv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(UFv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00최고의도움 :: 역발상|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\ncall bjv(Player(UFv),1,1)\nset DH=e4s()\nset NH[DH]=Player(UFv)\nset wH[DH]=\"ReplaceableTextures\\\\CommandButtons\\\\BTNBookOfSummoning.blp\"\ncall rbv(DH)\nset Bp[UFv]=\"역발상\"\nset Bs[UFv]=true\nendif\nset Up[UFv]=\"최고의도움\"\nset BFv=null\nset HFv=null\nendfunction"
+      }
+    },
+    {
+      "id": "Random.BlueFlavor",
+      "name": "파란색맛",
+      "category": "Random",
+      "registrationLines": [
+        39265,
+        58078
+      ],
+      "handler": {
+        "name": "IQv",
+        "source": {
+          "startLine": 39254,
+          "endLine": 39279,
+          "sha256": "5201feb16e348f074d8120a932e687490a927bbed1e669b5c56d9b511ce6748b"
+        },
+        "rawSource": "function IQv takes integer bQv,integer MQv returns nothing\nlocal player gQv\nlocal player uQv\nlocal real AQv\nif RV[MQv]then\nset gQv=null\nset uQv=null\nreturn\nendif\nif bQv==1 then\ncall yRR(Player(MQv),1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 파란색맛|r 항법효과로 \"+GetObjectName($65304958)+\" 1기 획득!\")\nelseif bQv==2 then\ncall SetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 초록색맛|r 항법효과로 |cff7ad8231 목재|r 획득!\")\nelseif bQv==3 then\nset uQv=Player(MQv)\nset gQv=Player(MQv)\nset AQv=GetStartLocationX(GetPlayerStartLocation(gQv))\nset gQv=Player(MQv)\nset bj_lastCreatedUnit=CreateUnit(uQv,$68303130,AQv,GetStartLocationY(GetPlayerStartLocation(gQv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 노란색맛|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset gQv=null\nset uQv=null\nendfunction"
+      }
+    },
+    {
+      "id": "Random.GreenFlavor",
+      "name": "초록색맛",
+      "category": "Random",
+      "registrationLines": [
+        39268,
+        58113
+      ],
+      "handler": {
+        "name": "IQv",
+        "source": {
+          "startLine": 39254,
+          "endLine": 39279,
+          "sha256": "5201feb16e348f074d8120a932e687490a927bbed1e669b5c56d9b511ce6748b"
+        },
+        "rawSource": "function IQv takes integer bQv,integer MQv returns nothing\nlocal player gQv\nlocal player uQv\nlocal real AQv\nif RV[MQv]then\nset gQv=null\nset uQv=null\nreturn\nendif\nif bQv==1 then\ncall yRR(Player(MQv),1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 파란색맛|r 항법효과로 \"+GetObjectName($65304958)+\" 1기 획득!\")\nelseif bQv==2 then\ncall SetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 초록색맛|r 항법효과로 |cff7ad8231 목재|r 획득!\")\nelseif bQv==3 then\nset uQv=Player(MQv)\nset gQv=Player(MQv)\nset AQv=GetStartLocationX(GetPlayerStartLocation(gQv))\nset gQv=Player(MQv)\nset bj_lastCreatedUnit=CreateUnit(uQv,$68303130,AQv,GetStartLocationY(GetPlayerStartLocation(gQv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 노란색맛|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset gQv=null\nset uQv=null\nendfunction"
+      }
+    },
+    {
+      "id": "Random.YellowFlavor",
+      "name": "노란색맛",
+      "category": "Random",
+      "registrationLines": [
+        39275,
+        58148
+      ],
+      "handler": {
+        "name": "IQv",
+        "source": {
+          "startLine": 39254,
+          "endLine": 39279,
+          "sha256": "5201feb16e348f074d8120a932e687490a927bbed1e669b5c56d9b511ce6748b"
+        },
+        "rawSource": "function IQv takes integer bQv,integer MQv returns nothing\nlocal player gQv\nlocal player uQv\nlocal real AQv\nif RV[MQv]then\nset gQv=null\nset uQv=null\nreturn\nendif\nif bQv==1 then\ncall yRR(Player(MQv),1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 파란색맛|r 항법효과로 \"+GetObjectName($65304958)+\" 1기 획득!\")\nelseif bQv==2 then\ncall SetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER,GetPlayerState(Player(MQv),PLAYER_STATE_RESOURCE_LUMBER)+1)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 초록색맛|r 항법효과로 |cff7ad8231 목재|r 획득!\")\nelseif bQv==3 then\nset uQv=Player(MQv)\nset gQv=Player(MQv)\nset AQv=GetStartLocationX(GetPlayerStartLocation(gQv))\nset gQv=Player(MQv)\nset bj_lastCreatedUnit=CreateUnit(uQv,$68303130,AQv,GetStartLocationY(GetPlayerStartLocation(gQv)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(Player(MQv),0.,0.,3.,\"|cffF15F5F[시스템]|r |cffffae00랜덤선택 :: 노란색맛|r 항법효과로 \"+GetUnitName(bj_lastCreatedUnit)+\" 획득!\")\nendif\nset gQv=null\nset uQv=null\nendfunction"
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "ability": "A0CI",
+      "cost": 1,
+      "registrationLine": 83137,
+      "name": "i4R",
+      "source": {
+        "startLine": 48527,
+        "endLine": 48554,
+        "sha256": "de7786fd2e4abe7a6b4a492cecb225acf44d2a95be6789851f6541c44c7e2007"
+      },
+      "rawSource": "function i4R takes nothing returns nothing\nlocal unit P4R=GetTriggerUnit()\nlocal player p4R=GetTriggerPlayer()\nlocal integer r4R=GetPlayerId(p4R)\nlocal string W4R=null\nif GetItemCharges(Ep[r4R])<1 then\ncall DisplayTimedTextToPlayer(p4R,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(P4R,\"stop\")\nset P4R=null\nset p4R=null\nreturn\nendif\ncall SetItemCharges(Ep[r4R],GetItemCharges(Ep[r4R])-1)\nset r4R=wWR(1,10)\nif r4R>=6 then\nset W4R=\"|cffffd7005000골드|r\"\ncall SetPlayerState(p4R,PLAYER_STATE_RESOURCE_GOLD,GetPlayerState(p4R,PLAYER_STATE_RESOURCE_GOLD)+$1388)\nelseif r4R>=2 then\nset W4R=\"|cffffd700\"+GetObjectName($65304958)+\"|r\"\ncall yRR(p4R,1)\nelseif r4R==1 then\nset W4R=\"|cffff8200\"+GetObjectName($65303138)+\"|r\"\ncall FqR(p4R,1)\nendif\ncall DisplayTimedTextToPlayer(p4R,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(1)+\" 콤푸|r를 소모하여 \"+W4R+\" 획득!\")\nset P4R=null\nset p4R=null\nendfunction"
+    },
+    {
+      "ability": "A0EZ",
+      "cost": 3,
+      "registrationLine": 83138,
+      "name": "VLv",
+      "source": {
+        "startLine": 32788,
+        "endLine": 32805,
+        "sha256": "98155967b6a5ce20ed7e85195a56c8fd49ca61778757a3e839ed4d4bd917f727"
+      },
+      "rawSource": "function VLv takes nothing returns nothing\nlocal unit wLv=GetTriggerUnit()\nlocal player DLv=GetTriggerPlayer()\nlocal integer SLv=GetPlayerId(DLv)\nif GetItemCharges(Ep[SLv])<3 then\ncall DisplayTimedTextToPlayer(DLv,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(wLv,\"stop\")\nset wLv=null\nset DLv=null\nreturn\nendif\ncall SetItemCharges(Ep[SLv],GetItemCharges(Ep[SLv])-3)\nset SLv=wWR(1,2)\ncall JDR(DLv,SLv)\ncall DisplayTimedTextToPlayer(DLv,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(3)+\" 콤푸|r를 소모하여 |cff7ad823\"+I2S(SLv)+\" 목재|r 획득!\")\nset wLv=null\nset DLv=null\nendfunction"
+    },
+    {
+      "ability": "A0DB",
+      "cost": 3,
+      "registrationLine": 83139,
+      "name": "W5s",
+      "source": {
+        "startLine": 33253,
+        "endLine": 33274,
+        "sha256": "44d5f783d709e38887f0637c8dab3a7ae7f51feeeef32c995fc62b6761e5880f"
+      },
+      "rawSource": "function W5s takes nothing returns nothing\nlocal unit P5s=GetTriggerUnit()\nlocal player p5s=GetTriggerPlayer()\nlocal integer r5s=GetPlayerId(p5s)\nif GetItemCharges(Ep[r5s])<3 then\ncall DisplayTimedTextToPlayer(p5s,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(P5s,\"stop\")\nset P5s=null\nset p5s=null\nreturn\nendif\ncall SetItemCharges(Ep[r5s],GetItemCharges(Ep[r5s])-3)\nif wWR(1,$64)<=35 then\nset r5s=2\nelse\nset r5s=1\nendif\ncall FqR(p5s,r5s)\ncall DisplayTimedTextToPlayer(p5s,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(3)+\" 콤푸|r를 소모하여 |cffff8200\"+GetObjectName($65303138)+\"|r \"+I2S(r5s)+\"개 획득!\")\nset P5s=null\nset p5s=null\nendfunction"
+    },
+    {
+      "ability": "A0IY",
+      "cost": 5,
+      "registrationLine": 83140,
+      "name": "KjR",
+      "source": {
+        "startLine": 18669,
+        "endLine": 18687,
+        "sha256": "03cf26522dba44535cbcee175db0cd7354408d60e7f9fbde21f8cb450f218684"
+      },
+      "rawSource": "function KjR takes nothing returns nothing\nlocal unit BjR=GetTriggerUnit()\nlocal player HjR=GetTriggerPlayer()\nlocal integer ojR=GetPlayerId(HjR)\nlocal real jjR\nif GetItemCharges(Ep[ojR])<5 then\ncall DisplayTimedTextToPlayer(HjR,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(BjR,\"stop\")\nset BjR=null\nset HjR=null\nreturn\nendif\ncall SetItemCharges(Ep[ojR],GetItemCharges(Ep[ojR])-5)\nset jjR=GetStartLocationX(GetPlayerStartLocation(HjR))\nset BjR=CreateUnit(HjR,$68303630,jjR,GetStartLocationY(GetPlayerStartLocation(HjR)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(HjR,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(5)+\" 콤푸|r를 소모하여 |cff20b2aa\"+GetUnitName(BjR)+\"|r 획득!\")\nset BjR=null\nset HjR=null\nendfunction"
+    },
+    {
+      "ability": "A0JR",
+      "cost": 2,
+      "registrationLine": 83141,
+      "name": "ucs",
+      "source": {
+        "startLine": 62572,
+        "endLine": 62589,
+        "sha256": "6fdabb5efa23afed61da04b32f72c69759c500e8e359d6f79f46e9ebb58fceea"
+      },
+      "rawSource": "function ucs takes nothing returns nothing\nlocal unit bcs=GetTriggerUnit()\nlocal player Mcs=GetTriggerPlayer()\nlocal integer gcs=GetPlayerId(Mcs)\nif GetItemCharges(Ep[gcs])<2 then\ncall DisplayTimedTextToPlayer(Mcs,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(bcs,\"stop\")\nset bcs=null\nset Mcs=null\nreturn\nendif\ncall SetItemCharges(Ep[gcs],GetItemCharges(Ep[gcs])-2)\ncall bjv(Mcs,1,0)\ncall SetPlayerAbilityAvailable(Mcs,$41304a52,false)\ncall DisplayTimedTextToPlayer(Mcs,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(2)+\" 콤푸|r를 소모하여 |cffA6A6A6아이템 발굴 1 스택|r 획득!\")\nset bcs=null\nset Mcs=null\nendfunction"
+    },
+    {
+      "ability": "A0BV",
+      "cost": 6,
+      "registrationLine": 83142,
+      "name": "wgs",
+      "source": {
+        "startLine": 64467,
+        "endLine": 64484,
+        "sha256": "157944209a22ee69bc923469846c9d4c8138030c9027b612b3c80ec1ae50d2f0"
+      },
+      "rawSource": "function wgs takes nothing returns nothing\nlocal unit ygs=GetTriggerUnit()\nlocal player lgs=GetTriggerPlayer()\nlocal integer Ngs=GetPlayerId(lgs)\nif GetItemCharges(Ep[Ngs])<6 then\ncall DisplayTimedTextToPlayer(lgs,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(ygs,\"stop\")\nset ygs=null\nset lgs=null\nreturn\nendif\ncall SetItemCharges(Ep[Ngs],GetItemCharges(Ep[Ngs])-6)\ncall bjv(lgs,1,1)\ncall SetPlayerAbilityAvailable(lgs,$41304256,false)\ncall DisplayTimedTextToPlayer(lgs,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(6)+\" 콤푸|r를 소모하여 |cffFF8200유니크 아이템 발굴 1 스택|r 획득!\")\nset ygs=null\nset lgs=null\nendfunction"
+    },
+    {
+      "ability": "A0MA",
+      "cost": 20,
+      "registrationLine": 83143,
+      "name": "eBR",
+      "source": {
+        "startLine": 44095,
+        "endLine": 44122,
+        "sha256": "a91271683c184b1a976df697455ca5ba296e3fa5b11331afebd99dd19ad55d2b"
+      },
+      "rawSource": "function eBR takes nothing returns nothing\nlocal unit HBR=GetTriggerUnit()\nlocal player oBR=GetTriggerPlayer()\nlocal integer jBR=GetPlayerId(oBR)\nlocal unit KBR\nlocal integer EBR\nlocal real JBR\nif GetItemCharges(Ep[jBR])<20 then\ncall DisplayTimedTextToPlayer(oBR,0.,0.,5.,\"|cffff0000[오류]|r|cffD0FC5C콤푸|r가 부족합니다!\")\ncall IssueImmediateOrder(HBR,\"stop\")\nset HBR=null\nset oBR=null\nset KBR=null\nreturn\nendif\ncall SetItemCharges(Ep[jBR],GetItemCharges(Ep[jBR])-20)\nset EBR=DB[wWR(0,13)]\nset JBR=GetStartLocationX(GetPlayerStartLocation(oBR))\nset HBR=CreateUnit(oBR,EBR,JBR,GetStartLocationY(GetPlayerStartLocation(oBR)),bj_UNIT_FACING)\ncall UnitAddAbility(HBR,$4130595a)\ncall IssueImmediateOrder(HBR,\"holdposition\")\nset JBR=GetStartLocationX(GetPlayerStartLocation(oBR))\nset KBR=CreateUnit(oBR,$68303647,JBR,GetStartLocationY(GetPlayerStartLocation(oBR)),bj_UNIT_FACING)\ncall DisplayTimedTextToPlayer(oBR,0.,0.,5.,\"|cffD0FC5C[환전소] \"+I2S(20)+\" 콤푸|r를 소모하여 \"+GetUnitName(HBR)+\"와 \"+GetUnitName(KBR)+\" 획득!\")\nset HBR=null\nset oBR=null\nset KBR=null\nendfunction"
+    }
+  ],
+  "doubleWispExchange": {
+    "cost": 3,
+    "successNumerator": 35,
+    "rollDenominator": 100,
+    "successSelectionWisps": 2,
+    "failureSelectionWisps": 1,
+    "failureStatus": "ExplicitSingleWispElse",
+    "source": {
+      "startLine": 33253,
+      "endLine": 33274,
+      "sha256": "44d5f783d709e38887f0637c8dab3a7ae7f51feeeef32c995fc62b6761e5880f"
+    }
+  },
+  "randomBox": {
+    "cost": 1,
+    "rollDenominator": 10,
+    "goldRolls": 5,
+    "goldAmount": 5000,
+    "randomWispRolls": 4,
+    "selectionWispRolls": 1,
+    "source": {
+      "startLine": 48528,
+      "endLine": 48551,
+      "sha256": "490d1d8ef53fd111c86277edb86f902b6a16ff25a001b1d33042f4a89b273628"
+    }
+  },
+  "grantForwarding": [
+    {
+      "startLine": 4395,
+      "endLine": 4411,
+      "sha256": "1856486f908fd133a96fa93e80e4e105ead9af9110ba49e0bfb76c59e9fb2cd8"
+    }
+  ]
+}

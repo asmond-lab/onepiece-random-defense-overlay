@@ -1,0 +1,60 @@
+{
+  "version": "2.320",
+  "reader": "official v9.40 release stormlib_dll.zip x64",
+  "flags": "0x100 STREAM_FLAG_READ_ONLY only",
+  "x64": true,
+  "archive": "C:\\Users\\123\\Documents\\Warcraft III\\Maps\\Download\\ORDR_S2_2.320[R].w3x",
+  "sha256Before": "68445631FDACA12A343E9465E5BC5DC9B4C8C6CC927D701F52E2CB822821E15F",
+  "opened": true,
+  "members": [
+    {
+      "name": "war3map.j",
+      "opened": true,
+      "size": 88,
+      "flags": "0x80010200",
+      "status": "failed",
+      "error": "Read failed error=1392 read=0 at=0"
+    },
+    {
+      "name": "war3map.w3u",
+      "opened": true,
+      "size": 917401,
+      "flags": "0x80010200",
+      "status": "read",
+      "readBytes": 917401,
+      "sha256": "18B5DBA815B7BAED4E56683136883E9B239FC4E8AC63491BC57696FB05586B2A"
+    },
+    {
+      "name": "war3map.w3a",
+      "opened": true,
+      "size": 699383,
+      "flags": "0x80010200",
+      "status": "read",
+      "readBytes": 699383,
+      "sha256": "D3FDE16020FAF5F3E0BECDBF571927D3ACD77BE9D5610F3E07A2B2584AC60AA5"
+    },
+    {
+      "name": "war3map.wts",
+      "opened": true,
+      "size": 1816858,
+      "flags": "0x80010200",
+      "status": "read",
+      "readBytes": 1816858,
+      "sha256": "4B9C531CDE67C979EAE0BA289D133862F57714CD7DC0CF3BBAC3376B52EE6946"
+    },
+    {
+      "name": "war3mapMisc.txt",
+      "opened": true,
+      "size": 1183,
+      "flags": "0x80010200",
+      "status": "read",
+      "readBytes": 1183,
+      "sha256": "8428C5E040AC9A75CE37209145B25B6640C560F5D96E5F068E589946317BF140"
+    }
+  ],
+  "openError": 0,
+  "sectorSize": 1073741824,
+  "archiveFlags": 1029,
+  "fileTableSize": 65536,
+  "sha256After": "68445631FDACA12A343E9465E5BC5DC9B4C8C6CC927D701F52E2CB822821E15F"
+}

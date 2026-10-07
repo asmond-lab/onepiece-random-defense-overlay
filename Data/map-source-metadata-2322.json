@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "archive": {
+    "archive": "ORDR_S2_2.322[R].w3x",
+    "archiveBytes": 119516025,
+    "archiveSha256": "93baeb58a6d7ad7e25c7e8a44a345f0c39b5907aa9c1774995730d4fbd101d9b"
+  },
+  "members": [
+    {
+      "name": "war3map.j",
+      "bytes": 3079186,
+      "sha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d"
+    },
+    {
+      "name": "war3map.w3u",
+      "bytes": 886731,
+      "sha256": "9890b21a7474d2005f9452526da57360fddbfa00c70c5b6752a09103b9a98822"
+    },
+    {
+      "name": "war3map.w3a",
+      "bytes": 658850,
+      "sha256": "05686321b4a7f6fbdc365f222bf5bb9cbcb6a9851ccc87c9211e112befa28ef2"
+    },
+    {
+      "name": "war3map.w3t",
+      "bytes": 3948,
+      "sha256": "65e06dd4c8aa1483bb97a1f363b788e9bcea54c68611364b4b3f85aa2a788191"
+    },
+    {
+      "name": "war3map.w3q",
+      "bytes": 62682,
+      "sha256": "082691a6e94be8510ac813e37fe09649e75aadd8e26a643d8888497945e1a094"
+    },
+    {
+      "name": "war3map.wts",
+      "bytes": 1846442,
+      "sha256": "848edaf8bbe96a274e76d95f535de51bd8c479b5921ebc3267cf3e8a89f4d690"
+    },
+    {
+      "name": "war3map.w3i",
+      "bytes": 649,
+      "sha256": "efb80440694ab7a152dd1874b3e8350c7967e912e7c7c11807490046d279d2ed"
+    },
+    {
+      "name": "war3mapMisc.txt",
+      "bytes": 1183,
+      "sha256": "8428c5e040ac9a75ce37209145b25b6640c560f5d96e5f068e589946317bf140"
+    }
+  ],
+  "sourceRefs": [
+    {
+      "startLine": 61986,
+      "endLine": 62034,
+      "sha256": "ea09265c9543425b2df2a29f32176208b1243f3a7a3b106fe95c73e22508214f"
+    },
+    {
+      "startLine": 48957,
+      "endLine": 48977,
+      "sha256": "c88dea089195b6aafdcb40e954b1c45d112e6de02154ffeb8d84e775f7a71f47"
+    },
+    {
+      "startLine": 19100,
+      "endLine": 19126,
+      "sha256": "2af6ec4d3749648e32106b94c392e3d5d74573a7c1aa18b2593a7d56a8f59f41"
+    },
+    {
+      "startLine": 50975,
+      "endLine": 51000,
+      "sha256": "89faf4941db5d74587fb85ac5d5cf2b370ead3b3dbd61c95af2a7bb7b19fcf90"
+    },
+    {
+      "startLine": 5370,
+      "endLine": 5382,
+      "sha256": "b1464fa4bbeeb8be6ea91e0415841f9a4c908a83f9a6572af10ff8f3629bf34f"
+    },
+    {
+      "startLine": 24262,
+      "endLine": 24265,
+      "sha256": "6c0964e5d7782eec798c03b15e20d045c031fe001c6842a922ee36d5572f248e"
+    },
+    {
+      "startLine": 72808,
+      "endLine": 72821,
+      "sha256": "06e58d055a5bc2f24ff781a8c0acf26563e53b1f45f4b5e1d5907fdbb676c6d9"
+    }
+  ]
+}

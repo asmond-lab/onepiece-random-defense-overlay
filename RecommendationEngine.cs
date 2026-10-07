@@ -3,23 +3,33 @@ using System.Globalization;
 namespace OrandOverlay;
 
 public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? clearStats = null,
-    CombineHotkeyCatalog? combineHotkeys = null)
+    CombineHotkeyCatalog? combineHotkeys = null, RecipeConditionContext? conditionContext = null, Func<DateTimeOffset>? conditionClock = null)
 {
     // RecommendNearestCrafts 진입 시 항법에 따라 설정된다. 1상위 항법이면 1상위
     // 클리어만, 긴급소집 같은 다상위 항법이면 상위 2기 이상 클리어만 집계한
     // 프로필을 쓴다(표본 부족 시 전체로 후퇴).
     private TopScope _topScope;
 
+    private StrategyMetrics StrategyMetricsFor(UnitDefinition unit) =>
+        GoalStrategyCalculator.StrategyMetricsFor(unit, catalog.MapVersion);
+
     // 이번 패스의 스턴 공략 목표·상한 — 패 수치 카드가 고정 1.4 대신 이 값을 쓴다.
     // (기본 1.4/1.5, 니카 이감 1.6/1.7, 노이감 2.9/3.0 등 공략마다 다르다.)
     public double ActiveStunTarget { get; private set; } = StableStunTarget;
     public double ActiveStunCap { get; private set; } = MaximumUsefulStun;
+    public double ActiveSlowTarget { get; private set; } = FullSlowTarget;
+    public double ActiveArmorReductionTarget { get; private set; } = FullArmorReductionTarget;
+    public double ActiveMagicArmorReductionTarget { get; private set; }
     // 이번 추천 패스에서 쓸 클리어 프로필. 마딜 목표는 보유 앵커(이미 짠 취향 유닛)와
     // 같이 쓰인 클리어만 재집계한 조건부 프로필일 수 있다.
     private GoalClearProfile? _activeClearProfile;
-    private LiveStats _liveStats = new();
+    private volatile LiveStats _liveStats = new();
+    private readonly object _liveStatsGate = new();
     // 조합 트리·조합식 등급 조회 전담 빌더(동작 보존 추출).
-    private readonly RecipeTreeBuilder _recipes = new(catalog, combineHotkeys);
+    private readonly RecipeTreeBuilder _recipes = new(catalog, combineHotkeys, conditionContext, conditionClock);
+    // Retain immutable observation timestamps, but never retain evaluation time across passes.
+    private RecipeConditionContext? CurrentConditions => conditionContext is null ? null
+        : conditionContext with { Now = conditionClock?.Invoke() ?? DateTimeOffset.UtcNow };
     // 최하위 재료 전개는 카탈로그 수명 동안 불변이다. 엔진 호출마다 계산기를
     // 새로 만들어 leaf cache를 버리지 않고 재사용한다.
     private readonly RecipeCompletionCalculator _recipeCalculator = new(catalog.Unit);
@@ -31,7 +41,23 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>자체 수집 통계의 게이트 통과 가중을 화면 순서 점수에 반영하도록 연결한다.</summary>
-    public void SetLiveStats(LiveStats liveStats) => _liveStats = liveStats;
+    private string? _gameplayMapHash;
+    private string? _gameplayDifficulty;
+    public void SetGameplayCohort(string mapScriptSha256, string difficulty)
+    {
+        lock (_liveStatsGate)
+        {
+            _gameplayMapHash = mapScriptSha256;
+            _gameplayDifficulty = difficulty;
+            if (!_liveStats.MatchesCohort(mapScriptSha256, difficulty)) _liveStats = new();
+        }
+    }
+
+    public void SetLiveStats(LiveStats liveStats)
+    {
+        lock (_liveStatsGate)
+            if (liveStats.MatchesCohort(_gameplayMapHash, _gameplayDifficulty)) _liveStats = liveStats;
+    }
     private string? _activeAnchorLabel;
 
     // GoalStrategyCalculator로 이동한 전략 상수의 엔진 내 별칭(호출점 무변경 유지).
@@ -69,6 +95,23 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ToList();
     }
 
+    internal IReadOnlyList<Recommendation> RecommendGuideCraft(string targetId,
+        IReadOnlyList<InventoryEntry> inventory, BulletGuidePlan plan, int round, int story)
+    {
+        var counts = inventory.GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Sum(entry => entry.Count), StringComparer.OrdinalIgnoreCase);
+        var available = BulletGuideReservations.Available(catalog, counts, plan.ProtectedUnitIds, targetId);
+        var goal = catalog.Unit(BulletGuidePolicy.GoalId);
+        var target = catalog.Unit(targetId);
+        var recommendation = EvaluateCraft(target, available, _recipeCalculator);
+        recommendation.GuidePlan = plan;
+        var strategy = GoalStrategyCalculator.StrategyProfileFor(goal) ?? new GoalStrategyProfile(0, 0);
+        recommendation.CurrentCraft = new CurrentCraftPolicy(catalog.Unit, goal, counts, strategy,
+            round, story, _recipeCalculator, CurrentConditions).Assess(target);
+        recommendation.CombatReadiness = CombatReadinessCalculator.Calculate(catalog, goal, inventory, plan.Difficulty);
+        return [recommendation];
+    }
+
     public IReadOnlyList<Recommendation> RecommendNearestCrafts(
         string goalUnitId,
         IEnumerable<InventoryEntry> inventory,
@@ -80,8 +123,19 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         bool prioritizeTargetRare = false,
         bool suppressFirstRareShip = false,
         bool suppressSecondaryTopCandidates = false,
-        string difficulty = "unknown")
+        string difficulty = "unknown",
+        int round = 0,
+        int completedStoryStage = 0,
+        string? committedCraftUnitId = null)
     {
+        lock (_liveStatsGate)
+        {
+            if (_gameplayDifficulty != difficulty)
+            {
+                _gameplayDifficulty = difficulty;
+                _liveStats = new();
+            }
+        }
         var inventoryList = inventory.ToList();
         var counts = inventoryList
             .GroupBy(x => x.UnitId, StringComparer.OrdinalIgnoreCase)
@@ -102,7 +156,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         var goalOwned = counts.GetValueOrDefault(goalUnitId) > 0 ||
                         goal.Rawcodes.Any(code =>
                             counts.GetValueOrDefault("rawcode:" + code) > 0);
-        var navigation = NavigationProfiles.Find(navigationMode);
+        var navigation = MapNavigationCatalog.Resolve(catalog, navigationMode);
         _topScope = navigation.AllowsMultipleTopUnits ? TopScope.MultiTop
             : navigation.CanCraftTopUnits ? TopScope.SoloTop
             : TopScope.Any;
@@ -157,13 +211,18 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         // 목표 자체 스턴 + 패에 쌓인 스턴으로 빌드 방향(니카 이감/노이감)을 판정한다.
         // 보유한 목표의 스턴은 집계에 이미 포함되고, 조합 예정이면 여기서 더한다.
         var committedStun = AggregateStrategyMetrics(counts).Stun +
-                            (showGoal ? GoalStrategyCalculator.StrategyMetricsFor(goal).Stun : 0);
+                            (showGoal ? StrategyMetricsFor(goal).Stun : 0);
         var strategy = GoalStrategyCalculator.ApplyGorosei(
             GoalStrategyCalculator.StrategyProfileFor(goal, committedStun, buildVariant), gorosei);
+        if (strategy is { } difficultyStrategy)
+            strategy = difficultyStrategy with
+            {
+                ArmorReductionTarget = GoalStrategyCalculator.ArmorReductionTargetForDifficulty(
+                    difficultyStrategy.ArmorReductionTarget, difficulty)
+            };
         if (viviPartnerId == "rawcode:4B0H" && strategy is { } viviKidStrategy)
             strategy = viviKidStrategy with { StunTarget = 0, StunCap = 0 };
-        ActiveStunTarget = strategy?.StunTarget ?? StableStunTarget;
-        ActiveStunCap = strategy?.StunCap ?? MaximumUsefulStun;
+        PublishActiveTargets(strategy, difficulty);
         // 키자루 초월 + 역발상: 레일리는 확정 획득이지만 특성포인트가 부족해 자체
         // 딜이 약하다(유저 검증 · 가이드는 특성공학 추천). 단일·끝딜 보강으로
         // 라인딜 공백을 메운다. 클리어 기록엔 항법 흔적이 없어 항법 선택으로 반영.
@@ -194,7 +253,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                            unit.Id.Equals(viviPartnerId,
                                StringComparison.OrdinalIgnoreCase) ||
                            GoalStrategyCalculator.IsMagicDamageTier(goal.Tier) &&
-                           GoalStrategyCalculator.StrategyMetricsFor(unit)
+                           StrategyMetricsFor(unit)
                                .MagicArmorReduction > 0)
             .Where(unit => !IsTopTier(unit.Tier) ||
                            GoalStrategyCalculator.IsCompatibleTopDamageType(goal, unit))
@@ -205,7 +264,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 goal, unit, viviPartnerId, goalOwned))
             .Where(unit => unit.Recipe.Count > 0)
             .Select(unit => (Unit: unit,
-                Metrics: GoalStrategyCalculator.StrategyMetricsFor(unit)))
+                Metrics: StrategyMetricsFor(unit)))
             // 역할 파이프라인이 절대 소비하지 않을 후보는 비싼 레시피 전개 전에 뺀다.
             .Where(candidate => strategy is null ||
                                 candidate.Metrics.HasAny ||
@@ -218,7 +277,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .Where(candidate => candidate.Recommendation.RecipeProgress.RequiredLeafCount > 0)
             .ToList();
         var projectedStun = AggregateStrategyMetrics(counts).Stun +
-                            (showGoal ? GoalStrategyCalculator.StrategyMetricsFor(goal).Stun : 0);
+                            (showGoal ? StrategyMetricsFor(goal).Stun : 0);
         var nearestStunCraft = OrderByCraftDistance(candidates
                 .Where(candidate => candidate.Metrics.Stun > 0))
             .FirstOrDefault();
@@ -238,8 +297,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 StunCap = MaximumUsefulStun,
                 StunBeforeSlow = true
             };
-            ActiveStunTarget = strategy.Value.StunTarget;
-            ActiveStunCap = strategy.Value.StunCap;
+            PublishActiveTargets(strategy, difficulty);
         }
 
         var missingLegendaryIds = pinnedRecipeLegendaryIds
@@ -318,7 +376,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
         var projectedBeforeSupports = AggregateStrategyMetrics(counts) +
                                       (showGoal
-                                          ? GoalStrategyCalculator.StrategyMetricsFor(goal)
+                                          ? StrategyMetricsFor(goal)
                                           : default);
         var stunPending = strategy is { PrioritizeStunRecommendations: true } activeStrategy &&
                           projectedBeforeSupports.Stun + 0.0001 < activeStrategy.StunTarget;
@@ -337,10 +395,10 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                         ? 3
                     : stunPending &&
                       IsActiveCommunityCore(pair.recommendation) &&
-                      GoalStrategyCalculator.StrategyMetricsFor(
+                      StrategyMetricsFor(
                           catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
                         ? 3
-                    : stunPending && GoalStrategyCalculator.StrategyMetricsFor(
+                    : stunPending && StrategyMetricsFor(
                         catalog.Unit(pair.recommendation.Route.GoalUnitId)).Stun > 0
                         ? 2
                         : IsActiveCommunityCore(pair.recommendation)
@@ -352,11 +410,11 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 strategy is { ArmorBeforeSlow: true } &&
                 !recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) &&
                 !IsActiveCommunityCore(pair.recommendation) &&
-                GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(
+                StrategyMetricsFor(catalog.Unit(
                     pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0 ? 1 : 0)
             .ThenByDescending(pair =>
                 !recipeLegendaryIds.Contains(pair.recommendation.Route.GoalUnitId) &&
-                GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(
+                StrategyMetricsFor(catalog.Unit(
                     pair.recommendation.Route.GoalUnitId)).ArmorReduction > 0
                     ? pair.recommendation.RecipeProgress.CompletionRatio
                     : 0)
@@ -368,7 +426,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             .ThenBy(pair => pair.recommendation.RecipeProgress.MissingLeaves
                 .Sum(leaf => leaf.MissingCount))
             .ThenByDescending(pair => strategy is { } supportStrategy
-                ? RemainingUsefulMetricCount(GoalStrategyCalculator.StrategyMetricsFor(
+                ? RemainingUsefulMetricCount(StrategyMetricsFor(
                     catalog.Unit(pair.recommendation.Route.GoalUnitId)),
                     projectedBeforeSupports, supportStrategy)
                 : 0)
@@ -410,7 +468,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                     .Select(code => _activeClearProfile?.SupportShare.GetValueOrDefault(code) ?? 0)
                     .DefaultIfEmpty()
                     .Max(), Useful: strategy is { } seraphimStrategy
-                        ? RemainingUsefulMetricCount(GoalStrategyCalculator.StrategyMetricsFor(unit),
+                        ? RemainingUsefulMetricCount(StrategyMetricsFor(unit),
                             projectedBeforeSupports, seraphimStrategy)
                         : 0))
                 .Where(pair => pair.Useful > 0 || BuffSupportValue(pair.Unit) > 0 || pair.Share >= 0.10)
@@ -483,14 +541,14 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             Count = pair.Value
         });
         var readiness = CombatReadinessCalculator.Calculate(
-            catalog, goal, readinessInventory, difficulty);
+            catalog, goal, readinessInventory, difficulty, strategy);
         var carryMode = catalog.CarryPolicy.ForGoal(goal.Id).Mode;
         var requiredTopSupportIds = results
             .Where(item =>
                 item.Route.GoalUnitId.Equals(viviPartnerId,
                     StringComparison.OrdinalIgnoreCase) ||
                 GoalStrategyCalculator.IsMagicDamageTier(goal.Tier) &&
-                GoalStrategyCalculator.StrategyMetricsFor(
+                StrategyMetricsFor(
                     catalog.Unit(item.Route.GoalUnitId))
                     .MagicArmorReduction > 0)
             .Select(item => item.Route.GoalUnitId)
@@ -520,16 +578,102 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 prioritizeTargetRare,
                 suppressFirstRareShip,
                 suppressSecondaryTopCandidates: true,
-                difficulty: difficulty);
+                difficulty: difficulty,
+                round: round,
+                completedStoryStage: completedStoryStage,
+                committedCraftUnitId: committedCraftUnitId);
             foreach (var recommendation in safe)
             {
                 recommendation.DeferredSecondaryTopCount =
                     Math.Max(gate.DeferredCount,
                         recommendation.DeferredSecondaryTopCount);
                 recommendation.DeferredSecondaryTopReason =
-                    "55라 준비 미달 — 2상위 보류";
+                    "지원 수치 미달 — 2상위 보류";
             }
             return safe;
+        }
+        if ((round > 0 || committedCraftUnitId is not null) && strategy is { } actionStrategy &&
+            counts.Values.Any(count => count > 0))
+        {
+            // The final composition above may credit an unfinished goal. Immediate actions
+            // must instead earn their place against the units actually on the board.
+            var actions = new CurrentCraftPolicy(catalog.Unit, goal, counts,
+                actionStrategy,
+                round, completedStoryStage, calculator, CurrentConditions);
+            var committedUnit = candidates.FirstOrDefault(candidate =>
+                candidate.Unit.Id == committedCraftUnitId && !IsTopTier(candidate.Unit.Tier))?.Unit;
+            var committed = committedUnit is null ? null : EvaluateCraft(committedUnit, counts, calculator);
+            // Suspend, rather than abandon, a recipe whose next conversions need replacement combat units.
+            if (committed is not null && committed.RemainingCraftSteps.Select(step => catalog.Unit(step.UnitId))
+                .Append(committedUnit!).Any(unit => actions.Assess(unit).LosesRequiredCombat))
+                committed = null;
+            if (committed is not null)
+                gate = gate with { Recommendations = Recascade(new[] { committed }
+                    .Concat(gate.Recommendations.Where(item => item.Route.GoalUnitId != committedCraftUnitId))
+                    .Take(Math.Max(1, gate.Recommendations.Count)).ToList(), inventoryList, null).ToList() };
+            var next = candidates.Select(candidate => candidate.Unit)
+                .Where(unit => !IsTopTier(unit.Tier))
+                .Concat(gate.Recommendations.Select(item => catalog.Unit(item.Route.GoalUnitId)))
+                .DistinctBy(unit => unit.Id, StringComparer.OrdinalIgnoreCase)
+                .Select(unit => (Unit: unit, Action: actions.Assess(unit)))
+                .Where(item => item.Action.Priority <= 3 &&
+                    (committed is null || item.Action.Priority <= 1))
+                .OrderBy(item => item.Action.Priority)
+                .ThenBy(item => item.Action.GoalMaterialLoss)
+                .ThenByDescending(item => CommunityPriorityScore(goal, item.Unit))
+                .ThenBy(item => item.Unit.Id, StringComparer.Ordinal)
+                .FirstOrDefault();
+            var replacingGoalMaterial = false;
+            var goalAction = actions.Assess(goal);
+            if (next.Unit is null && showGoal && goalAction.LosesRequiredCombat)
+            {
+                // Reserve the ready goal's materials before estimating a replacement's cost.
+                // A craftable goal must not remain a dead-end "wait" instruction.
+                var reserved = calculator.CalculateAllocation([goal.Id], counts).RemainingInventory
+                    .ToDictionary(pair => pair.Key, pair => checked((int)pair.Value),
+                        StringComparer.OrdinalIgnoreCase);
+                var replacement = candidates
+                    .Where(candidate => !IsTopTier(candidate.Unit.Tier))
+                    .Select(candidate => (candidate.Unit,
+                        Repair: CurrentCraftPolicy.RepairScore(candidate.Metrics, goalAction.LostCoverage),
+                        Progress: calculator.Calculate([candidate.Unit.Id], reserved)))
+                    .Where(item => item.Repair > 0 && !actions.Assess(item.Unit).LosesRequiredCombat)
+                    .OrderByDescending(item => item.Repair)
+                    .ThenBy(item => item.Progress.MissingLeaves.Sum(leaf => leaf.MissingCount))
+                    .ThenByDescending(item => CommunityPriorityScore(goal, item.Unit))
+                    .ThenBy(item => item.Unit.Id, StringComparer.Ordinal)
+                    .FirstOrDefault();
+                if (replacement.Unit is not null)
+                {
+                    next = (replacement.Unit, actions.Assess(replacement.Unit));
+                    replacingGoalMaterial = true;
+                }
+            }
+            if (next.Unit is not null)
+            {
+                var action = gate.Recommendations.FirstOrDefault(item =>
+                    item.Route.GoalUnitId.Equals(next.Unit.Id, StringComparison.OrdinalIgnoreCase))
+                    ?? EvaluateCraft(next.Unit, counts, calculator);
+                var actionOrder = new[] { action }.Concat(gate.Recommendations.Where(item =>
+                        !item.Route.GoalUnitId.Equals(next.Unit.Id, StringComparison.OrdinalIgnoreCase)))
+                    .Take(Math.Max(1, gate.Recommendations.Count))
+                    .ToList();
+                gate = gate with { Recommendations = Recascade(actionOrder, inventoryList, null).ToList() };
+                if (replacingGoalMaterial)
+                    gate.Recommendations[0].Warnings.Add(
+                        $"{goal.Name} 조합 전 대체 기물 확보 — 재료 소모 후 전력 유지");
+            }
+            foreach (var recommendation in gate.Recommendations)
+            {
+                recommendation.CurrentCraft = actions.Assess(catalog.Unit(recommendation.Route.GoalUnitId));
+                if (recommendation.CurrentCraft.LosesRequiredCombat)
+                    recommendation.Warnings.Add("조합 보류 — 재료로 소모되는 생존·딜 기물을 먼저 대체하세요");
+                if (recommendation.CurrentCraft.GoalMaterialLoss > 0)
+                    recommendation.Warnings.Add(
+                        $"목표 재료 소모 — 하위 패 {recommendation.CurrentCraft.GoalMaterialLoss}개 추가 확보 필요");
+                if (recommendation.CurrentCraft.NeedsResourceConfirmation)
+                    recommendation.Warnings.Add("유닛 재료 확보 — 조합 전 목재·골드·특포 확인");
+            }
         }
         foreach (var recommendation in gate.Recommendations)
         {
@@ -552,6 +696,15 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             initialCandidateEvaluations[unit.Id] = evaluated;
             return evaluated;
         }
+    }
+
+    private void PublishActiveTargets(GoalStrategyProfile? strategy, string difficulty)
+    {
+        ActiveStunTarget = strategy?.StunTarget ?? StableStunTarget;
+        ActiveStunCap = strategy?.StunCap ?? MaximumUsefulStun;
+        ActiveSlowTarget = strategy?.SlowTarget ?? FullSlowTarget;
+        ActiveArmorReductionTarget = strategy?.ArmorReductionTarget ?? FullArmorReductionTarget;
+        ActiveMagicArmorReductionTarget = strategy?.MagicArmorReductionTarget ?? 0;
     }
 
     private void PrepareCandidateProgressCache(IReadOnlyDictionary<string, int> inventory)
@@ -595,6 +748,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             remaining = leftover;
             crafted.ClusterParentUnitId = rec.ClusterParentUnitId;
             crafted.ClearEvidence = rec.ClearEvidence;
+            crafted.CurrentCraft = rec.CurrentCraft;
+            crafted.GuidePlan = rec.GuidePlan;
+            crafted.CombatReadiness = rec.CombatReadiness;
+            crafted.CarryMode = rec.CarryMode;
+            crafted.DeferredSecondaryTopCount = rec.DeferredSecondaryTopCount;
+            crafted.DeferredSecondaryTopReason = rec.DeferredSecondaryTopReason;
+            crafted.Warnings.AddRange(rec.Warnings.Where(warning => !crafted.Warnings.Contains(warning)));
             if (rec.ProgressionGoalUnitId is { Length: > 0 } progressionGoalId)
             {
                 crafted.ProgressionGoalUnitId = progressionGoalId;
@@ -853,9 +1013,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         GoalStrategyProfile strategy)
     {
         var projected = AggregateStrategyMetrics(inventory);
-        if (includeGoal) projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+        if (includeGoal) projected += StrategyMetricsFor(goal);
         foreach (var support in supports)
-            projected += GoalStrategyCalculator.StrategyMetricsFor(
+            projected += StrategyMetricsFor(
                 catalog.Unit(support.Route.GoalUnitId));
         return MeetsStrategyTargets(projected, strategy);
     }
@@ -905,7 +1065,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         }
         var projected = AggregateStrategyMetrics(inventory);
         if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
-            projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+            projected += StrategyMetricsFor(goal);
         var armorWasPendingAtStart =
             projected.ArmorReduction + 0.0001 < strategy.ArmorReductionTarget;
 
@@ -1213,7 +1373,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 selected, strategy, canCraftGoal);
             projected = AggregateStrategyMetrics(inventory);
             if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
-                projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+                projected += StrategyMetricsFor(goal);
             foreach (var candidate in selected) projected += candidate.Metrics;
 
             // 핵심 목표를 유지하면서 중복 후보를 지울 때는 현재 패에서 먼 기물부터
@@ -1276,7 +1436,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                 .Where(pair => pair.Value > 0)
                 .Select(pair => catalog.Unit(pair.Key))
                 .Where(unit => CountsAsCompletedSupport(unit) && !isCheap(unit))
-                .Count(unit => metric(GoalStrategyCalculator.StrategyMetricsFor(unit)) > 0);
+                .Count(unit => metric(StrategyMetricsFor(unit)) > 0);
             return fromSelected + fromOwned;
         }
     }
@@ -1290,7 +1450,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
     {
         var baseline = AggregateStrategyMetrics(inventory);
         if (canCraftGoal && inventory.GetValueOrDefault(goal.Id) <= 0)
-            baseline += GoalStrategyCalculator.StrategyMetricsFor(goal);
+            baseline += StrategyMetricsFor(goal);
         if (baseline.ArmorReduction + 0.0001 >= strategy.ArmorReductionTarget)
             return selected;
 
@@ -1767,7 +1927,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
                         Unit = unit,
                         CoverageLoss = StrategyCoverageLoss(fullMetrics, without, strategy.Value),
                         CommunityPriority = CommunityPriorityScore(goal, unit),
-                        IsArmor = GoalStrategyCalculator.StrategyMetricsFor(unit)
+                        IsArmor = StrategyMetricsFor(unit)
                             .ArmorReduction > 0,
                         Completion = recommendation.RecipeProgress.CompletionRatio,
                         MissingLeaves = recommendation.RecipeProgress.MissingLeaves
@@ -1800,13 +1960,13 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         StrategyMetrics ProjectedMetrics(IReadOnlyList<Recommendation> items, int excludedIndex)
         {
             var projected = AggregateStrategyMetrics(inventory);
-            if (showGoal) projected += GoalStrategyCalculator.StrategyMetricsFor(goal);
+            if (showGoal) projected += StrategyMetricsFor(goal);
             for (var index = 0; index < items.Count; index++)
             {
                 if (index == excludedIndex) continue;
                 var unitId = items[index].Route.GoalUnitId;
                 if (unitId.Equals(goal.Id, StringComparison.OrdinalIgnoreCase)) continue;
-                projected += GoalStrategyCalculator.StrategyMetricsFor(catalog.Unit(unitId));
+                projected += StrategyMetricsFor(catalog.Unit(unitId));
             }
             return projected;
         }
@@ -1870,8 +2030,8 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
 
         var priorities = RecommendationCommunityPriorities.ForGoal(goal);
         if (priorities is null) return 0;
-        return candidate.Rawcodes.Select(rawcode => priorities.GetValueOrDefault(rawcode))
-            .DefaultIfEmpty().Max();
+        return LiveStats.ApplyWeight(candidate.Rawcodes.Select(rawcode => priorities.GetValueOrDefault(rawcode))
+            .DefaultIfEmpty().Max(), _liveStats.WeightFor(goal.Id, candidate.Id));
     }
 
     private bool IsCommunityCore(UnitDefinition goal, UnitDefinition candidate,
@@ -1965,7 +2125,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             GoalStrategyCalculator.AbilityTotal(candidate, "광폭화 잡기") > 0 &&
             projected.BerserkBossControl + 0.0001 >= strategy.BerserkBossControlTarget)
         {
-            var otherMetrics = GoalStrategyCalculator.StrategyMetricsFor(candidate) with { BerserkBossControl = 0 };
+            var otherMetrics = StrategyMetricsFor(candidate) with { BerserkBossControl = 0 };
             if (RemainingUsefulMetricCount(otherMetrics, projected, strategy) <= 0)
                 return false;
         }
@@ -2008,7 +2168,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         {
             var unit = catalog.Unit(unitId);
             if (!CountsAsCompletedSupport(unit)) continue;
-            result += GoalStrategyCalculator.StrategyMetricsFor(unit) * count;
+            result += StrategyMetricsFor(unit) * count;
             if (unit.Rawcodes.Contains("G30h", StringComparer.Ordinal))
                 conditionalJinbeCount += count;
         }
@@ -2170,9 +2330,9 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             },
             Score = progress.CompletionRatio * 100,
             MissingUnits = progress.MissingLeaves.Select(leaf => leaf.Name).ToList(),
-            Warnings = missingSpecials,
+            Warnings = missingSpecials.ToList(),
             MissingSpecials = missingSpecials,
-            NextAction = nextAction,
+            NextAction = RecipeConditionEvaluator.Evaluate(unit, CurrentConditions) is { IsSatisfied: false } condition ? condition.Reason : nextAction,
             RecipeProgress = progress,
             CompositionUnits =
             [
@@ -2223,7 +2383,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             : sanji;
     }
 
-    private static bool IsViviExpertCompatible(
+    private bool IsViviExpertCompatible(
         UnitDefinition goal,
         UnitDefinition candidate,
         string? partnerId,
@@ -2234,7 +2394,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
         if (goalOwned && candidate.Id == "rawcode:Z30h") return false;
         if (IsTopTier(candidate.Tier) && candidate.Id != partnerId) return false;
         if (partnerId == "rawcode:4B0H" &&
-            GoalStrategyCalculator.StrategyMetricsFor(candidate).Stun > 0)
+            StrategyMetricsFor(candidate).Stun > 0)
             return false;
         return true;
     }
@@ -2398,7 +2558,7 @@ public sealed class RecommendationEngine(DataCatalog catalog, ClearBuildStats? c
             MissingUnits = missing,
             Warnings = warnings.Distinct().ToList(),
             Roles = roleStatuses,
-            NextAction = next,
+            NextAction = RecipeConditionEvaluator.Evaluate(catalog.Unit(route.GoalUnitId), CurrentConditions) is { IsSatisfied: false } condition ? condition.Reason : next,
             RecipeProgress = recipeProgress,
             CompositionUnits = CompositionUnits(route, inventory),
             CombineCommands = catalog.Unit(route.GoalUnitId).CombineCommands

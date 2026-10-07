@@ -5,7 +5,7 @@ namespace OrandOverlay;
 internal static class QuestGlobalDiscovery
 {
     internal static Dictionary<string, ulong> Find(RouteQuestMemory memory,
-        Func<IEnumerable<(ulong Base, byte[] Buffer)>> chunks, CancellationToken token)
+        Func<IEnumerable<(ulong Base, byte[] Buffer)>> chunks, CancellationToken token, string[]? additionalNames = null)
     {
         var watch = Stopwatch.StartNew();
         var names = new HashSet<ulong>();
@@ -31,7 +31,7 @@ internal static class QuestGlobalDiscovery
                     BitConverter.ToInt32(chunk.Buffer, index + 12) != 13) continue;
                 var node = chunk.Base + (ulong)index - 40;
                 if (candidates.ContainsKey(node)) continue;
-                var table = Walk(memory, node, token);
+                var table = Walk(memory, node, token, RouteQuestMemory.RequiredNames.Concat(additionalNames ?? []).ToArray());
                 if (table is not null) candidates[node] = table;
                 if (candidates.Count > 1) throw new InvalidDataException("퀘스트 변수 표 후보가 둘 이상");
             }
@@ -39,7 +39,12 @@ internal static class QuestGlobalDiscovery
         return candidates.Count == 1 ? candidates.Values.Single() : throw new InvalidDataException("퀘스트 변수 표 탐색 중");
     }
 
-    private static Dictionary<string, ulong>? Walk(RouteQuestMemory memory, ulong start, CancellationToken token)
+    internal static Dictionary<string, ulong> FindRelated(RouteQuestMemory memory, ulong start,
+        string[] names, CancellationToken token) => Walk(memory, start, token, names)
+        ?? throw new InvalidDataException("맵 변수 표에서 필수 항목을 확인하지 못했습니다.");
+
+    private static Dictionary<string, ulong>? Walk(RouteQuestMemory memory, ulong start, CancellationToken token,
+        string[] requiredNames)
     {
         var nodes = new Dictionary<string, ulong>(StringComparer.Ordinal);
         var visited = new HashSet<ulong>();
@@ -58,9 +63,9 @@ internal static class QuestGlobalDiscovery
             if (previous >= 24) queue.Enqueue(previous - 24);
             queue.Enqueue(BitConverter.ToUInt64(bytes, 32));
             var name = memory.Name(BitConverter.ToUInt64(bytes, 40));
-            if (!RouteQuestMemory.RequiredNames.Contains(name, StringComparer.Ordinal)) continue;
+            if (!requiredNames.Contains(name, StringComparer.Ordinal)) continue;
             if (!nodes.TryAdd(name, address)) return null;
-            if (nodes.Count == RouteQuestMemory.RequiredNames.Length) return nodes;
+            if (nodes.Count == requiredNames.Length) return nodes;
         }
         return null;
     }

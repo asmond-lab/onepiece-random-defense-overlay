@@ -23,10 +23,36 @@ public sealed class DataCatalog
     private IReadOnlySet<string> _nativeRawcodes = new HashSet<string>(StringComparer.Ordinal);
     private IReadOnlySet<string> _appUnitIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public void Load(bool loadCarryPolicy = true)
+    private readonly string? _overridePath;
+
+    // No implicit user-data lookup: production opts in at its composition root.
+    public DataCatalog(string? overridePath = null) => _overridePath = overridePath;
+
+    public string MapVersion { get; private set; } = "2.314";
+    private MapRecipeMechanics? _mechanics;
+    public Map2320DataBundle? OfflineBundle { get; private set; }
+    public Map2322DataBundle? MapBundle { get; private set; }
+    public Map2322DataBundle? Bundle2322 => MapVersion == Map2322SourceContract.MapVersion ? MapBundle : null;
+    public Map2322DataBundle? Bundle2323 => MapVersion == Map2323SourceContract.MapVersion ? MapBundle : null;
+    public string SelectedDatasetFingerprint => MapBundle?.Fingerprint ?? OfflineBundle?.Fingerprint ?? "";
+    public bool HasModernSource => MapBundle is not null || OfflineBundle is not null;
+    private IReadOnlyDictionary<string, Map2320RecipeProjection> _sourceProjections =
+        new Dictionary<string, Map2320RecipeProjection>(StringComparer.Ordinal);
+
+    public void Load(bool loadCarryPolicy = true, string mapVersion = "2.314")
     {
+        if (mapVersion is not ("2.314" or "2.320" or "2.321" or "2.322" or "2.323"))
+            throw new InvalidDataException("Unsupported explicit map dataset: " + mapVersion);
+        var bundle = Map2320DataBundle.IsCompatible(mapVersion) ? Map2320DataBundle.LoadBundled() : null;
+        var mapBundle = mapVersion is "2.322" or "2.323" ? Map2322DataBundle.LoadBundled(mapVersion) : null;
+        MapVersion = mapVersion;
+        OfflineBundle = bundle;
+        MapBundle = mapBundle;
+        _mechanics = bundle?.Nika;
+        _sourceProjections = mapBundle?.Recipes.ProjectAll() ?? bundle?.Recipes.ProjectAll() ??
+            new Dictionary<string, Map2320RecipeProjection>(StringComparer.Ordinal);
         var bundled = Path.Combine(AppContext.BaseDirectory, "Data", "game-data.demo.json");
-        var overridePath = Path.Combine(AppPaths.UserDataDirectory, "game-data.json");
+        var overridePath = _overridePath;
         var selected = File.Exists(overridePath) ? overridePath : bundled;
         var json = File.ReadAllText(selected);
         Data = JsonSerializer.Deserialize<GameData>(json, JsonOptions)
@@ -35,11 +61,9 @@ public sealed class DataCatalog
             throw new InvalidDataException($"지원하지 않는 데이터 스키마: {Data.SchemaVersion}");
         _appUnitIds = Data.Units.Select(unit => unit.Id)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var nativeCatalog = ApplyBundledImages(
-            ApplyMapCombineCommands(
-                ApplyTmoRecipeOverrides(
-                    ApplyTmoUnitAdditions(
-                        ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))))));
+        var legacyCatalog = ApplyTmoRecipeOverrides(ApplyTmoUnitAdditions(
+            ApplyMapRecipeOverrides(ApplyGuideOverrides(LoadRawcodeCatalog()))));
+        var nativeCatalog = ApplyBundledImages(ApplyMapCombineCommands(ApplyNikaRecipeOverrides(Apply2320SourceRecipes(legacyCatalog))));
         _nativeRawcodes = nativeCatalog.Keys.ToHashSet(StringComparer.Ordinal);
         RawcodeCatalog = WithAliasKeys(nativeCatalog);
         _unitIdsByRawcode = Data.Units
@@ -91,6 +115,8 @@ public sealed class DataCatalog
 
     public UnitDefinition Unit(string id)
     {
+        if (_mechanics is not null && id == RecipeWildcards.AnyNika)
+            return new UnitDefinition { Id = id, Name = "루피 또는 스네이크맨 초월", Tier = "선택 재료", Rawcodes = ["T80H"] };
         if (UnitsById.TryGetValue(id, out var unit)) return KoreanUnit(unit);
         const string prefix = "rawcode:";
         if (id.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
@@ -109,6 +135,7 @@ public sealed class DataCatalog
                     Name = KoreanLabels.ContainsLatin(entry.Name) ? KoreanLabels.RemoveLatin(entry.Name) : entry.Name,
                     Tier = entry.Tier,
                     Recipe = RecipeFor(rawcode, entry),
+                    RecipeConditions = SourceConditions(rawcode, entry.Recipe.Count > 0),
                     Rawcodes = RawcodeAliases.WithSharedStats(rawcode).ToList(),
                     Tags = ["rawcode-catalog"],
                     Image = entry.Image,
@@ -137,6 +164,9 @@ public sealed class DataCatalog
             Recipe = catalogEntry is null
                 ? unit.Recipe
                 : RecipeFor(unit.Rawcodes.FirstOrDefault() ?? "", catalogEntry),
+            RecipeConditions = HasModernSource
+                ? unit.Rawcodes.Select(code => SourceConditions(code, unit.Recipe.Count > 0)).FirstOrDefault(value => value is not null)
+                : unit.RecipeConditions,
             Tags = unit.Tags,
             Rawcodes = unit.Rawcodes,
             Image = UnitImageFactory.ResolveBundledImage(
@@ -148,9 +178,8 @@ public sealed class DataCatalog
             Description = !string.IsNullOrWhiteSpace(unit.Description) || catalogEntry is null
                 ? KoreanText(unit.Description)
                 : KoreanText(catalogEntry.Description),
-            CombineCommands = catalogEntry is { Commands.Count: > 0 }
-                ? catalogEntry.Commands
-                : unit.CombineCommands
+            CombineCommands = HasModernSource ? catalogEntry?.Commands ?? []
+                : catalogEntry is { Commands.Count: > 0 } ? catalogEntry.Commands : unit.CombineCommands
         };
         return KoreanUnit(enriched);
     }
@@ -231,6 +260,7 @@ public sealed class DataCatalog
         return new UnitDefinition
         {
             Id = unit.Id,
+            RecipeConditions = unit.RecipeConditions,
             Name = unit.Id.Equals("item_greenblood", StringComparison.OrdinalIgnoreCase)
                 ? "그린블러드"
                 : KoreanLabels.RemoveLatin(unit.Name),
@@ -377,18 +407,89 @@ public sealed class DataCatalog
         return merged;
     }
 
-    private static IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyMapCombineCommands(
+    private IReadOnlyDictionary<string, RawcodeCatalogEntry> Apply2320SourceRecipes(
+        IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
+    {
+        if (!HasModernSource) return catalog;
+        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+        if (MapBundle is not null)
+        {
+            foreach (var code in _sourceProjections.Keys)
+                if (!merged.ContainsKey(code))
+                    merged[code] = new RawcodeCatalogEntry { Rawcode = code, Name = "이름 미등록 유닛", Tier = "원본 조합" };
+            merged["2C0h"] = new RawcodeCatalogEntry { Rawcode = "2C0h", Name = "한마 유지로", Tier = "신비" };
+        }
+        foreach (var pair in merged.ToArray())
+        {
+            if (!_sourceProjections.TryGetValue(pair.Key, out var projection) || MapRecipeMechanics.IsNikaCode(pair.Key)) continue;
+            // Only newly audited source recipes override historical TMO presentation layers.
+            var ingredients = projection.IngredientsByAppRawcode.Select(item =>
+                new RawcodeRecipeEntry { Id = item.Key, Count = item.Value }).ToList();
+            merged[pair.Key] = CopyCatalogEntry(pair.Value, recipe: ingredients);
+        }
+        return merged;
+    }
+
+    private RecipeConditionRequirements? SourceConditions(string rawcode, bool hasRecipe)
+    {
+        if (!HasModernSource) return null;
+        if (_mechanics is not null && MapRecipeMechanics.IsNikaCode(rawcode)) return _mechanics.Conditions;
+        if (!_sourceProjections.TryGetValue(rawcode, out var projection))
+            return hasRecipe ? new RecipeConditionRequirements(MapVersion, false, "", 0, 0)
+                { UnresolvedSourceConditions = MapVersion + " 원본 조합 확인 필요" } : null;
+        var lumber = projection.IngredientsByAppRawcode.GetValueOrDefault("LUMBER");
+        var gold = projection.IngredientsByAppRawcode.GetValueOrDefault("GOLD");
+        var conditions = projection.ConditionalRequirements.Select(item => item.Source.Kind)
+            .Distinct(StringComparer.Ordinal).ToList();
+        if (gold > 0) conditions.Add("GOLD:" + gold.ToString(CultureInfo.InvariantCulture));
+        if (lumber == 0 && conditions.Count == 0) return null;
+        return new RecipeConditionRequirements(MapVersion, false, "", 0, lumber)
+        {
+            UnresolvedSourceConditions = conditions.Count == 0 ? null :
+                MapVersion + " 추가 조합 조건 확인 필요: " + string.Join(", ", conditions)
+        };
+    }
+
+    private IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyNikaRecipeOverrides(IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
+    {
+        if (_mechanics is null) return catalog;
+        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+        foreach (var key in merged.Keys.Where(MapRecipeMechanics.IsNikaCode).ToArray())
+        {
+            var old = merged[key];
+            merged[key] = new RawcodeCatalogEntry { Rawcode = old.Rawcode, Name = old.Name,
+                Tier = old.Tier, Image = old.Image, Abilities = old.Abilities, Description = old.Description,
+                Commands = old.Commands, Recipe = [new() { Id = "T80H", Count = 1 },
+                    new() { Id = "C30h", Count = 1 }, new() { Id = "D20h", Count = 1 },
+                    new() { Id = "K00h", Count = 1 }, new() { Id = "LUMBER", Count = 5 }] };
+        }
+        return merged;
+    }
+
+    private IReadOnlyDictionary<string, RawcodeCatalogEntry> ApplyMapCombineCommands(
         IReadOnlyDictionary<string, RawcodeCatalogEntry> catalog)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Data",
-            "map-combine-commands-2314.txt");
-        if (!File.Exists(path))
-            throw new InvalidDataException("2.314 맵 조합 명령 데이터가 없습니다.");
-
-        var merged = catalog.ToDictionary(pair => pair.Key, pair => pair.Value,
+            Map2320DataBundle.IsCompatible(MapVersion) ? "map-combine-commands-2320.txt" : "map-combine-commands-2314.txt");
+        if (!HasModernSource && !File.Exists(path))
+            throw new InvalidDataException("맵 조합 명령 데이터가 없습니다.");
+        var commandLines = MapBundle is not null
+            ? MapBundle.Commands.Select(pair => pair.Key + "=" + string.Join("|", pair.Value)).ToArray()
+            : OfflineBundle is null ? File.ReadAllLines(path) : OfflineBundle.Commands.Split('\n');
+        if (Map2320DataBundle.IsCompatible(MapVersion))
+        {
+            var header = commandLines.TakeWhile(line => line.StartsWith("#")).ToArray();
+            if (!header.Contains("# schema=1") || !header.Contains("# map=2.320") ||
+                !header.Contains("# source=ORDR_S2_2.320[R].w3x/war3map.j SaveStr(Lc, resultRawcode, ...)") ||
+                !header.Contains("# source-sha256=" + MapRecipeMechanics.ScriptSha256.ToLowerInvariant()) ||
+                !header.Contains("# audited-results=81") || !header.Contains("# command-aliases=162"))
+                throw new InvalidDataException("Unverified 2.320 command source.");
+        }
+        var merged = catalog.ToDictionary(pair => pair.Key,
+            pair => !HasModernSource ? pair.Value : CopyCatalogEntry(pair.Value, commands: []),
             StringComparer.Ordinal);
         var applied = 0;
-        foreach (var line in File.ReadLines(path))
+        foreach (var line in commandLines)
         {
             var text = line.Trim();
             if (text.Length == 0 || text.StartsWith('#')) continue;
@@ -414,6 +515,9 @@ public sealed class DataCatalog
         }
         if (applied != 81)
             throw new InvalidDataException($"맵 조합 명령 유닛 수가 잘못되었습니다: {applied}");
+        if (OfflineBundle is not null && merged.TryGetValue("KB0H", out var nika))
+            foreach (var alias in merged.Keys.Where(code => code != "KB0H" && MapRecipeMechanics.IsNikaCode(code)).ToArray())
+                merged[alias] = CopyCatalogEntry(merged[alias], commands: nika.Commands.ToList());
         return merged;
     }
 
@@ -456,7 +560,7 @@ public sealed class DataCatalog
             StringComparer.Ordinal);
 
     private static RawcodeCatalogEntry CopyCatalogEntry(RawcodeCatalogEntry original,
-        string? image = null, List<RawcodeRecipeEntry>? recipe = null) => new()
+        string? image = null, List<RawcodeRecipeEntry>? recipe = null, List<string>? commands = null) => new()
     {
         Rawcode = original.Rawcode,
         Name = original.Name,
@@ -465,7 +569,7 @@ public sealed class DataCatalog
         Recipe = recipe ?? original.Recipe,
         Abilities = original.Abilities,
         Description = original.Description,
-        Commands = original.Commands
+        Commands = commands ?? original.Commands
     };
 
     private static string CanonicalGuideTier(string tier)
@@ -554,7 +658,7 @@ public static class AppPaths
         get
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OrandOverlay");
-            Directory.CreateDirectory(path);
+            // Path lookup is pure; writers own directory creation.
             return path;
         }
     }
@@ -565,7 +669,7 @@ public static class AppPaths
         get
         {
             var path = Path.Combine(UserDataDirectory, "templates");
-            Directory.CreateDirectory(path);
+            // Path lookup is pure; writers own directory creation.
             return path;
         }
     }

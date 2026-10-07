@@ -24,6 +24,7 @@ public sealed class RuntimeMapIdentityProviderTests
         Assert.Equal(Path.GetFullPath(fixture.ArchivePath), result.ActualArchivePath);
         Assert.Equal(fixture.Pin.LengthBytes, result.ArchiveBytesRead);
         Assert.Equal(fixture.Pin.Sha256, result.ActualArchiveSha256);
+        Assert.Equal(new FileInfo(fixture.LogPath).Length, result.LogBytesRead);
         Assert.Equal(1, result.LogReadCalls);
         Assert.Equal(1, result.ArchiveReadCalls);
     }

@@ -20,9 +20,9 @@ public sealed class SequentialRecommendationProcessTests
         Assert.Equal(8750, decision.ExpectedUsefulUnitBp);
         Assert.Contains("특별위습 2", decision.ClearRewardSummary, StringComparison.Ordinal);
         Assert.Contains("안흔위습 1", decision.ClearRewardSummary, StringComparison.Ordinal);
-        Assert.Contains("특별 유효 특별 A", decision.OutcomeValueSummary,
+        Assert.Contains("특별 A", decision.OutcomeValueSummary,
             StringComparison.Ordinal);
-        Assert.Contains("안흔 유효 안흔 A", decision.OutcomeValueSummary,
+        Assert.Contains("안흔 A", decision.OutcomeValueSummary,
             StringComparison.Ordinal);
         Assert.Contains("2 스토리 보상 [현재]", decision.StepSummary, StringComparison.Ordinal);
         Assert.False(decision.TopNavigationUnlocked);

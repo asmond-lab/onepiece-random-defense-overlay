@@ -121,6 +121,11 @@ public sealed class AdaptivePlanningCoordinator
         lock (_gate) SetLatches(new ManualLatches(_manualLatches.GoalOverride, false));
     }
 
+    public void ClearManualGoalOverride()
+    {
+        lock (_gate) SetLatches(new ManualLatches(false, _manualLatches.NavigationOverride));
+    }
+
     public void NoteProgrammaticSelection() { }
 
     public void ConfirmReset(long matchGeneration)

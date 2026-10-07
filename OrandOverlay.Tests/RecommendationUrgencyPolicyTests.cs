@@ -82,6 +82,24 @@ public sealed class RecommendationUrgencyPolicyTests
             result.Recommendations.Select(item => item.Route.Id));
     }
 
+    [Theory]
+    [InlineData("쉬움")]
+    [InlineData("보통")]
+    [InlineData("어려움")]
+    [InlineData("지옥")]
+    [InlineData("신")]
+    [InlineData("unknown")]
+    public void OtherDifficultiesDoNotInheritNightmareStoryDeadline(string difficulty)
+    {
+        var goal = GoalForFamily(magic: false);
+        var source = Recommendations(goal, Neutral(), StoryDamageSupport());
+        var result = RecommendationUrgencyPolicy.Apply(_catalog, goal, BossReadyInventory(),
+            source, round: 34, completedStoryStage: 12, difficulty: difficulty);
+        Assert.Equal(RecommendationUrgency.None, result.Urgency);
+        Assert.Equal(source.Select(item => item.Route.Id), result.Recommendations.Select(item => item.Route.Id));
+        Assert.Null(result.Reason);
+    }
+
     private UnitDefinition BossGoal() => _catalog.AllUnits.First(unit =>
         (GoalStrategyCalculator.StrategyProfileFor(unit)?.BossControlTarget ?? 0) > 0 ||
         (GoalStrategyCalculator.StrategyProfileFor(unit)?.BerserkBossControlTarget ?? 0) > 0);

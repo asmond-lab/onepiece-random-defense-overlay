@@ -1,0 +1,6483 @@
+{
+  "schemaVersion": 1,
+  "sourceGuideId": 48784,
+  "sourceUrl": "https://tmo.gg/g/ord/build-helper/48784",
+  "sourceTitle": "폭뎀표기됨 ㄱㅇㅇ",
+  "capturedAt": "2026-09-12T19:34:23.108Z",
+  "scope": "특별함 이상, 특수함·해적선·변화·왜곡·세라핌 포함. 흔함·안흔함·랜덤유닛·오로성·아이템·기타·연구소 제외.",
+  "sourceEntryCount": 244,
+  "mappedSourceEntryCount": 243,
+  "uniqueUnitCount": 240,
+  "interpretation": "사용자가 선택한 커뮤니티 조합도우미의 표기 자료. 실전 적용량이나 공식 맵 검증값을 보장하지 않음. 미표기·충돌·조건부 효과는 일반 합계와 분리.",
+  "units": [
+    {
+      "rawcode": "K10h",
+      "name": "X-드레이크",
+      "tier": "특별함",
+      "sourceName": "X-드레이크",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "X-드레이크",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q00h",
+      "name": "갓 에넬",
+      "tier": "특별함",
+      "sourceName": "에넬",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에넬",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B00h",
+      "name": "겟코모리아",
+      "tier": "특별함",
+      "sourceName": "겟코 모리아",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "겟코 모리아",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "P00h",
+      "name": "나미 크리마 텍트",
+      "tier": "특별함",
+      "sourceName": "나미 크리마텍트",
+      "sourceTier": "특별함",
+      "sourceText": "발동이동속도 감소(발동이감): 11",
+      "abilities": {
+        "발동이동속도 감소": 11
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "나미 크리마텍트",
+          "tier": "특별함",
+          "sourceText": "발동이동속도 감소(발동이감): 11"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S00h",
+      "name": "로빈 오하라",
+      "tier": "특별함",
+      "sourceName": "로빈 오하라",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로빈 오하라",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R00h",
+      "name": "로브 루치",
+      "tier": "특별함",
+      "sourceName": "로브 루치",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로브 루치",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "T00h",
+      "name": "마르코",
+      "tier": "특별함",
+      "sourceName": "마르코",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마르코",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "710h",
+      "name": "바솔로뮤 쿠마",
+      "tier": "특별함",
+      "sourceName": "바솔로뮤 쿠마",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바솔로뮤 쿠마",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U00h",
+      "name": "루피 기어세컨드",
+      "tier": "특별함",
+      "sourceName": "루피 기어세컨드",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루피 기어세컨드",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "610h",
+      "name": "바질 호킨스",
+      "tier": "특별함",
+      "sourceName": "바질 호킨스 (방깍3)",
+      "sourceTier": "특별함",
+      "sourceText": "방어력 감소(방깎): 3\n\n*바질 희귀와 방깎 중첩 안 되고, 초월은 가능",
+      "abilities": {
+        "방어력 감소": 3
+      },
+      "notes": [
+        "바질 희귀와 방어력 감소가 중첩되지 않으며 초월은 가능"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {
+        "방어력 감소": "hawkins-special-rare-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "바질 호킨스 (방깍3)",
+          "tier": "특별함",
+          "sourceText": "방어력 감소(방깎): 3\n\n*바질 희귀와 방깎 중첩 안 되고, 초월은 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "510h",
+      "name": "버기 마기탄",
+      "tier": "특별함",
+      "sourceName": "버기 마기탄",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "버기 마기탄",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "410h",
+      "name": "봉쿠레",
+      "tier": "특별함",
+      "sourceName": "봉쿠레",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "봉쿠레",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "310h",
+      "name": "상디 검은다리",
+      "tier": "특별함",
+      "sourceName": "상디 검은다리",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "상디 검은다리",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "F10h",
+      "name": "스모커",
+      "tier": "특별함",
+      "sourceName": "스모커 (이감5)",
+      "sourceTier": "특별함",
+      "sourceText": "이동속도 감소(이감): 5",
+      "abilities": {
+        "이동속도 감소": 5
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "스모커 (이감5)",
+          "tier": "특별함",
+          "sourceText": "이동속도 감소(이감): 5"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "210h",
+      "name": "스쿼드",
+      "tier": "특별함",
+      "sourceName": "스쿼드",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "스쿼드",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "110h",
+      "name": "아론",
+      "tier": "특별함",
+      "sourceName": "아론",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아론",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "010h",
+      "name": "압살롬",
+      "tier": "특별함",
+      "sourceName": "압살롬",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "압살롬",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Z00h",
+      "name": "우솝 화염탄",
+      "tier": "특별함",
+      "sourceName": "우솝 화염탄",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "우솝 화염탄",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Y00h",
+      "name": "캡틴 키드",
+      "tier": "특별함",
+      "sourceName": "유스타드 키드 (이감5)",
+      "sourceTier": "특별함",
+      "sourceText": "이동속도 감소(이감): 5",
+      "abilities": {
+        "이동속도 감소": 5
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "유스타드 키드 (이감5)",
+          "tier": "특별함",
+          "sourceText": "이동속도 감소(이감): 5"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "X00h",
+      "name": "이나즈마 혁명군",
+      "tier": "특별함",
+      "sourceName": "이나즈마 혁명군",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "이나즈마 혁명군",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W00h",
+      "name": "조로 귀기",
+      "tier": "특별함",
+      "sourceName": "조로 귀기",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "조로 귀기",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "810h",
+      "name": "징베",
+      "tier": "특별함",
+      "sourceName": "징베",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "징베",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "910h",
+      "name": "챠카",
+      "tier": "특별함",
+      "sourceName": "챠카",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "챠카",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "C10h",
+      "name": "카포네 갱 벳지",
+      "tier": "특별함",
+      "sourceName": "카포네 갱 벳지",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카포네 갱 벳지",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V00h",
+      "name": "캡틴 크로",
+      "tier": "특별함",
+      "sourceName": "캡틴 크로",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "캡틴 크로",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A10h",
+      "name": "크로커다일",
+      "tier": "특별함",
+      "sourceName": "크로커다일 (이감5)",
+      "sourceTier": "특별함",
+      "sourceText": "이동속도 감소(이감): 5",
+      "abilities": {
+        "이동속도 감소": 5
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "크로커다일 (이감5)",
+          "tier": "특별함",
+          "sourceText": "이동속도 감소(이감): 5"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B10h",
+      "name": "킬러",
+      "tier": "특별함",
+      "sourceName": "킬러",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "킬러",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "D10h",
+      "name": "쵸파 가드 포인트",
+      "tier": "특별함",
+      "sourceName": "쵸파 가드포인트 (공증7)",
+      "sourceTier": "특별함",
+      "sourceText": "공격력 증가(공증): 7",
+      "abilities": {
+        "공격력 증가": 7
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 가드포인트 (공증7)",
+          "tier": "특별함",
+          "sourceText": "공격력 증가(공증): 7"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "E10h",
+      "name": "쵸파 두뇌강화",
+      "tier": "특별함",
+      "sourceName": "쵸파 두뇌강화 (방깍3)",
+      "sourceTier": "특별함",
+      "sourceText": "방어력 감소(방깍): 3",
+      "abilities": {
+        "방어력 감소": 3
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 두뇌강화 (방깍3)",
+          "tier": "특별함",
+          "sourceText": "방어력 감소(방깍): 3"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H10h",
+      "name": "트라팔가 로우",
+      "tier": "특별함",
+      "sourceName": "트라팔가 로우 (공속버프)",
+      "sourceTier": "특별함",
+      "sourceText": "공속 100퍼 버프7초",
+      "abilities": {
+        "발동공격속도 증가": 100
+      },
+      "notes": [
+        "공격속도 버프 지속시간 7초"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "트라팔가 로우 (공속버프)",
+          "tier": "특별함",
+          "sourceText": "공속 100퍼 버프7초"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "G10h",
+      "name": "파이러츠 도킹 5",
+      "tier": "특별함",
+      "sourceName": "파이러츠 도킹5",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "파이러츠 도킹5",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "J10h",
+      "name": "에이스 2번대대장",
+      "tier": "특별함",
+      "sourceName": "에이스",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에이스",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I10h",
+      "name": "헤르메포",
+      "tier": "특별함",
+      "sourceName": "헤르메포",
+      "sourceTier": "특별함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "헤르메포",
+          "tier": "특별함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H50h",
+      "name": "모건",
+      "tier": "특수함",
+      "sourceName": "모건 (광보잡)",
+      "sourceTier": "특수함",
+      "sourceText": "▶ 광잡 보잡(현퍼딜)\n▶ 단일스턴 공중이동\n▶ 단일적추가고정딜",
+      "abilities": {
+        "광폭화": true,
+        "보스 잡기": true,
+        "공중이동": true,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "스턴은 단일 대상",
+        "현 체력 비례 피해",
+        "단일 적 추가 고정 피해"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "모건 (광보잡)",
+          "tier": "특수함",
+          "sourceText": "▶ 광잡 보잡(현퍼딜)\n▶ 단일스턴 공중이동\n▶ 단일적추가고정딜"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "Q50h",
+      "name": "블고리",
+      "tier": "특수함",
+      "sourceName": "블고리 (방깍25)",
+      "sourceTier": "특수함",
+      "sourceText": "▶ 방깍25 공중이동",
+      "abilities": {
+        "방어력 감소": 25,
+        "공중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "블고리 (방깍25)",
+          "tier": "특수함",
+          "sourceText": "▶ 방깍25 공중이동"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "N80h",
+      "name": "베티",
+      "tier": "특수함",
+      "sourceName": "베티 (공속11, 체마젠)",
+      "sourceTier": "특수함",
+      "sourceText": "▶ 공속 체젠 마젠 공중이동 \n▶ 사용스킬 : 선택한 유닛의 체력과 마나를 3초동안 90 회복 (100초 쿨)",
+      "abilities": {
+        "공격속도 증가": 11,
+        "체력 재생": "수치 미표기",
+        "마나 재생": "수치 미표기",
+        "공중이동": true
+      },
+      "notes": [
+        "체력·마나 재생 수치 미표기",
+        "사용 스킬: 선택 유닛의 체력과 마나를 3초 동안 90 회복, 쿨다운 100초"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "베티 (공속11, 체마젠)",
+          "tier": "특수함",
+          "sourceText": "▶ 공속 체젠 마젠 공중이동 \n▶ 사용스킬 : 선택한 유닛의 체력과 마나를 3초동안 90 회복 (100초 쿨)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "O50h",
+      "name": "아이스버그",
+      "tier": "특수함",
+      "sourceName": "아이스버그 (배 제작)",
+      "sourceTier": "특수함",
+      "sourceText": "※ 목재 사용해서 배 1대 제작\n▶ 해적선 : 목재 2개\n▶ 발라티에 : 목재 10개\n▶ 모비딕호 : 목재 10개\n▶ 방주맥심 : 목재 15개\n▶ 써니호 : 목재 15개\n▶ 레드포스호 : 목재 20개",
+      "abilities": {},
+      "notes": [
+        "목재로 배 1대 제작: 해적선 목재 2, 발라티에 목재 10, 모비딕호 목재 10, 방주맥심 목재 15, 써니호 목재 15; 캡처 텍스트는 레드포에서 잘림"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아이스버그 (배 제작)",
+          "tier": "특수함",
+          "sourceText": "※ 목재 사용해서 배 1대 제작\n▶ 해적선 : 목재 2개\n▶ 발라티에 : 목재 10개\n▶ 모비딕호 : 목재 10개\n▶ 방주맥심 : 목재 15개\n▶ 써니호 : 목재 15개\n▶ 레드포스호 : 목재 20개"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "P50h",
+      "name": "오타마",
+      "tier": "특수함",
+      "sourceName": "오타마 (희귀함이하구매)",
+      "sourceTier": "특수함",
+      "sourceText": "자신 또는 다른 유저의 유닛 하나를 영구히 귀속시킴.\n1. 희귀함 이하 유닛만 가능\n2. 유닛을 받는 사람 목재2 획득 / 유닛을 주는 사람 목재 12획득",
+      "abilities": {},
+      "notes": [
+        "자신 또는 다른 유저의 유닛 하나를 영구 귀속",
+        "희귀함 이하 유닛만 가능",
+        "받는 사람 목재 2, 주는 사람 목재 12 획득"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "오타마 (희귀함이하구매)",
+          "tier": "특수함",
+          "sourceText": "자신 또는 다른 유저의 유닛 하나를 영구히 귀속시킴.\n1. 희귀함 이하 유닛만 가능\n2. 유닛을 받는 사람 목재2 획득 / 유닛을 주는 사람 목재 12획득"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "R50h",
+      "name": "페루",
+      "tier": "특수함",
+      "sourceName": "페루 (공증)",
+      "sourceTier": "특수함",
+      "sourceText": "공증40(패시브)\n공증60(액티브)",
+      "abilities": {
+        "공격력 증가": 40,
+        "발동공격력 증가": 60
+      },
+      "notes": [
+        "공격력 증가 40은 패시브, 60은 액티브"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "페루 (공증)",
+          "tier": "특수함",
+          "sourceText": "공증40(패시브)\n공증60(액티브)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "T90h",
+      "name": "폭시",
+      "tier": "특수함",
+      "sourceName": "폭시 (이감20)",
+      "sourceTier": "특수함",
+      "sourceText": "특별 유닛에게 스킬 사용 시 50% 확률로 특수 유닛 또는 레일리를 얻음(최대3번)",
+      "abilities": {
+        "이동속도 감소": 20
+      },
+      "notes": [
+        "특별 유닛에 스킬 사용 시 50% 확률로 특수 유닛 또는 레일리 획득, 최대 3번"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "폭시 (이감20)",
+          "tier": "특수함",
+          "sourceText": "특별 유닛에게 스킬 사용 시 50% 확률로 특수 유닛 또는 레일리를 얻음(최대3번)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "X90h",
+      "name": "X-드레이크",
+      "tier": "희귀함",
+      "sourceName": "X-드레이크 (이감 10, 깍 5)",
+      "sourceTier": "희귀함",
+      "sourceText": "이감10 방깍5\n\n*킹 전설과 중복 안됨",
+      "abilities": {
+        "이동속도 감소": 10,
+        "방어력 감소": 5
+      },
+      "notes": [
+        "킹 전설과 중복되지 않음"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {
+        "방어력 감소": "drake-king-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "X-드레이크 (이감 10, 깍 5)",
+          "tier": "희귀함",
+          "sourceText": "이감10 방깍5\n\n*킹 전설과 중복 안됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q10h",
+      "name": "거프",
+      "tier": "희귀함",
+      "sourceName": "거프",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "거프",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "120h",
+      "name": "마샬.D.티치",
+      "tier": "희귀함",
+      "sourceName": "검은수염",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "검은수염",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "L10h",
+      "name": "도플라밍고",
+      "tier": "희귀함",
+      "sourceName": "도플라밍고",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "도플라밍고",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "L20h",
+      "name": "트라팔가 로우",
+      "tier": "희귀함",
+      "sourceName": "로우 (공속버프)",
+      "sourceTier": "희귀함",
+      "sourceText": "단일 공격속도 8초간 120%증가",
+      "abilities": {
+        "단일공격속도 증가": 120
+      },
+      "notes": [
+        "단일 대상 공격속도 증가 지속시간 8초"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로우 (공속버프)",
+          "tier": "희귀함",
+          "sourceText": "단일 공격속도 8초간 120%증가"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "X10h",
+      "name": "루피 기어서드",
+      "tier": "희귀함",
+      "sourceName": "루피 기어서드",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루피 기어서드",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "520h",
+      "name": "류마",
+      "tier": "희귀함",
+      "sourceName": "류마",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "류마",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "220h",
+      "name": "마르코",
+      "tier": "희귀함",
+      "sourceName": "마르코",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마르코",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Z10h",
+      "name": "마젤란",
+      "tier": "희귀함",
+      "sourceName": "마젤란",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마젤란",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Y10h",
+      "name": "모몬가",
+      "tier": "희귀함",
+      "sourceName": "모몬가",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "모몬가",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H40h",
+      "name": "미호크",
+      "tier": "희귀함",
+      "sourceName": "미호크",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "미호크",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W10h",
+      "name": "바르톨로메오",
+      "tier": "희귀함",
+      "sourceName": "바르톨로메오",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바르톨로메오",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V10h",
+      "name": "바제스",
+      "tier": "희귀함",
+      "sourceName": "바제스",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바제스",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U10h",
+      "name": "바질 호킨스",
+      "tier": "희귀함",
+      "sourceName": "바질 호킨스 (깍 10)",
+      "sourceTier": "희귀함",
+      "sourceText": "방어력 감소(방깍) : 10\n\n*방깍 중첩\n┣ 바질 특별 X\n┗ 바질 초월 O",
+      "abilities": {
+        "방어력 감소": 10
+      },
+      "notes": [
+        "바질 특별과 방어력 감소가 중첩되지 않으며 바질 초월은 가능"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {
+        "방어력 감소": "hawkins-special-rare-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "바질 호킨스 (깍 10)",
+          "tier": "희귀함",
+          "sourceText": "방어력 감소(방깍) : 10\n\n*방깍 중첩\n┣ 바질 특별 X\n┗ 바질 초월 O"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "T10h",
+      "name": "반 더 데켄",
+      "tier": "희귀함",
+      "sourceName": "반 더 데켄",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "반 더 데켄",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M20h",
+      "name": "베이비 5",
+      "tier": "희귀함",
+      "sourceName": "베이비 5",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "베이비 5",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S10h",
+      "name": "벤 베크만",
+      "tier": "희귀함",
+      "sourceName": "벤 베크만",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "벤 베크만",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N10h",
+      "name": "브룩",
+      "tier": "희귀함",
+      "sourceName": "브룩 음악가 (공속 10)",
+      "sourceTier": "희귀함",
+      "sourceText": "공격속도 증가(공속): 10",
+      "abilities": {
+        "공격속도 증가": 10
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "브룩 음악가 (공속 10)",
+          "tier": "희귀함",
+          "sourceText": "공격속도 증가(공속): 10"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "O10h",
+      "name": "비비",
+      "tier": "희귀함",
+      "sourceName": "비비",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "비비",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "L50h",
+      "name": "사보",
+      "tier": "희귀함",
+      "sourceName": "사보 (깍10)",
+      "sourceTier": "희귀함",
+      "sourceText": "방어력 감소(방깎): 10",
+      "abilities": {
+        "방어력 감소": 10
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "사보 (깍10)",
+          "tier": "희귀함",
+          "sourceText": "방어력 감소(방깎): 10"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I20h",
+      "name": "상디 디아블잠브",
+      "tier": "희귀함",
+      "sourceName": "상디 디아블잠브",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "상디 디아블잠브",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "920h",
+      "name": "샹크스",
+      "tier": "희귀함",
+      "sourceName": "샹크스",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "샹크스",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "820h",
+      "name": "센토마루",
+      "tier": "희귀함",
+      "sourceName": "센토마루",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "센토마루",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "720h",
+      "name": "슈가",
+      "tier": "희귀함",
+      "sourceName": "슈가 (마젠0.6)",
+      "sourceTier": "희귀함",
+      "sourceText": "마나 재생(마젠): 0.6",
+      "abilities": {
+        "마나 재생": 0.6
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "슈가 (마젠0.6)",
+          "tier": "희귀함",
+          "sourceText": "마나 재생(마젠): 0.6"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "620h",
+      "name": "시류",
+      "tier": "희귀함",
+      "sourceName": "시류",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시류",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B20h",
+      "name": "아오키지",
+      "tier": "희귀함",
+      "sourceName": "아오키지 (이감10, 0.2스턴)",
+      "sourceTier": "희귀함",
+      "sourceText": "이동속도 감소(이감): 10\n스턴: 0.2",
+      "abilities": {
+        "이동속도 감소": 10,
+        "스턴": 0.2
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아오키지 (이감10, 0.2스턴)",
+          "tier": "희귀함",
+          "sourceText": "이동속도 감소(이감): 10\n스턴: 0.2"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "P10h",
+      "name": "아카이누",
+      "tier": "희귀함",
+      "sourceName": "아카이누",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아카이누",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "020h",
+      "name": "오즈",
+      "tier": "희귀함",
+      "sourceName": "오즈",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "오즈",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "420h",
+      "name": "와이퍼",
+      "tier": "희귀함",
+      "sourceName": "와이퍼",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "와이퍼",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "C20h",
+      "name": "우솝",
+      "tier": "희귀함",
+      "sourceName": "우솝 (0.2스턴)",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {
+        "스턴": 0.2
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "우솝 (0.2스턴)",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A20h",
+      "name": "이완코브",
+      "tier": "희귀함",
+      "sourceName": "이완코브 (0.2스턴, 1인공증)",
+      "sourceTier": "희귀함",
+      "sourceText": "단일 공격력 증가(공증): 35\n스턴: 0.2",
+      "abilities": {
+        "단일공격력 증가": 35,
+        "스턴": 0.2
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "이완코브 (0.2스턴, 1인공증)",
+          "tier": "희귀함",
+          "sourceText": "단일 공격력 증가(공증): 35\n스턴: 0.2"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "G20h",
+      "name": "제프",
+      "tier": "희귀함",
+      "sourceName": "제프",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "제프",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "F20h",
+      "name": "조로",
+      "tier": "희귀함",
+      "sourceName": "조로 현상금 사냥",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "조로 현상금 사냥",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "E20h",
+      "name": "죠즈",
+      "tier": "희귀함",
+      "sourceName": "죠즈",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "죠즈",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "K20h",
+      "name": "쵸파 혼 포인트",
+      "tier": "희귀함",
+      "sourceName": "쵸파 혼포인트 (공증25)",
+      "sourceTier": "희귀함",
+      "sourceText": "공격력 증가(공증): 30",
+      "abilities": {
+        "공격력 증가": "제목25 / 상세30 (수치 미확정)"
+      },
+      "notes": [
+        "이름 주석은 공격력 증가 25, 상세 텍스트는 공격력 증가 30으로 불일치",
+        "공격력 증가 값은 제목 25와 상세 30이 충돌하므로 숫자 합산에서 제외.",
+        "공격력 증가 수치 불일치: 이름 주석 25, 상세 텍스트 30"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 혼포인트 (공증25)",
+          "tier": "희귀함",
+          "sourceText": "공격력 증가(공증): 30"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "320h",
+      "name": "카쿠",
+      "tier": "희귀함",
+      "sourceName": "카쿠",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카쿠",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H20h",
+      "name": "크로커다일",
+      "tier": "희귀함",
+      "sourceName": "크로커다일 (이감15)",
+      "sourceTier": "희귀함",
+      "sourceText": "이동속도 감소(이감): 15\n스킬 공격력 증가(공증): 20",
+      "abilities": {
+        "이동속도 감소": 15
+      },
+      "notes": [
+        "상세 텍스트의 스킬 공격력 증가(공증) 20을 공격력 증가로 정규화",
+        "스킬 공격력 증가20은 일반 공격력 증가 버프로 변환·합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "크로커다일 (이감15)",
+          "tier": "희귀함",
+          "sourceText": "이동속도 감소(이감): 15\n스킬 공격력 증가(공증): 20"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "D20h",
+      "name": "캡틴 키드",
+      "tier": "희귀함",
+      "sourceName": "유스타드 키드 (이감15)",
+      "sourceTier": "희귀함",
+      "sourceText": "이동속도 감소(이감): 15",
+      "abilities": {
+        "이동속도 감소": 15
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "유스타드 키드 (이감15)",
+          "tier": "희귀함",
+          "sourceText": "이동속도 감소(이감): 15"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R10h",
+      "name": "키자루",
+      "tier": "희귀함",
+      "sourceName": "키자루",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "키자루",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "J20h",
+      "name": "킨에몬",
+      "tier": "희귀함",
+      "sourceName": "킨에몬",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "킨에몬",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "K50h",
+      "name": "페로나",
+      "tier": "희귀함",
+      "sourceName": "페로나 (이감 20)",
+      "sourceTier": "희귀함",
+      "sourceText": "이동속도 감소(이감): 20",
+      "abilities": {
+        "이동속도 감소": 20
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "페로나 (이감 20)",
+          "tier": "희귀함",
+          "sourceText": "이동속도 감소(이감): 20"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M10h",
+      "name": "핸콕",
+      "tier": "희귀함",
+      "sourceName": "보아 핸콕",
+      "sourceTier": "희귀함",
+      "sourceText": "",
+      "abilities": {},
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "보아 핸콕",
+          "tier": "희귀함",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A30h",
+      "name": "레일리",
+      "tier": "전설 [물딜]",
+      "sourceName": "레일리 (깍20 암브 공증25)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "*레일리 필요함!\n▶ 방깍20 공증25\n▶ 스플딜러 단일스턴",
+      "abilities": {
+        "방어력 감소": 20,
+        "공격력 증가": 25,
+        "아머브레이크": true,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레일리 (깍20 암브 공증25)",
+          "tier": "전설 [물딜]",
+          "sourceText": "*레일리 필요함!\n▶ 방깍20 공증25\n▶ 스플딜러 단일스턴"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "T20h",
+      "name": "마르코",
+      "tier": "전설 [물딜]",
+      "sourceName": "마르코 (이감30)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "이동속도 감소(이감): 30\n보조딜\n바제스 클리어 가능",
+      "abilities": {
+        "이동속도 감소": 30,
+        "바제스": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마르코 (이감30)",
+          "tier": "전설 [물딜]",
+          "sourceText": "이동속도 감소(이감): 30\n보조딜\n바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V20h",
+      "name": "스모커",
+      "tier": "전설 [물딜]",
+      "sourceName": "스모커 (이감50 암브)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "이동속도 감소(이감): 50\n아머브레이크(암브)",
+      "abilities": {
+        "이동속도 감소": 50,
+        "아머브레이크": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "스모커 (이감50 암브)",
+          "tier": "전설 [물딜]",
+          "sourceText": "이동속도 감소(이감): 50\n아머브레이크(암브)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "630h",
+      "name": "센고쿠",
+      "tier": "전설 [물딜]",
+      "sourceName": "센고쿠 (이감20 발동깍20 발동공증)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "▶ 보조딜\n▶ 발동공증30 발동깍20\n▶ 이감20",
+      "abilities": {
+        "이동속도 감소": 20,
+        "발동방어력 감소": 20,
+        "발동공격력 증가": 30
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "센고쿠 (이감20 발동깍20 발동공증)",
+          "tier": "전설 [물딜]",
+          "sourceText": "▶ 보조딜\n▶ 발동공증30 발동깍20\n▶ 이감20"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "O20h",
+      "name": "에이스",
+      "tier": "전설 [물딜]",
+      "sourceName": "에이스 (깍33)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소(방깎): 33",
+      "abilities": {
+        "방어력 감소": 33
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에이스 (깍33)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소(방깎): 33"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "830h",
+      "name": "시저",
+      "tier": "전설 [물딜]",
+      "sourceName": "시저 (깍30)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "▶ 방깍30 지형무시이동(1시가능)",
+      "abilities": {
+        "방어력 감소": 30,
+        "지형무시이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시저 (깍30)",
+          "tier": "전설 [물딜]",
+          "sourceText": "▶ 방깍30 지형무시이동(1시가능)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "G30h",
+      "name": "징베",
+      "tier": "전설 [마딜]",
+      "sourceName": "징베 (마젠2.5 조건깍25)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "마나 재생: 2.5\n마나 스킬(광역마댐)\n아머브레이크 10이상인 적에게 방어력 25 감소 (1회 적용)\n\n바다 이동\n2.200바제스 클리어 불가능?",
+      "abilities": {
+        "마나 재생": 2.5,
+        "조건부방어력 감소": 25,
+        "바다이동": true
+      },
+      "notes": [
+        "아머브레이크 10 이상인 적에게 1회 적용되는 조건부 방어력 감소."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "징베 (마젠2.5 조건깍25)",
+          "tier": "전설 [물딜]",
+          "sourceText": "마나 재생: 2.5\n마나 스킬(광역마댐)\n아머브레이크 10이상인 적에게 방어력 25 감소 (1회 적용)\n\n바다 이동\n2.200바제스 클리어 불가능?"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S30h",
+      "name": "울티",
+      "tier": "전설 [물딜]",
+      "sourceName": "울티 (깍27)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소(방깎): 27\n바제스 클리어 가능",
+      "abilities": {
+        "방어력 감소": 27,
+        "바제스": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "울티 (깍27)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소(방깎): 27\n바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "K30h",
+      "name": "쵸파 유력강화",
+      "tier": "전설 [마딜]",
+      "sourceName": "쵸파 유력강화 (깍18 공속20)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소 : 18\n공격속도 증가 : 20",
+      "abilities": {
+        "방어력 감소": 18,
+        "공격속도 증가": 20
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 유력강화 (깍18 공속20)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소 : 18\n공격속도 증가 : 20"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "F30h",
+      "name": "카르가라",
+      "tier": "전설 [물딜]",
+      "sourceName": "카르가라 (깍20 단일깍20)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소(방깎): 20\n단일방어력 감소(단일방깎): 40\n스토리 대상으로는 20 방어력 감소 적용\n가반 중첩 불가",
+      "abilities": {
+        "방어력 감소": 20,
+        "단일방어력 감소": "제목20 / 상세40 (수치 미확정)"
+      },
+      "notes": [
+        "가반 중첩 불가.",
+        "스토리 대상에는 방어력 감소 20 적용.",
+        "카르가라 단일방깎은 가반·요우무와 비중첩 그룹이지만 충돌값은 숫자로 채택하지 않음.",
+        "헤더 단일깍20과 상세 단일방어력 감소40이 상충함."
+      ],
+      "exclusions": [
+        "가반 중첩 불가"
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카르가라 (깍20 단일깍20)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소(방깎): 20\n단일방어력 감소(단일방깎): 40\n스토리 대상으로는 20 방어력 감소 적용\n가반 중첩 불가"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H30h",
+      "name": "샬롯 크래커",
+      "tier": "전설 [물딜]",
+      "sourceName": "크래커 (깍25 버프)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소(방깎): 25\n공증,공속 영구버프 부여(쿨240초)",
+      "abilities": {
+        "방어력 감소": 25,
+        "공격력 증가": "수치 미표기",
+        "공격속도 증가": "수치 미표기"
+      },
+      "notes": [
+        "영구 공증·공속 버프, 쿨다운 240초."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "크래커 (깍25 버프)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소(방깎): 25\n공증,공속 영구버프 부여(쿨240초)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "HA0h",
+      "name": "킹",
+      "tier": "전설 [물딜]",
+      "sourceName": "킹 (이감10 깍5 발동깍30)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "이동속도 감소 : 10\n방어력 감소 : 5\n발동방어력 감소 : 30\n\n*킹 제한, X드레이크와 방깍 중복 안됨",
+      "abilities": {
+        "이동속도 감소": 10,
+        "방어력 감소": 5,
+        "발동방어력 감소": 30
+      },
+      "notes": [
+        "킹 제한. X-드레이크와 방어력 감소 중복 안 됨."
+      ],
+      "exclusions": [
+        "X-드레이크와 방어력 감소 중복 안 됨"
+      ],
+      "nonStackingGroups": {
+        "방어력 감소": "drake-king-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "킹 (이감10 깍5 발동깍30)",
+          "tier": "전설 [물딜]",
+          "sourceText": "이동속도 감소 : 10\n방어력 감소 : 5\n발동방어력 감소 : 30\n\n*킹 제한, X드레이크와 방깍 중복 안됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B30h",
+      "name": "흰수염",
+      "tier": "전설 [물딜]",
+      "sourceName": "흰수염 (깍15 발동이감)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "방어력 감소(방깎): 15\n발동이감 : 35\n보스, 스토리에서 추가 방어력 감소: 30\n바제스 클리어 가능\n\n*흰수염 불멸과 방깎 중첩 가능",
+      "abilities": {
+        "방어력 감소": 15,
+        "발동이동속도 감소": 35,
+        "조건부방어력 감소": 30,
+        "바제스": true
+      },
+      "notes": [
+        "보스·스토리에서만 추가 방어력 감소 30.",
+        "흰수염 불멸과 방어력 감소 중첩 가능."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "흰수염 (깍15 발동이감)",
+          "tier": "전설 [물딜]",
+          "sourceText": "방어력 감소(방깎): 15\n발동이감 : 35\n보스, 스토리에서 추가 방어력 감소: 30\n바제스 클리어 가능\n\n*흰수염 불멸과 방깎 중첩 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "MC0h",
+      "name": "히바리",
+      "tier": "전설 [물딜]",
+      "sourceName": "히바리 (깍22)",
+      "sourceTier": "전설 [물딜]",
+      "sourceText": "2,000 범위 방어력 22 감소\n3단계크립까지 가능\n도시락 1회 공속버프부여\n파랑자리 -> 베이비5 창고 이동 -> 히바리 조합 = 1시 미션 가능",
+      "abilities": {
+        "방어력 감소": 22,
+        "조건부공격속도 증가": "수치 미표기"
+      },
+      "notes": [
+        "도시락이 1회 공속 버프 부여."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "히바리 (깍22)",
+          "tier": "전설 [물딜]",
+          "sourceText": "2,000 범위 방어력 22 감소\n3단계크립까지 가능\n도시락 1회 공속버프부여\n파랑자리 -> 베이비5 창고 이동 -> 히바리 조합 = 1시 미션 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "T30h",
+      "name": "레베카",
+      "tier": "히든 [물딜]",
+      "sourceName": "레베카 (깍18)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "레베카조합 / rebecca 방어력 감소(방깎): 18",
+      "abilities": {
+        "방어력 감소": 18
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레베카 (깍18)",
+          "tier": "히든 [물딜]",
+          "sourceText": "레베카조합 / rebecca 방어력 감소(방깎): 18"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N30h",
+      "name": "료쿠규",
+      "tier": "히든 [물딜]",
+      "sourceName": "료쿠규 (깍25 발동깍15 발동이감20)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "료쿠규조합 / ryokugyu 방깍: 25  발동방깍: 15\n발동이감: 20\n\n바제스 가능",
+      "abilities": {
+        "방어력 감소": 25,
+        "발동방어력 감소": 15,
+        "발동이동속도 감소": 20,
+        "바제스": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "료쿠규 (깍25 발동깍15 발동이감20)",
+          "tier": "히든 [물딜]",
+          "sourceText": "료쿠규조합 / ryokugyu 방깍: 25  발동방깍: 15\n발동이감: 20\n\n바제스 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "340h",
+      "name": "미호크",
+      "tier": "히든 [물딜]",
+      "sourceName": "미호크 (깍25)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "검호조합 / mihawk 방어력 감소(방깎): 25",
+      "abilities": {
+        "방어력 감소": 25
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "미호크 (깍25)",
+          "tier": "히든 [물딜]",
+          "sourceText": "검호조합 / mihawk 방어력 감소(방깎): 25"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W30h",
+      "name": "베르고",
+      "tier": "히든 [물딜]",
+      "sourceName": "베르고 (암브)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "베르고조합 / vergo 마나스킬(최대방깎 30, 스턴 2.5)\n공성업 할 수록 마나스킬깍 증가",
+      "abilities": {
+        "아머브레이크": true,
+        "조건부마나스킬스턴": 2.5,
+        "조건부마나스킬방어력 감소": 30
+      },
+      "notes": [
+        "마나스킬 최대 방어력 감소 30이며 공성업에 따라 증가.",
+        "방깎 최대30과 스턴2.5는 마나스킬 조건부이며 일반 스턴·방깎에 합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "베르고 (암브)",
+          "tier": "히든 [물딜]",
+          "sourceText": "베르고조합 / vergo 마나스킬(최대방깎 30, 스턴 2.5)\n공성업 할 수록 마나스킬깍 증가"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M30h",
+      "name": "사보",
+      "tier": "히든 [물딜]",
+      "sourceName": "사보 (깍20 이감25)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "사보조합 / sabo 이동속도 감소(이감): 25\n방어력 감소(방깎): 20\n바제스 클리어 가능",
+      "abilities": {
+        "이동속도 감소": 25,
+        "방어력 감소": 20,
+        "바제스": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "사보 (깍20 이감25)",
+          "tier": "히든 [물딜]",
+          "sourceText": "사보조합 / sabo 이동속도 감소(이감): 25\n방어력 감소(방깎): 20\n바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "540h",
+      "name": "킬러",
+      "tier": "히든 [물딜]",
+      "sourceName": "킬러 (광보잡, 깍12)",
+      "sourceTier": "히든 [물딜]",
+      "sourceText": "킬러조합 / killer 보스 공격 시 40% 확률로 보스 현재 체력의 0.85%만큼 대미지\n유닛 3개를 동시에 공격",
+      "abilities": {
+        "방어력 감소": 12,
+        "광폭화": true,
+        "보스 잡기": true
+      },
+      "notes": [
+        "보스 공격 40% 확률로 현재 체력 0.85% 대미지."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "킬러 (광보잡, 깍12)",
+          "tier": "히든 [물딜]",
+          "sourceText": "킬러조합 / killer 보스 공격 시 40% 확률로 보스 현재 체력의 0.85%만큼 대미지\n유닛 3개를 동시에 공격"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W20h",
+      "name": "드래곤",
+      "tier": "전설 [스턴]",
+      "sourceName": "드래곤 (0.9스턴, 이감10, 깍10, 공속5, 공증25)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스토리 진입 시 스토리 방어력 추가로 45 감소\n스턴: 0.9\n이동속도 감소(이감): 10\n방어력 감소(방깎): 10\n공격속도 증가(공속): 5\n공격력 증가(공증): 25",
+      "abilities": {
+        "스턴": 0.9,
+        "이동속도 감소": 10,
+        "방어력 감소": 10,
+        "공격속도 증가": 5,
+        "공격력 증가": 25,
+        "조건부방어력 감소": 45
+      },
+      "notes": [
+        "스토리 진입 시에만 추가 방어력 감소 45."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "드래곤 (0.9스턴, 이감10, 깍10, 공속5, 공증25)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스토리 진입 시 스토리 방어력 추가로 45 감소\n스턴: 0.9\n이동속도 감소(이감): 10\n방어력 감소(방깎): 10\n공격속도 증가(공속): 5\n공격력 증가(공증): 25"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q20h",
+      "name": "라분",
+      "tier": "전설 [스턴]",
+      "sourceName": "라분 (0.9스턴, 공속17)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스턴: 0.9\n공격속도 증가: 17\n수중이동",
+      "abilities": {
+        "스턴": 0.9,
+        "공격속도 증가": 17,
+        "수중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "라분 (0.9스턴, 공속17)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스턴: 0.9\n공격속도 증가: 17\n수중이동"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Z20h",
+      "name": "바르톨로메오",
+      "tier": "전설 [스턴]",
+      "sourceName": "바르톨로메오 (1스턴, 깍12)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스턴: 1\n방어력 감소: 12",
+      "abilities": {
+        "스턴": 1,
+        "방어력 감소": 12
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바르톨로메오 (1스턴, 깍12)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스턴: 1\n방어력 감소: 12"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "530h",
+      "name": "샹크스",
+      "tier": "전설 [스턴]",
+      "sourceName": "샹크스 (0.9 스턴)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스턴: 0.9",
+      "abilities": {
+        "스턴": 0.9
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "샹크스 (0.9 스턴)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스턴: 0.9"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "930h",
+      "name": "시키",
+      "tier": "전설 [스턴]",
+      "sourceName": "시키 (1스턴, 암브)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스턴: 1\n공중이동\n아머브레이크",
+      "abilities": {
+        "스턴": 1,
+        "아머브레이크": true,
+        "공중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시키 (1스턴, 암브)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스턴: 1\n공중이동\n아머브레이크"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "030h",
+      "name": "쿠마",
+      "tier": "전설 [스턴]",
+      "sourceName": "쿠마 (0.5스턴, w자석)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "*그린블러드 주면 스턴 사라짐\n스턴: 0.5\n마나스킬로 바제스 가능",
+      "abilities": {
+        "스턴": 0.5,
+        "바제스": true
+      },
+      "notes": [
+        "마나스킬로 바제스 가능."
+      ],
+      "exclusions": [
+        "그린블러드 부여 시 스턴 사라짐"
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쿠마 (0.5스턴, w자석)",
+          "tier": "전설 [스턴]",
+          "sourceText": "*그린블러드 주면 스턴 사라짐\n스턴: 0.5\n마나스킬로 바제스 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "130h",
+      "name": "후지토라",
+      "tier": "전설 [스턴]",
+      "sourceName": "후지토라 (0.7스턴, 이감25, 마방깍)",
+      "sourceTier": "전설 [스턴]",
+      "sourceText": "스턴: 0.7\n이동속도 감소(이감): 25\n마법방어력 감소",
+      "abilities": {
+        "스턴": 0.7,
+        "이동속도 감소": 25,
+        "마법방어력 감소": "수치 미표기"
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "후지토라 (0.7스턴, 이감25, 마방깍)",
+          "tier": "전설 [스턴]",
+          "sourceText": "스턴: 0.7\n이동속도 감소(이감): 25\n마법방어력 감소"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "O30h",
+      "name": "봉쿠레",
+      "tier": "히든 [스턴]",
+      "sourceName": "봉쿠레 (0.5스턴 깍11)",
+      "sourceTier": "히든 [스턴]",
+      "sourceText": "봉쿠레조합 / bonkurei*이완코브 히든과 깍 중복적용 안 됨",
+      "abilities": {
+        "스턴": 0.5,
+        "방어력 감소": 11
+      },
+      "notes": [
+        "이완코브 히든과 방어력 감소 중복 적용 안 됨."
+      ],
+      "exclusions": [
+        "이완코브와 방어력 감소 중복 적용 안 됨"
+      ],
+      "nonStackingGroups": {
+        "방어력 감소": "bonclay-ivankov-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "봉쿠레 (0.5스턴 깍11)",
+          "tier": "히든 [스턴]",
+          "sourceText": "봉쿠레조합 / bonkurei*이완코브 히든과 깍 중복적용 안 됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Y30h",
+      "name": "이완코브",
+      "tier": "히든 [스턴]",
+      "sourceName": "이완코브 (0.5스턴 깍11 단일공증45)",
+      "sourceTier": "히든 [스턴]",
+      "sourceText": "이완코브조합 / ivankov*봉쿠레와 깍 중복적용 안 됨",
+      "abilities": {
+        "스턴": 0.5,
+        "방어력 감소": 11,
+        "단일공격력 증가": 45
+      },
+      "notes": [
+        "봉쿠레와 방어력 감소 중복 적용 안 됨."
+      ],
+      "exclusions": [
+        "봉쿠레와 방어력 감소 중복 적용 안 됨"
+      ],
+      "nonStackingGroups": {
+        "방어력 감소": "bonclay-ivankov-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "이완코브 (0.5스턴 깍11 단일공증45)",
+          "tier": "히든 [스턴]",
+          "sourceText": "이완코브조합 / ivankov*봉쿠레와 깍 중복적용 안 됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "140h",
+      "name": "아오키지",
+      "tier": "히든 [스턴]",
+      "sourceName": "아오키지 (0.5스턴 이감35 폭뎀증10)",
+      "sourceTier": "히든 [스턴]",
+      "sourceText": "아오키지조합 / aokiji",
+      "abilities": {
+        "스턴": 0.5,
+        "이동속도 감소": 35,
+        "폭발형 데미지 증폭": 10
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아오키지 (0.5스턴 이감35 폭뎀증10)",
+          "tier": "히든 [스턴]",
+          "sourceText": "아오키지조합 / aokiji"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "740h",
+      "name": "피셔타이거",
+      "tier": "히든 [스턴]",
+      "sourceName": "피셔타이거 (0.9스턴 공증35)",
+      "sourceTier": "히든 [스턴]",
+      "sourceText": "피셔타이거조합 / tiger▶ 스턴 광보잡 지형무시이동(1시가능)",
+      "abilities": {
+        "스턴": 0.9,
+        "공격력 증가": 35,
+        "광폭화": true,
+        "보스 잡기": true,
+        "지형무시이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "피셔타이거 (0.9스턴 공증35)",
+          "tier": "히든 [스턴]",
+          "sourceText": "피셔타이거조합 / tiger▶ 스턴 광보잡 지형무시이동(1시가능)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S50h",
+      "name": "도플라밍고",
+      "tier": "변화된",
+      "sourceName": "도플라밍고 (단일0.6)",
+      "sourceTier": "변화된",
+      "sourceText": "▶ 공중이동, 단일",
+      "abilities": {
+        "단일": 0.6,
+        "공중이동": true
+      },
+      "notes": [
+        "단일0.6는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "도플라밍고 (단일0.6)",
+          "tier": "변화된",
+          "sourceText": "▶ 공중이동, 단일"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N70h",
+      "name": "베이비 5",
+      "tier": "변화된",
+      "sourceName": "베이비 5 (암브 공속버프)",
+      "sourceTier": "변화된",
+      "sourceText": "[패치 후 광보잡 성능 삭제, 암브 추가 ]\n▶ 아머브레이크(암브)\n▶ 공속버프(12초간 150%, 50초쿨)",
+      "abilities": {
+        "아머브레이크": true,
+        "조건부공격속도 증가": 150
+      },
+      "notes": [
+        "공속 버프는 12초간, 쿨다운 50초."
+      ],
+      "exclusions": [
+        "패치 후 광보잡 성능 삭제"
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "베이비 5 (암브 공속버프)",
+          "tier": "변화된",
+          "sourceText": "[패치 후 광보잡 성능 삭제, 암브 추가 ]\n▶ 아머브레이크(암브)\n▶ 공속버프(12초간 150%, 50초쿨)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W50h",
+      "name": "비비",
+      "tier": "변화된",
+      "sourceName": "비비 (이감20 깍11)",
+      "sourceTier": "변화된",
+      "sourceText": "",
+      "abilities": {
+        "이동속도 감소": 20,
+        "방어력 감소": 11
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "비비 (이감20 깍11)",
+          "tier": "변화된",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "KC0h",
+      "name": "카쿠",
+      "tier": "변화된",
+      "sourceName": "카쿠 (끝딜0.5 순간이동)",
+      "sourceTier": "변화된",
+      "sourceText": "",
+      "abilities": {
+        "끝딜": 0.5,
+        "순간이동": true
+      },
+      "notes": [
+        "끝딜0.5는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카쿠 (끝딜0.5 순간이동)",
+          "tier": "변화된",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "J70h",
+      "name": "캐럿",
+      "tier": "변화된",
+      "sourceName": "캐럿 (폭뎀증1)",
+      "sourceTier": "변화된",
+      "sourceText": "▶ 폭뎀증(폭발형 데미지 증폭)",
+      "abilities": {
+        "폭발형 데미지 증폭": 1
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "캐럿 (폭뎀증1)",
+          "tier": "변화된",
+          "sourceText": "▶ 폭뎀증(폭발형 데미지 증폭)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S80h",
+      "name": "샬롯 브륄레",
+      "tier": "전설 [마딜]",
+      "sourceName": "브륄레 (전설유닛선택)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "특성포인트 1소모 아래에서 전설유닛 선택",
+      "abilities": {},
+      "notes": [
+        "특성포인트 1소모로 아래 전설 유닛 선택."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "브륄레 (전설유닛선택)",
+          "tier": "전설 [마딜]",
+          "sourceText": "특성포인트 1소모 아래에서 전설유닛 선택"
+        }
+      ],
+      "mappingEvidence": [
+        "Known catalog naming alias: source 브륄레 is catalog 샬롯 브륄레 at the same legend-magic grade."
+      ]
+    },
+    {
+      "rawcode": "780h",
+      "name": "아마츠키 토키",
+      "tier": "전설 [마딜]",
+      "sourceName": "토키 (이감25 공속20)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "9초마다 450 범위의 전설 이상 랜덤 유닛 2기를 6초 동안 공격속도 35% 증가\n이동속도 감소: 25",
+      "abilities": {
+        "이동속도 감소": 25,
+        "공격속도 증가": "제목20 / 상세 조건부35 (관계 미확정)",
+        "조건부공격속도 증가": 35
+      },
+      "notes": [
+        "9초마다 450 범위 전설 이상 랜덤 유닛 2기를 6초 동안 공격속도 35% 증가.",
+        "헤더 공속20과 상세 조건부 공속35의 관계가 확인되지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "토키 (이감25 공속20)",
+          "tier": "전설 [마딜]",
+          "sourceText": "9초마다 450 범위의 전설 이상 랜덤 유닛 2기를 6초 동안 공격속도 35% 증가\n이동속도 감소: 25"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U20h",
+      "name": "마샬.D.티치",
+      "tier": "전설 [마딜]",
+      "sourceName": "검은수염 (마증)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "모든피해증가: 10\n단일마법 대미지 증가(단일마댐증폭): 8\n범위 적 현재 체력 % 대미지(범위현퍼): 1%\n광폭화 방어력 버프 제거 후 400만 마법 대미지",
+      "abilities": {
+        "모든피해증가": 10,
+        "단일마법 데미지 증가": 8,
+        "광폭화": true
+      },
+      "notes": [
+        "광폭화 방어력 버프 제거 후 400만 마법 대미지."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "검은수염 (마증)",
+          "tier": "전설 [마딜]",
+          "sourceText": "모든피해증가: 10\n단일마법 대미지 증가(단일마댐증폭): 8\n범위 적 현재 체력 % 대미지(범위현퍼): 1%\n광폭화 방어력 버프 제거 후 400만 마법 대미지"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "P20h",
+      "name": "나미",
+      "tier": "전설 [마딜]",
+      "sourceName": "나미 (마뎀증 발동이감)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "마뎀증 1% (25%까지 중첩)\n발동이감\n\n골드획득량 증가\n탐색 보상 증가",
+      "abilities": {
+        "중첩마법데미지 증폭": 1,
+        "발동이동속도 감소": "수치 미표기"
+      },
+      "notes": [
+        "마법데미지 증폭은 1%씩 최대 25%까지 중첩. 관측 시점의 중첩 수는 미표기."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "나미 (마뎀증 발동이감)",
+          "tier": "전설 [마딜]",
+          "sourceText": "마뎀증 1% (25%까지 중첩)\n발동이감\n\n골드획득량 증가\n탐색 보상 증가"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Z90h",
+      "name": "네코마무시",
+      "tier": "전설 [마딜]",
+      "sourceName": "네코마 (보잡 이감30)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "공격력 증가(공증): 32\n범위 전체 체력 퍼센트 대미지(범위전퍼)\n이동속도 감소: 30\n스킬 발동 시 대상이 광폭화 유닛이면 전체 체력 9%의 추가 대미지\n보스 잡기에 특화됨\n바제스 클리어 가능",
+      "abilities": {
+        "공격력 증가": 32,
+        "이동속도 감소": 30,
+        "광폭화": true,
+        "보스 잡기": true,
+        "바제스": true
+      },
+      "notes": [
+        "스킬 발동 시 대상이 광폭화 유닛이면 전체 체력 9% 추가 대미지."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "네코마 (보잡 이감30)",
+          "tier": "전설 [마딜]",
+          "sourceText": "공격력 증가(공증): 32\n범위 전체 체력 퍼센트 대미지(범위전퍼)\n이동속도 감소: 30\n스킬 발동 시 대상이 광폭화 유닛이면 전체 체력 9%의 추가 대미지\n보스 잡기에 특화됨\n바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "330h",
+      "name": "레이쥬",
+      "tier": "전설 [마딜]",
+      "sourceName": "레이쥬 (폭뎀단일 이감35)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 폭뎀단일\n▶ 공중이동, 이감35",
+      "abilities": {
+        "이동속도 감소": 35,
+        "공중이동": true,
+        "단일": true
+      },
+      "notes": [
+        "폭뎀 단일 제공자이며 수치 미표기."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레이쥬 (폭뎀단일 이감35)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 폭뎀단일\n▶ 공중이동, 이감35"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R20h",
+      "name": "로브 루치",
+      "tier": "전설 [마딜]",
+      "sourceName": "루치 (단일1.2)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 단일스턴 단일",
+      "abilities": {
+        "단일": 1.2,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "단일1.2는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루치 (단일1.2)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 단일스턴 단일"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "C30h",
+      "name": "트라팔가 로우",
+      "tier": "전설 [마딜]",
+      "sourceName": "로우 (단일이감99 범퍼)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "범위 현재 체력 퍼센트 대미지(범위현퍼)\n(W) 스킬 사용 시 12초 동안 단일 공격속도 150% 증가(쿨타임 50초)\n단일 적에게 2.5초 동안 이동속도 99% 감소\n광폭화 방어력 버프 제거 후 현재 체력 22.5%의 마법 대미지",
+      "abilities": {
+        "단일이동속도 감소": 99,
+        "조건부단일공격속도 증가": 150,
+        "광폭화": true
+      },
+      "notes": [
+        "W 사용 시 단일 공격속도 150% 증가, 12초간, 쿨다운 50초.",
+        "광폭화 방어력 버프 제거 후 현재 체력 22.5% 마법 대미지."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로우 (단일이감99 범퍼)",
+          "tier": "전설 [마딜]",
+          "sourceText": "범위 현재 체력 퍼센트 대미지(범위현퍼)\n(W) 스킬 사용 시 12초 동안 단일 공격속도 150% 증가(쿨타임 50초)\n단일 적에게 2.5초 동안 이동속도 99% 감소\n광폭화 방어력 버프 제거 후 현재 체력 22.5%의 마법 대미지"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Y20h",
+      "name": "루피 나이트메어",
+      "tier": "전설 [마딜]",
+      "sourceName": "루나메 (광보잡)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 단일스턴 광보잡 공중이동\n*광보잡 성능 매우 뛰어남",
+      "abilities": {
+        "단일스턴": "수치 미표기",
+        "광폭화": true,
+        "보스 잡기": true,
+        "공중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루나메 (광보잡)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 단일스턴 광보잡 공중이동\n*광보잡 성능 매우 뛰어남"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N20h",
+      "name": "겟코 모리아",
+      "tier": "전설 [마딜]",
+      "sourceName": "모리아 (유닛삭제 이감30 공비례폭뎀)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러\n▶ 이감30 라인몹삭제9초쿨",
+      "abilities": {
+        "이동속도 감소": 30,
+        "유닛삭제": true
+      },
+      "notes": [
+        "라인몹 삭제는 9초 쿨다운.",
+        "라인몹 삭제 기능은 9초 쿨."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "모리아 (유닛삭제 이감30 공비례폭뎀)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러\n▶ 이감30 라인몹삭제9초쿨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "X20h",
+      "name": "블랙마리아",
+      "tier": "전설 [마딜]",
+      "sourceName": "블랙마리아 (공비례폭뎀)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러 보조딜\n▶ 범위 전체 체력 퍼센트 데미지\n▶ 단일스턴",
+      "abilities": {
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "블랙마리아 (공비례폭뎀)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러 보조딜\n▶ 범위 전체 체력 퍼센트 데미지\n▶ 단일스턴"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "430h",
+      "name": "상디",
+      "tier": "전설 [마딜]",
+      "sourceName": "상디 (단일1.4)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "",
+      "abilities": {
+        "단일": 1.4
+      },
+      "notes": [
+        "단일1.4는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "상디 (단일1.4)",
+          "tier": "전설 [마딜]",
+          "sourceText": ""
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "730h",
+      "name": "슈가",
+      "tier": "전설 [마딜]",
+      "sourceName": "슈가 (마젠 1.25)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "삭제 시 적 유닛을 로봇으로 바꿈\n마나 재생: 1.25\n공격 시 단일 적 50% 확률로 0.5초 스턴\n잡동사니 판매",
+      "abilities": {
+        "마나 재생": 1.25,
+        "조건부단일스턴": 0.5
+      },
+      "notes": [
+        "공격 시 단일 적 50% 확률로 0.5초 스턴. 확률·지속시간은 전체 스턴 수치로 정규화하지 않음.",
+        "공격 시 50% 확률의 단일 0.5초 스턴으로 일반 보장 스턴에 합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "슈가 (마젠 1.25)",
+          "tier": "전설 [마딜]",
+          "sourceText": "삭제 시 적 유닛을 로봇으로 바꿈\n마나 재생: 1.25\n공격 시 단일 적 50% 확률로 0.5초 스턴\n잡동사니 판매"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "240h",
+      "name": "시노부",
+      "tier": "전설 [마딜]",
+      "sourceName": "시노부 (끝딜 탐색)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "보물 탐색(R 스킬)",
+      "abilities": {
+        "끝딜": true
+      },
+      "notes": [
+        "보물 탐색 R 스킬."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시노부 (끝딜 탐색)",
+          "tier": "전설 [마딜]",
+          "sourceText": "보물 탐색(R 스킬)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "S20h",
+      "name": "조로",
+      "tier": "전설 [마딜]",
+      "sourceName": "조로 (처형)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 단일스턴\n▶ 체력 15%이하 라인몹 처형",
+      "abilities": {
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "체력 15% 이하 라인몹 처형."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "조로 (처형)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 단일스턴\n▶ 체력 15%이하 라인몹 처형"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I30h",
+      "name": "제파",
+      "tier": "전설 [마딜]",
+      "sourceName": "제파 (광보잡)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 단일스턴, 광보잡",
+      "abilities": {
+        "단일스턴": "수치 미표기",
+        "광폭화": true,
+        "보스 잡기": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "제파 (광보잡)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 단일스턴, 광보잡"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "E30h",
+      "name": "코비",
+      "tier": "전설 [마딜]",
+      "sourceName": "코비 (폭뎀단일1)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "▶ 폭뎀단일\n▶ 마나스킬: 공증20 체젠1 마젠1",
+      "abilities": {
+        "단일": 1,
+        "조건부공격력 증가": 20,
+        "조건부체력 재생": 1,
+        "조건부마나 재생": 1
+      },
+      "notes": [
+        "마나스킬 조건부 효과.",
+        "단일1는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "코비 (폭뎀단일1)",
+          "tier": "전설 [마딜]",
+          "sourceText": "▶ 폭뎀단일\n▶ 마나스킬: 공증20 체젠1 마젠1"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "230h",
+      "name": "핸콕",
+      "tier": "전설 [마딜]",
+      "sourceName": "보아 핸콕 (끝딜)",
+      "sourceTier": "전설 [마딜]",
+      "sourceText": "피스톨 키스 발동 시 매 공격마다 단일 적에게 전체 체력의 7% 폭발형 대미지",
+      "abilities": {
+        "끝딜": true
+      },
+      "notes": [
+        "피스톨 키스 발동 시 매 공격마다 단일 적 전체 체력 7% 폭발형 대미지."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "보아 핸콕 (끝딜)",
+          "tier": "전설 [마딜]",
+          "sourceText": "피스톨 키스 발동 시 매 공격마다 단일 적에게 전체 체력의 7% 폭발형 대미지"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "440h",
+      "name": "류마",
+      "tier": "히든 [마딜]",
+      "sourceName": "류마 (단일0.7)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "류마조합 / ryuma",
+      "abilities": {
+        "단일": 0.7
+      },
+      "notes": [
+        "단일0.7는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "류마 (단일0.7)",
+          "tier": "히든 [마딜]",
+          "sourceText": "류마조합 / ryuma"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "550h",
+      "name": "스튜시",
+      "tier": "히든 [마딜]",
+      "sourceName": "스튜시 (단일1)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "스튜시조합 / stussy 1500 범위 순간이동",
+      "abilities": {
+        "단일": 1,
+        "순간이동": true
+      },
+      "notes": [
+        "순간이동 범위 1500.",
+        "단일1는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "스튜시 (단일1)",
+          "tier": "히든 [마딜]",
+          "sourceText": "스튜시조합 / stussy 1500 범위 순간이동"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "J30h",
+      "name": "시류",
+      "tier": "히든 [마딜]",
+      "sourceName": "시류 (끝딜)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "시류조합 / shiryu 끝딜 7\n마나스킬\n목업2 도킹1 혹은 도킹2 목업1시 바제스 클리어 가능",
+      "abilities": {
+        "끝딜": 7,
+        "바제스": true
+      },
+      "notes": [
+        "목업2·도킹1 또는 도킹2·목업1일 때 바제스 클리어 가능.",
+        "끝딜7는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시류 (끝딜)",
+          "tier": "히든 [마딜]",
+          "sourceText": "시류조합 / shiryu 끝딜 7\n마나스킬\n목업2 도킹1 혹은 도킹2 목업1시 바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Z30h",
+      "name": "아카이누",
+      "tier": "히든 [마딜]",
+      "sourceName": "아카이누 (광보잡)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "아카이누조합 / akainu▶ 광보잡(매우좋음)\n▶ 단일적스턴\n▶ 발동이감10(믿음직)",
+      "abilities": {
+        "단일스턴": "수치 미표기",
+        "광폭화": true,
+        "보스 잡기": true,
+        "발동이동속도 감소": 10
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아카이누 (광보잡)",
+          "tier": "히든 [마딜]",
+          "sourceText": "아카이누조합 / akainu▶ 광보잡(매우좋음)\n▶ 단일적스턴\n▶ 발동이감10(믿음직)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "L70h",
+      "name": "캐럿",
+      "tier": "히든 [마딜]",
+      "sourceName": "캐럿 (단일0.5 마뎀증)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "캐럿조합 / carrot*레일리 필요!\n단일 마뎀증\n\n*변이하면 단일 없어지고 폭뎀딜러로 변함\n*단일컨 힘들면 변이해서 써도 좋음",
+      "abilities": {
+        "단일": 0.5,
+        "마법데미지 증폭": "수치 미표기"
+      },
+      "notes": [
+        "변이 시 단일 효과가 사라지고 폭발형 딜러로 변함.",
+        "단일0.5는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [
+        "변이 시 단일 효과 사라짐"
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "캐럿 (단일0.5 마뎀증)",
+          "tier": "히든 [마딜]",
+          "sourceText": "캐럿조합 / carrot*레일리 필요!\n단일 마뎀증\n\n*변이하면 단일 없어지고 폭뎀딜러로 변함\n*단일컨 힘들면 변이해서 써도 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "640h",
+      "name": "키쿠",
+      "tier": "히든 [마딜]",
+      "sourceName": "키쿠 (보잡)",
+      "sourceTier": "히든 [마딜]",
+      "sourceText": "키쿠조합 / kiku 광보잡\n\n마젠 유닛과 조합이 매우 좋음",
+      "abilities": {
+        "광폭화": true,
+        "보스 잡기": true
+      },
+      "notes": [
+        "마나 재생 유닛과 조합이 매우 좋음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "키쿠 (보잡)",
+          "tier": "히든 [마딜]",
+          "sourceText": "키쿠조합 / kiku 광보잡\n\n마젠 유닛과 조합이 매우 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U30h",
+      "name": "레드포스호",
+      "tier": "해적선",
+      "sourceName": "레드포스호 (깍20 공증35)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "레드포스호조합 / redforce 방어력 감소(방깎): 20\n공격력 증가(공증): 35\n광폭화 추가 대미지\n4명의 적에게 공격을 동시에 가함\n스토리 공격시 30% 확률로 3배 크리티컬",
+      "abilities": {
+        "방어력 감소": 20,
+        "공격력 증가": 35,
+        "광폭화": true
+      },
+      "notes": [
+        "스토리 공격 시 30% 확률로 3배 크리티컬."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레드포스호 (깍20 공증35)",
+          "tier": "해적선🚁",
+          "sourceText": "레드포스호조합 / redforce 방어력 감소(방깎): 20\n공격력 증가(공증): 35\n광폭화 추가 대미지\n4명의 적에게 공격을 동시에 가함\n스토리 공격시 30% 확률로 3배 크리티컬"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q30h",
+      "name": "모비딕호",
+      "tier": "해적선",
+      "sourceName": "모비딕호 (이감40 체젠1.25)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "모비딕호조합 / mobydick 이동속도 감소(이감): 40\n체력 재생: 1.25",
+      "abilities": {
+        "이동속도 감소": 40,
+        "체력 재생": 1.25
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "모비딕호 (이감40 체젠1.25)",
+          "tier": "해적선🚁",
+          "sourceText": "모비딕호조합 / mobydick 이동속도 감소(이감): 40\n체력 재생: 1.25"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R30h",
+      "name": "반 더 데켄",
+      "tier": "해적선",
+      "sourceName": "반 더 데켄 (마딜보조 1시가능)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "6.25% 확률로 단일 적에게 30만 마법 대미지 또는 단일 적 제외 400범위에 60% 마법 대미지\n보조딜\n노아 스킬(마나 95 소모) 사용 시 800범위 적에게 스턴 3초, 300만 + 잃은 체력의 4% 대미지\n바다이동\n바제스 클리어 가능",
+      "abilities": {
+        "바다이동": true,
+        "바제스": true
+      },
+      "notes": [
+        "노아 스킬 사용 시 800 범위 적에게 3초 스턴. 지속시간은 전체 스턴 수치로 정규화하지 않음.",
+        "회복된 꼬리에서 바다이동과 바제스 클리어 가능을 확인. 노아 3초 스턴은 마나스킬 조건부라 일반 스턴에 넣지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "반 더 데켄 (마딜보조 1시가능)",
+          "tier": "해적선🚁",
+          "sourceText": "6.25% 확률로 단일 적에게 30만 마법 대미지 또는 단일 적 제외 400범위에 60% 마법 대미지\n보조딜\n노아 스킬(마나 95 소모) 사용 시 800범위 적에게 스턴 3초, 300만 + 잃은 체력의 4% 대미지\n바다이동\n바제스 클리어 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "P30h",
+      "name": "발라티에",
+      "tier": "해적선",
+      "sourceName": "발라티에 (공속22 단일공속150)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "발라티에조합 / baratie 단일 공격속도 증가(공속): 150",
+      "abilities": {
+        "공격속도 증가": 22,
+        "단일공격속도 증가": 150
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "발라티에 (공속22 단일공속150)",
+          "tier": "해적선🚁",
+          "sourceText": "발라티에조합 / baratie 단일 공격속도 증가(공속): 150"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "X30h",
+      "name": "방주맥심",
+      "tier": "해적선",
+      "sourceName": "방주맥심 (발동이감30 마방깍10)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "방주맥심조합 / maxim 마방깍 폭뎀증\n발동이동속도 감소: 30",
+      "abilities": {
+        "발동이동속도 감소": 30,
+        "마법방어력 감소": 10,
+        "폭발형 데미지 증폭": "수치 미표기"
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "방주맥심 (발동이감30 마방깍10)",
+          "tier": "해적선🚁",
+          "sourceText": "방주맥심조합 / maxim 마방깍 폭뎀증\n발동이동속도 감소: 30"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "L30h",
+      "name": "써니호",
+      "tier": "해적선",
+      "sourceName": "써니호 (0.7스턴 광보잡)",
+      "sourceTier": "해적선🚁",
+      "sourceText": "써니호조합 / sunny",
+      "abilities": {
+        "스턴": 0.7,
+        "광폭화": true,
+        "보스 잡기": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "써니호 (0.7스턴 광보잡)",
+          "tier": "해적선🚁",
+          "sourceText": "써니호조합 / sunny"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U40h",
+      "name": "블랙마리아",
+      "tier": "왜곡됨",
+      "sourceName": "블랙마리아 (깍15)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "[물딜] 보조딜러\n*스킬 사용 시 3가지 타입 중 선택\n꼼짝: 0.7스턴\n멈춰: 이감40\n불타: 보조딜\n\n*방깎이 낮아서 풀방깎 세팅이 까다로움\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "방어력 감소": 15,
+        "조건부선택모드스턴": 0.7,
+        "조건부선택모드이동속도 감소": 40
+      },
+      "notes": [
+        "스킬 사용 시 3가지 타입 중 선택: 꼼짝은 0.7 스턴, 멈춰는 이감40, 불타는 보조딜. 스턴과 이감은 대체 모드로 함께 합산하지 않음.",
+        "꼼짝0.7스턴·멈춰이감40·불타보조딜은 상호 대체 선택 모드이며 일반 합계에 포함하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "블랙마리아 (깍15)",
+          "tier": "왜곡됨",
+          "sourceText": "[물딜] 보조딜러\n*스킬 사용 시 3가지 타입 중 선택\n꼼짝: 0.7스턴\n멈춰: 이감40\n불타: 보조딜\n\n*방깎이 낮아서 풀방깎 세팅이 까다로움\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "V30h",
+      "name": "코알라",
+      "tier": "히든 [물딜]",
+      "sourceName": "코알라 (보잡 마젠 3.25)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "혁명군대리사범 / koala[마딜] 보잡 마젠\n\n*마나스킬 있는 마딜과 시너지가 좋고 특히 키쿠(광보잡), 써니호(광폭 스턴)와 좋음\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "마나 재생": 3.25,
+        "보스 잡기": true
+      },
+      "notes": [
+        "마나스킬 있는 마딜과 시너지. 추천 동료 언급으로 추가 능력을 추론하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "코알라 (보잡 마젠 3.25)",
+          "tier": "왜곡됨",
+          "sourceText": "혁명군대리사범 / koala[마딜] 보잡 마젠\n\n*마나스킬 있는 마딜과 시너지가 좋고 특히 키쿠(광보잡), 써니호(광폭 스턴)와 좋음\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "IC0h",
+      "name": "퀸",
+      "tier": "히든 [물딜]",
+      "sourceName": "퀸 (0.4스턴 발깍20, 암브, 체마1)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "[물딜] 보조스턴 체젠 마젠 암브 발동깍20\n\n*광폭, 보스 칠 때 같이 쳐주면 좋음\n*퀸은 공중이동이 없어서 킹으로 크립부터 잡고 만들면 좋음\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "스턴": 0.4,
+        "발동방어력 감소": 20,
+        "아머브레이크": true,
+        "체력 재생": 1,
+        "마나 재생": 1
+      },
+      "notes": [
+        "광폭화·보스 대상에 함께 공격 권장."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "퀸 (0.4스턴 발깍20, 암브, 체마1)",
+          "tier": "왜곡됨",
+          "sourceText": "[물딜] 보조스턴 체젠 마젠 암브 발동깍20\n\n*광폭, 보스 칠 때 같이 쳐주면 좋음\n*퀸은 공중이동이 없어서 킹으로 크립부터 잡고 만들면 좋음\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "840h",
+      "name": "페로나",
+      "tier": "히든 [마딜]",
+      "sourceName": "페로나 (이감45 삭제)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "고스트프린세스 / perona[마딜] 폭뎀딜러 이감45 폭뎀증10(1회) 공중이동 라인몹삭제\n\n*7.5초마다 폭뎀증 2% 누적(최대25%)\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "이동속도 감소": 45,
+        "폭발형 데미지 증폭": 10,
+        "중첩폭발형 데미지 증폭": 2,
+        "공중이동": true,
+        "유닛삭제": true
+      },
+      "notes": [
+        "폭발형 데미지 증폭 10은 1회. 7.5초마다 2% 누적, 최대 25%; 관측 시점의 중첩 수는 미표기.",
+        "라인몹 삭제 기능을 명시된 capability로 보존. 10% 1회와 2% 누적(최대25%)은 합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "페로나 (이감45 삭제)",
+          "tier": "왜곡됨",
+          "sourceText": "고스트프린세스 / perona[마딜] 폭뎀딜러 이감45 폭뎀증10(1회) 공중이동 라인몹삭제\n\n*7.5초마다 폭뎀증 2% 누적(최대25%)\n\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V50h",
+      "name": "에이스",
+      "tier": "변화된",
+      "sourceName": "에이스 (깍40 공증25 이감25)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "해적왕의아들 / ace[물딜] 방깍 이감 공증\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "방어력 감소": 40,
+        "공격력 증가": 25,
+        "이동속도 감소": 25
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에이스 (깍40 공증25 이감25)",
+          "tier": "왜곡됨",
+          "sourceText": "해적왕의아들 / ace[물딜] 방깍 이감 공증\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V90h",
+      "name": "바제스",
+      "tier": "왜곡됨",
+      "sourceName": "바제스 (단일1.8)",
+      "sourceTier": "왜곡됨",
+      "sourceText": "괴력의챔피언 / burgess[마딜] 폭뎀단일 보조스턴 수중이동\n*공격력이 높을수록 스턴 능력이 오릅니다\n*광폭화, 보스 추가딜이 있지만 라인몹 단일 치는 게 훨씬 좋습니다\n*오로성 새턴일 때 성능 저하\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다.",
+      "abilities": {
+        "단일": 1.8,
+        "단일스턴": "수치 미표기",
+        "수중이동": true,
+        "광폭화": true,
+        "보스 잡기": true
+      },
+      "notes": [
+        "스턴 능력은 공격력에 따라 오르며 수치 미표기.",
+        "단일1.8는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바제스 (단일1.8)",
+          "tier": "왜곡됨",
+          "sourceText": "괴력의챔피언 / burgess[마딜] 폭뎀단일 보조스턴 수중이동\n*공격력이 높을수록 스턴 능력이 오릅니다\n*광폭화, 보스 추가딜이 있지만 라인몹 단일 치는 게 훨씬 좋습니다\n*오로성 새턴일 때 성능 저하\n*왜곡은 첫 조합에 목재 3개가 필요하고 이후 5개씩 증가합니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "Y90h",
+      "name": "S-스네이크",
+      "tier": "세라핌",
+      "sourceName": "S-스네이크 (끝딜 폭뎀증3)",
+      "sourceTier": "세라핌",
+      "sourceText": "[핸라핌] 끝딜 폭뎀증 공중이동\n▶ 폭뎀딜러와 잘 어울림",
+      "abilities": {
+        "끝딜": true,
+        "폭발형 데미지 증폭": 3,
+        "공중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "S-스네이크 (끝딜 폭뎀증3)",
+          "tier": "세라핌",
+          "sourceText": "[핸라핌] 끝딜 폭뎀증 공중이동\n▶ 폭뎀딜러와 잘 어울림"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "3A0h",
+      "name": "S-호크",
+      "tier": "세라핌",
+      "sourceName": "S-호크 (깍35, 광보잡 단일암브2)",
+      "sourceTier": "세라핌",
+      "sourceText": "[검라핌] 공중이동",
+      "abilities": {
+        "방어력 감소": 35,
+        "광폭화": true,
+        "보스 잡기": true,
+        "단일아머브레이크": 2,
+        "공중이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "S-호크 (깍35, 광보잡 단일암브2)",
+          "tier": "세라핌",
+          "sourceText": "[검라핌] 공중이동"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "0A0h",
+      "name": "S-샤크",
+      "tier": "세라핌",
+      "sourceName": "S-샤크 (깍20 암브 체젠 스플)",
+      "sourceTier": "세라핌",
+      "sourceText": "[징라핌] 20초마다 3명 투지 부여 (공증 55, 체젠 1.75)",
+      "abilities": {
+        "방어력 감소": 20,
+        "아머브레이크": true,
+        "체력 재생": "수치 미표기",
+        "조건부공격력 증가": 55,
+        "조건부체력 재생": 1.75
+      },
+      "notes": [
+        "20초마다 3명에게 투지 부여."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "S-샤크 (깍20 암브 체젠 스플)",
+          "tier": "세라핌",
+          "sourceText": "[징라핌] 20초마다 3명 투지 부여 (공증 55, 체젠 1.75)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "1A0h",
+      "name": "S-베어",
+      "tier": "세라핌",
+      "sourceName": "S-베어 (광보잡 마뎀증 마방깍)",
+      "sourceTier": "세라핌",
+      "sourceText": "[쿠라핌] 공중이동 순간이동\n▶ 발동이감(믿음직)\n▶ 마뎀딜러와 잘 어울림",
+      "abilities": {
+        "광폭화": true,
+        "보스 잡기": true,
+        "마법데미지 증폭": "수치 미표기",
+        "마법방어력 감소": "수치 미표기",
+        "발동이동속도 감소": "수치 미표기",
+        "공중이동": true,
+        "순간이동": true
+      },
+      "notes": [],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "S-베어 (광보잡 마뎀증 마방깍)",
+          "tier": "세라핌",
+          "sourceText": "[쿠라핌] 공중이동 순간이동\n▶ 발동이감(믿음직)\n▶ 마뎀딜러와 잘 어울림"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "E90H",
+      "name": "도플라밍고",
+      "tier": "초월 [물딜]",
+      "sourceName": "도플라밍고 (스플딜러 혼자이감끝 발동깍60)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "어둠의조커 / joker tr▶ 스플딜러 발동이감(믿음직)\n▶ 혼자이감커버됨(발이감변수있음)\n▶ 마나스킬때강함 발동깍60\n▷ 특강(필수) : 마나스킬 때 적을 모아줌\n▶ 다른 상위를 섞기보다 솔딜로(또는 알비다정도만) 쓰고 부족한 방깎을 보완",
+      "abilities": {
+        "발동방어력 감소": 60
+      },
+      "notes": [
+        "스플딜러",
+        "발동이감은 믿음직하나 수치는 미기재",
+        "혼자 이감 커버됨(발이감 변수 있음)",
+        "마나스킬 때 강함",
+        "특강(필수): 마나스킬 때 적을 모아줌",
+        "다른 상위를 섞기보다 솔딜 또는 알비다 정도만 사용하고 부족한 방깎 보완"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "도플라밍고 (스플딜러 혼자이감끝 발동깍60)",
+          "tier": "초월 [물딜]",
+          "sourceText": "어둠의조커 / joker tr▶ 스플딜러 발동이감(믿음직)\n▶ 혼자이감커버됨(발이감변수있음)\n▶ 마나스킬때강함 발동깍60\n▷ 특강(필수) : 마나스킬 때 적을 모아줌\n▶ 다른 상위를 섞기보다 솔딜로(또는 알비다정도만) 쓰고 부족한 방깎을 보완"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "890H",
+      "name": "로빈",
+      "tier": "초월 [물딜]",
+      "sourceName": "로빈 (스킬딜러 깍45 스턴1.2)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "악마의자식 / robin tr▶ 보조스킬딜러 깍45 스턴\n▷ 특강 : 액티브스킬(보조딜)\n[ 추천조합 : 카타쿠리 모비딕 마르코전설 흰수염전설 센고쿠전설 ]\n※ 보조딜러 필수",
+      "abilities": {
+        "방어력 감소": 45,
+        "스턴": 1.2
+      },
+      "notes": [
+        "보조 스킬딜러",
+        "특강: 액티브스킬(보조딜)",
+        "보조딜러 필수"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로빈 (스킬딜러 깍45 스턴1.2)",
+          "tier": "초월 [물딜]",
+          "sourceText": "악마의자식 / robin tr▶ 보조스킬딜러 깍45 스턴\n▷ 특강 : 액티브스킬(보조딜)\n[ 추천조합 : 카타쿠리 모비딕 마르코전설 흰수염전설 센고쿠전설 ]\n※ 보조딜러 필수"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "LB0H",
+      "name": "료쿠규",
+      "tier": "초월 [물딜]",
+      "sourceName": "료쿠규 (스킬딜러 깍50 발이감25)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "신해군대장초록소 / ryokugyu tr▶ 스킬딜러 스플딜러(마나변신)\n▶ 방깍35 발동깍15 발이감25(믿음직)\n▷ 특강 : 보조딜 암브 피해량증폭\n※ 특강 시 암브25이상 필수(스킬발동조건)\n▶ 보잡이 약해 별도 보잡 유닛 필요",
+      "abilities": {
+        "방어력 감소": 35,
+        "발동방어력 감소": 15,
+        "발동이동속도 감소": 25,
+        "조건부특강아머브레이크": true
+      },
+      "notes": [
+        "스킬딜러·스플딜러(마나변신)",
+        "발이감25는 믿음직",
+        "특강: 보조딜, 암브, 피해량 증폭",
+        "특강 시 암브25 이상이 스킬 발동 조건",
+        "보잡이 약해 별도 보잡 유닛 필요"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "료쿠규 (스킬딜러 깍50 발이감25)",
+          "tier": "초월 [물딜]",
+          "sourceText": "신해군대장초록소 / ryokugyu tr▶ 스킬딜러 스플딜러(마나변신)\n▶ 방깍35 발동깍15 발이감25(믿음직)\n▷ 특강 : 보조딜 암브 피해량증폭\n※ 특강 시 암브25이상 필수(스킬발동조건)\n▶ 보잡이 약해 별도 보잡 유닛 필요"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "990H",
+      "name": "루피",
+      "tier": "초월 [물딜]",
+      "sourceName": "루피 (스플딜러 스턴0.5 발동이감33)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "▶ 스플딜러 보조스턴 발동이감(믿음직)\n▷ 특강 : 딜증가 스턴 0.3→0.5\n※ 니카 예정이라면 특강X\n▶ 강력한 딜러지만 방깍이 없어 풀깍 맞추기 어려움\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 부족한 방깍을 보완",
+      "abilities": {
+        "스턴": 0.3,
+        "조건부특강스턴": 0.5
+      },
+      "notes": [
+        "스플딜러·보조스턴",
+        "발동이감은 믿음직하나 수치는 미기재",
+        "특강: 딜 증가, 스턴 0.3→0.5",
+        "니카 예정이면 특강하지 않음",
+        "방깎 없음"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루피 (스플딜러 스턴0.5 발동이감33)",
+          "tier": "초월 [물딜]",
+          "sourceText": "▶ 스플딜러 보조스턴 발동이감(믿음직)\n▷ 특강 : 딜증가 스턴 0.3→0.5\n※ 니카 예정이라면 특강X\n▶ 강력한 딜러지만 방깍이 없어 풀깍 맞추기 어려움\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 부족한 방깍을 보완"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "490H",
+      "name": "바질호킨스",
+      "tier": "초월 [물딜]",
+      "sourceName": "바질호킨스 (스킬딜러 깍32 이감7 점치기)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "운명의마술사 / hawkins tr▶ 스킬딜러 방깍25\n▷ 특강(필수) : 미니 스트로맨 소환\n스킬쿨초 방깍7 이감7\n▶ 디버프 개수 비례 딜증가\n▶ 점치기로 전설 위습까지 획득 가능",
+      "abilities": {
+        "방어력 감소": 25,
+        "조건부스킬쿨초방어력 감소": 7,
+        "조건부스킬쿨초이동속도 감소": 7
+      },
+      "notes": [
+        "스킬딜러",
+        "특강(필수): 미니 스트로맨 소환",
+        "스킬 쿨초 시 방깎7·이감7",
+        "디버프 개수 비례 딜 증가",
+        "점치기로 전설 위습까지 획득 가능"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바질호킨스 (스킬딜러 깍32 이감7 점치기)",
+          "tier": "초월 [물딜]",
+          "sourceText": "운명의마술사 / hawkins tr▶ 스킬딜러 방깍25\n▷ 특강(필수) : 미니 스트로맨 소환\n스킬쿨초 방깍7 이감7\n▶ 디버프 개수 비례 딜증가\n▶ 점치기로 전설 위습까지 획득 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "XB0H",
+      "name": "보니",
+      "tier": "초월 [물딜]",
+      "sourceName": "보니 (스킬딜러 스턴0.6 중첩깍40)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "※ 비추천(어렵고 안 좋음)\n▶ 스킬딜러 보조스턴 나이조작\n▶ 나이조작(누적방깍40) 자리고정\n▶ 마나스킬 변신 했을 때 강함\n▷ 특강 : 마나 많이 쓰고 딜이 쎄짐\n\n※ 마딜에서 단일로 쓰는 게 더 좋음\n※ 마딜로 쓸 때는 특강 안 하고 변신을 더 오래 유지하는 걸 추천\n[ 추천조합(마딜) : 코알라 키쿠 방주맥심(에넬제한) ]",
+      "abilities": {
+        "스턴": 0.6,
+        "중첩방어력 감소": 40
+      },
+      "notes": [
+        "비추천(어렵고 안 좋음)",
+        "스킬딜러·보조스턴·나이조작",
+        "나이조작 누적방깎40, 자리고정",
+        "마나스킬 변신 시 강함",
+        "특강: 마나 많이 쓰고 딜이 셈"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "보니 (스킬딜러 스턴0.6 중첩깍40)",
+          "tier": "초월 [물딜]",
+          "sourceText": "※ 비추천(어렵고 안 좋음)\n▶ 스킬딜러 보조스턴 나이조작\n▶ 나이조작(누적방깍40) 자리고정\n▶ 마나스킬 변신 했을 때 강함\n▷ 특강 : 마나 많이 쓰고 딜이 쎄짐\n\n※ 마딜에서 단일로 쓰는 게 더 좋음\n※ 마딜로 쓸 때는 특강 안 하고 변신을 더 오래 유지하는 걸 추천\n[ 추천조합(마딜) : 코알라 키쿠 방주맥심(에넬제한) ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "290H",
+      "name": "사보",
+      "tier": "초월 [물딜]",
+      "sourceName": "사보 (스플딜러 깍35 이감35)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "▶ 스플딜러 이감35 발이감30(못믿음)\n▶ 방깍35 버프개수비례딜증가\n▷ 특강(필수) : 범위딜 공속20 발이감30\n[추천조합 : 레일리전설 드래곤 센고쿠 퀸 이완히든 혼포인트 ]\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 방깍과 버프를 집중적으로 보완\n▶ 상위 유닛 중에서는 패를 잘 먹었다면 버기 영원과 조합이 좋음",
+      "abilities": {
+        "이동속도 감소": 35,
+        "방어력 감소": 35,
+        "조건부특강공격속도 증가": 20,
+        "조건부특강발동이동속도 감소": 30
+      },
+      "notes": [
+        "스플딜러",
+        "발이감30은 못믿음",
+        "버프 개수 비례 딜 증가",
+        "특강(필수): 범위딜, 공속20, 발이감30"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "사보 (스플딜러 깍35 이감35)",
+          "tier": "초월 [물딜]",
+          "sourceText": "▶ 스플딜러 이감35 발이감30(못믿음)\n▶ 방깍35 버프개수비례딜증가\n▷ 특강(필수) : 범위딜 공속20 발이감30\n[추천조합 : 레일리전설 드래곤 센고쿠 퀸 이완히든 혼포인트 ]\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 방깍과 버프를 집중적으로 보완\n▶ 상위 유닛 중에서는 패를 잘 먹었다면 버기 영원과 조합이 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "DB0H",
+      "name": "야마토",
+      "tier": "초월 [물딜]",
+      "sourceName": "야마토 (스플딜러 방깍25 적이속+10)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "오니히메 / yamato tr▶ 스플딜러 방깍25 단일스턴\n▷ 특강(필수) : 스킬강화(딜증가)\n▶ 적 이속+10 ※ 풀이감 필수\n▶ 적 이속이 낮을수록 딜 증가\n[추천조합 : 이완히든 모비딕 킹]",
+      "abilities": {
+        "방어력 감소": 25,
+        "이동속도 감소": -10
+      },
+      "notes": [
+        "스플딜러·단일스턴",
+        "특강(필수): 스킬강화(딜 증가)",
+        "적 이동속도 +10 패널티",
+        "풀이감 필수",
+        "적 이동속도가 낮을수록 딜 증가"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "야마토 (스플딜러 방깍25 적이속+10)",
+          "tier": "초월 [물딜]",
+          "sourceText": "오니히메 / yamato tr▶ 스플딜러 방깍25 단일스턴\n▷ 특강(필수) : 스킬강화(딜증가)\n▶ 적 이속+10 ※ 풀이감 필수\n▶ 적 이속이 낮을수록 딜 증가\n[추천조합 : 이완히든 모비딕 킹]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B90H",
+      "name": "우솝",
+      "tier": "초월 [물딜]",
+      "sourceName": "우솝 (스플딜러 깍30 보잡)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "▶ 스플딜러 방깍30 보잡\n▷ 특강(필수) : 식물 3개\n완두콩(스플뎀)\n백설콩(스턴0.27)\n해바라기(목재생성)\n먹깨비(유닛삭제)\n▶ 빨리 뽑아서 해바라기로 목재 얻고 50라 이후에 완두콩으로 교체(스턴 부족하면 백설콩)",
+      "abilities": {
+        "방어력 감소": 30,
+        "보스 잡기": true,
+        "조건부특강스턴": 0.27,
+        "조건부특강유닛삭제": true
+      },
+      "notes": [
+        "스플딜러",
+        "특강(필수): 식물 3개",
+        "특강 식물: 완두콩(스플뎀), 백설콩(스턴0.27), 해바라기(목재생성), 먹깨비(유닛삭제)",
+        "해바라기로 목재 생성"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "우솝 (스플딜러 깍30 보잡)",
+          "tier": "초월 [물딜]",
+          "sourceText": "▶ 스플딜러 방깍30 보잡\n▷ 특강(필수) : 식물 3개\n완두콩(스플뎀)\n백설콩(스턴0.27)\n해바라기(목재생성)\n먹깨비(유닛삭제)\n▶ 빨리 뽑아서 해바라기로 목재 얻고 50라 이후에 완두콩으로 교체(스턴 부족하면 백설콩)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "F90H",
+      "name": "조로",
+      "tier": "초월 [물딜]",
+      "sourceName": "조로 (스킬딜러 이감35 깍35 스턴0.4)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "최강의검사 / zoro tr▶ 스킬딜러 이감 방깍 보조스턴\n▷ 특강(필수) : 스킬 강화\n이감30→35 / 방깍30→35\n[추천조합 : 크로커제한 봉쿠레히든 로져]\n※ 아이템 슈스이로 강화 가능",
+      "abilities": {
+        "스턴": 0.4,
+        "이동속도 감소": 30,
+        "방어력 감소": 30,
+        "조건부특강이동속도 감소": 35,
+        "조건부특강방어력 감소": 35
+      },
+      "notes": [
+        "스킬딜러·보조스턴",
+        "특강(필수): 스킬 강화, 이감30→35·방깍30→35",
+        "아이템 슈스이로 강화 가능"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "조로 (스킬딜러 이감35 깍35 스턴0.4)",
+          "tier": "초월 [물딜]",
+          "sourceText": "최강의검사 / zoro tr▶ 스킬딜러 이감 방깍 보조스턴\n▷ 특강(필수) : 스킬 강화\n이감30→35 / 방깍30→35\n[추천조합 : 크로커제한 봉쿠레히든 로져]\n※ 아이템 슈스이로 강화 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "TB0H",
+      "name": "조로 염왕",
+      "tier": "초월 [물딜]",
+      "sourceName": "조로 염왕 (스킬딜러 이감42 깍42 스턴0.4)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "※ 흑도 슈스이로 조로 초월 강화\n▶ 스킬딜러 스턴0.4 이감42 방깍42 \n[추천조합 : 크로커제한 봉쿠레히든 로져]",
+      "abilities": {
+        "조건부아이템흑도슈스이스턴": 0.4,
+        "조건부아이템흑도슈스이이동속도 감소": 42,
+        "조건부아이템흑도슈스이방어력 감소": 42
+      },
+      "notes": [
+        "흑도 슈스이로 조로 초월 강화된 형태",
+        "스킬딜러",
+        "업그레이드 의존 수치만 기재되어 일반 보유 효과로 단정하지 않음"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "조로 염왕 (스킬딜러 이감42 깍42 스턴0.4)",
+          "tier": "초월 [물딜]",
+          "sourceText": "※ 흑도 슈스이로 조로 초월 강화\n▶ 스킬딜러 스턴0.4 이감42 방깍42 \n[추천조합 : 크로커제한 봉쿠레히든 로져]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "A90H",
+      "name": "징베",
+      "tier": "초월 [물딜]",
+      "sourceName": "징베 (스플딜러 마젠 암브)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "▶ 스플딜러 마젠 암브 발동이감(못믿음)\n▶ 보잡약간 암브비례딜증가\n▷ 특강 : 딜 스킬 추가\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n[추천조합 : 카벤디슈 알비다 킹제한 퀸 스모커전설 베르고]\n※ 스모커 전설은 필수",
+      "abilities": {
+        "아머브레이크": true
+      },
+      "notes": [
+        "스플딜러",
+        "마나 재생 및 발동이감은 수치 미기재, 발동이감은 못믿음",
+        "보잡 약간, 암브 비례 딜 증가",
+        "특강: 딜 스킬 추가",
+        "스킬조건 때문에 다른 암브 유닛 필수"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "징베 (스플딜러 마젠 암브)",
+          "tier": "초월 [물딜]",
+          "sourceText": "▶ 스플딜러 마젠 암브 발동이감(못믿음)\n▶ 보잡약간 암브비례딜증가\n▷ 특강 : 딜 스킬 추가\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n[추천조합 : 카벤디슈 알비다 킹제한 퀸 스모커전설 베르고]\n※ 스모커 전설은 필수"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "190H",
+      "name": "쵸파",
+      "tier": "초월 [물딜]",
+      "sourceName": "쵸파 (깍50 공증80 공속40)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "순록의사! / chopper tr▶ 공증80 공속40 방깍50\n▷ 특강 : 공증40 없어지고 스플딜러\n▶ 다른 스플딜러와 조합이 좋음\n▶ 보잡 유닛 반드시 필요함",
+      "abilities": {
+        "공격력 증가": 80,
+        "공격속도 증가": 40,
+        "방어력 감소": 50
+      },
+      "notes": [
+        "특강 시 공증80에서 공증40으로 변경되고 스플딜러가 됨",
+        "다른 스플딜러와 조합이 좋음",
+        "보잡 유닛 반드시 필요",
+        "특강 시 공증이 80에서 40으로 감소하는 변형이며 +40 추가 버프로 합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 (깍50 공증80 공속40)",
+          "tier": "초월 [물딜]",
+          "sourceText": "순록의사! / chopper tr▶ 공증80 공속40 방깍50\n▷ 특강 : 공증40 없어지고 스플딜러\n▶ 다른 스플딜러와 조합이 좋음\n▶ 보잡 유닛 반드시 필요함"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "390H",
+      "name": "쵸파 몬스터포인트 특강",
+      "tier": "초월 [물딜]",
+      "sourceName": "쵸파 몬스터포인트(특강) (스플딜러 깍50 공증40 공속40)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "▶ 공증40 공속40 방깍50\n▷ 특강 : 공증40 없어지고 스플딜러\n▶ 다른 스플딜러와 조합이 좋음\n▶ 보잡 유닛 반드시 필요함",
+      "abilities": {
+        "공격력 증가": 40,
+        "공격속도 증가": 40,
+        "방어력 감소": 50
+      },
+      "notes": [
+        "몬스터포인트(특강) 별도 물리 행",
+        "스플딜러",
+        "다른 스플딜러와 조합이 좋음",
+        "보잡 유닛 반드시 필요"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "쵸파 몬스터포인트(특강) (스플딜러 깍50 공증40 공속40)",
+          "tier": "초월 [물딜]",
+          "sourceText": "▶ 공증40 공속40 방깍50\n▷ 특강 : 공증40 없어지고 스플딜러\n▶ 다른 스플딜러와 조합이 좋음\n▶ 보잡 유닛 반드시 필요함"
+        }
+      ],
+      "mappingEvidence": [
+        "Known tmo-unit-additions special-upgrade alias: source “(특강)” corresponds to distinct 몬스터포인트 특강 rawcode."
+      ]
+    },
+    {
+      "rawcode": "X80H",
+      "name": "후지토라",
+      "tier": "초월 [물딜]",
+      "sourceName": "후지토라 (스플딜러 스턴1.1 이감55 암브)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "분노하는맹호 / fujitora tr▶ 스플딜러 이감 스턴 암브\n▷ 특강 : 딜 스킬 추가\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n[추천조합 : 베르고 퀸 버기 영원]\n※ 원스턴 불안함",
+      "abilities": {
+        "스턴": 1.1,
+        "이동속도 감소": 55,
+        "아머브레이크": true
+      },
+      "notes": [
+        "스플딜러",
+        "특강: 딜 스킬 추가",
+        "스킬조건 때문에 다른 암브 유닛 필수",
+        "원스턴 불안함"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "후지토라 (스플딜러 스턴1.1 이감55 암브)",
+          "tier": "초월 [물딜]",
+          "sourceText": "분노하는맹호 / fujitora tr▶ 스플딜러 이감 스턴 암브\n▷ 특강 : 딜 스킬 추가\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n[추천조합 : 베르고 퀸 버기 영원]\n※ 원스턴 불안함"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "AA0H",
+      "name": "베가펑크",
+      "tier": "초월 [마딜]",
+      "sourceName": "베가펑크 (검호) (소환딜러 스턴1.1 물/마딜가능 서포터)",
+      "sourceTier": "초월 [물딜]",
+      "sourceText": "세계최고의과학자 / vegapunk tr※ 특포6개필수 물마딜 겸용\n▶ 소환딜러 공증40 공속40 이감40\n▷ 특강(필수) : 요크(스턴1.1)\n▷ 물딜(필수) : 릴리스(광보잡 방깍40)\n▷ 마딜(필수) : 아틀라스(공비례폭뎀)\n※ 14스토리 격파 후 조합 가능",
+      "abilities": {
+        "공격력 증가": 40,
+        "공격속도 증가": 40,
+        "이동속도 감소": 40,
+        "조건부특강요크스턴": 1.1,
+        "조건부물딜릴리스보스 잡기": true,
+        "조건부물딜릴리스방어력 감소": 40
+      },
+      "notes": [
+        "소환딜러, 특성포인트 6개 필수, 물·마딜 겸용",
+        "특강(필수): 요크 스턴1.1",
+        "물딜(필수): 릴리스 광보잡·방깍40",
+        "마딜(필수): 아틀라스 공비례 폭뎀",
+        "14스토리 격파 후 조합 가능",
+        "같은 코드의 선택형 4개 항목에서 공통으로 확인된 값만 집계합니다. 선택형 효과를 중복 합산하지 않습니다."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "베가펑크 (검호) (소환딜러 스턴1.1 물/마딜가능 서포터)",
+          "tier": "초월 [물딜]",
+          "sourceText": "세계최고의과학자 / vegapunk tr※ 특포6개필수 물마딜 겸용\n▶ 소환딜러 공증40 공속40 이감40\n▷ 특강(필수) : 요크(스턴1.1)\n▷ 물딜(필수) : 릴리스(광보잡 방깍40)\n▷ 마딜(필수) : 아틀라스(공비례폭뎀)\n※ 14스토리 격파 후 조합 가능"
+        },
+        {
+          "name": "베가펑크 (핸콕) (소환딜러 스턴1.1 물/마딜가능 서포터)",
+          "tier": "초월 [물딜]",
+          "sourceText": "세계최고의과학자 / vegapunk tr※ 특포6개필수 물마딜 겸용\n▶ 소환딜러 공증40 공속40 이감40\n▷ 특강(필수) : 요크(스턴1.1)\n▷ 물딜(필수) : 릴리스(광보잡 방깍40)\n▷ 마딜(필수) : 아틀라스(공비례폭뎀)\n※ 14스토리 격파 후 조합 가능"
+        },
+        {
+          "name": "베가펑크 (쿠마) (소환딜러 스턴1.1 물/마딜가능 서포터)",
+          "tier": "초월 [물딜]",
+          "sourceText": "세계최고의과학자 / vegapunk tr※ 특포6개필수 물마딜 겸용\n▶ 소환딜러 공증40 공속40 이감40\n▷ 특강(필수) : 요크(스턴1.1)\n▷ 물딜(필수) : 릴리스(광보잡 방깍40)\n▷ 마딜(필수) : 아틀라스(공비례폭뎀)\n※ 14스토리 격파 후 조합 가능"
+        },
+        {
+          "name": "베가펑크 (징베) (소환딜러 스턴1.1 물/마딜가능 서포터)",
+          "tier": "초월 [물딜]",
+          "sourceText": "세계최고의과학자 / vegapunk tr※ 특포6개필수 물마딜 겸용\n▶ 소환딜러 공증40 공속40 이감40\n▷ 특강(필수) : 요크(스턴1.1)\n▷ 물딜(필수) : 릴리스(광보잡 방깍40)\n▷ 마딜(필수) : 아틀라스(공비례폭뎀)\n※ 14스토리 격파 후 조합 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation.",
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation.",
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation.",
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "C40h",
+      "name": "거프",
+      "tier": "불멸 [물딜]",
+      "sourceName": "거프 (스플딜러 스턴1.1 적방어+15 보잡)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "해군영웅거프 / garp im▶ 스플딜러 범위스턴  보잡\n▶ 버프 개수 비례 딜 증가\n▶  패널티 : 적 방어력 15 증가\n▷ 특강 : 마나스킬 딜 2배정도 증가\n▶ 다른 상위를 섞기보다 솔딜로(또는 쵸초 정도만) 쓰고 부족한 방깎을 보완",
+      "abilities": {
+        "스턴": 1.1,
+        "보스 잡기": true,
+        "방어력 감소": -15
+      },
+      "notes": [
+        "스플딜러·범위스턴",
+        "버프 개수 비례 딜 증가",
+        "패널티: 적 방어력 15 증가",
+        "특강: 마나스킬 딜 약 2배 증가",
+        "다른 상위를 섞기보다 솔딜 또는 쵸초 정도만 사용하고 부족한 방깎 보완"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "거프 (스플딜러 스턴1.1 적방어+15 보잡)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "해군영웅거프 / garp im▶ 스플딜러 범위스턴  보잡\n▶ 버프 개수 비례 딜 증가\n▶  패널티 : 적 방어력 15 증가\n▷ 특강 : 마나스킬 딜 2배정도 증가\n▶ 다른 상위를 섞기보다 솔딜로(또는 쵸초 정도만) 쓰고 부족한 방깎을 보완"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "940h",
+      "name": "레일리",
+      "tier": "불멸 [물딜]",
+      "sourceName": "레일리 (스플딜러 깍20 공속45 삭제)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "▶ 스플딜러 방깍20 공속45\n▶ 단일스턴 광잡 유닛삭제\n▷ 특강(필수) : 보조딜 노획물추가\n▶ 솔딜로 쓰거나 쵸초 or 크제와 조합\n▶ 보잡·이감·스턴·방깎이 부족하고 판매로 얻은 위습으로 유닛을 더 만들어야 해서 조합 난이도가 극악이므로 뉴비 비추천",
+      "abilities": {
+        "방어력 감소": 20,
+        "공격속도 증가": 45,
+        "유닛삭제": true,
+        "단일스턴": "수치 미표기",
+        "광폭화": true
+      },
+      "notes": [
+        "스플딜러·단일스턴·광잡",
+        "특강(필수): 보조딜, 노획물 추가",
+        "솔딜 또는 쵸초/크제와 조합",
+        "보잡·이감·스턴·방깎 부족",
+        "광잡과 단일스턴은 명시됐지만 스턴 수치는 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레일리 (스플딜러 깍20 공속45 삭제)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "▶ 스플딜러 방깍20 공속45\n▶ 단일스턴 광잡 유닛삭제\n▷ 특강(필수) : 보조딜 노획물추가\n▶ 솔딜로 쓰거나 쵸초 or 크제와 조합\n▶ 보잡·이감·스턴·방깎이 부족하고 판매로 얻은 위습으로 유닛을 더 만들어야 해서 조합 난이도가 극악이므로 뉴비 비추천"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "J40h",
+      "name": "로져",
+      "tier": "불멸 [물딜]",
+      "sourceName": "로져 (스킬딜러 이감50 깍60 공증60)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "해적왕골D로져 / roger im▶ 스킬딜러 단일스턴\n▶ 이감50 방깍60 공증60\n▷ 특강 : 액티브스킬(보잡 스턴)",
+      "abilities": {
+        "이동속도 감소": 50,
+        "방어력 감소": 60,
+        "공격력 증가": 60,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "스킬딜러·단일스턴",
+        "특강: 액티브스킬(보잡·스턴)"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로져 (스킬딜러 이감50 깍60 공증60)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "해적왕골D로져 / roger im▶ 스킬딜러 단일스턴\n▶ 이감50 방깍60 공증60\n▷ 특강 : 액티브스킬(보잡 스턴)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "180h",
+      "name": "불릿",
+      "tier": "불멸 [물딜]",
+      "sourceName": "불릿 (스플딜러 방깍40 암브 능력강화)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "괴물의후계자 / bullet im▶ 스플딜러 방깍40 암브 능력강화\n※ 흔함을 써서 능력강화 : 방깍부터 레전더리 찍고 나머지는 최소 유니크\n▶ 보스 못 잡으니 보잡 유닛 필요함\n▶ 다른 유닛부터 만들고 강화",
+      "abilities": {
+        "방어력 감소": 40,
+        "아머브레이크": true
+      },
+      "notes": [
+        "스플딜러·능력강화",
+        "흔함을 써서 능력강화: 방깎부터 레전더리, 나머지는 최소 유니크",
+        "보스 못 잡아 보잡 유닛 필요"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "불릿 (스플딜러 방깍40 암브 능력강화)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "괴물의후계자 / bullet im▶ 스플딜러 방깍40 암브 능력강화\n※ 흔함을 써서 능력강화 : 방깍부터 레전더리 찍고 나머지는 최소 유니크\n▶ 보스 못 잡으니 보잡 유닛 필요함\n▶ 다른 유닛부터 만들고 강화"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "F40h",
+      "name": "스코퍼가반",
+      "tier": "불멸 [물딜]",
+      "sourceName": "스코퍼가반 (단일방깍60 한마리씩잡음)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "▶ 단일방깍60 단일스턴\n▶ 한마리씩잡는딜러\n▷ 특강 : [팔십효사] 딜비례 대상 추가\n[견문색패기] 자신공증50 / 보스깍180\n\n[ 추천조합 : 쵸파초월, 이감·스턴 없이 풀방깍으로 한마리씩 빠르게 정리 ]\n※ 카르가라와 스킬이 겹치니 주의",
+      "abilities": {
+        "단일방어력 감소": 60,
+        "조건부특강자신공격력 증가": 50,
+        "조건부특강보스방어력 감소": 180,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "한마리씩 잡는 딜러·단일스턴",
+        "특강: 팔십효사 딜비례 대상 추가, 견문색패기 자신공증50·보스깍180"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {
+        "단일방어력 감소": "gaban-kargara-youmu-single-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "스코퍼가반 (단일방깍60 한마리씩잡음)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "▶ 단일방깍60 단일스턴\n▶ 한마리씩잡는딜러\n▷ 특강 : [팔십효사] 딜비례 대상 추가\n[견문색패기] 자신공증50 / 보스깍180\n\n[ 추천조합 : 쵸파초월, 이감·스턴 없이 풀방깍으로 한마리씩 빠르게 정리 ]\n※ 카르가라와 스킬이 겹치니 주의"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M70h",
+      "name": "카이도",
+      "tier": "불멸 [물딜]",
+      "sourceName": "카이도 (스플딜러 이감60 중첩방깍 보잡약간)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "▶ 스플딜러 이감60 중첩방깍 보잡약간\n▶ 아군공격력 75% 감소\n▶ 공속 챙겨줘야함(로우 베이비5변화)\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 방깍을 보완\n▶ 상위 중에서는 알비다 베가펑크 쵸파초월(특강x)이 어울림",
+      "abilities": {
+        "이동속도 감소": 60
+      },
+      "notes": [
+        "스플딜러·중첩방깎·보잡 약간",
+        "중첩방깎 수치 미기재",
+        "아군 공격력 75% 감소 패널티는 일반 공격력 증가 합산값으로 처리하지 않음",
+        "공속을 챙겨줘야 함",
+        "다른 상위를 섞기보다 솔딜로 쓰고 방깎 보완"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카이도 (스플딜러 이감60 중첩방깍 보잡약간)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "▶ 스플딜러 이감60 중첩방깍 보잡약간\n▶ 아군공격력 75% 감소\n▶ 공속 챙겨줘야함(로우 베이비5변화)\n▶ 다른 상위를 섞기보다 솔딜로 쓰고 방깍을 보완\n▶ 상위 중에서는 알비다 베가펑크 쵸파초월(특강x)이 어울림"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A40h",
+      "name": "흰수염",
+      "tier": "불멸 [물딜]",
+      "sourceName": "흰수염 (스플딜러 스턴0.6 깍45)",
+      "sourceTier": "불멸 [물딜]",
+      "sourceText": "대해적흰수염 / newgate im▶스플딜러 보조스턴 발동이감(못믿음)\n▷ 특강 : 스킬강화\n[추천조합 : 쵸초 버영 크제]",
+      "abilities": {
+        "스턴": 0.6,
+        "방어력 감소": 45
+      },
+      "notes": [
+        "스플딜러·보조스턴",
+        "발동이감은 못믿음, 수치 미기재",
+        "특강: 스킬강화"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "흰수염 (스플딜러 스턴0.6 깍45)",
+          "tier": "불멸 [물딜]",
+          "sourceText": "대해적흰수염 / newgate im▶스플딜러 보조스턴 발동이감(못믿음)\n▷ 특강 : 스킬강화\n[추천조합 : 쵸초 버영 크제]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "KB0H",
+      "name": "니카(루초)",
+      "tier": "영원 [물딜]",
+      "sourceName": "니카 (루초) (스플딜러 스턴1.1 깍35 보잡)",
+      "sourceTier": "영원 [물딜]",
+      "sourceText": "태양의신 / nika et※ 아이템 '태양신의 흔적' 필요\n▶ 스플딜러 스턴 단일스턴 방깍35 보잡\n▶ 매우 쎄서 방깍 다소 낮아도 클리어 가능\n▶ 적의 이동속도가 빠를수록 강해짐\n▶ 지형무시이동(1시가능)",
+      "abilities": {
+        "스턴": 1.1,
+        "방어력 감소": 35,
+        "보스 잡기": true,
+        "단일스턴": "수치 미표기",
+        "지형무시이동": true
+      },
+      "notes": [
+        "아이템 태양신의 흔적 필요",
+        "스플딜러·단일스턴",
+        "적 이동속도가 빠를수록 강해짐",
+        "지형무시이동(1시 가능)"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "니카 (루초) (스플딜러 스턴1.1 깍35 보잡)",
+          "tier": "영원 [물딜]",
+          "sourceText": "태양의신 / nika et※ 아이템 '태양신의 흔적' 필요\n▶ 스플딜러 스턴 단일스턴 방깍35 보잡\n▶ 매우 쎄서 방깍 다소 낮아도 클리어 가능\n▶ 적의 이동속도가 빠를수록 강해짐\n▶ 지형무시이동(1시가능)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "KB0H_",
+      "name": "니카(뱀초)",
+      "tier": "영원 [물딜]",
+      "sourceName": "니카 (뱀초) (스플딜러 스턴1.1 깍35 보잡)",
+      "sourceTier": "영원 [물딜]",
+      "sourceText": "태양의신 / nika et※ 아이템 '태양신의 흔적' 필요\n▶ 스플딜러 스턴 단일스턴 방깍35 보잡\n▶ 매우 쎄서 방깍 다소 낮아도 클리어 가능\n▶ 적의 이동속도가 빠를수록 강해짐\n▶ 지형무시이동(1시가능)",
+      "abilities": {
+        "스턴": 1.1,
+        "방어력 감소": 35,
+        "보스 잡기": true,
+        "단일스턴": "수치 미표기",
+        "지형무시이동": true
+      },
+      "notes": [
+        "아이템 태양신의 흔적 필요",
+        "스플딜러·단일스턴",
+        "적 이동속도가 빠를수록 강해짐",
+        "지형무시이동(1시 가능)"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "니카 (뱀초) (스플딜러 스턴1.1 깍35 보잡)",
+          "tier": "영원 [물딜]",
+          "sourceText": "태양의신 / nika et※ 아이템 '태양신의 흔적' 필요\n▶ 스플딜러 스턴 단일스턴 방깍35 보잡\n▶ 매우 쎄서 방깍 다소 낮아도 클리어 가능\n▶ 적의 이동속도가 빠를수록 강해짐\n▶ 지형무시이동(1시가능)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A50h",
+      "name": "버기",
+      "tier": "영원 [물딜]",
+      "sourceName": "버기 (소환딜러 깍41 스턴0.5 이감25 공증 공속)",
+      "sourceTier": "영원 [물딜]",
+      "sourceText": "천냥광대 / buggy et▶ 소환딜러 보조스턴 방깍41\n▶ 이감25 공증33 공속65\n▷ 특강 : 보스/광폭/스토리 대상 소환스킬\n▶ 다른 스플딜러와 잘 어울림\n※ 재료가 너무 비싸 뉴비 비추천(샹크스, 마젤란 없이 가기 힘듦)",
+      "abilities": {
+        "스턴": 0.5,
+        "방어력 감소": 41,
+        "이동속도 감소": 25,
+        "공격력 증가": 33,
+        "공격속도 증가": 65
+      },
+      "notes": [
+        "소환딜러·보조스턴",
+        "특강: 보스/광폭/스토리 대상 소환스킬",
+        "다른 스플딜러와 잘 어울림",
+        "재료가 비싸 뉴비 비추천"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "버기 (소환딜러 깍41 스턴0.5 이감25 공증 공속)",
+          "tier": "영원 [물딜]",
+          "sourceText": "천냥광대 / buggy et▶ 소환딜러 보조스턴 방깍41\n▶ 이감25 공증33 공속65\n▷ 특강 : 보스/광폭/스토리 대상 소환스킬\n▶ 다른 스플딜러와 잘 어울림\n※ 재료가 너무 비싸 뉴비 비추천(샹크스, 마젤란 없이 가기 힘듦)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "B50h",
+      "name": "카벤딧슈",
+      "tier": "영원 [물딜]",
+      "sourceName": "카벤딧슈 (스플딜러 스턴1 깍35 단일암브)",
+      "sourceTier": "영원 [물딜]",
+      "sourceText": "해적왕자 / cavendish et▶ 스플딜러 스턴 방깎35 단일암브\n▷ 특강 : 암브 광보잡 처형",
+      "abilities": {
+        "스턴": 1,
+        "방어력 감소": 35,
+        "단일아머브레이크": true
+      },
+      "notes": [
+        "스플딜러",
+        "특강: 암브·광보잡·처형"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카벤딧슈 (스플딜러 스턴1 깍35 단일암브)",
+          "tier": "영원 [물딜]",
+          "sourceText": "해적왕자 / cavendish et▶ 스플딜러 스턴 방깎35 단일암브\n▷ 특강 : 암브 광보잡 처형"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I50h",
+      "name": "레베카",
+      "tier": "제한됨",
+      "sourceName": "레베카 (스플딜러 방깍38)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "▶ 스플딜러 방깍38 단일스턴\n▶ 발동이감(못믿음)\n▷ 특강 : [반복수련] 즉시완료\n[트루에노 센텐시아] 범위+단일적추가딜\n▶ 슈가로 이득보다 49라 조합하고 특강\n※ 특강 안 하면 스킬 레벨업이 느려 빨리 만들어도 끝날쯤에 20레벨\n▶ 만들긴 쉬우나 딜이 약해 조합 난도 높음(뉴비 비추천)",
+      "abilities": {
+        "방어력 감소": 38,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "스플딜러·단일스턴",
+        "발동이감은 못믿음, 수치 미기재",
+        "특강: 반복수련 즉시완료, 트루에노 센텐시아 범위+단일 적 추가딜"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레베카 (스플딜러 방깍38)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "▶ 스플딜러 방깍38 단일스턴\n▶ 발동이감(못믿음)\n▷ 특강 : [반복수련] 즉시완료\n[트루에노 센텐시아] 범위+단일적추가딜\n▶ 슈가로 이득보다 49라 조합하고 특강\n※ 특강 안 하면 스킬 레벨업이 느려 빨리 만들어도 끝날쯤에 20레벨\n▶ 만들긴 쉬우나 딜이 약해 조합 난도 높음(뉴비 비추천)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q90h",
+      "name": "마르코",
+      "tier": "제한됨 [물딜]",
+      "sourceName": "마르코 (불사조폼) (스플딜러 이감45 체젠3)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "※ 아이템 '불사조의 깃털' 필요\n▶ 불사조폼[물딜] : 스플딜러\n▶ 이감45 체젠3 공중이동\n▷ 특강(애매) : 이감60 체젠4\n▶ 딜은 쎈데 방깍 맞추기 힘들기 때문에 뉴비 비추천\n[ 추천조합 : 로빈초월 카타쿠리 모비딕호 ]",
+      "abilities": {
+        "이동속도 감소": 45,
+        "체력 재생": 3,
+        "공중이동": true,
+        "조건부특강이동속도 감소": 60,
+        "조건부특강체력 재생": 4
+      },
+      "notes": [
+        "아이템 불사조의 깃털 필요",
+        "불사조폼 물딜 스플딜러",
+        "특강(애매): 이감45→60, 체젠3→4",
+        "방깎 맞추기 어려움"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마르코 (불사조폼) (스플딜러 이감45 체젠3)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "※ 아이템 '불사조의 깃털' 필요\n▶ 불사조폼[물딜] : 스플딜러\n▶ 이감45 체젠3 공중이동\n▷ 특강(애매) : 이감60 체젠4\n▶ 딜은 쎈데 방깍 맞추기 힘들기 때문에 뉴비 비추천\n[ 추천조합 : 로빈초월 카타쿠리 모비딕호 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Known recipe/form distinction: Q90h is the separate physical Marco form; retained separately from O80h human form."
+      ]
+    },
+    {
+      "rawcode": "Q80h",
+      "name": "알비다",
+      "tier": "제한됨",
+      "sourceName": "알비다 (넉백 스킬보조딜러 깍25)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "※ 조합에 특성포인트 4개 필요\n▶ 넉백 스킬보조딜러 방깍25\n▶ 풀이감일 때 혼자 스턴 역할 가능\n▶ 공속고정 다른딜러필수\n[추천조합: 도초 징초 킹제 로져]",
+      "abilities": {
+        "방어력 감소": 25
+      },
+      "notes": [
+        "넉백 스킬보조딜러",
+        "풀이감일 때 혼자 스턴 역할 가능",
+        "공속고정, 다른 딜러 필수"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "알비다 (넉백 스킬보조딜러 깍25)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "※ 조합에 특성포인트 4개 필요\n▶ 넉백 스킬보조딜러 방깍25\n▶ 풀이감일 때 혼자 스턴 역할 가능\n▶ 공속고정 다른딜러필수\n[추천조합: 도초 징초 킹제 로져]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I70h",
+      "name": "카타쿠리",
+      "tier": "제한됨",
+      "sourceName": "카타쿠리 (스킬딜러 깍30 체젠 보잡약간)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "▶ 스킬딜러 스플딜러(체력스킬) 체젠\n▶ 보잡약간 방깍30 암브6(1번) 단일스턴\n▷ 특강 : 딜증가\n[추천조합 : 로빈초월 모비딕 샤크 마르코전설 흰수염]",
+      "abilities": {
+        "방어력 감소": 30,
+        "아머브레이크": true
+      },
+      "notes": [
+        "스킬딜러·스플딜러(체력스킬)",
+        "체력 재생 수치 미기재",
+        "보잡 약간",
+        "암브6(1번), 단일스턴",
+        "특강: 딜 증가"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "카타쿠리 (스킬딜러 깍30 체젠 보잡약간)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "▶ 스킬딜러 스플딜러(체력스킬) 체젠\n▶ 보잡약간 방깍30 암브6(1번) 단일스턴\n▷ 특강 : 딜증가\n[추천조합 : 로빈초월 모비딕 샤크 마르코전설 흰수염]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "F50h",
+      "name": "크로커다일",
+      "tier": "제한됨",
+      "sourceName": "크로커다일 (스킬딜러 깍25 이감40 스턴0.5)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "▶ 약한스킬딜러 이감40 방깍25 보조스턴\n▷ 특강 :  체력스킬(암브)\n▶ 여러 상위와 잘 어울림",
+      "abilities": {
+        "이동속도 감소": 40,
+        "방어력 감소": 25,
+        "스턴": 0.5,
+        "조건부특강아머브레이크": true
+      },
+      "notes": [
+        "약한 스킬딜러·보조스턴",
+        "특강: 체력스킬(암브)",
+        "여러 상위와 잘 어울림"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "크로커다일 (스킬딜러 깍25 이감40 스턴0.5)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "▶ 약한스킬딜러 이감40 방깍25 보조스턴\n▷ 특강 :  체력스킬(암브)\n▶ 여러 상위와 잘 어울림"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "IA0h",
+      "name": "킹",
+      "tier": "제한됨",
+      "sourceName": "킹 (스플딜러 발동깍30 단일암브)",
+      "sourceTier": "제한됨 [물딜]",
+      "sourceText": "▶ 스플딜러 발동방깍30 단일암브\n▷ 특강 : 딜증가 +깍5\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n▶ 조합 맞추기 어려워서 뉴비에게 비추천\n[추천조합: 징베전설(초월) 퀸 스모커전설]",
+      "abilities": {
+        "발동방어력 감소": 30,
+        "단일아머브레이크": true,
+        "조건부특강방어력 감소": 5
+      },
+      "notes": [
+        "스플딜러",
+        "특강: 딜 증가 + 방깎5",
+        "스킬조건 때문에 다른 암브 유닛 필수",
+        "조합 맞추기 어려워 뉴비 비추천"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "킹 (스플딜러 발동깍30 단일암브)",
+          "tier": "제한됨 [물딜]",
+          "sourceText": "▶ 스플딜러 발동방깍30 단일암브\n▷ 특강 : 딜증가 +깍5\n▶ 스킬조건 때문에 다른 암브 유닛 필수\n▶ 조합 맞추기 어려워서 뉴비에게 비추천\n[추천조합: 징베전설(초월) 퀸 스모커전설]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "2A0h",
+      "name": "료우기 시키",
+      "tier": "신비함",
+      "sourceName": "료우기 시키 (깍44)",
+      "sourceTier": "신비함 [물딜]",
+      "sourceText": "보스/스토리 최고\n한마리씩 죽이는 스킬딜러\n광폭화도 잘 잡으니 방깎 잘 챙겨주면 됨",
+      "abilities": {
+        "방어력 감소": 44,
+        "보스 잡기": true,
+        "광폭화": true
+      },
+      "notes": [
+        "보스/스토리 최고",
+        "한마리씩 죽이는 스킬딜러",
+        "광폭화도 잘 잡음",
+        "방깎을 잘 챙겨줘야 함"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "료우기 시키 (깍44)",
+          "tier": "신비함 [물딜]",
+          "sourceText": "보스/스토리 최고\n한마리씩 죽이는 스킬딜러\n광폭화도 잘 잡으니 방깎 잘 챙겨주면 됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "380h",
+      "name": "샌즈",
+      "tier": "신비함",
+      "sourceName": "샌즈 (깍35, 이감30, 발동깍15)",
+      "sourceTier": "신비함 [물딜]",
+      "sourceText": "*30강하고 안 하고 차이 큼\n브룩 안흔함 3개\n브룩 희귀함 2개 필요\n\n도움소 독약과 방깎 중복 안됨",
+      "abilities": {
+        "방어력 감소": 35,
+        "이동속도 감소": 30,
+        "발동방어력 감소": 15
+      },
+      "notes": [
+        "30강 여부 차이가 큼",
+        "브룩 안흔함 3개·브룩 희귀함 2개 필요"
+      ],
+      "exclusions": [
+        "도움소 독약과 방깎은 중복 안됨"
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "샌즈 (깍35, 이감30, 발동깍15)",
+          "tier": "신비함 [물딜]",
+          "sourceText": "*30강하고 안 하고 차이 큼\n브룩 안흔함 3개\n브룩 희귀함 2개 필요\n\n도움소 독약과 방깎 중복 안됨"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized local catalog base name and base grade match after removing source ability annotation."
+      ]
+    },
+    {
+      "rawcode": "CC0h",
+      "name": "콘파쿠 요우무",
+      "tier": "신비함",
+      "sourceName": "요우무 (단일깍40/발동이감50)",
+      "sourceTier": "신비함 [물딜]",
+      "sourceText": "단일방어력감소40\n(카르가라, 가반과 중첩 안됨)\n발동이감50\n\n공증 버프 해주면 매우 좋음(혼포인트, 이완코브 히든)",
+      "abilities": {
+        "단일방어력 감소": 40,
+        "발동이동속도 감소": 50
+      },
+      "notes": [
+        "공증 버프를 받으면 매우 좋음"
+      ],
+      "exclusions": [
+        "카르가라·가반과 중첩 안됨"
+      ],
+      "nonStackingGroups": {
+        "단일방어력 감소": "gaban-kargara-youmu-single-armor"
+      },
+      "sourceVariants": [
+        {
+          "name": "요우무 (단일깍40/발동이감50)",
+          "tier": "신비함 [물딜]",
+          "sourceText": "단일방어력감소40\n(카르가라, 가반과 중첩 안됨)\n발동이감50\n\n공증 버프 해주면 매우 좋음(혼포인트, 이완코브 히든)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R90h",
+      "name": "쿠죠 죠타로",
+      "tier": "신비함",
+      "sourceName": "죠타로 (깍25, 암브1, 공증20)",
+      "sourceTier": "신비함 [물딜]",
+      "sourceText": "스킬딜러 암브 \n*암브 중첩 비례해서 딜 증가, 다른 암브 유닛과 조합이 좋음",
+      "abilities": {
+        "방어력 감소": 25,
+        "아머브레이크": true,
+        "공격력 증가": 20
+      },
+      "notes": [
+        "스킬딜러",
+        "암브 중첩 비례 딜 증가",
+        "다른 암브 유닛과 조합이 좋음"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "죠타로 (깍25, 암브1, 공증20)",
+          "tier": "신비함 [물딜]",
+          "sourceText": "스킬딜러 암브 \n*암브 중첩 비례해서 딜 증가, 다른 암브 유닛과 조합이 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "CB0h",
+      "name": "타츠마키",
+      "tier": "신비함",
+      "sourceName": "타츠마키 (0.9스턴, 이감50, 암브1, 위습생성)",
+      "sourceTier": "신비함 [물딜]",
+      "sourceText": "0.9스턴 이감50 암브1\n위습 2개 생성(최대전설위습)",
+      "abilities": {
+        "스턴": 0.9,
+        "이동속도 감소": 50,
+        "아머브레이크": true
+      },
+      "notes": [
+        "위습 2개 생성(최대 전설 위습)"
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "타츠마키 (0.9스턴, 이감50, 암브1, 위습생성)",
+          "tier": "신비함 [물딜]",
+          "sourceText": "0.9스턴 이감50 암브1\n위습 2개 생성(최대전설위습)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "090H",
+      "name": "검은수염",
+      "tier": "초월 [마딜]",
+      "sourceName": "검은수염 (발동이감65 끌당 피해증폭)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "치밀하고비열한어둠 / teach tr※ 뉴비 절대 비추천\n▶ 발동이감 끌어당기기(마뎀증)\n▶ 한마리씩 끌어당겨서 단일 유닛이랑 같이 공격",
+      "abilities": {
+        "발동이동속도 감소": 65
+      },
+      "notes": [
+        "발동 시 끌어당기기와 마법 피해증폭이 언급되나 증폭 수치는 없음.",
+        "한 마리씩 끌어당기는 단일 운용."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "검은수염 (발동이감65 끌당 피해증폭)",
+          "tier": "초월 [마딜]",
+          "sourceText": "치밀하고비열한어둠 / teach tr※ 뉴비 절대 비추천\n▶ 발동이감 끌어당기기(마뎀증)\n▶ 한마리씩 끌어당겨서 단일 유닛이랑 같이 공격"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "V80H",
+      "name": "나미",
+      "tier": "초월 [마딜]",
+      "sourceName": "나미 (라인딜 발동이감45)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "날씨는맑음 / nami tr▶ 라인딜 마뎀증 발동이감(믿음직)\n▶ 골드획득량 증가\n▶ 탐색 보상 증가",
+      "abilities": {
+        "발동이동속도 감소": 45
+      },
+      "notes": [
+        "라인딜 및 마법 피해증폭 언급은 수치 없음."
+      ],
+      "exclusions": [
+        "골드 획득량·탐색 보상 증가는 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "나미 (라인딜 발동이감45)",
+          "tier": "초월 [마딜]",
+          "sourceText": "날씨는맑음 / nami tr▶ 라인딜 마뎀증 발동이감(믿음직)\n▶ 골드획득량 증가\n▶ 탐색 보상 증가"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "690H",
+      "name": "로우",
+      "tier": "초월 [마딜]",
+      "sourceName": "로우 (공비례폭뎀 발동이감40 현퍼딜 순간이동)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러 발동이감40\n▷ 특강 : 공비례폭뎀 공증 사라지고 범위고정딜로 변경\n▶ 현재 체력 비례 범위딜\n▶ 순간이동(무제한)\n※ 폭뎀 조합이면 특강 안 함\n[추천조합 : 센고쿠 불멸(특강)]",
+      "abilities": {
+        "발동이동속도 감소": 40,
+        "순간이동": true
+      },
+      "notes": [
+        "특강 시 공비례 폭발형 딜이 범위 고정딜로 변경되며, 폭발형 조합에서는 특강을 하지 않는다는 설명."
+      ],
+      "exclusions": [
+        "공격력 비례/현재 체력 비례 피해는 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "로우 (공비례폭뎀 발동이감40 현퍼딜 순간이동)",
+          "tier": "초월 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러 발동이감40\n▷ 특강 : 공비례폭뎀 공증 사라지고 범위고정딜로 변경\n▶ 현재 체력 비례 범위딜\n▶ 순간이동(무제한)\n※ 폭뎀 조합이면 특강 안 함\n[추천조합 : 센고쿠 불멸(특강)]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W80H",
+      "name": "루치",
+      "tier": "초월 [마딜]",
+      "sourceName": "루치 (단일 폭뎀증10 순간이동)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "검은정의를좇는하얀새 / lucci tr▶ 단일 폭뎀증10 순간이동 단일스턴",
+      "abilities": {
+        "단일폭발형 데미지 증폭": 10,
+        "순간이동": true,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "단일 스턴은 지속시간 수치 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "루치 (단일 폭뎀증10 순간이동)",
+          "tier": "초월 [마딜]",
+          "sourceText": "검은정의를좇는하얀새 / lucci tr▶ 단일 폭뎀증10 순간이동 단일스턴"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "2B0H",
+      "name": "루피 기어포스",
+      "tier": "초월 [마딜]",
+      "sourceName": "스네이크맨 (공비례폭뎀 보잡 라인딜",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "다섯번째황제 / snakeman tr▶ 공비례폭뎀딜러 공중이동\n▶ 적 이동속도가 높을 수록 스킬 대미지 증가\n▶ 특강(필수) : 단일스턴 광보잡\n[추천조합 : 센고쿠 불멸]",
+      "abilities": {
+        "공중이동": true,
+        "조건부특강보스 잡기": true,
+        "조건부특강광폭화": true,
+        "조건부특강단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "특강은 단일 스턴 및 광역 보스 잡기 추가.",
+        "단일스턴·광보잡은 특강 조건부."
+      ],
+      "exclusions": [
+        "이동속도 비례 스킬 피해는 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "스네이크맨 (공비례폭뎀 보잡 라인딜",
+          "tier": "초월 [마딜]",
+          "sourceText": "다섯번째황제 / snakeman tr▶ 공비례폭뎀딜러 공중이동\n▶ 적 이동속도가 높을 수록 스킬 대미지 증가\n▶ 특강(필수) : 단일스턴 광보잡\n[추천조합 : 센고쿠 불멸]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I90H",
+      "name": "브룩",
+      "tier": "초월 [마딜]",
+      "sourceName": "브룩 (끝딜 마뎀증10 마방깍3)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "소울킹 / brook tr▶ 끝딜 마방깍3(1번) 마뎀증\n▶ 이감15+맵전체이감5\n▷ 특강 : 미니라분 소환\n이감7 공속25 마젠5",
+      "abilities": {
+        "끝딜": true,
+        "마법방어력 감소": 3,
+        "마법데미지 증폭": 10,
+        "이동속도 감소": "기본15 + 맵전체5 (합산·상시 여부 미확정)",
+        "조건부특강소환미니라분 이동속도 감소": 7,
+        "조건부특강소환미니라분 공격속도 증가": 25,
+        "조건부특강소환미니라분 마나 재생": 5
+      },
+      "notes": [
+        "기본 이감 15와 맵 전체 이감 5는 명시적으로 합산.",
+        "미니라분 수치는 특강 소환물 전용이며 일반 합계와 분리.",
+        "이감15와 맵전체 이감5를 상시 오라로 가정해 20으로 합산하지 않음. 미니라분 수치는 특강 소환 조건부."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "브룩 (끝딜 마뎀증10 마방깍3)",
+          "tier": "초월 [마딜]",
+          "sourceText": "소울킹 / brook tr▶ 끝딜 마방깍3(1번) 마뎀증\n▶ 이감15+맵전체이감5\n▷ 특강 : 미니라분 소환\n이감7 공속25 마젠5"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "H90H",
+      "name": "상디",
+      "tier": "초월 [마딜]",
+      "sourceName": "상디 (라인딜 단일 발동이감50)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "지옥에서돌아온자 / sanji tr▶ 단일 발동이감50 라인딜 공중이동\n▷ 특강(필수) :  공속15 풀공속",
+      "abilities": {
+        "발동이동속도 감소": 50,
+        "단일": true,
+        "공중이동": true,
+        "조건부특강공격속도 증가": 15
+      },
+      "notes": [
+        "공속 15는 특강(필수) 효과로 분리."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "상디 (라인딜 단일 발동이감50)",
+          "tier": "초월 [마딜]",
+          "sourceText": "지옥에서돌아온자 / sanji tr▶ 단일 발동이감50 라인딜 공중이동\n▷ 특강(필수) :  공속15 풀공속"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "G90H",
+      "name": "상디 제르마 특강",
+      "tier": "초월 [마딜]",
+      "sourceName": "상디 제르마 (특강) (라인딜 단일 발동이감50 공속15)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "▶ 단일 발동이감50 라인딜 공속15 공중이동\n\n※ 풀공속이니 토키 있으면 버프는 다른 유닛에게 주세요",
+      "abilities": {
+        "발동이동속도 감소": 50,
+        "단일": true,
+        "공중이동": true,
+        "공격속도 증가": 15
+      },
+      "notes": [
+        "특강 변형 행."
+      ],
+      "exclusions": [
+        "풀공속 상태 및 토키 버프 권고는 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "상디 제르마 (특강) (라인딜 단일 발동이감50 공속15)",
+          "tier": "초월 [마딜]",
+          "sourceText": "▶ 단일 발동이감50 라인딜 공속15 공중이동\n\n※ 풀공속이니 토키 있으면 버프는 다른 유닛에게 주세요"
+        }
+      ],
+      "mappingEvidence": [
+        "Known tmo-unit-additions special-upgrade alias: source “상디 제르마 (특강)” corresponds to distinct 제르마 특강 rawcode."
+      ]
+    },
+    {
+      "rawcode": "Z80H",
+      "name": "샹크스",
+      "tier": "초월 [마딜]",
+      "sourceName": "샹크스 (라인딜 스턴2)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "▶ 라인딜보조 강한스턴\n▷ 특강 : 보잡, 스턴 스킬추가\n\n[추천조합 : 빅맘 에이스영원 에넬제한]\n※ 라인딜이 부족해서 딜러와 조합이 좋음\n※ 스턴이 좋아 단일을 치려면 검은수염전설이 있으면 편함",
+      "abilities": {
+        "스턴": 2
+      },
+      "notes": [
+        "특강 시 보스 잡기와 스턴 스킬 추가."
+      ],
+      "exclusions": [
+        "추천 조합은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "샹크스 (라인딜 스턴2)",
+          "tier": "초월 [마딜]",
+          "sourceText": "▶ 라인딜보조 강한스턴\n▷ 특강 : 보잡, 스턴 스킬추가\n\n[추천조합 : 빅맘 에이스영원 에넬제한]\n※ 라인딜이 부족해서 딜러와 조합이 좋음\n※ 스턴이 좋아 단일을 치려면 검은수염전설이 있으면 편함"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "U80H",
+      "name": "시라호시",
+      "tier": "초월 [마딜]",
+      "sourceName": "시라호시 (스턴1.2 잃퍼뎀)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "해왕류를다스리는인어공주 / shirahoshi tr▶ 스턴 잃퍼뎀(범위끝딜)\n▷ 특강 : 레벨업, 스킬강화\n※ 30라 안으로 빨리 뽑아야함(레벨중요)\n※ 항해목표 달성하면 경험치 획득",
+      "abilities": {
+        "스턴": 1.2
+      },
+      "notes": [
+        "잃은 체력 비례 범위 끝딜은 수치 없음.",
+        "특강은 레벨업·스킬강화."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시라호시 (스턴1.2 잃퍼뎀)",
+          "tier": "초월 [마딜]",
+          "sourceText": "해왕류를다스리는인어공주 / shirahoshi tr▶ 스턴 잃퍼뎀(범위끝딜)\n▷ 특강 : 레벨업, 스킬강화\n※ 30라 안으로 빨리 뽑아야함(레벨중요)\n※ 항해목표 달성하면 경험치 획득"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "790H",
+      "name": "아오키지",
+      "tier": "초월 [마딜]",
+      "sourceName": "아오키지 (스턴1.2 이감70 폭뎀증10)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "전해군대장푸른꿩 / aokiji tr▶ 스턴 이감 폭뎀증\n▷ 특강 : 이감10 폭뎀증5\n▶ 딜이 약해서 다른딜러 필요함\n▶ 폭뎀 유닛과 조합이 좋음",
+      "abilities": {
+        "스턴": 1.2,
+        "이동속도 감소": 70,
+        "폭발형 데미지 증폭": 10,
+        "조건부특강이동속도 감소": 10,
+        "조건부특강폭발형 데미지 증폭": 5
+      },
+      "notes": [
+        "특강 이감·폭발형 증폭 수치는 기본 수치와 분리."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아오키지 (스턴1.2 이감70 폭뎀증10)",
+          "tier": "초월 [마딜]",
+          "sourceText": "전해군대장푸른꿩 / aokiji tr▶ 스턴 이감 폭뎀증\n▷ 특강 : 이감10 폭뎀증5\n▶ 딜이 약해서 다른딜러 필요함\n▶ 폭뎀 유닛과 조합이 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "590H",
+      "name": "아카이누",
+      "tier": "초월 [마딜]",
+      "sourceName": "아카이누 (광보잡 라인딜 발동이감12)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "해군원수붉은개 / akainu tr▶ 라인딜 광보잡 발동이감(믿음직)",
+      "abilities": {
+        "발동이동속도 감소": 12,
+        "보스 잡기": true
+      },
+      "notes": [
+        "광역 보스 잡기."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아카이누 (광보잡 라인딜 발동이감12)",
+          "tier": "초월 [마딜]",
+          "sourceText": "해군원수붉은개 / akainu tr▶ 라인딜 광보잡 발동이감(믿음직)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "OC0H",
+      "name": "코비",
+      "tier": "초월 [마딜]",
+      "sourceName": "코비 (공비례폭뎀 라인딜 폭뎀감소10))",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "▶ 공비례폭발형데미지 라인딜\n▶ 버프개수비례딜증가\n▷ 특강 : 딜증가+버프비례퍼딜\n[추천조합 : 핸라핌 네코마 드래곤 피셔 토키 모비딕]\n※ 폭뎀감10 있어서 폭뎀증 유닛과 조합이 좋음\n※ 5라운드마다 공속 증가해서 30라 전에 뽑는게 좋음\n※ 마나가 없어 마젠 버프는 안 받음",
+      "abilities": {
+        "폭발형 데미지 증폭": -10
+      },
+      "notes": [
+        "폭발형 데미지 감소 10은 음수로 정규화.",
+        "버프 개수 비례 딜 증가는 수치 없음."
+      ],
+      "exclusions": [
+        "추천 조합은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "코비 (공비례폭뎀 라인딜 폭뎀감소10))",
+          "tier": "초월 [마딜]",
+          "sourceText": "▶ 공비례폭발형데미지 라인딜\n▶ 버프개수비례딜증가\n▷ 특강 : 딜증가+버프비례퍼딜\n[추천조합 : 핸라핌 네코마 드래곤 피셔 토키 모비딕]\n※ 폭뎀감10 있어서 폭뎀증 유닛과 조합이 좋음\n※ 5라운드마다 공속 증가해서 30라 전에 뽑는게 좋음\n※ 마나가 없어 마젠 버프는 안 받음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "4B0H",
+      "name": "키드",
+      "tier": "초월 [마딜]",
+      "sourceName": "키드 (라인딜 이감33 스턴0.2)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "신세대의이단아 / kid tr▶ 라인딜 이감33 스턴0.2\n▶ 체젠 높으면 스턴 능력 오름(체젠4정도면 1스턴)\n\n[추천조합 : 모비딕호 ]",
+      "abilities": {
+        "이동속도 감소": 33,
+        "스턴": 0.2
+      },
+      "notes": [
+        "체력 재생이 높을수록 스턴이 증가하나 조건별 수치 불명."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "키드 (라인딜 이감33 스턴0.2)",
+          "tier": "초월 [마딜]",
+          "sourceText": "신세대의이단아 / kid tr▶ 라인딜 이감33 스턴0.2\n▶ 체젠 높으면 스턴 능력 오름(체젠4정도면 1스턴)\n\n[추천조합 : 모비딕호 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "5B0H",
+      "name": "키자루",
+      "tier": "초월 [마딜]",
+      "sourceName": "키자루 (스턴1 라인딜 순간이동)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "해군대장노란원숭이 / kizaru tr※ 레일리 희귀함 필요\n▶ 스턴 라인딜 보잡\n▷ 특강 : 특포 소모해서 스킬강화\n▶ 특성공학 항법 추천",
+      "abilities": {
+        "스턴": 1,
+        "보스 잡기": true,
+        "순간이동": true
+      },
+      "notes": [
+        "특강은 특성 포인트를 소모하는 스킬강화."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "키자루 (스턴1 라인딜 순간이동)",
+          "tier": "초월 [마딜]",
+          "sourceText": "해군대장노란원숭이 / kizaru tr※ 레일리 희귀함 필요\n▶ 스턴 라인딜 보잡\n▷ 특강 : 특포 소모해서 스킬강화\n▶ 특성공학 항법 추천"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N50H",
+      "name": "타시기",
+      "tier": "초월 [마딜]",
+      "sourceName": "타시기 (라인딜 보잡)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "※ 물마딜겸용(마딜이 더 좋음)\n▷ 특강(필수) : 스킬강화 레벨업\n=== [마딜] ===\n▶ 라인딜 보잡\n[추천조합(마딜) : 코알라 쿠라핌]\n\n=== [물딜] ===\n▶ 스킬딜러 암브 보잡",
+      "abilities": {
+        "보스 잡기": true
+      },
+      "notes": [
+        "마딜 운용의 라인딜·보스 잡기.",
+        "특강은 스킬강화·레벨업."
+      ],
+      "exclusions": [
+        "물딜 섹션과 추천 조합은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "타시기 (라인딜 보잡)",
+          "tier": "초월 [마딜]",
+          "sourceText": "※ 물마딜겸용(마딜이 더 좋음)\n▷ 특강(필수) : 스킬강화 레벨업\n=== [마딜] ===\n▶ 라인딜 보잡\n[추천조합(마딜) : 코알라 쿠라핌]\n\n=== [물딜] ===\n▶ 스킬딜러 암브 보잡"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Y80H",
+      "name": "프랑키",
+      "tier": "초월 [마딜]",
+      "sourceName": "프랑키 (마나스킬딜러 마젠5)",
+      "sourceTier": "초월 [마딜]",
+      "sourceText": "▶ 마나스킬딜러 마젠 써니호2대소환\n▶ 써니호 마나스킬 조절 필요 (번갈아가면서 마나스킬 사용하게 조절하면 써니호 2대로 스턴 잡힘)\n\n[추천조합 : 코알라 방주(에넬제한) 반더데켄 키쿠 시류 에영 미영 오뎅]\n※ 코알라 필수\n※ 써니호 2대 마나스킬 같이 쓰면 바제스 가능",
+      "abilities": {
+        "마나 재생": 5,
+        "조건부바제스": true
+      },
+      "notes": [
+        "써니호 소환 및 마나스킬 운용.",
+        "써니호 2대의 마나스킬을 함께 쓰는 조건에서 바제스 가능."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "프랑키 (마나스킬딜러 마젠5)",
+          "tier": "초월 [마딜]",
+          "sourceText": "▶ 마나스킬딜러 마젠 써니호2대소환\n▶ 써니호 마나스킬 조절 필요 (번갈아가면서 마나스킬 사용하게 조절하면 써니호 2대로 스턴 잡힘)\n\n[추천조합 : 코알라 방주(에넬제한) 반더데켄 키쿠 시류 에영 미영 오뎅]\n※ 코알라 필수\n※ 써니호 2대 마나스킬 같이 쓰면 바제스 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "D40h",
+      "name": "드래곤",
+      "tier": "불멸 [마딜]",
+      "sourceName": "드래곤 (스턴1.4 폭뎀증20 공속20)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "폭풍을몰아오는바람 / dragon im▶ 스턴 폭뎀증 공속\n▷ 특강 : 유닛삭제 딜증가\n▶ 폭발형 데미지 유닛과 조합이 좋음",
+      "abilities": {
+        "스턴": 1.4,
+        "폭발형 데미지 증폭": 20,
+        "공격속도 증가": 20,
+        "조건부특강유닛삭제": true
+      },
+      "notes": [
+        "유닛삭제는 특강 효과.",
+        "유닛삭제는 특강으로 추가되는 조건부 기능."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "드래곤 (스턴1.4 폭뎀증20 공속20)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "폭풍을몰아오는바람 / dragon im▶ 스턴 폭뎀증 공속\n▷ 특강 : 유닛삭제 딜증가\n▶ 폭발형 데미지 유닛과 조합이 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "Q40h",
+      "name": "빅맘",
+      "tier": "불멸 [마딜]",
+      "sourceName": "빅맘 (라인딜러 이감40)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "탐식의강철풍선 / bigmom im▶ 라인딜러 이감40\n▷ 특강 : 딜증가 이감70→ 40\n[추천조합 : 토키 ]",
+      "abilities": {
+        "이동속도 감소": "현재 수치 미확정"
+      },
+      "notes": [
+        "본문은 기본 이감 70에서 특강 시 40으로 변경된다고 명시. 제목의 40은 무조건 기본값으로 처리하지 않음.",
+        "제목은 이감40, 상세는 기본70→특강40으로 읽히므로 현재 숫자는 미확정. 70과 40은 조건 정보로만 보존.",
+        "제목 이감40 vs 본문 기본70→특강40: 변형 조건 충돌 플래그."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "빅맘 (라인딜러 이감40)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "탐식의강철풍선 / bigmom im▶ 라인딜러 이감40\n▷ 특강 : 딜증가 이감70→ 40\n[추천조합 : 토키 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "E40h",
+      "name": "센고쿠",
+      "tier": "불멸 [마딜]",
+      "sourceName": "센고쿠 (공비례폭뎀 스턴1.1 범퍼)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러 공증33(자신제외)\n▶ 스턴 범위현재체력퍼센트데미지\n▷ 특강 : 추가스턴 본인공증10\n\n[ 추천조합 : 핸라핌 / 네코마 / 토키 / 오뎅 / 블랙마리아(전설) / 혼포인트 / 피셔 / 캐럿(변화) ]",
+      "abilities": {
+        "스턴": 1.1,
+        "공격력 증가": 33,
+        "조건부특강자신공격력 증가": 10
+      },
+      "notes": [
+        "공격력 증가 33은 자신 제외.",
+        "특강의 본인 공격력 증가 10은 글로벌 버프와 분리."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "센고쿠 (공비례폭뎀 스턴1.1 범퍼)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러 공증33(자신제외)\n▶ 스턴 범위현재체력퍼센트데미지\n▷ 특강 : 추가스턴 본인공증10\n\n[ 추천조합 : 핸라핌 / 네코마 / 토키 / 오뎅 / 블랙마리아(전설) / 혼포인트 / 피셔 / 캐럿(변화) ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "MB0h",
+      "name": "센고쿠 특강",
+      "tier": "불멸 [마딜]",
+      "sourceName": "센고쿠 (특강) (공비례폭뎀 스턴1.8 범퍼)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러 공증33(자신제외)\n▶ 강한스턴 범위현재체력퍼센트데미지\n\n[ 추천조합 : 핸라핌 / 네코마 / 토키 / 오뎅 / 블랙마리아(전설) / 혼포인트 / 피셔 / 캐럿(변화) ]\n\n[ 추천조합2 : 로우초월(특강x), 센불(특강o) ]",
+      "abilities": {
+        "스턴": 1.8,
+        "공격력 증가": 33
+      },
+      "notes": [
+        "특강 변형 행. 공격력 증가 33은 자신 제외."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "센고쿠 (특강) (공비례폭뎀 스턴1.8 범퍼)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러 공증33(자신제외)\n▶ 강한스턴 범위현재체력퍼센트데미지\n\n[ 추천조합 : 핸라핌 / 네코마 / 토키 / 오뎅 / 블랙마리아(전설) / 혼포인트 / 피셔 / 캐럿(변화) ]\n\n[ 추천조합2 : 로우초월(특강x), 센불(특강o) ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Data/tmo-unit-additions-42479.json has distinct 센고쿠 특강 MB0h; base E40h must not absorb this form."
+      ]
+    },
+    {
+      "rawcode": "B40h",
+      "name": "시키",
+      "tier": "불멸 [마딜]",
+      "sourceName": "시키 (스턴1.9 라인딜 마뎀증15)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "※ 물마딜 겸용(물딜은 특강필수)\n=== [마딜] ===\n▶ 스턴 라인딜 마뎀증\n▷ 특강 : 발동이감35 라인딜추가\n▶ 마딜은 특강 안 해도 잘 씀\n\n=== [물딜] ===\n※ 물딜은 특강 필수(매우좋음)\n▶ 스킬딜러 스턴 암브 발동이감35\n▷ 특강 : 스킬강화 발동이감(믿음직)\n[ 추천 운영 : 연속베팅 항법 → 중급도박 24번 ]\n▶ 다른 상위를 섞기보다 솔딜로(또는 쵸초 정도만) 쓰고 부족한 방깍을 보완\n※ 특강하고 강화하면 물딜 성능이 더 좋음",
+      "abilities": {
+        "스턴": 1.9,
+        "마법데미지 증폭": 15,
+        "조건부특강발동이동속도 감소": 35
+      },
+      "notes": [
+        "특강 발동 이감 35는 기본 효과와 분리."
+      ],
+      "exclusions": [
+        "물딜 섹션은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시키 (스턴1.9 라인딜 마뎀증15)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "※ 물마딜 겸용(물딜은 특강필수)\n=== [마딜] ===\n▶ 스턴 라인딜 마뎀증\n▷ 특강 : 발동이감35 라인딜추가\n▶ 마딜은 특강 안 해도 잘 씀\n\n=== [물딜] ===\n※ 물딜은 특강 필수(매우좋음)\n▶ 스킬딜러 스턴 암브 발동이감35\n▷ 특강 : 스킬강화 발동이감(믿음직)\n[ 추천 운영 : 연속베팅 항법 → 중급도박 24번 ]\n▶ 다른 상위를 섞기보다 솔딜로(또는 쵸초 정도만) 쓰고 부족한 방깍을 보완\n※ 특강하고 강화하면 물딜 성능이 더 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "G40h",
+      "name": "제트",
+      "tier": "불멸 [마딜]",
+      "sourceName": "제트 (라인딜 이감35 보잡 단일스턴)",
+      "sourceTier": "불멸 [마딜]",
+      "sourceText": "▶ 라인딜 광보잡 이감35 단일스턴 순간이동\n▷ 특강 : 스킬강화, 범퍼딜\n※ 공속 올려서 머리 위 숫자가 7이상 유지돼야함\n\n[ 추천 조합 : 토키 발라티에 로우(특별희귀전설) ]\n※ 로우 특별 2~3 만들어서 버프 돌려 써도 좋음",
+      "abilities": {
+        "이동속도 감소": 35,
+        "보스 잡기": true,
+        "순간이동": true,
+        "단일스턴": "수치 미표기",
+        "광폭화": true
+      },
+      "notes": [
+        "단일 스턴 지속시간 수치 없음.",
+        "특강은 스킬강화·범위 피해."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "제트 (라인딜 이감35 보잡 단일스턴)",
+          "tier": "불멸 [마딜]",
+          "sourceText": "▶ 라인딜 광보잡 이감35 단일스턴 순간이동\n▷ 특강 : 스킬강화, 범퍼딜\n※ 공속 올려서 머리 위 숫자가 7이상 유지돼야함\n\n[ 추천 조합 : 토키 발라티에 로우(특별희귀전설) ]\n※ 로우 특별 2~3 만들어서 버프 돌려 써도 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "JC0h",
+      "name": "류마",
+      "tier": "영원 [마딜]",
+      "sourceName": "류마 (끝딜 폭뎀 보잡)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "※ 성장형 딜러라서 빨리 뽑아야 좋음\n▶ 폭뎀 끝딜 보잡\n▶ 단일 성능도 있지만 단일로 안 씀\n▶ 토키는 필수, 시노부까진 빡셈\n▶ 공증이 있어야 스킬 조건 충족함(오니)\n▶ 오로성 새턴일 때 성능 저하\n▶ 아이템 '슈스이'로 강화 가능",
+      "abilities": {
+        "끝딜": true,
+        "보스 잡기": true,
+        "단일": true
+      },
+      "notes": [
+        "폭발형은 피해 유형 언급만 있고 증폭 수치 없음."
+      ],
+      "exclusions": [
+        "추천 조합·공격력 조건은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "류마 (끝딜 폭뎀 보잡)",
+          "tier": "영원 [마딜]",
+          "sourceText": "※ 성장형 딜러라서 빨리 뽑아야 좋음\n▶ 폭뎀 끝딜 보잡\n▶ 단일 성능도 있지만 단일로 안 씀\n▶ 토키는 필수, 시노부까진 빡셈\n▶ 공증이 있어야 스킬 조건 충족함(오니)\n▶ 오로성 새턴일 때 성능 저하\n▶ 아이템 '슈스이'로 강화 가능"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "850h",
+      "name": "미호크",
+      "tier": "영원 [마딜]",
+      "sourceName": "미호크 (공비례폭뎀 이감45)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "▶ 공비례폭뎀딜러 단일스턴\n▶ 보잡성능부족 보잡유닛필요\n▷ 특강 : 폭뎀스킬추가 폭뎀증비례쿨감\n\n1. 공비례폭뎀 조합\n[추천조합 : 베가펑크 네코마 피셔 토키 핸라핌]\n*공증 공속 버프 좋음\n\n2. 마나리젠 조합\n[추천조합 : 프랑키초월 코알라 에제]",
+      "abilities": {
+        "이동속도 감소": 45,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "단일 스턴 지속시간 수치 없음.",
+        "특강 폭발형 스킬 추가는 증폭 수치 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "미호크 (공비례폭뎀 이감45)",
+          "tier": "영원 [마딜]",
+          "sourceText": "▶ 공비례폭뎀딜러 단일스턴\n▶ 보잡성능부족 보잡유닛필요\n▷ 특강 : 폭뎀스킬추가 폭뎀증비례쿨감\n\n1. 공비례폭뎀 조합\n[추천조합 : 베가펑크 네코마 피셔 토키 핸라핌]\n*공증 공속 버프 좋음\n\n2. 마나리젠 조합\n[추천조합 : 프랑키초월 코알라 에제]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "750h",
+      "name": "비비",
+      "tier": "영원 [마딜]",
+      "sourceName": "비비 (끝딜 스킬강화)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "※ 쓸 줄 알면 S급, 모르면 D급\n▶ 끝딜 스킬강화(7강까지 권장)\n강화 성공마다 고뎀증가\n3강 : 3연사 강화\n5강 : 이동사격 스킬추가\n7강 : 헤드샷 강화\n\n[추천조합 : 우타 상디초월 토키 아카히든]\n※검수초, 보니 빼곤 대부분 잘 어울림",
+      "abilities": {
+        "끝딜": true
+      },
+      "notes": [
+        "스킬강화 단계별 피해 증가 수치는 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "비비 (끝딜 스킬강화)",
+          "tier": "영원 [마딜]",
+          "sourceText": "※ 쓸 줄 알면 S급, 모르면 D급\n▶ 끝딜 스킬강화(7강까지 권장)\n강화 성공마다 고뎀증가\n3강 : 3연사 강화\n5강 : 이동사격 스킬추가\n7강 : 헤드샷 강화\n\n[추천조합 : 우타 상디초월 토키 아카히든]\n※검수초, 보니 빼곤 대부분 잘 어울림"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "950h",
+      "name": "에이스",
+      "tier": "영원 [마딜]",
+      "sourceName": "에이스 (라인딜 이감45)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "화권의에이스 / ace et▶ 라인딜 이감45\n▷ 특강 : 딜강화 지속딜→즉발\n▶ 마나스킬이 강력해서 마젠 효율 좋음\n[ 추천조합 : 샹크스초월 에넬제한 시키불멸 코알라]",
+      "abilities": {
+        "이동속도 감소": 45
+      },
+      "notes": [
+        "특강은 지속딜을 즉발로 변경."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에이스 (라인딜 이감45)",
+          "tier": "영원 [마딜]",
+          "sourceText": "화권의에이스 / ace et▶ 라인딜 이감45\n▷ 특강 : 딜강화 지속딜→즉발\n▶ 마나스킬이 강력해서 마젠 효율 좋음\n[ 추천조합 : 샹크스초월 에넬제한 시키불멸 코알라]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "R80h",
+      "name": "오뎅",
+      "tier": "영원 [마딜]",
+      "sourceName": "오뎅 (라인딜 광보잡 마뎀증)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "▶ 라인딜 보잡 광잡(특강) 마뎀증\n▷ 특강(필수) : 킨에몬소환 광잡\n▶ 마나스킬이 핵심 : 아군 추가딜\n[추천조합 : 코알라 방주(에제) 발라티에 나미전설 모건 ]\n※ 코알라는 필수\n▶ 조로희귀2 킨에몬2 필요해서 비싸다",
+      "abilities": {
+        "보스 잡기": true,
+        "조건부특강광폭화": true
+      },
+      "notes": [
+        "마법 피해증폭은 수치 없음.",
+        "특강 소환물 광역 보스 잡기는 별도 운용.",
+        "광잡은 특강 킨에몬 소환 조건부이며 기본 보잡과 분리."
+      ],
+      "exclusions": [
+        "마나스킬의 아군 추가딜 수치는 없음."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "오뎅 (라인딜 광보잡 마뎀증)",
+          "tier": "영원 [마딜]",
+          "sourceText": "▶ 라인딜 보잡 광잡(특강) 마뎀증\n▷ 특강(필수) : 킨에몬소환 광잡\n▶ 마나스킬이 핵심 : 아군 추가딜\n[추천조합 : 코알라 방주(에제) 발라티에 나미전설 모건 ]\n※ 코알라는 필수\n▶ 조로희귀2 킨에몬2 필요해서 비싸다"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "760h",
+      "name": "우타",
+      "tier": "영원 [마딜]",
+      "sourceName": "우타 (라인딜 이감45 단일0.5 끝딜0.5 스턴0.6 공속15 공증30 폭뎀증10 마방깍10)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "세계의가희 / u-ta et※ 아이템 '우타의 헤드셋'과 레일리 필요\n▶ 라인딜 단일 끝딜 스턴0.6 공속15\n▶ 이감45 공증30 폭뎀증10 마방깍10\n※ 수면 상태일 때 몹 샐 수 있음\n▷ 특강 : 수면 상태 보완\n▶ 단끝컨 안 함",
+      "abilities": {
+        "이동속도 감소": 45,
+        "단일": 0.5,
+        "끝딜": 0.5,
+        "스턴": 0.6,
+        "공격속도 증가": 15,
+        "공격력 증가": 30,
+        "폭발형 데미지 증폭": 10,
+        "마법방어력 감소": 10
+      },
+      "notes": [
+        "제목과 본문에 명시된 단일·끝딜 가중치 0.5 보존.",
+        "단일0.5는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음.",
+        "끝딜0.5는 출처가 부여한 가중치이자 해당 역할 제공자 표기이며, 공격피해%·스턴시간·일반 합산 수치로 변환하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "우타 (라인딜 이감45 단일0.5 끝딜0.5 스턴0.6 공속15 공증30 폭뎀증10 마방깍10)",
+          "tier": "영원 [마딜]",
+          "sourceText": "세계의가희 / u-ta et※ 아이템 '우타의 헤드셋'과 레일리 필요\n▶ 라인딜 단일 끝딜 스턴0.6 공속15\n▶ 이감45 공증30 폭뎀증10 마방깍10\n※ 수면 상태일 때 몹 샐 수 있음\n▷ 특강 : 수면 상태 보완\n▶ 단끝컨 안 함"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "C50h",
+      "name": "핸콕",
+      "tier": "영원 [마딜]",
+      "sourceName": "핸콕 (라인딜 스턴1.1 깍45 마깍5)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "※ 물마딜겸용(마딜이 더 좋음)\n▷ 특강(필수) : 스킬강화\n스턴0.9→1.1 / 방깍35→40\n=== [마딜] ===\n▶ 라인딜 스턴 마나스킬끝딜 발동이감(못믿음) 마방깍5(1번)\n[추천조합(마딜) : 코알라 키쿠or쿠라핌 방주(에제) 빅맘]\n\n=== [물딜] ===\n▶ 스킬딜러 스턴1.1 방깍45\n▶ 발동이감(못믿음)\n\n※마딜 성능이 더 좋음",
+      "abilities": {
+        "스턴": "상세 기본0.9 / 특강·물딜1.1 (현재값 미확정)",
+        "조건부특강스턴": 1.1,
+        "방어력 감소": "제목·물딜45 / 상세 기본35 (수치 미확정)",
+        "조건부특강방어력 감소": 40,
+        "마법방어력 감소": 5
+      },
+      "notes": [
+        "특강 설명은 방어력 감소 35→40, 제목은 45로 표기되어 서로 해소되지 않음.",
+        "발동 이감은 수치 없음.",
+        "방깎45를 일반 수치로 채택하지 않음. 상세의 기본35→특강40과 물딜 모드45는 분리해 보존.",
+        "제목 방깍45 vs 특강 상세 방깍35→40: 실제 값 충돌."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "핸콕 (라인딜 스턴1.1 깍45 마깍5)",
+          "tier": "영원 [마딜]",
+          "sourceText": "※ 물마딜겸용(마딜이 더 좋음)\n▷ 특강(필수) : 스킬강화\n스턴0.9→1.1 / 방깍35→40\n=== [마딜] ===\n▶ 라인딜 스턴 마나스킬끝딜 발동이감(못믿음) 마방깍5(1번)\n[추천조합(마딜) : 코알라 키쿠or쿠라핌 방주(에제) 빅맘]\n\n=== [물딜] ===\n▶ 스킬딜러 스턴1.1 방깍45\n▶ 발동이감(못믿음)\n\n※마딜 성능이 더 좋음"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "A60h",
+      "name": "길드 테조로",
+      "tier": "영원 [마딜]",
+      "sourceName": "테조로 (스턴1.3 끝딜폭뎀 공속25)",
+      "sourceTier": "영원 [마딜]",
+      "sourceText": "최고의엔터테이너 / tesoro et▶ 끝딜폭뎀 스턴1.3 공속25\n▶ 골드량 비례 딜 증가\n▷ 특강(필수) : 골드획득 스킬추가\n▶ 폭뎀증과 조합이 좋음\n[추천조합 : 바운티헌터항법 핸라핌 검은수염전설 캐럿변이 ]",
+      "abilities": {
+        "스턴": 1.3,
+        "끝딜": true,
+        "공격속도 증가": 25
+      },
+      "notes": [
+        "폭발형은 피해 유형 언급만 있고 증폭 수치 없음."
+      ],
+      "exclusions": [
+        "골드 비례 피해 및 추천 조합은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "테조로 (스턴1.3 끝딜폭뎀 공속25)",
+          "tier": "영원 [마딜]",
+          "sourceText": "최고의엔터테이너 / tesoro et▶ 끝딜폭뎀 스턴1.3 공속25\n▶ 골드량 비례 딜 증가\n▷ 특강(필수) : 골드획득 스킬추가\n▶ 폭뎀증과 조합이 좋음\n[추천조합 : 바운티헌터항법 핸라핌 검은수염전설 캐럿변이 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Known catalog naming alias: source 테조로 is catalog 길드 테조로 at the same eternal-magic grade."
+      ]
+    },
+    {
+      "rawcode": "G50h",
+      "name": "레드필드",
+      "tier": "제한됨",
+      "sourceName": "레드필드 (범위끝딜 범위잃퍼딜 끝딜)",
+      "sourceTier": "제한됨 [마딜]",
+      "sourceText": "※ 40라운드까지만 조합 가능\n▶ 범위끝딜 끝딜 단일스턴\n▷ 특강 : 범위잃은체력퍼센트데미지",
+      "abilities": {
+        "끝딜": true,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "단일 스턴 지속시간 수치 없음.",
+        "특강 범위 잃은 체력 비례 피해는 수치 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "레드필드 (범위끝딜 범위잃퍼딜 끝딜)",
+          "tier": "제한됨 [마딜]",
+          "sourceText": "※ 40라운드까지만 조합 가능\n▶ 범위끝딜 끝딜 단일스턴\n▷ 특강 : 범위잃은체력퍼센트데미지"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "O80h",
+      "name": "마르코",
+      "tier": "제한됨",
+      "sourceName": "마르코 (인간폼) (폭뎀단일 이감45 체젠3)",
+      "sourceTier": "제한됨 [마딜]",
+      "sourceText": "※ 아이템 '불사조의 깃털' 필요\n▶ 인간폼[마딜] : 폭뎀단일\n▶ 이감45 체젠3 공중이동\n▷ 특강(애매) : 이감60 체젠4\n[추천조합 : 키드초월 빅맘 캐럿변이]",
+      "abilities": {
+        "이동속도 감소": 45,
+        "체력 재생": 3,
+        "공중이동": true,
+        "조건부특강이동속도 감소": 60,
+        "조건부특강체력 재생": 4
+      },
+      "notes": [
+        "특강의 이감60·체젠4은 기본 수치와 분리."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "마르코 (인간폼) (폭뎀단일 이감45 체젠3)",
+          "tier": "제한됨 [마딜]",
+          "sourceText": "※ 아이템 '불사조의 깃털' 필요\n▶ 인간폼[마딜] : 폭뎀단일\n▶ 이감45 체젠3 공중이동\n▷ 특강(애매) : 이감60 체젠4\n[추천조합 : 키드초월 빅맘 캐럿변이]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "480h",
+      "name": "시노부",
+      "tier": "제한됨",
+      "sourceName": "시노부 (이감30 끝딜 보잡 탐색)",
+      "sourceTier": "제한됨 [마딜]",
+      "sourceText": "▶ 끝딜 보잡 이감 단일스턴\n▷ 특강 : 딜 증가\n[추천조합 : 나미전설(탐색 시너지), 캐럿 ]",
+      "abilities": {
+        "이동속도 감소": 30,
+        "끝딜": true,
+        "보스 잡기": true,
+        "단일스턴": "수치 미표기"
+      },
+      "notes": [
+        "단일 스턴 지속시간 수치 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "시노부 (이감30 끝딜 보잡 탐색)",
+          "tier": "제한됨 [마딜]",
+          "sourceText": "▶ 끝딜 보잡 이감 단일스턴\n▷ 특강 : 딜 증가\n[추천조합 : 나미전설(탐색 시너지), 캐럿 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "040h",
+      "name": "아인",
+      "tier": "제한됨",
+      "sourceName": "아인 (뒤로뒤로열매 광잡 단일스턴 순간이동)",
+      "sourceTier": "제한됨 [마딜]",
+      "sourceText": "▶ 광잡 단일스턴 순간이동\n▶ [뒤로뒤로열매] : 라인몹을 이전 라인몹으로 변경, 7중첩 시 유닛 삭제\n▷ 특강 : 150초쿨 사용스킬, 범위내모든적 뒤로뒤로-2중첩\n\n[추천조합 : 특성공학항법 아인(2~3명) 토키 베가펑크 ]\n※ 빠르게 라인몹을 7중첩으로 만들고 유닛 삭제\n※ 운용 방법이 어려워서 뉴비 비추천",
+      "abilities": {
+        "순간이동": true,
+        "조건부7중첩유닛삭제": true,
+        "단일스턴": "수치 미표기",
+        "광폭화": true
+      },
+      "notes": [
+        "뒤로뒤로열매 7중첩 시 유닛삭제.",
+        "특강은 150초 쿨의 범위 2중첩 효과.",
+        "유닛삭제는 뒤로뒤로열매 7중첩 조건부이며 일반 기능으로 합산하지 않음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아인 (뒤로뒤로열매 광잡 단일스턴 순간이동)",
+          "tier": "제한됨 [마딜]",
+          "sourceText": "▶ 광잡 단일스턴 순간이동\n▶ [뒤로뒤로열매] : 라인몹을 이전 라인몹으로 변경, 7중첩 시 유닛 삭제\n▷ 특강 : 150초쿨 사용스킬, 범위내모든적 뒤로뒤로-2중첩\n\n[추천조합 : 특성공학항법 아인(2~3명) 토키 베가펑크 ]\n※ 빠르게 라인몹을 7중첩으로 만들고 유닛 삭제\n※ 운용 방법이 어려워서 뉴비 비추천"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "E50h",
+      "name": "갓 에넬",
+      "tier": "제한됨",
+      "sourceName": "에넬 (라인딜 마젠1.5 마방깍18 발동이감35)",
+      "sourceTier": "제한됨 [마딜]",
+      "sourceText": "▶ 라인딜 마젠 마방깍 발동이감(못믿음) 광보잡약간\n▷ 특강 : 딜추가 발동이감(믿음)\n[추천조합 : 프랑키초월 베가펑크 코알라 키쿠]",
+      "abilities": {
+        "마나 재생": 1.5,
+        "마법방어력 감소": 18,
+        "발동이동속도 감소": 35,
+        "보스 잡기": true,
+        "광폭화": true
+      },
+      "notes": [
+        "발동 이감35는 본문상 신뢰도 낮음. 특강 발동 이감은 수치 없음."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "에넬 (라인딜 마젠1.5 마방깍18 발동이감35)",
+          "tier": "제한됨 [마딜]",
+          "sourceText": "▶ 라인딜 마젠 마방깍 발동이감(못믿음) 광보잡약간\n▷ 특강 : 딜추가 발동이감(믿음)\n[추천조합 : 프랑키초월 베가펑크 코알라 키쿠]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M90h",
+      "name": "고죠 사토루",
+      "tier": "신비함",
+      "sourceName": "고죠사토루(이감30)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "범위전체체력% 이감30\n\n마나스킬이 강력하니 마나젠 올려주면 좋음\n[추천 조합 : 프랑키 초월 ]",
+      "abilities": {
+        "이동속도 감소": 30
+      },
+      "notes": [
+        "범위 전체 체력 비례 피해는 손스탯에서 제외."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "고죠사토루(이감30)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "범위전체체력% 이감30\n\n마나스킬이 강력하니 마나젠 올려주면 좋음\n[추천 조합 : 프랑키 초월 ]"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "FB0h",
+      "name": "카마도 네즈코",
+      "tier": "신비함",
+      "sourceName": "네즈코 (단일/단일 중첩 폭뎀증)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "폭뎀단일 폭뎀증 마나스킬끝딜(공격했던 유닛만 적용됨)",
+      "abilities": {
+        "단일": true,
+        "중첩폭발형 데미지 증폭": "수치 미표기",
+        "조건부마나스킬끝딜": true
+      },
+      "notes": [
+        "마나스킬 끝딜은 공격했던 유닛만 적용되는 단일 조건.",
+        "중첩 폭발형 증폭 수치는 없음.",
+        "끝딜은 마나스킬이며 공격했던 유닛에만 적용. 중첩 폭뎀증 수치는 미표기."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "네즈코 (단일/단일 중첩 폭뎀증)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "폭뎀단일 폭뎀증 마나스킬끝딜(공격했던 유닛만 적용됨)"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "W90h",
+      "name": "나미카제 미나토",
+      "tier": "신비함",
+      "sourceName": "미나토 (2.1스턴, 끝딜, 마뎀증3)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "순간이동(1시가능)\n마뎀증 강한스턴",
+      "abilities": {
+        "스턴": 2.1,
+        "끝딜": true,
+        "마법데미지 증폭": 3,
+        "순간이동": true
+      },
+      "notes": [
+        "순간이동은 1시 방향 가능으로 설명."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "미나토 (2.1스턴, 끝딜, 마뎀증3)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "순간이동(1시가능)\n마뎀증 강한스턴"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "I80h",
+      "name": "쿠치키 바쿠야",
+      "tier": "신비함",
+      "sourceName": "바쿠야 (이감20, 라인딜)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "짧은순간이동 이감",
+      "abilities": {
+        "이동속도 감소": 20,
+        "순간이동": true
+      },
+      "notes": [
+        "짧은 순간이동."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "바쿠야 (이감20, 라인딜)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "짧은순간이동 이감"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "N90h",
+      "name": "부릉냐",
+      "tier": "신비함",
+      "sourceName": "부릉냐(끝딜, 발동마젠)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "스킬발동시 마젠5",
+      "abilities": {
+        "끝딜": true,
+        "발동마나 재생": 5
+      },
+      "notes": [
+        "마나 재생 5는 스킬 발동 시 효과로 일반 마나 재생과 분리."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "부릉냐(끝딜, 발동마젠)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "스킬발동시 마젠5"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "M80h",
+      "name": "아냐 포저",
+      "tier": "신비함",
+      "sourceName": "아냐 (이감40, 체젠2, 마젠1.75, 공속증가30)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "버프 마방깍 마뎀증\n*쿨타임마다 스킬 쓰기\n자원 벌어다주는 친구",
+      "abilities": {
+        "이동속도 감소": 40,
+        "체력 재생": 2,
+        "마나 재생": 1.75,
+        "공격속도 증가": 30
+      },
+      "notes": [
+        "마방깍·마법 피해증폭은 버프 언급만 있고 수치 없음.",
+        "스킬은 쿨타임마다 사용 권장."
+      ],
+      "exclusions": [
+        "자원 수급 설명은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "아냐 (이감40, 체젠2, 마젠1.75, 공속증가30)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "버프 마방깍 마뎀증\n*쿨타임마다 스킬 쓰기\n자원 벌어다주는 친구"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "6A0h",
+      "name": "야쿠모 유카리",
+      "tier": "신비함",
+      "sourceName": "유카리 (이감45, 유닛삭제, 폭뎀증, 블링크)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "순간이동 폭뎀증10 이감45 삭제 라인딜",
+      "abilities": {
+        "이동속도 감소": 45,
+        "폭발형 데미지 증폭": 10,
+        "유닛삭제": true,
+        "순간이동": true
+      },
+      "notes": [
+        "삭제 및 라인딜 운용."
+      ],
+      "exclusions": [],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "유카리 (이감45, 유닛삭제, 폭뎀증, 블링크)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "순간이동 폭뎀증10 이감45 삭제 라인딜"
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    },
+    {
+      "rawcode": "CA0h",
+      "name": "산적왕 히그마",
+      "tier": "신비함",
+      "sourceName": "히그마 (이감30, 목재복사)",
+      "sourceTier": "신비함 [마딜]",
+      "sourceText": "골드와 목재를 벌어다 주는 유닛\n체력 재생(체젠)이 높을수록 수급량이 증가하기 때문에 모비딕과 조합이 좋습니다.",
+      "abilities": {
+        "이동속도 감소": 30
+      },
+      "notes": [
+        "체력 재생은 수급량 비례 조건으로 수치 없음."
+      ],
+      "exclusions": [
+        "골드·목재 수급은 손스탯에서 제외."
+      ],
+      "nonStackingGroups": {},
+      "sourceVariants": [
+        {
+          "name": "히그마 (이감30, 목재복사)",
+          "tier": "신비함 [마딜]",
+          "sourceText": "골드와 목재를 벌어다 주는 유닛\n체력 재생(체젠)이 높을수록 수급량이 증가하기 때문에 모비딕과 조합이 좋습니다."
+        }
+      ],
+      "mappingEvidence": [
+        "Exact normalized match to the local guide unitOverride (decorative characters/spacing ignored)."
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "sourceName": "가이몬 (탐색 강화)",
+      "sourceTier": "특수함",
+      "sourceText": "▶ 자신의 라인존 보물 탐색(300초)\n▶ 탐색 범위 15% 증가\n▶ 탐색 성공시 보상 2배\n▶ 탐색 랜덤위습을 선택위습으로 변경",
+      "reason": "No exact local catalog/guide alias establishes a rawcode for this distinct source row."
+    }
+  ]
+}

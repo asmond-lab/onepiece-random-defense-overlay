@@ -761,16 +761,15 @@
       "Levels": [
         {
           "Level": 1,
-          "Value": "branch_damage:200000,branch_chance:1/5"
+          "Value": "armor_reduction:20,duration:5,radius:500,cast_range:700,buff:B06Y"
         },
         {
           "Level": 2,
-          "Value": "branch_damage:2200000,boss_branch_chance:1/20"
+          "Value": "armor_reduction:25,duration:10,radius:500,cast_range:700,buff:B06Y"
         }
       ],
       "SourceRangeIds": [
-        "best-help-selection",
-        "poison-effect"
+        "best-help-selection"
       ]
     },
     {

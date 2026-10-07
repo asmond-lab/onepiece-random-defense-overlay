@@ -1,0 +1,38 @@
+[
+  {
+    "version": "2.314",
+    "length": 134758580,
+    "prefix": "484d3357000000007c636666303062666666ec9b90ed94bcec8aa4eb9e9ceb8da4eb9494ed8e9cec8aa45220322e3331345b525d0068e4010004000000000000",
+    "headers": [
+      {
+        "offset": 512,
+        "headerSize": 2097410,
+        "archiveSize": 134758068,
+        "version": 0,
+        "sectorShift": 3,
+        "hashOffset": 132660916,
+        "blockOffset": 133709492,
+        "hashCount": 65536,
+        "blockCount": 65536
+      }
+    ]
+  },
+  {
+    "version": "2.320",
+    "length": 119129261,
+    "prefix": "484d3357000000007c636666303062666666ec9b90ed94bcec8aa4eb9e9ceb8da4eb9494ed8e9cec8aa45220322e3332305b525d0068e4010004000000000000",
+    "headers": [
+      {
+        "offset": 2048,
+        "headerSize": 2097410,
+        "archiveSize": 119127213,
+        "version": 1,
+        "sectorShift": 21,
+        "hashOffset": 116913155,
+        "blockOffset": 117961731,
+        "hashCount": 65536,
+        "blockCount": 64749
+      }
+    ]
+  }
+]

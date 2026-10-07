@@ -6,30 +6,59 @@ using System.Windows.Media;
 namespace OrandOverlay;
 
 /// <summary>
-/// 롤체/닥지/OP.GG형 HUD 색·간격.
-/// 1번 피처드 + 나머지 표 + 상단 KPI 타일이다.
+/// Shared layout tokens and compatibility aliases for the neutral RandyPick theme.
 /// </summary>
 internal static class OverlayTheme
 {
-    public static readonly Color Gold = Color.FromRgb(240, 199, 94);
-    public static readonly Color Muted = Color.FromRgb(139, 147, 167);
-    public static readonly Color Hairline = Color.FromRgb(36, 41, 52);
-    public static readonly Color Chip = Color.FromRgb(20, 24, 32);
-    public static readonly Color Ok = Color.FromRgb(61, 220, 132);
-    public static readonly Color Warn = Color.FromRgb(240, 180, 70);
-    public static readonly Color Row = Color.FromRgb(12, 14, 18);
-    public static readonly Color RowAlt = Color.FromRgb(16, 19, 26);
-    public static readonly Color Featured = Color.FromRgb(18, 21, 28);
+    public static SolidColorBrush PlanCanvas => RandyPickTheme.Canvas;
+    public static SolidColorBrush PlanSurface => RandyPickTheme.Surface;
+    public static SolidColorBrush PlanRaised => RandyPickTheme.Raised;
+    public static SolidColorBrush PlanLine => RandyPickTheme.Border;
+    public static SolidColorBrush PlanText => RandyPickTheme.Text;
+    public static SolidColorBrush PlanSecondary => RandyPickTheme.Secondary;
+    public static SolidColorBrush PlanAccent => RandyPickTheme.Accent;
+    public static SolidColorBrush PlanSuccess => RandyPickTheme.Success;
+    public static SolidColorBrush PlanWarning => RandyPickTheme.Warning;
+    public static SolidColorBrush OutlineBrush => PlanLine;
+    public static SolidColorBrush FocusBrush => PlanAccent;
+    public static SolidColorBrush SelectionBorderBrush => RandyPickTheme.SelectionBorder;
+    public const double PlanTitleSize = 24;
+    public const double PlanHeadingSize = 16;
+    public const double PlanRailWidth = 180;
+    public static GridLength PlanRailColumn { get; } = new(PlanRailWidth);
+    public const double PlanSettingsWidth = 330;
+    public const double PlanActionWidth = 320;
+    public const double PlanSplitWidth = 800;
+    public const double PlanWindowWidth = 1400;
+    public const double PlanWindowHeight = 900;
+    public static Thickness PlanPagePadding { get; } = new(24);
+    public static Thickness PlanGap { get; } = new(0, 0, 24, 0);
+    public static Thickness PlanInset { get; } = new(8, 0, 8, 0);
+    public static Thickness PlanActionRule { get; } = new(0, 3, 0, 0);
+    public static Thickness PlanIconGap { get; } = new(0, 0, 12, 0);
+    public static Thickness PlanDetailInset { get; } = new(8, 12, 8, 0);
+    public static Thickness PlanTopGap { get; } = new(0, 16, 0, 0);
+    public static Thickness PlanTileGap { get; } = new(0, 0, 8, 8);
+    public const double PlanTrackHeight = 4;
+    public static readonly Color Gold = RandyPickTheme.TextColor;
+    public static readonly Color Muted = RandyPickTheme.MutedColor;
+    public static readonly Color Hairline = RandyPickTheme.BorderColor;
+    public static readonly Color Chip = RandyPickTheme.RaisedColor;
+    public static readonly Color Ok = RandyPickTheme.SuccessColor;
+    public static readonly Color Warn = RandyPickTheme.WarningColor;
+    public static readonly Color Row = RandyPickTheme.CanvasColor;
+    public static readonly Color RowAlt = RandyPickTheme.SurfaceColor;
+    public static readonly Color Featured = RandyPickTheme.RaisedColor;
 
-    public static SolidColorBrush GoldBrush { get; } = Freeze(Gold);
-    public static SolidColorBrush MutedBrush { get; } = Freeze(Muted);
-    public static SolidColorBrush OkBrush { get; } = Freeze(Ok);
-    public static SolidColorBrush WarnBrush { get; } = Freeze(Warn);
-    public static SolidColorBrush RowBrush { get; } = Freeze(Row);
-    public static SolidColorBrush RowAltBrush { get; } = Freeze(RowAlt);
-    public static SolidColorBrush FeaturedBrush { get; } = Freeze(Featured);
-    public static SolidColorBrush HairlineBrush { get; } = Freeze(Hairline);
-    public static SolidColorBrush WhiteBrush { get; } = Freeze(Colors.White);
+    public static SolidColorBrush GoldBrush => RandyPickTheme.Text;
+    public static SolidColorBrush MutedBrush => RandyPickTheme.Muted;
+    public static SolidColorBrush OkBrush => RandyPickTheme.Success;
+    public static SolidColorBrush WarnBrush => RandyPickTheme.Warning;
+    public static SolidColorBrush RowBrush => RandyPickTheme.Canvas;
+    public static SolidColorBrush RowAltBrush => RandyPickTheme.Surface;
+    public static SolidColorBrush FeaturedBrush => RandyPickTheme.Raised;
+    public static SolidColorBrush HairlineBrush => RandyPickTheme.Border;
+    public static SolidColorBrush WhiteBrush => RandyPickTheme.Text;
 
     public const double ChromeRadius = 16;
     public const double WellRadius = 12;
@@ -48,6 +77,13 @@ internal static class OverlayTheme
     public const double PlannerStateTypeSize = 9.5;
     public const double PlannerLabelTypeSize = 10;
     public const double PlannerValueTypeSize = 10.5;
+    public const double CoachTitleTypeSize = 20;
+    public const double CoachBodyTypeSize = 14;
+    public const double CoachMetaTypeSize = 12;
+    public const double CoachIconSize = 48;
+    public const double ControlMinHitHeight = 32;
+    public static Thickness CoachPanelPadding { get; } = new(16);
+    public static Thickness CoachSectionSpacing { get; } = new(0, 0, 0, 12);
 
     public static void AttachRoundClip(FrameworkElement element, double radius)
     {
@@ -70,7 +106,7 @@ internal static class OverlayTheme
         return new Border
         {
             Background = new SolidColorBrush(Chip),
-            BorderBrush = primary ? GoldBrush : HairlineBrush,
+            BorderBrush = primary ? SelectionBorderBrush : OutlineBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(ChipRadius),
             Padding = new Thickness(7, 2, 7, 2),
@@ -240,8 +276,8 @@ internal static class OverlayTheme
     public static Border FeaturedShell(UIElement child) => new()
     {
         Background = FeaturedBrush,
-        BorderBrush = GoldBrush,
-        BorderThickness = new Thickness(3, 0, 0, 0),
+        BorderBrush = OutlineBrush,
+        BorderThickness = new Thickness(1, 0, 0, 0),
         Padding = new Thickness(10, 10, 10, 10),
         Margin = new Thickness(0, 2, 0, 2),
         Child = child
@@ -313,7 +349,7 @@ internal static class OverlayTheme
         grid.Children.Add(new Border { Background = new SolidColorBrush(accent) });
         return new Border
         {
-            Background = new SolidColorBrush(Color.FromRgb(40, 45, 56)),
+            Background = RandyPickTheme.Border,
             CornerRadius = new CornerRadius(2),
             Child = grid
         };
@@ -516,10 +552,4 @@ internal static class OverlayTheme
         return block;
     }
 
-    private static SolidColorBrush Freeze(Color color)
-    {
-        var brush = new SolidColorBrush(color);
-        brush.Freeze();
-        return brush;
-    }
 }

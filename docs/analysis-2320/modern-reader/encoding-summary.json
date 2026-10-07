@@ -1,0 +1,62 @@
+[
+  {
+    "path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-ko-2.320\\war3map.j",
+    "length": 3014709,
+    "first64Hex": "676C6F62616C730A686173687461626C6520623D6E756C6C0A686173687461626C6520543D6E756C6C0A686173687461626C6520793D6E756C6C0A6861736874",
+    "encodings": {
+      "utf8": {
+        "endfunctionCount": 2650,
+        "roundtrip": true,
+        "valid": true,
+        "nulCount": 0,
+        "hangulCount": 25660,
+        "functionCount": 2650,
+        "lineCount": 86599
+      },
+      "cp949": {
+        "valid": false,
+        "index": 59718,
+        "failureWindowHex": "72696E67436173652822EBB0A9EC9AB8EB8F84EB9DBCECA7802333353536222C66616C7365290A6C6F",
+        "error": "Unable to translate bytes [EB][8F] at index 59718 from specified code page to Unicode."
+      }
+    }
+  },
+  {
+    "path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-2.320\\war3map.wts",
+    "length": 1816858,
+    "first64Hex": "EFBBBF535452494E4720300D0A2F2F20EC9CA0EB8B9B3A20683036432028EC9CA0EB8B9BEB8F84EBB095292C20486F746B65792028EB8BA8ECB695ED82A42028",
+    "encodings": {
+      "utf8": {
+        "valid": false,
+        "index": 33870,
+        "failureWindowHex": "36EBB688EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028EC9DB4EBA68420",
+        "error": "Unable to translate bytes [EB] at index 33870 from specified code page to Unicode."
+      },
+      "cp949": {
+        "valid": false,
+        "index": 16,
+        "failureWindowHex": "EFBBBF535452494E4720300D0A2F2F20EC9CA0EB8B9B3A20683036432028EC9CA0EB8B9BEB8F84EBB0",
+        "error": "Unable to translate bytes [EC][9C] at index 16 from specified code page to Unicode."
+      }
+    }
+  },
+  {
+    "path": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-2.314\\war3map.wts",
+    "length": 1756386,
+    "first64Hex": "EFBBBF535452494E4720300D0A2F2F20EC9CA0EB8B9B3A20683036432028EC9CA0EB8B9BEB8F84EBB095292C20486F746B65792028EB8BA8ECB695ED82A42028",
+    "encodings": {
+      "utf8": {
+        "valid": false,
+        "index": 33892,
+        "failureWindowHex": "36EBB688EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028EC9DB4EBA68420",
+        "error": "Unable to translate bytes [EB] at index 33892 from specified code page to Unicode."
+      },
+      "cp949": {
+        "valid": false,
+        "index": 16,
+        "failureWindowHex": "EFBBBF535452494E4720300D0A2F2F20EC9CA0EB8B9B3A20683036432028EC9CA0EB8B9BEB8F84EBB0",
+        "error": "Unable to translate bytes [EC][9C] at index 16 from specified code page to Unicode."
+      }
+    }
+  }
+]

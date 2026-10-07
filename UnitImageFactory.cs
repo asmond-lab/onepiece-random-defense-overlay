@@ -29,12 +29,12 @@ public static class UnitImageFactory
         {
             Width = size,
             Height = size,
-            Background = new SolidColorBrush(Color.FromRgb(55, 65, 81)),
+            Background = RandyPickTheme.Raised,
             CornerRadius = new CornerRadius(OverlayTheme.ImageRadius),
             Child = new TextBlock
             {
                 Text = FirstKoreanCharacter(unitName),
-                Foreground = Brushes.White,
+                Foreground = RandyPickTheme.Text,
                 FontWeight = FontWeights.Bold,
                 FontSize = Math.Max(11, size * 0.34),
                 HorizontalAlignment = HorizontalAlignment.Center,

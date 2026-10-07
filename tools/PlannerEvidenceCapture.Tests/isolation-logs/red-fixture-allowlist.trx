@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a3d1a400-80c6-4d14-96cd-7b4cb0dd7536" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:27:41" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:27:41.0350623+09:00" queuing="2026-09-07T19:27:41.0350625+09:00" start="2026-09-07T19:27:40.0841007+09:00" finish="2026-09-07T19:27:41.0386748+09:00" />
+  <TestSettings name="default" id="3f9f0d88-c07b-4ea0-a1f8-65670ceea61f">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_27_41" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="f3467784-d5dd-431a-ac89-141a9a843fa8" testId="1e0a3317-eef3-68c1-bf4a-1677129e08c3" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0025892" startTime="2026-09-07T19:27:40.4528128+09:00" endTime="2026-09-07T19:27:40.4528204+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f3467784-d5dd-431a-ac89-141a9a843fa8">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.NotNull() Failure: Value is null</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CapturePreflightTests.UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs:line 13&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5a1ae703-5b79-4044-8aea-177f988f234d" testId="ca73831b-1b58-c86d-20c6-a2abbf90a6a3" testName="PlannerEvidenceCapture.Tests.CapturePreflightTests.ActualBundledMetadataPassesLexicalPreflightWithoutWpf" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.5106744" startTime="2026-09-07T19:27:40.9625723+09:00" endTime="2026-09-07T19:27:40.9625726+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a1ae703-5b79-4044-8aea-177f988f234d">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : Unsafe fixture unit ID.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.CaptureInputContract.ValidateImageInput(String id, String fallback) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 15&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 54&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 46&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 48&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 46&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.ValidateJson(String json) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 42&#xD;
+   at PlannerEvidenceCapture.CaptureInputContract.ValidateBundledInputs(String dataDirectory) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs:line 31&#xD;
+   at PlannerEvidenceCapture.Tests.CapturePreflightTests.ActualBundledMetadataPassesLexicalPreflightWithoutWpf() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs:line 22&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.ActualBundledMetadataPassesLexicalPreflightWithoutWpf" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="ca73831b-1b58-c86d-20c6-a2abbf90a6a3">
+      <Execution id="5a1ae703-5b79-4044-8aea-177f988f234d" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="ActualBundledMetadataPassesLexicalPreflightWithoutWpf" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CapturePreflightTests.UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="1e0a3317-eef3-68c1-bf4a-1677129e08c3">
+      <Execution id="f3467784-d5dd-431a-ac89-141a9a843fa8" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CapturePreflightTests" name="UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="1e0a3317-eef3-68c1-bf4a-1677129e08c3" executionId="f3467784-d5dd-431a-ac89-141a9a843fa8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca73831b-1b58-c86d-20c6-a2abbf90a6a3" executionId="5a1ae703-5b79-4044-8aea-177f988f234d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="2" executed="2" passed="0" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.09]       Assert.NotNull() Failure: Value is null&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs(13,0): at PlannerEvidenceCapture.Tests.CapturePreflightTests.UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.60]       System.ArgumentException : Unsafe fixture unit ID.&#xD;
+[xUnit.net 00:00:00.60]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(15,0): at PlannerEvidenceCapture.CaptureInputContract.ValidateImageInput(String id, String fallback)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(54,0): at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(46,0): at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(48,0): at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(46,0): at PlannerEvidenceCapture.CaptureInputContract.&lt;ValidateJson&gt;g__Visit|3_0(JsonElement node, String key)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(42,0): at PlannerEvidenceCapture.CaptureInputContract.ValidateJson(String json)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureInputContract.cs(31,0): at PlannerEvidenceCapture.CaptureInputContract.ValidateBundledInputs(String dataDirectory)&#xD;
+[xUnit.net 00:00:00.60]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CapturePreflightTests.cs(22,0): at PlannerEvidenceCapture.Tests.CapturePreflightTests.ActualBundledMetadataPassesLexicalPreflightWithoutWpf()&#xD;
+[xUnit.net 00:00:00.60]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.60]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.60]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:27:40.4517523+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CapturePreflightTests.UnknownButLexicallySafeFixtureIdIsRejectedByBundledAllowlist [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:27:40.9623641+09:00">
+        <Text>[xUnit.net 00:00:00.60]     PlannerEvidenceCapture.Tests.CapturePreflightTests.ActualBundledMetadataPassesLexicalPreflightWithoutWpf [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

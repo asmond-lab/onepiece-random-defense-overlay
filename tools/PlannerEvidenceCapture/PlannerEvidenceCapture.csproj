@@ -10,4 +10,34 @@
     <ProjectReference Include="..\..\OrandOverlay.csproj" />
     <InternalsVisibleTo Include="PlannerEvidenceCapture.Tests" />
   </ItemGroup>
+  <!-- Development capture only: never imported by OrandOverlay.csproj. -->
+  <ItemGroup>
+    <CaptureFingerprintInput Include="../../App.xaml" CanonicalPath="App.xaml" />
+    <CaptureFingerprintInput Include="../../DESIGN.md" CanonicalPath="DESIGN.md" />
+    <CaptureFingerprintInput Include="../../BulletOperatingBoard.cs" CanonicalPath="BulletOperatingBoard.cs" />
+    <CaptureFingerprintInput Include="../../Data/bullet-strategy-2314.json" CanonicalPath="Data/bullet-strategy-2314.json" />
+    <CaptureFingerprintInput Include="../../FirstRareTargetPolicy.cs" CanonicalPath="FirstRareTargetPolicy.cs" />
+    <CaptureFingerprintInput Include="../../MainWindow.xaml" CanonicalPath="MainWindow.xaml" />
+    <CaptureFingerprintInput Include="../../MainWindow.xaml.cs" CanonicalPath="MainWindow.xaml.cs" />
+    <CaptureFingerprintInput Include="../../OverlayTheme.cs" CanonicalPath="OverlayTheme.cs" />
+    <CaptureFingerprintInput Include="../../OverlayWindow.xaml" CanonicalPath="OverlayWindow.xaml" />
+    <CaptureFingerprintInput Include="../../OverlayWindow.xaml.cs" CanonicalPath="OverlayWindow.xaml.cs" />
+    <CaptureFingerprintInput Include="../../RecommendationBoard.cs" CanonicalPath="RecommendationBoard.cs" />
+    <CaptureFingerprintInput Include="../../RecommendationPresentation.cs" CanonicalPath="RecommendationPresentation.cs" />
+    <CaptureFingerprintInput Include="../../tools/PlannerEvidenceCapture/CapturePixelContract.cs" CanonicalPath="tools/PlannerEvidenceCapture/CapturePixelContract.cs" />
+    <CaptureFingerprintInput Include="../../tools/PlannerEvidenceCapture/Program.cs" CanonicalPath="tools/PlannerEvidenceCapture/Program.cs" />
+    <Content Include="@(CaptureFingerprintInput)" Link="FingerprintInputs/%(CanonicalPath).input"
+             CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
+  </ItemGroup>
+  <Target Name="BindCaptureFingerprintInputs" BeforeTargets="GetAssemblyAttributes">
+    <GetFileHash Files="@(CaptureFingerprintInput)" Algorithm="SHA256">
+      <Output TaskParameter="Items" ItemName="HashedCaptureFingerprintInput" />
+    </GetFileHash>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>CaptureSource:%(HashedCaptureFingerprintInput.CanonicalPath)</_Parameter1>
+        <_Parameter2>%(HashedCaptureFingerprintInput.FileHash)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>

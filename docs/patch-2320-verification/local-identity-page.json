@@ -1,0 +1,13 @@
+{
+  "Pid": 79380,
+  "SameSession": true,
+  "Version": "3.0.0.24268",
+  "Rva": "0xCA73D0",
+  "State": 4096,
+  "Protection": 1,
+  "Readable": false,
+  "BytesRead": 0,
+  "Code": null,
+  "WritesPerformed": false,
+  "Approval": false
+}

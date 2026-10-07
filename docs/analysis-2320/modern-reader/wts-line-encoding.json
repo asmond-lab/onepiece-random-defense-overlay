@@ -1,0 +1,104 @@
+[
+  {
+    "version": "2.320",
+    "inspection": {
+      "lines": 72969,
+      "nonAsciiLines": 25681,
+      "utf8OnlyLines": 24860,
+      "cp949OnlyLines": 0,
+      "bothValidLines": 816,
+      "neitherValidLines": 5,
+      "utf8InvalidLines": 5,
+      "utf8InvalidCommentLines": 5,
+      "utf8InvalidStringValueLines": 0,
+      "samples": [
+        {
+          "line": 1521,
+          "offset": 33870,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028"
+        },
+        {
+          "line": 1527,
+          "offset": 34067,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C204E616D652028EC9DB4EBA6842028"
+        },
+        {
+          "line": 1767,
+          "offset": 39970,
+          "comment": true,
+          "inside": false,
+          "windowHex": "2D207C636666303066613961EC292C204E616D652028EC9DB4EBA6842028"
+        },
+        {
+          "line": 2335,
+          "offset": 53162,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028"
+        },
+        {
+          "line": 2341,
+          "offset": 53359,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C204E616D652028EC9DB4EBA6842028"
+        }
+      ]
+    }
+  },
+  {
+    "version": "2.314",
+    "inspection": {
+      "lines": 70760,
+      "nonAsciiLines": 24974,
+      "utf8OnlyLines": 24165,
+      "cp949OnlyLines": 0,
+      "bothValidLines": 804,
+      "neitherValidLines": 5,
+      "utf8InvalidLines": 5,
+      "utf8InvalidCommentLines": 5,
+      "utf8InvalidStringValueLines": 0,
+      "samples": [
+        {
+          "line": 1521,
+          "offset": 33892,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028"
+        },
+        {
+          "line": 1527,
+          "offset": 34089,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C204E616D652028EC9DB4EBA6842028"
+        },
+        {
+          "line": 1767,
+          "offset": 39985,
+          "comment": true,
+          "inside": false,
+          "windowHex": "2D207C636666303066613961EC292C204E616D652028EC9DB4EBA6842028"
+        },
+        {
+          "line": 2335,
+          "offset": 53155,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C20456469746F725375666669782028"
+        },
+        {
+          "line": 2341,
+          "offset": 53352,
+          "comment": true,
+          "inside": false,
+          "windowHex": "EBA9B87C7220EC868CED9998EB292C204E616D652028EC9DB4EBA6842028"
+        }
+      ]
+    }
+  }
+]

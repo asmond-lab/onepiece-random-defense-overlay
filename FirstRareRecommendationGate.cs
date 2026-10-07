@@ -44,9 +44,7 @@ public sealed class FirstRareRecommendationGate
 
     public static bool IsQuestWindow(IEnumerable<InventoryEntry> inventory, int currentRound)
     {
-        if (currentRound > 0) return currentRound < QuestDeadlineRound;
-        return inventory.Where(entry => entry.Count > 0).Sum(entry => entry.Count) <=
-               MaximumUnknownRoundInventory;
+        return currentRound is > 0 and < QuestDeadlineRound;
     }
 
     public void Reset()

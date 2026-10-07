@@ -1,0 +1,61 @@
+{
+  "Surface": "real MainWindow.ScanAsync -\u003E CoachRendered; controlled tracker/scanner/ReadyDiagnostics inputs",
+  "Rows": [
+    {
+      "Name": "old-round65",
+      "ConfirmsSessionBoundary": false,
+      "MapState": {
+        "MaxRound": 65,
+        "SettlementCopies": 3,
+        "Difficulty": "\uC545\uBABD"
+      },
+      "Round": 65,
+      "MatchGeneration": 0,
+      "Difficulty": "\uC545\uBABD",
+      "Outcome": "unknown",
+      "IsCurrent": true,
+      "Kind": "Navigation"
+    },
+    {
+      "Name": "unconfirmed-rollback",
+      "ConfirmsSessionBoundary": false,
+      "MapState": {
+        "MaxRound": 65,
+        "SettlementCopies": 3,
+        "Difficulty": "\uC545\uBABD"
+      },
+      "Round": 65,
+      "MatchGeneration": 0,
+      "Difficulty": "\uC545\uBABD",
+      "Outcome": "unknown",
+      "IsCurrent": true,
+      "Kind": "Navigation"
+    },
+    {
+      "Name": "confirmed-boundary",
+      "ConfirmsSessionBoundary": true,
+      "MapState": null,
+      "Round": 0,
+      "MatchGeneration": 1,
+      "Difficulty": "unknown",
+      "Outcome": "unknown",
+      "IsCurrent": true,
+      "Kind": "Craft"
+    },
+    {
+      "Name": "new-round1",
+      "ConfirmsSessionBoundary": false,
+      "MapState": {
+        "MaxRound": 1,
+        "SettlementCopies": 0,
+        "Difficulty": "\uBCF4\uD1B5"
+      },
+      "Round": 1,
+      "MatchGeneration": 1,
+      "Difficulty": "\uBCF4\uD1B5",
+      "Outcome": "unknown",
+      "IsCurrent": true,
+      "Kind": "Craft"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ namespace OrandOverlay.Tests;
 public sealed class AppUpdateCoordinatorTests
 {
     private static AppUpdateCoordinator Create() => new(
+        OverlayExecutionContext.Fixture(new AppSettings()),
         new AppSettings(),
         isLiveSession: () => false,
         notifyFooter: _ => Task.CompletedTask,

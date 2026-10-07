@@ -9,11 +9,15 @@ internal static class AdaptivePlanningCoordinatorSimulationFactory
         AdaptivePlanningInputSource source, IReadOnlyDictionary<string, int> inventory)
     {
         var baseline = routes.Selected ?? routes.BestPhysical ?? routes.BestMagic;
+        var goalBundle = RouteQuestEvaluation.Evaluate(source);
         var allied = new AlliedForcesNavigationSimulation(profile,
-            new RouteCounterfactualEvaluator(baseline?.FinalLowerBp ?? 0));
-        var craftValues = routes.PhysicalCandidates.Concat(routes.MagicCandidates)
+            new RouteCounterfactualEvaluator(source.PlannedGoalUnitIds.IsDefaultOrEmpty
+                ? baseline?.FinalLowerBp ?? 0 : goalBundle.PlannedBuildBp));
+        var craftValues = source.PlannedGoalUnitIds.IsDefaultOrEmpty
+            ? routes.PhysicalCandidates.Concat(routes.MagicCandidates)
             .Select(route => checked((int)Math.Min(int.MaxValue, route.GoalMissingLeaves)))
-            .ToImmutableArray();
+            .ToImmutableArray()
+            : ImmutableArray.Create(checked((int)Math.Min(int.MaxValue, goalBundle.PlannedMissingLeaves)));
         var alliedResults = ImmutableArray.Create(
             allied.SimulateDoubleBenefit(craftValues),
             allied.SimulateEmergencyCall([], craftValues),
@@ -21,7 +25,7 @@ internal static class AdaptivePlanningCoordinatorSimulationFactory
                 AlliedResourceInterval.UnknownFinite(0, 3),
                 AlliedResourceInterval.UnknownFinite(0, 3), 0, 0, craftValues));
 
-        var topCount = RouteQuestEvaluation.Evaluate(source).PlannedTopCount;
+        var topCount = goalBundle.PlannedTopCount;
         var pathInput = new PathOfKingsSimulationInput(topCount, 0, 0, 0, false, [],
             profile.Fixture("royal-piecewise-proc-branches").SemanticInput.RoyalAttackScenarios);
         var path = new PathOfKingsNavigationSimulation(profile);

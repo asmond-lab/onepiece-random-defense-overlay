@@ -1,0 +1,2485 @@
+{
+  "schemaVersion": 1,
+  "mapVersion": "2.322",
+  "mapSha256": "93baeb58a6d7ad7e25c7e8a44a345f0c39b5907aa9c1774995730d4fbd101d9b",
+  "jassSha256": "6805a1def612d237ba0046a5000f8a2514e928445c8071ecb734b874fa39b47d",
+  "registryCount": 246,
+  "abilityCount": 198,
+  "categoryCounts": [
+    91,
+    112,
+    36,
+    7
+  ],
+  "source": "artifacts/ordr-2322/map-extracted/war3map.j",
+  "registryLines": [
+    84213,
+    84476
+  ],
+  "aggregationLines": [
+    45030,
+    45228
+  ],
+  "rows": [
+    {
+      "index": 0,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 1,
+      "family": "A0QJ",
+      "value": 0,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 1,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 2,
+      "family": "A0QJ",
+      "value": -5,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 2,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 3,
+      "family": "A0QJ",
+      "value": -10,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 3,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 4,
+      "family": "A0QJ",
+      "value": -15,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 4,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 5,
+      "family": "A0QJ",
+      "value": -20,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 5,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 6,
+      "family": "A0QJ",
+      "value": -25,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 6,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 7,
+      "family": "A0QJ",
+      "value": -30,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 7,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 8,
+      "family": "A0QJ",
+      "value": -35,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 8,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 9,
+      "family": "A0QJ",
+      "value": -40,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 9,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 10,
+      "family": "A0QJ",
+      "value": -45,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 10,
+      "ability": "A0QJ",
+      "category": 1,
+      "level": 11,
+      "family": "A0QJ",
+      "value": -50,
+      "startLine": 84236,
+      "endLine": 84236
+    },
+    {
+      "index": 11,
+      "ability": "A15G",
+      "category": 1,
+      "level": 1,
+      "family": "B02M",
+      "value": -35.0,
+      "startLine": 84239,
+      "endLine": 84239
+    },
+    {
+      "index": 12,
+      "ability": "A14K",
+      "category": 1,
+      "level": 1,
+      "family": "B01L",
+      "value": -40.0,
+      "startLine": 84240,
+      "endLine": 84240
+    },
+    {
+      "index": 13,
+      "ability": "A146",
+      "category": 1,
+      "level": 1,
+      "family": "A146",
+      "value": -20.0,
+      "startLine": 84241,
+      "endLine": 84241
+    },
+    {
+      "index": 14,
+      "ability": "A13U",
+      "category": 1,
+      "level": 1,
+      "family": "B084",
+      "value": -35.0,
+      "startLine": 84242,
+      "endLine": 84242
+    },
+    {
+      "index": 15,
+      "ability": "A132",
+      "category": 1,
+      "level": 1,
+      "family": "B00C",
+      "value": -5.0,
+      "startLine": 84243,
+      "endLine": 84243
+    },
+    {
+      "index": 16,
+      "ability": "A12A",
+      "category": 1,
+      "level": 1,
+      "family": "A12A",
+      "value": -25.0,
+      "startLine": 84244,
+      "endLine": 84244
+    },
+    {
+      "index": 17,
+      "ability": "A12A",
+      "category": 1,
+      "level": 2,
+      "family": "A12A",
+      "value": -25.0,
+      "startLine": 84245,
+      "endLine": 84245
+    },
+    {
+      "index": 18,
+      "ability": "A11A",
+      "category": 1,
+      "level": 1,
+      "family": "B06Y",
+      "value": -25.0,
+      "startLine": 84246,
+      "endLine": 84246
+    },
+    {
+      "index": 19,
+      "ability": "A112",
+      "category": 1,
+      "level": 1,
+      "family": "B00A",
+      "value": -35.0,
+      "startLine": 84247,
+      "endLine": 84247
+    },
+    {
+      "index": 20,
+      "ability": "A10Y",
+      "category": 1,
+      "level": 1,
+      "family": "B07J",
+      "value": -15.0,
+      "startLine": 84248,
+      "endLine": 84248
+    },
+    {
+      "index": 21,
+      "ability": "A10I",
+      "category": 1,
+      "level": 1,
+      "family": "A10I",
+      "value": -50.0,
+      "startLine": 84249,
+      "endLine": 84249
+    },
+    {
+      "index": 22,
+      "ability": "A0YX",
+      "category": 1,
+      "level": 1,
+      "family": "B072",
+      "value": -15.0,
+      "startLine": 84250,
+      "endLine": 84250
+    },
+    {
+      "index": 23,
+      "ability": "A0XD",
+      "category": 1,
+      "level": 1,
+      "family": "B00Y",
+      "value": -25.0,
+      "startLine": 84251,
+      "endLine": 84251
+    },
+    {
+      "index": 24,
+      "ability": "A0X8",
+      "category": 1,
+      "level": 1,
+      "family": "B00A",
+      "value": -20.0,
+      "startLine": 84252,
+      "endLine": 84252
+    },
+    {
+      "index": 25,
+      "ability": "A0WN",
+      "category": 1,
+      "level": 1,
+      "family": "A0WN",
+      "value": -5.0,
+      "startLine": 84253,
+      "endLine": 84253
+    },
+    {
+      "index": 26,
+      "ability": "A0WN",
+      "category": 1,
+      "level": 2,
+      "family": "A0WN",
+      "value": -20.0,
+      "startLine": 84254,
+      "endLine": 84254
+    },
+    {
+      "index": 27,
+      "ability": "A0WN",
+      "category": 1,
+      "level": 3,
+      "family": "A0WN",
+      "value": -40.0,
+      "startLine": 84255,
+      "endLine": 84255
+    },
+    {
+      "index": 28,
+      "ability": "A0WN",
+      "category": 1,
+      "level": 4,
+      "family": "A0WN",
+      "value": -50.0,
+      "startLine": 84256,
+      "endLine": 84256
+    },
+    {
+      "index": 29,
+      "ability": "A0W2",
+      "category": 1,
+      "level": 1,
+      "family": "B06K",
+      "value": -44.0,
+      "startLine": 84257,
+      "endLine": 84257
+    },
+    {
+      "index": 30,
+      "ability": "A0VR",
+      "category": 1,
+      "level": 1,
+      "family": "B05T",
+      "value": -30.0,
+      "startLine": 84258,
+      "endLine": 84258
+    },
+    {
+      "index": 31,
+      "ability": "A0UL",
+      "category": 1,
+      "level": 1,
+      "family": "B06F",
+      "value": -35.0,
+      "startLine": 84259,
+      "endLine": 84259
+    },
+    {
+      "index": 32,
+      "ability": "A0TN",
+      "category": 1,
+      "level": 1,
+      "family": "B06B",
+      "value": -35.0,
+      "startLine": 84260,
+      "endLine": 84260
+    },
+    {
+      "index": 33,
+      "ability": "A0TF",
+      "category": 1,
+      "level": 1,
+      "family": "B02I",
+      "value": -38.0,
+      "startLine": 84261,
+      "endLine": 84261
+    },
+    {
+      "index": 34,
+      "ability": "A0T9",
+      "category": 1,
+      "level": 1,
+      "family": "B069",
+      "value": -15.0,
+      "startLine": 84262,
+      "endLine": 84262
+    },
+    {
+      "index": 35,
+      "ability": "A0SZ",
+      "category": 1,
+      "level": 1,
+      "family": "B02O",
+      "value": -15.0,
+      "startLine": 84263,
+      "endLine": 84263
+    },
+    {
+      "index": 36,
+      "ability": "A0SB",
+      "category": 1,
+      "level": 1,
+      "family": "B061",
+      "value": -45.0,
+      "startLine": 84264,
+      "endLine": 84264
+    },
+    {
+      "index": 37,
+      "ability": "A0S7",
+      "category": 1,
+      "level": 1,
+      "family": "B06Y",
+      "value": -25.0,
+      "startLine": 84265,
+      "endLine": 84265
+    },
+    {
+      "index": 38,
+      "ability": "A0R8",
+      "category": 1,
+      "level": 1,
+      "family": "B05Q",
+      "value": -11.0,
+      "startLine": 84266,
+      "endLine": 84266
+    },
+    {
+      "index": 39,
+      "ability": "A0QE",
+      "category": 1,
+      "level": 1,
+      "family": "A0QE",
+      "value": -30.0,
+      "startLine": 84267,
+      "endLine": 84267
+    },
+    {
+      "index": 40,
+      "ability": "A0QE",
+      "category": 1,
+      "level": 2,
+      "family": "A0QE",
+      "value": -35.0,
+      "startLine": 84268,
+      "endLine": 84268
+    },
+    {
+      "index": 41,
+      "ability": "A0QE",
+      "category": 1,
+      "level": 3,
+      "family": "A0QE",
+      "value": -42.0,
+      "startLine": 84269,
+      "endLine": 84269
+    },
+    {
+      "index": 42,
+      "ability": "A0PM",
+      "category": 1,
+      "level": 1,
+      "family": "B05B",
+      "value": -7.0,
+      "startLine": 84270,
+      "endLine": 84270
+    },
+    {
+      "index": 43,
+      "ability": "A0PK",
+      "category": 1,
+      "level": 1,
+      "family": "B011",
+      "value": -25.0,
+      "startLine": 84271,
+      "endLine": 84271
+    },
+    {
+      "index": 44,
+      "ability": "A0OR",
+      "category": 1,
+      "level": 1,
+      "family": "B051",
+      "value": -22.0,
+      "startLine": 84272,
+      "endLine": 84272
+    },
+    {
+      "index": 45,
+      "ability": "A0OI",
+      "category": 1,
+      "level": 1,
+      "family": "B025",
+      "value": -50.0,
+      "startLine": 84273,
+      "endLine": 84273
+    },
+    {
+      "index": 46,
+      "ability": "A0O7",
+      "category": 1,
+      "level": 1,
+      "family": "B04S",
+      "value": -3.0,
+      "startLine": 84274,
+      "endLine": 84274
+    },
+    {
+      "index": 47,
+      "ability": "A0O0",
+      "category": 1,
+      "level": 1,
+      "family": "B04R",
+      "value": -6.0,
+      "startLine": 84275,
+      "endLine": 84275
+    },
+    {
+      "index": 48,
+      "ability": "A0NR",
+      "category": 1,
+      "level": 1,
+      "family": "A0NR",
+      "value": -35.0,
+      "startLine": 84276,
+      "endLine": 84276
+    },
+    {
+      "index": 49,
+      "ability": "A0NR",
+      "category": 1,
+      "level": 2,
+      "family": "A0NR",
+      "value": -40.0,
+      "startLine": 84277,
+      "endLine": 84277
+    },
+    {
+      "index": 50,
+      "ability": "A0NJ",
+      "category": 1,
+      "level": 1,
+      "family": "B04E",
+      "value": -30.0,
+      "startLine": 84278,
+      "endLine": 84278
+    },
+    {
+      "index": 51,
+      "ability": "A0MZ",
+      "category": 1,
+      "level": 1,
+      "family": "B04B",
+      "value": -25.0,
+      "startLine": 84279,
+      "endLine": 84279
+    },
+    {
+      "index": 52,
+      "ability": "A0M4",
+      "category": 1,
+      "level": 1,
+      "family": "B02B",
+      "value": -35.0,
+      "startLine": 84280,
+      "endLine": 84280
+    },
+    {
+      "index": 53,
+      "ability": "A0LM",
+      "category": 1,
+      "level": 1,
+      "family": "B03T",
+      "value": -25.0,
+      "startLine": 84281,
+      "endLine": 84281
+    },
+    {
+      "index": 54,
+      "ability": "A0KU",
+      "category": 1,
+      "level": 1,
+      "family": "B03J",
+      "value": -30.0,
+      "startLine": 84282,
+      "endLine": 84282
+    },
+    {
+      "index": 55,
+      "ability": "A0JP",
+      "category": 1,
+      "level": 1,
+      "family": "B03A",
+      "value": -60.0,
+      "startLine": 84283,
+      "endLine": 84283
+    },
+    {
+      "index": 56,
+      "ability": "A0J7",
+      "category": 1,
+      "level": 1,
+      "family": "B00U",
+      "value": -20.0,
+      "startLine": 84284,
+      "endLine": 84284
+    },
+    {
+      "index": 57,
+      "ability": "A0HK",
+      "category": 1,
+      "level": 1,
+      "family": "B02W",
+      "value": -22.0,
+      "startLine": 84285,
+      "endLine": 84285
+    },
+    {
+      "index": 58,
+      "ability": "A0H9",
+      "category": 1,
+      "level": 1,
+      "family": "B02U",
+      "value": -20.0,
+      "startLine": 84286,
+      "endLine": 84286
+    },
+    {
+      "index": 59,
+      "ability": "A0H5",
+      "category": 1,
+      "level": 1,
+      "family": "B02R",
+      "value": -12.0,
+      "startLine": 84287,
+      "endLine": 84287
+    },
+    {
+      "index": 60,
+      "ability": "A0GW",
+      "category": 1,
+      "level": 1,
+      "family": "B02Q",
+      "value": -25.0,
+      "startLine": 84288,
+      "endLine": 84288
+    },
+    {
+      "index": 61,
+      "ability": "A0GU",
+      "category": 1,
+      "level": 1,
+      "family": "B02P",
+      "value": -18.0,
+      "startLine": 84289,
+      "endLine": 84289
+    },
+    {
+      "index": 62,
+      "ability": "A0GN",
+      "category": 1,
+      "level": 1,
+      "family": "B02O",
+      "value": -15.0,
+      "startLine": 84290,
+      "endLine": 84290
+    },
+    {
+      "index": 63,
+      "ability": "A0GJ",
+      "category": 1,
+      "level": 1,
+      "family": "B02M",
+      "value": -25.0,
+      "startLine": 84291,
+      "endLine": 84291
+    },
+    {
+      "index": 64,
+      "ability": "A0G4",
+      "category": 1,
+      "level": 1,
+      "family": "B02I",
+      "value": -18.0,
+      "startLine": 84292,
+      "endLine": 84292
+    },
+    {
+      "index": 65,
+      "ability": "A0FW",
+      "category": 1,
+      "level": 1,
+      "family": "B01H",
+      "value": -10.0,
+      "startLine": 84293,
+      "endLine": 84293
+    },
+    {
+      "index": 66,
+      "ability": "A0FM",
+      "category": 1,
+      "level": 1,
+      "family": "B011",
+      "value": -10.0,
+      "startLine": 84294,
+      "endLine": 84294
+    },
+    {
+      "index": 67,
+      "ability": "A0EO",
+      "category": 1,
+      "level": 1,
+      "family": "B02G",
+      "value": -3.0,
+      "startLine": 84295,
+      "endLine": 84295
+    },
+    {
+      "index": 68,
+      "ability": "A0DN",
+      "category": 1,
+      "level": 1,
+      "family": "B02B",
+      "value": -20.0,
+      "startLine": 84296,
+      "endLine": 84296
+    },
+    {
+      "index": 69,
+      "ability": "A0DF",
+      "category": 1,
+      "level": 1,
+      "family": "B029",
+      "value": -11.0,
+      "startLine": 84297,
+      "endLine": 84297
+    },
+    {
+      "index": 70,
+      "ability": "A0CU",
+      "category": 1,
+      "level": 1,
+      "family": "B025",
+      "value": -18.0,
+      "startLine": 84298,
+      "endLine": 84298
+    },
+    {
+      "index": 71,
+      "ability": "A0CF",
+      "category": 1,
+      "level": 1,
+      "family": "B021",
+      "value": -60.0,
+      "startLine": 84299,
+      "endLine": 84299
+    },
+    {
+      "index": 72,
+      "ability": "A0BE",
+      "category": 1,
+      "level": 1,
+      "family": "B01U",
+      "value": -20.0,
+      "startLine": 84300,
+      "endLine": 84300
+    },
+    {
+      "index": 73,
+      "ability": "A0B0",
+      "category": 1,
+      "level": 1,
+      "family": "B01Q",
+      "value": -45.0,
+      "startLine": 84301,
+      "endLine": 84301
+    },
+    {
+      "index": 74,
+      "ability": "A0AP",
+      "category": 1,
+      "level": 1,
+      "family": "B01L",
+      "value": -33.0,
+      "startLine": 84302,
+      "endLine": 84302
+    },
+    {
+      "index": 75,
+      "ability": "A09P",
+      "category": 1,
+      "level": 1,
+      "family": "B061",
+      "value": -45.0,
+      "startLine": 84303,
+      "endLine": 84303
+    },
+    {
+      "index": 76,
+      "ability": "A09K",
+      "category": 1,
+      "level": 1,
+      "family": "B01D",
+      "value": -10.0,
+      "startLine": 84304,
+      "endLine": 84304
+    },
+    {
+      "index": 77,
+      "ability": "A09H",
+      "category": 1,
+      "level": 1,
+      "family": "B01B",
+      "value": -12.0,
+      "startLine": 84305,
+      "endLine": 84305
+    },
+    {
+      "index": 78,
+      "ability": "A08W",
+      "category": 1,
+      "level": 1,
+      "family": "B017",
+      "value": -25.0,
+      "startLine": 84306,
+      "endLine": 84306
+    },
+    {
+      "index": 79,
+      "ability": "A08U",
+      "category": 1,
+      "level": 1,
+      "family": "B016",
+      "value": -30.0,
+      "startLine": 84307,
+      "endLine": 84307
+    },
+    {
+      "index": 80,
+      "ability": "A08N",
+      "category": 1,
+      "level": 1,
+      "family": "B011",
+      "value": -3.0,
+      "startLine": 84308,
+      "endLine": 84308
+    },
+    {
+      "index": 81,
+      "ability": "A07X",
+      "category": 1,
+      "level": 1,
+      "family": "A07X",
+      "value": -20.0,
+      "startLine": 84309,
+      "endLine": 84309
+    },
+    {
+      "index": 82,
+      "ability": "A07X",
+      "category": 1,
+      "level": 2,
+      "family": "A07X",
+      "value": -25.0,
+      "startLine": 84310,
+      "endLine": 84310
+    },
+    {
+      "index": 83,
+      "ability": "A06Q",
+      "category": 1,
+      "level": 1,
+      "family": "B00U",
+      "value": -20.0,
+      "startLine": 84311,
+      "endLine": 84311
+    },
+    {
+      "index": 84,
+      "ability": "A06I",
+      "category": 1,
+      "level": 1,
+      "family": "B00P",
+      "value": -15.0,
+      "startLine": 84312,
+      "endLine": 84312
+    },
+    {
+      "index": 85,
+      "ability": "A06E",
+      "category": 1,
+      "level": 1,
+      "family": "B00N",
+      "value": -27.0,
+      "startLine": 84313,
+      "endLine": 84313
+    },
+    {
+      "index": 86,
+      "ability": "A060",
+      "category": 1,
+      "level": 1,
+      "family": "B00K",
+      "value": -20.0,
+      "startLine": 84314,
+      "endLine": 84314
+    },
+    {
+      "index": 87,
+      "ability": "A05X",
+      "category": 1,
+      "level": 1,
+      "family": "B06Y",
+      "value": -20.0,
+      "startLine": 84315,
+      "endLine": 84315
+    },
+    {
+      "index": 88,
+      "ability": "A034",
+      "category": 1,
+      "level": 1,
+      "family": "B088",
+      "value": -40.0,
+      "startLine": 84316,
+      "endLine": 84316
+    },
+    {
+      "index": 89,
+      "ability": "A031",
+      "category": 1,
+      "level": 1,
+      "family": "B000",
+      "value": -25.0,
+      "startLine": 84317,
+      "endLine": 84317
+    },
+    {
+      "index": 90,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 1,
+      "family": "A0S1",
+      "value": 0,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 91,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 2,
+      "family": "A0S1",
+      "value": 5,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 92,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 3,
+      "family": "A0S1",
+      "value": 10,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 93,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 4,
+      "family": "A0S1",
+      "value": 15,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 94,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 5,
+      "family": "A0S1",
+      "value": 20,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 95,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 6,
+      "family": "A0S1",
+      "value": 25,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 96,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 7,
+      "family": "A0S1",
+      "value": 30,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 97,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 8,
+      "family": "A0S1",
+      "value": 35,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 98,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 9,
+      "family": "A0S1",
+      "value": 40,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 99,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 10,
+      "family": "A0S1",
+      "value": 45,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 100,
+      "ability": "A0S1",
+      "category": 2,
+      "level": 11,
+      "family": "A0S1",
+      "value": 50,
+      "startLine": 84327,
+      "endLine": 84327
+    },
+    {
+      "index": 101,
+      "ability": "A18I",
+      "category": 2,
+      "level": 1,
+      "family": "B028",
+      "value": 99.0,
+      "startLine": 84330,
+      "endLine": 84330
+    },
+    {
+      "index": 102,
+      "ability": "A173",
+      "category": 2,
+      "level": 1,
+      "family": "A173",
+      "value": 45.0,
+      "startLine": 84331,
+      "endLine": 84331
+    },
+    {
+      "index": 103,
+      "ability": "A173",
+      "category": 2,
+      "level": 2,
+      "family": "A173",
+      "value": 60.0,
+      "startLine": 84332,
+      "endLine": 84332
+    },
+    {
+      "index": 104,
+      "ability": "A14Z",
+      "category": 2,
+      "level": 1,
+      "family": "B02N",
+      "value": 25.0,
+      "startLine": 84333,
+      "endLine": 84333
+    },
+    {
+      "index": 105,
+      "ability": "A141",
+      "category": 2,
+      "level": 1,
+      "family": "B083",
+      "value": 30.0,
+      "startLine": 84334,
+      "endLine": 84334
+    },
+    {
+      "index": 106,
+      "ability": "A12U",
+      "category": 2,
+      "level": 1,
+      "family": "B03O",
+      "value": 20.0,
+      "startLine": 84335,
+      "endLine": 84335
+    },
+    {
+      "index": 107,
+      "ability": "A10N",
+      "category": 2,
+      "level": 1,
+      "family": "B07M",
+      "value": 40.0,
+      "startLine": 84336,
+      "endLine": 84336
+    },
+    {
+      "index": 108,
+      "ability": "A10D",
+      "category": 2,
+      "level": 1,
+      "family": "B004",
+      "value": 35.0,
+      "startLine": 84337,
+      "endLine": 84337
+    },
+    {
+      "index": 109,
+      "ability": "A109",
+      "category": 2,
+      "level": 1,
+      "family": "B07D",
+      "value": 20.0,
+      "startLine": 84338,
+      "endLine": 84338
+    },
+    {
+      "index": 110,
+      "ability": "A100",
+      "category": 2,
+      "level": 1,
+      "family": "B06Q",
+      "value": 10.0,
+      "startLine": 84339,
+      "endLine": 84339
+    },
+    {
+      "index": 111,
+      "ability": "A0ZU",
+      "category": 2,
+      "level": 1,
+      "family": "B07C",
+      "value": 30.0,
+      "startLine": 84340,
+      "endLine": 84340
+    },
+    {
+      "index": 112,
+      "ability": "A0Z9",
+      "category": 2,
+      "level": 1,
+      "family": "B07L",
+      "value": 45.0,
+      "startLine": 84341,
+      "endLine": 84341
+    },
+    {
+      "index": 113,
+      "ability": "A0YT",
+      "category": 2,
+      "level": 1,
+      "family": "B03V",
+      "value": 20.0,
+      "startLine": 84342,
+      "endLine": 84342
+    },
+    {
+      "index": 114,
+      "ability": "A0XV",
+      "category": 2,
+      "level": 1,
+      "family": "B01W",
+      "value": 30.0,
+      "startLine": 84343,
+      "endLine": 84343
+    },
+    {
+      "index": 115,
+      "ability": "A0X9",
+      "category": 2,
+      "level": 1,
+      "family": "B00X",
+      "value": 40.0,
+      "startLine": 84344,
+      "endLine": 84344
+    },
+    {
+      "index": 116,
+      "ability": "A0WW",
+      "category": 2,
+      "level": 1,
+      "family": "B06X",
+      "value": 50.0,
+      "startLine": 84345,
+      "endLine": 84345
+    },
+    {
+      "index": 117,
+      "ability": "A0WV",
+      "category": 2,
+      "level": 1,
+      "family": "B06U",
+      "value": 20.0,
+      "startLine": 84346,
+      "endLine": 84346
+    },
+    {
+      "index": 118,
+      "ability": "A0WB",
+      "category": 2,
+      "level": 1,
+      "family": "B06L",
+      "value": 20.0,
+      "startLine": 84347,
+      "endLine": 84347
+    },
+    {
+      "index": 119,
+      "ability": "A0VK",
+      "category": 2,
+      "level": 1,
+      "family": "B068",
+      "value": 7.0,
+      "startLine": 84348,
+      "endLine": 84348
+    },
+    {
+      "index": 120,
+      "ability": "A0UJ",
+      "category": 2,
+      "level": 1,
+      "family": "B04P",
+      "value": 30.0,
+      "startLine": 84349,
+      "endLine": 84349
+    },
+    {
+      "index": 121,
+      "ability": "A0T7",
+      "category": 2,
+      "level": 1,
+      "family": "B065",
+      "value": 40.0,
+      "startLine": 84350,
+      "endLine": 84350
+    },
+    {
+      "index": 122,
+      "ability": "A0SR",
+      "category": 2,
+      "level": 1,
+      "family": "B04D",
+      "value": 15.0,
+      "startLine": 84351,
+      "endLine": 84351
+    },
+    {
+      "index": 123,
+      "ability": "A0SK",
+      "category": 2,
+      "level": 1,
+      "family": "B06Q",
+      "value": 10.0,
+      "startLine": 84352,
+      "endLine": 84352
+    },
+    {
+      "index": 124,
+      "ability": "A0RY",
+      "category": 2,
+      "level": 1,
+      "family": "A0RY",
+      "value": 70.0,
+      "startLine": 84353,
+      "endLine": 84353
+    },
+    {
+      "index": 125,
+      "ability": "A0RY",
+      "category": 2,
+      "level": 2,
+      "family": "A0RY",
+      "value": 40.0,
+      "startLine": 84354,
+      "endLine": 84354
+    },
+    {
+      "index": 126,
+      "ability": "A0R9",
+      "category": 2,
+      "level": 1,
+      "family": "B05R",
+      "value": 25.0,
+      "startLine": 84355,
+      "endLine": 84355
+    },
+    {
+      "index": 127,
+      "ability": "A0R7",
+      "category": 2,
+      "level": 1,
+      "family": "B05P",
+      "value": 20.0,
+      "startLine": 84356,
+      "endLine": 84356
+    },
+    {
+      "index": 128,
+      "ability": "A0QT",
+      "category": 2,
+      "level": 1,
+      "family": "B05N",
+      "value": 35.0,
+      "startLine": 84357,
+      "endLine": 84357
+    },
+    {
+      "index": 129,
+      "ability": "A0QC",
+      "category": 2,
+      "level": 1,
+      "family": "A0QC",
+      "value": 30.0,
+      "startLine": 84358,
+      "endLine": 84358
+    },
+    {
+      "index": 130,
+      "ability": "A0QC",
+      "category": 2,
+      "level": 2,
+      "family": "A0QC",
+      "value": 35.0,
+      "startLine": 84359,
+      "endLine": 84359
+    },
+    {
+      "index": 131,
+      "ability": "A0QC",
+      "category": 2,
+      "level": 3,
+      "family": "A0QC",
+      "value": 42.0,
+      "startLine": 84360,
+      "endLine": 84360
+    },
+    {
+      "index": 132,
+      "ability": "A0PO",
+      "category": 2,
+      "level": 1,
+      "family": "B05C",
+      "value": 7.0,
+      "startLine": 84361,
+      "endLine": 84361
+    },
+    {
+      "index": 133,
+      "ability": "A0P9",
+      "category": 2,
+      "level": 1,
+      "family": "B056",
+      "value": 10.0,
+      "startLine": 84362,
+      "endLine": 84362
+    },
+    {
+      "index": 134,
+      "ability": "A0OQ",
+      "category": 2,
+      "level": 1,
+      "family": "A0OQ",
+      "value": 30.0,
+      "startLine": 84363,
+      "endLine": 84363
+    },
+    {
+      "index": 135,
+      "ability": "A0OB",
+      "category": 2,
+      "level": 1,
+      "family": "B04X",
+      "value": 45.0,
+      "startLine": 84364,
+      "endLine": 84364
+    },
+    {
+      "index": 136,
+      "ability": "A0O1",
+      "category": 2,
+      "level": 1,
+      "family": "B04O",
+      "value": 7.0,
+      "startLine": 84365,
+      "endLine": 84365
+    },
+    {
+      "index": 137,
+      "ability": "A0NP",
+      "category": 2,
+      "level": 1,
+      "family": "A0NP",
+      "value": 50.0,
+      "startLine": 84366,
+      "endLine": 84366
+    },
+    {
+      "index": 138,
+      "ability": "A0N3",
+      "category": 2,
+      "level": 1,
+      "family": "B04C",
+      "value": 25.0,
+      "startLine": 84367,
+      "endLine": 84367
+    },
+    {
+      "index": 139,
+      "ability": "A0N0",
+      "category": 2,
+      "level": 1,
+      "family": "A0N0",
+      "value": 70.0,
+      "startLine": 84368,
+      "endLine": 84368
+    },
+    {
+      "index": 140,
+      "ability": "A0MT",
+      "category": 2,
+      "level": 1,
+      "family": "A0MT",
+      "value": 45.0,
+      "startLine": 84369,
+      "endLine": 84369
+    },
+    {
+      "index": 141,
+      "ability": "A0MM",
+      "category": 2,
+      "level": 1,
+      "family": "B044",
+      "value": 30.0,
+      "startLine": 84370,
+      "endLine": 84370
+    },
+    {
+      "index": 142,
+      "ability": "A0MH",
+      "category": 2,
+      "level": 1,
+      "family": "A0MH",
+      "value": 200.0,
+      "startLine": 84371,
+      "endLine": 84371
+    },
+    {
+      "index": 143,
+      "ability": "A0M5",
+      "category": 2,
+      "level": 1,
+      "family": "B02C",
+      "value": 35.0,
+      "startLine": 84372,
+      "endLine": 84372
+    },
+    {
+      "index": 144,
+      "ability": "A0M0",
+      "category": 2,
+      "level": 1,
+      "family": "A0M0",
+      "value": 50.0,
+      "startLine": 84373,
+      "endLine": 84373
+    },
+    {
+      "index": 145,
+      "ability": "A0LX",
+      "category": 2,
+      "level": 1,
+      "family": "A0LX",
+      "value": 30.0,
+      "startLine": 84374,
+      "endLine": 84374
+    },
+    {
+      "index": 146,
+      "ability": "A0L5",
+      "category": 2,
+      "level": 1,
+      "family": "A0L5",
+      "value": 250.0,
+      "startLine": 84375,
+      "endLine": 84375
+    },
+    {
+      "index": 147,
+      "ability": "A0KY",
+      "category": 2,
+      "level": 1,
+      "family": "B03M",
+      "value": 7.0,
+      "startLine": 84376,
+      "endLine": 84376
+    },
+    {
+      "index": 148,
+      "ability": "A0KS",
+      "category": 2,
+      "level": 1,
+      "family": "B03H",
+      "value": 30.0,
+      "startLine": 84377,
+      "endLine": 84377
+    },
+    {
+      "index": 149,
+      "ability": "A0KO",
+      "category": 2,
+      "level": 1,
+      "family": "B03F",
+      "value": 45.0,
+      "startLine": 84378,
+      "endLine": 84378
+    },
+    {
+      "index": 150,
+      "ability": "A0KJ",
+      "category": 2,
+      "level": 1,
+      "family": "A0KJ",
+      "value": 75.0,
+      "startLine": 84379,
+      "endLine": 84379
+    },
+    {
+      "index": 151,
+      "ability": "A0JQ",
+      "category": 2,
+      "level": 1,
+      "family": "B03B",
+      "value": 50.0,
+      "startLine": 84380,
+      "endLine": 84380
+    },
+    {
+      "index": 152,
+      "ability": "A0PX",
+      "category": 2,
+      "level": 1,
+      "family": "A0PX",
+      "value": 60.0,
+      "startLine": 84381,
+      "endLine": 84381
+    },
+    {
+      "index": 153,
+      "ability": "A0PX",
+      "category": 2,
+      "level": 2,
+      "family": "A0PX",
+      "value": 30.0,
+      "startLine": 84382,
+      "endLine": 84382
+    },
+    {
+      "index": 154,
+      "ability": "A0JF",
+      "category": 2,
+      "level": 1,
+      "family": "A0JF",
+      "value": 33.0,
+      "startLine": 84383,
+      "endLine": 84383
+    },
+    {
+      "index": 155,
+      "ability": "A0J0",
+      "category": 2,
+      "level": 1,
+      "family": "B040",
+      "value": 45.0,
+      "startLine": 84384,
+      "endLine": 84384
+    },
+    {
+      "index": 156,
+      "ability": "A0II",
+      "category": 2,
+      "level": 1,
+      "family": "A0II",
+      "value": 10.0,
+      "startLine": 84385,
+      "endLine": 84385
+    },
+    {
+      "index": 157,
+      "ability": "A0II",
+      "category": 2,
+      "level": 2,
+      "family": "A0II",
+      "value": 20.0,
+      "startLine": 84386,
+      "endLine": 84386
+    },
+    {
+      "index": 158,
+      "ability": "A0IA",
+      "category": 2,
+      "level": 1,
+      "family": "B032",
+      "value": 45.0,
+      "startLine": 84387,
+      "endLine": 84387
+    },
+    {
+      "index": 159,
+      "ability": "A0I3",
+      "category": 2,
+      "level": 1,
+      "family": "A0I3",
+      "value": 50.0,
+      "startLine": 84388,
+      "endLine": 84388
+    },
+    {
+      "index": 160,
+      "ability": "A0HT",
+      "category": 2,
+      "level": 1,
+      "family": "A0HT",
+      "value": 45.0,
+      "startLine": 84389,
+      "endLine": 84389
+    },
+    {
+      "index": 161,
+      "ability": "A0HT",
+      "category": 2,
+      "level": 2,
+      "family": "A0HT",
+      "value": 45.0,
+      "startLine": 84390,
+      "endLine": 84390
+    },
+    {
+      "index": 162,
+      "ability": "A0HH",
+      "category": 2,
+      "level": 1,
+      "family": "A0HH",
+      "value": 35.0,
+      "startLine": 84391,
+      "endLine": 84391
+    },
+    {
+      "index": 163,
+      "ability": "A0HF",
+      "category": 2,
+      "level": 1,
+      "family": "A0HF",
+      "value": 25.0,
+      "startLine": 84392,
+      "endLine": 84392
+    },
+    {
+      "index": 164,
+      "ability": "A0HA",
+      "category": 2,
+      "level": 1,
+      "family": "A0HA",
+      "value": 30.0,
+      "startLine": 84393,
+      "endLine": 84393
+    },
+    {
+      "index": 165,
+      "ability": "A0GT",
+      "category": 2,
+      "level": 1,
+      "family": "A0GT",
+      "value": 50.0,
+      "startLine": 84394,
+      "endLine": 84394
+    },
+    {
+      "index": 166,
+      "ability": "A0GL",
+      "category": 2,
+      "level": 1,
+      "family": "B02N",
+      "value": 20.0,
+      "startLine": 84395,
+      "endLine": 84395
+    },
+    {
+      "index": 167,
+      "ability": "A0GF",
+      "category": 2,
+      "level": 1,
+      "family": "B01X",
+      "value": 10.0,
+      "startLine": 84396,
+      "endLine": 84396
+    },
+    {
+      "index": 168,
+      "ability": "A0G9",
+      "category": 2,
+      "level": 1,
+      "family": "B002",
+      "value": 35.0,
+      "startLine": 84397,
+      "endLine": 84397
+    },
+    {
+      "index": 169,
+      "ability": "A0FR",
+      "category": 2,
+      "level": 1,
+      "family": "A0FR",
+      "value": 70.0,
+      "startLine": 84398,
+      "endLine": 84398
+    },
+    {
+      "index": 170,
+      "ability": "A0FR",
+      "category": 2,
+      "level": 2,
+      "family": "A0FR",
+      "value": 80.0,
+      "startLine": 84399,
+      "endLine": 84399
+    },
+    {
+      "index": 171,
+      "ability": "A0DO",
+      "category": 2,
+      "level": 1,
+      "family": "B02C",
+      "value": 25.0,
+      "startLine": 84400,
+      "endLine": 84400
+    },
+    {
+      "index": 172,
+      "ability": "A0CS",
+      "category": 2,
+      "level": 1,
+      "family": "B024",
+      "value": 99.0,
+      "startLine": 84401,
+      "endLine": 84401
+    },
+    {
+      "index": 173,
+      "ability": "A0CN",
+      "category": 2,
+      "level": 1,
+      "family": "B00G",
+      "value": 55.0,
+      "startLine": 84402,
+      "endLine": 84402
+    },
+    {
+      "index": 174,
+      "ability": "A0CH",
+      "category": 2,
+      "level": 1,
+      "family": "A0CH",
+      "value": 70.0,
+      "startLine": 84403,
+      "endLine": 84403
+    },
+    {
+      "index": 175,
+      "ability": "A0C1",
+      "category": 2,
+      "level": 1,
+      "family": "B01Z",
+      "value": 40.0,
+      "startLine": 84404,
+      "endLine": 84404
+    },
+    {
+      "index": 176,
+      "ability": "A0BN",
+      "category": 2,
+      "level": 1,
+      "family": "B01X",
+      "value": 12.0,
+      "startLine": 84405,
+      "endLine": 84405
+    },
+    {
+      "index": 177,
+      "ability": "A0BL",
+      "category": 2,
+      "level": 1,
+      "family": "B005",
+      "value": 45.0,
+      "startLine": 84406,
+      "endLine": 84406
+    },
+    {
+      "index": 178,
+      "ability": "A0AT",
+      "category": 2,
+      "level": 1,
+      "family": "B01M",
+      "value": 30.0,
+      "startLine": 84407,
+      "endLine": 84407
+    },
+    {
+      "index": 179,
+      "ability": "A0AH",
+      "category": 2,
+      "level": 1,
+      "family": "B01K",
+      "value": 30.0,
+      "startLine": 84408,
+      "endLine": 84408
+    },
+    {
+      "index": 180,
+      "ability": "A0A4",
+      "category": 2,
+      "level": 1,
+      "family": "B01G",
+      "value": 30.0,
+      "startLine": 84409,
+      "endLine": 84409
+    },
+    {
+      "index": 181,
+      "ability": "A09N",
+      "category": 2,
+      "level": 1,
+      "family": "B01F",
+      "value": 10.0,
+      "startLine": 84410,
+      "endLine": 84410
+    },
+    {
+      "index": 182,
+      "ability": "A092",
+      "category": 2,
+      "level": 1,
+      "family": "B019",
+      "value": 35.0,
+      "startLine": 84411,
+      "endLine": 84411
+    },
+    {
+      "index": 183,
+      "ability": "A08H",
+      "category": 2,
+      "level": 1,
+      "family": "B004",
+      "value": 5.0,
+      "startLine": 84412,
+      "endLine": 84412
+    },
+    {
+      "index": 184,
+      "ability": "A08F",
+      "category": 2,
+      "level": 1,
+      "family": "B012",
+      "value": 5.0,
+      "startLine": 84413,
+      "endLine": 84413
+    },
+    {
+      "index": 185,
+      "ability": "A08E",
+      "category": 2,
+      "level": 1,
+      "family": "B001",
+      "value": 5.0,
+      "startLine": 84414,
+      "endLine": 84414
+    },
+    {
+      "index": 186,
+      "ability": "A089",
+      "category": 2,
+      "level": 1,
+      "family": "B010",
+      "value": 5.0,
+      "startLine": 84415,
+      "endLine": 84415
+    },
+    {
+      "index": 187,
+      "ability": "A072",
+      "category": 2,
+      "level": 1,
+      "family": "B00W",
+      "value": 20.0,
+      "startLine": 84416,
+      "endLine": 84416
+    },
+    {
+      "index": 188,
+      "ability": "A06X",
+      "category": 2,
+      "level": 1,
+      "family": "B012",
+      "value": 50.0,
+      "startLine": 84417,
+      "endLine": 84417
+    },
+    {
+      "index": 189,
+      "ability": "A06P",
+      "category": 2,
+      "level": 1,
+      "family": "B067",
+      "value": 35.0,
+      "startLine": 84418,
+      "endLine": 84418
+    },
+    {
+      "index": 190,
+      "ability": "A06N",
+      "category": 2,
+      "level": 1,
+      "family": "B00S",
+      "value": 10.0,
+      "startLine": 84419,
+      "endLine": 84419
+    },
+    {
+      "index": 191,
+      "ability": "A06M",
+      "category": 2,
+      "level": 1,
+      "family": "B00R",
+      "value": 25.0,
+      "startLine": 84420,
+      "endLine": 84420
+    },
+    {
+      "index": 192,
+      "ability": "A05W",
+      "category": 2,
+      "level": 1,
+      "family": "B00H",
+      "value": 10.0,
+      "startLine": 84421,
+      "endLine": 84421
+    },
+    {
+      "index": 193,
+      "ability": "A05K",
+      "category": 2,
+      "level": 1,
+      "family": "B00G",
+      "value": 25.0,
+      "startLine": 84422,
+      "endLine": 84422
+    },
+    {
+      "index": 194,
+      "ability": "A05G",
+      "category": 2,
+      "level": 1,
+      "family": "B08D",
+      "value": 40.0,
+      "startLine": 84423,
+      "endLine": 84423
+    },
+    {
+      "index": 195,
+      "ability": "A045",
+      "category": 2,
+      "level": 1,
+      "family": "B010",
+      "value": 42.0,
+      "startLine": 84424,
+      "endLine": 84424
+    },
+    {
+      "index": 196,
+      "ability": "A03W",
+      "category": 2,
+      "level": 1,
+      "family": "B001",
+      "value": 15.0,
+      "startLine": 84425,
+      "endLine": 84425
+    },
+    {
+      "index": 197,
+      "ability": "A03S",
+      "category": 2,
+      "level": 1,
+      "family": "B004",
+      "value": 15.0,
+      "startLine": 84426,
+      "endLine": 84426
+    },
+    {
+      "index": 198,
+      "ability": "A03R",
+      "category": 2,
+      "level": 1,
+      "family": "B005",
+      "value": 20.0,
+      "startLine": 84427,
+      "endLine": 84427
+    },
+    {
+      "index": 199,
+      "ability": "A02U",
+      "category": 2,
+      "level": 1,
+      "family": "B001",
+      "value": 40.0,
+      "startLine": 84428,
+      "endLine": 84428
+    },
+    {
+      "index": 200,
+      "ability": "A023",
+      "category": 2,
+      "level": 1,
+      "family": "B002",
+      "value": 10.0,
+      "startLine": 84429,
+      "endLine": 84429
+    },
+    {
+      "index": 201,
+      "ability": "A020",
+      "category": 2,
+      "level": 1,
+      "family": "A020",
+      "value": 10.0,
+      "startLine": 84430,
+      "endLine": 84430
+    },
+    {
+      "index": 202,
+      "ability": "A04C",
+      "category": 3,
+      "level": 1,
+      "family": "A04C",
+      "value": 33.0,
+      "startLine": 84431,
+      "endLine": 84431
+    },
+    {
+      "index": 203,
+      "ability": "A04U",
+      "category": 3,
+      "level": 1,
+      "family": "A04U",
+      "value": 50.0,
+      "startLine": 84432,
+      "endLine": 84432
+    },
+    {
+      "index": 204,
+      "ability": "A04U",
+      "category": 3,
+      "level": 2,
+      "family": "A04U",
+      "value": 50.0,
+      "startLine": 84433,
+      "endLine": 84433
+    },
+    {
+      "index": 205,
+      "ability": "A06H",
+      "category": 3,
+      "level": 1,
+      "family": "B00P",
+      "value": 35.0,
+      "startLine": 84434,
+      "endLine": 84434
+    },
+    {
+      "index": 206,
+      "ability": "A088",
+      "category": 3,
+      "level": 1,
+      "family": "B010",
+      "value": 5.0,
+      "startLine": 84435,
+      "endLine": 84435
+    },
+    {
+      "index": 207,
+      "ability": "A0AL",
+      "category": 3,
+      "level": 1,
+      "family": "B010",
+      "value": 42.0,
+      "startLine": 84436,
+      "endLine": 84436
+    },
+    {
+      "index": 208,
+      "ability": "A0BH",
+      "category": 3,
+      "level": 1,
+      "family": "A0BH",
+      "value": 30.0,
+      "startLine": 84437,
+      "endLine": 84437
+    },
+    {
+      "index": 209,
+      "ability": "A0CF",
+      "category": 3,
+      "level": 1,
+      "family": "B021",
+      "value": 325.0,
+      "startLine": 84438,
+      "endLine": 84438
+    },
+    {
+      "index": 210,
+      "ability": "A0E8",
+      "category": 3,
+      "level": 1,
+      "family": "A0E8",
+      "value": 12.0,
+      "startLine": 84439,
+      "endLine": 84439
+    },
+    {
+      "index": 211,
+      "ability": "A0GC",
+      "category": 3,
+      "level": 1,
+      "family": "A0GC",
+      "value": 10.0,
+      "startLine": 84440,
+      "endLine": 84440
+    },
+    {
+      "index": 212,
+      "ability": "A0GJ",
+      "category": 3,
+      "level": 1,
+      "family": "B02M",
+      "value": 20.0,
+      "startLine": 84441,
+      "endLine": 84441
+    },
+    {
+      "index": 213,
+      "ability": "A0I6",
+      "category": 3,
+      "level": 1,
+      "family": "A0I6",
+      "value": 45.0,
+      "startLine": 84442,
+      "endLine": 84442
+    },
+    {
+      "index": 214,
+      "ability": "A0I7",
+      "category": 3,
+      "level": 1,
+      "family": "A0I7",
+      "value": 45.0,
+      "startLine": 84443,
+      "endLine": 84443
+    },
+    {
+      "index": 215,
+      "ability": "A0IZ",
+      "category": 3,
+      "level": 1,
+      "family": "A0IZ",
+      "value": 45.0,
+      "startLine": 84444,
+      "endLine": 84444
+    },
+    {
+      "index": 216,
+      "ability": "A0IZ",
+      "category": 3,
+      "level": 2,
+      "family": "A0IZ",
+      "value": 45.0,
+      "startLine": 84445,
+      "endLine": 84445
+    },
+    {
+      "index": 217,
+      "ability": "A0KD",
+      "category": 3,
+      "level": 1,
+      "family": "A0KD",
+      "value": 40.0,
+      "startLine": 84446,
+      "endLine": 84446
+    },
+    {
+      "index": 218,
+      "ability": "A0KD",
+      "category": 3,
+      "level": 2,
+      "family": "A0KD",
+      "value": 40.0,
+      "startLine": 84447,
+      "endLine": 84447
+    },
+    {
+      "index": 219,
+      "ability": "A0M1",
+      "category": 3,
+      "level": 1,
+      "family": "A0M1",
+      "value": 30.0,
+      "startLine": 84448,
+      "endLine": 84448
+    },
+    {
+      "index": 220,
+      "ability": "A0M6",
+      "category": 3,
+      "level": 1,
+      "family": "A0M6",
+      "value": 30.0,
+      "startLine": 84449,
+      "endLine": 84449
+    },
+    {
+      "index": 221,
+      "ability": "A0NO",
+      "category": 3,
+      "level": 1,
+      "family": "A0NO",
+      "value": 60.0,
+      "startLine": 84450,
+      "endLine": 84450
+    },
+    {
+      "index": 222,
+      "ability": "A0P4",
+      "category": 3,
+      "level": 1,
+      "family": "A0P4",
+      "value": 50.0,
+      "startLine": 84451,
+      "endLine": 84451
+    },
+    {
+      "index": 223,
+      "ability": "A0SE",
+      "category": 3,
+      "level": 1,
+      "family": "A0SE",
+      "value": 55.0,
+      "startLine": 84452,
+      "endLine": 84452
+    },
+    {
+      "index": 224,
+      "ability": "A0T4",
+      "category": 3,
+      "level": 1,
+      "family": "A0T4",
+      "value": 35.0,
+      "startLine": 84453,
+      "endLine": 84453
+    },
+    {
+      "index": 225,
+      "ability": "A0T4",
+      "category": 3,
+      "level": 2,
+      "family": "A0T4",
+      "value": 35.0,
+      "startLine": 84454,
+      "endLine": 84454
+    },
+    {
+      "index": 226,
+      "ability": "A0T4",
+      "category": 3,
+      "level": 3,
+      "family": "A0T4",
+      "value": 35.0,
+      "startLine": 84455,
+      "endLine": 84455
+    },
+    {
+      "index": 227,
+      "ability": "A0T4",
+      "category": 3,
+      "level": 4,
+      "family": "A0T4",
+      "value": 35.0,
+      "startLine": 84456,
+      "endLine": 84456
+    },
+    {
+      "index": 228,
+      "ability": "A0TH",
+      "category": 3,
+      "level": 1,
+      "family": "A0TH",
+      "value": 60.0,
+      "startLine": 84457,
+      "endLine": 84457
+    },
+    {
+      "index": 229,
+      "ability": "A0YG",
+      "category": 3,
+      "level": 1,
+      "family": "A0YG",
+      "value": 70.0,
+      "startLine": 84458,
+      "endLine": 84458
+    },
+    {
+      "index": 230,
+      "ability": "A0ZK",
+      "category": 3,
+      "level": 1,
+      "family": "A0ZK",
+      "value": 50.0,
+      "startLine": 84459,
+      "endLine": 84459
+    },
+    {
+      "index": 231,
+      "ability": "A10J",
+      "category": 3,
+      "level": 1,
+      "family": "B07G",
+      "value": 30.0,
+      "startLine": 84460,
+      "endLine": 84460
+    },
+    {
+      "index": 232,
+      "ability": "A11T",
+      "category": 3,
+      "level": 1,
+      "family": "A11T",
+      "value": 50.0,
+      "startLine": 84461,
+      "endLine": 84461
+    },
+    {
+      "index": 233,
+      "ability": "A143",
+      "category": 3,
+      "level": 1,
+      "family": "A143",
+      "value": 30.0,
+      "startLine": 84462,
+      "endLine": 84462
+    },
+    {
+      "index": 234,
+      "ability": "A15G",
+      "category": 3,
+      "level": 1,
+      "family": "B02M",
+      "value": 25.0,
+      "startLine": 84463,
+      "endLine": 84463
+    },
+    {
+      "index": 235,
+      "ability": "A15J",
+      "category": 3,
+      "level": 1,
+      "family": "A15J",
+      "value": 25.0,
+      "startLine": 84464,
+      "endLine": 84464
+    },
+    {
+      "index": 236,
+      "ability": "A15J",
+      "category": 3,
+      "level": 2,
+      "family": "A15J",
+      "value": 25.0,
+      "startLine": 84465,
+      "endLine": 84465
+    },
+    {
+      "index": 237,
+      "ability": "A19Q",
+      "category": 3,
+      "level": 2,
+      "family": "A19Q",
+      "value": 35.0,
+      "startLine": 84466,
+      "endLine": 84466
+    },
+    {
+      "index": 238,
+      "ability": "A0GJ",
+      "category": 4,
+      "level": 1,
+      "family": "B02M",
+      "value": -15.0,
+      "startLine": 84467,
+      "endLine": 84467
+    },
+    {
+      "index": 239,
+      "ability": "A15G",
+      "category": 4,
+      "level": 1,
+      "family": "B02M",
+      "value": -15.0,
+      "startLine": 84468,
+      "endLine": 84468
+    },
+    {
+      "index": 240,
+      "ability": "A05U",
+      "category": 4,
+      "level": 1,
+      "family": "B00E",
+      "value": -30,
+      "startLine": 84470,
+      "endLine": 84470
+    },
+    {
+      "index": 241,
+      "ability": "A074",
+      "category": 4,
+      "level": 1,
+      "family": "A074",
+      "value": -20.0,
+      "startLine": 84472,
+      "endLine": 84472
+    },
+    {
+      "index": 242,
+      "ability": "A0H8",
+      "category": 4,
+      "level": 1,
+      "family": "A0H8",
+      "value": -20.0,
+      "startLine": 84473,
+      "endLine": 84473
+    },
+    {
+      "index": 243,
+      "ability": "A0S3",
+      "category": 4,
+      "level": 1,
+      "family": "B00E",
+      "value": -10.0,
+      "startLine": 84474,
+      "endLine": 84474
+    },
+    {
+      "index": 244,
+      "ability": "A0S8",
+      "category": 4,
+      "level": 1,
+      "family": "B00E",
+      "value": -10.0,
+      "startLine": 84475,
+      "endLine": 84475
+    },
+    {
+      "index": 245,
+      "ability": "A0BS",
+      "category": 1,
+      "level": 1,
+      "family": "A0BS",
+      "value": -5.0,
+      "startLine": 84476,
+      "endLine": 84476
+    }
+  ]
+}

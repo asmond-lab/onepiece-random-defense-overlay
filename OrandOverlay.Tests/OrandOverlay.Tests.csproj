@@ -16,5 +16,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrandOverlay.csproj" />
+    <ProjectReference Include="..\Tools\ActivityLogCapture\ActivityLogCapture.csproj"
+                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Tools\RandyPickLiveValidation\RandyPickLiveValidation.csproj" />
+    <ProjectReference Include="..\Tools\OverlayResizeCapture\OverlayResizeCapture.csproj"
+                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Tools\Map2322VisualCapture\Map2322VisualCapture.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\docs\analysis-2320\bullet-formula-regression-2314-2320.json" Link="Fixtures\bullet-formula-regression-2314-2320.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

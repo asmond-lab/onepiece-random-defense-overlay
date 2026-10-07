@@ -11,7 +11,7 @@ public sealed class Task5MapProfileVerifierTests
     [
         ("source-metadata", "Data/map-source-metadata-2314.json", "Pins the 2.314 map archive and extracted source members.", "2d262ff929fcae3d70a94c6c76969708f37f28a62b9dd06b52b0af80d4c10c82"),
         ("story", "Data/story-progression-2314.json", "Defines source-pinned story stages, owners, and rewards.", "8c24aff6b74ebc6a4117c9aa57bfc236cbd286d12ad85faf802c6453dc58ae0b"),
-        ("navigation", "Data/navigation-mechanics-2314.json", "Defines source-pinned navigation mechanics and bounded scenarios.", "b0b0825700c5c4d39aed9a91a42c2b2782490eca88b470a9c1aaf3340833a7f3"),
+        ("navigation", "Data/navigation-mechanics-2314.json", "Defines source-pinned navigation mechanics and bounded scenarios.", "cbd13f3b7b675906f8b1966319c6e8d05880159beb18e63bf2e7828fa1904790"),
         ("recipe-overrides", "Data/map-recipe-overrides-2314.txt", "Pins map-authored recipe overrides used by route allocation.", "7f738b496d0e361c4e742dea80e20b523a29d5681c6c428e38d9bdfda947a406"),
         ("combine-commands", "Data/map-combine-commands-2314.txt", "Pins map-authored combine commands used by route allocation.", "0af03328afd3c1bbb59bd49dc1ed0651e94568b87de3486ab265533ded2a6d7d")
     ];

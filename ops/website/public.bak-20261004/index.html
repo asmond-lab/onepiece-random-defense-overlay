@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>랜디픽 RandyPick · 원랜디 실시간 조합 추천 오버레이</title>
+  <meta name="description" content="원랜디(원피스 랜덤 디펜스)용 Windows 오버레이. 지금 내 패로 무엇을 만들지, 신 난이도 이상 클리어 기록 3만 판을 바탕으로 실시간 추천합니다.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://randypick.com/">
+  <meta property="og:title" content="랜디픽 RandyPick · 원랜디 실시간 조합 추천">
+  <meta property="og:description" content="지금 내 패로 무엇을 만들지, 고수들의 클리어 기록 3만 판이 알려 줍니다.">
+  <meta property="og:image" content="https://randypick.com/assets/hero-1280.webp">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <div class="announce"><a href="/download">안정 버전 준비 중 · 다운로드는 아직 열리지 않았어요 <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></div>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="/" aria-label="랜디픽 홈">
+        <img src="/favicon.svg" alt="" width="26" height="26">
+        <span class="brand__name">랜디픽</span>
+        <span class="brand__en">RandyPick</span>
+      </a>
+      <nav class="tabs" aria-label="주요 메뉴">
+        <a class="tab" href="/#features">기능 <span class="tab__n">01</span></a>
+        <a class="tab" href="/#data">근거 <span class="tab__n">02</span></a>
+        <a class="tab" href="/#how">사용법 <span class="tab__n">03</span></a>
+        <a class="tab" href="/#safety">안전 <span class="tab__n">04</span></a>
+        <a class="tab" href="/#faq">FAQ <span class="tab__n">05</span></a>
+      </nav>
+      <a class="btn btn--pending site-header__cta" href="/download"><span class="btn__dot" aria-hidden="true"></span>다운로드 · 준비 중</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <picture class="hero__media">
+        <source media="(max-width: 720px)" srcset="/assets/hero-mobile.webp">
+        <img src="/assets/hero-2048.webp" srcset="/assets/hero-1280.webp 1280w, /assets/hero-2048.webp 2048w" sizes="100vw" alt="" width="2048" height="1152" fetchpriority="high" decoding="async">
+      </picture>
+      <div class="hero__shade" aria-hidden="true"></div>
+      <div class="hero__dither" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="label">원랜디 실시간 조합 추천 오버레이 · Beta</p>
+          <h1 class="hero__title" id="hero-title">지금 내 패로 무엇을 만들지, <span>고수 3만 판이 알려 줍니다.</span></h1>
+          <p class="hero__desc">워크래프트 III 화면 한쪽에 작은 창을 띄워, 지금 패에서 만들 가치가 있는 유닛을 실시간으로 보여 줍니다. 추천마다 고수들이 같은 선택을 얼마나 했는지가 함께 표시됩니다.</p>
+          <div class="hero__actions">
+            <a class="btn btn--solid" href="#features">기능 살펴보기 <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1.5 6.5 5 3 8.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></a>
+            <a class="btn btn--pending" href="/download" aria-describedby="download-note"><span class="btn__dot" aria-hidden="true"></span>다운로드 · 준비 중</a>
+          </div>
+          <p class="hero__note" id="download-note">안정 버전을 준비하고 있어요. 지금은 내려받을 수 없습니다.</p>
+        </div>
+        <p class="hero__caption" aria-hidden="true">Windows · 설치 없이 실행 · 게임은 읽기만</p>
+      </div>
+    </section>
+
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="title-duo" id="features-title">기능. <span>지금 해야 할 판단을 한 화면에.</span></h2>
+          <p class="label">01 / Features</p>
+        </div>
+        <ul class="grid-lines figs">
+          <li class="fig-cell">
+            <p class="label">Fig.01</p>
+            <svg class="fig" viewBox="0 0 300 210" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="1">
+    <path d="M60 165 L130 130 L200 165 L130 200 Z"/>
+    <path d="M95 147.5 165 182.5M95 182.5 165 147.5M60 165h140M130 130v70" stroke-opacity=".45"/>
+    <path d="M60 165V115M200 165V115M130 200v-50" stroke-dasharray="2 4"/>
+    <path d="M60 115 L130 80 L200 115 L130 150 Z"/>
+    <path d="M60 115V65M200 115V65" stroke-dasharray="2 4"/>
+    <g class="accent"><path d="M60 65 L130 30 L200 65 L130 100 Z" stroke="currentColor"/></g>
+    <path d="M200 165h34M200 115h34M200 65h34" stroke-opacity=".6"/>
+  </g>
+  <circle cx="108" cy="115" r="3" fill="#7a7a7a"/><circle cx="140" cy="104" r="3" fill="#7a7a7a"/><circle cx="150" cy="124" r="3.4" class="accent-fill pulse"/>
+  <circle cx="130" cy="65" r="3" class="accent-fill"/>
+  <text x="238" y="68">TARGET</text><text x="238" y="118">PICK</text><text x="238" y="168">HAND</text>
+</svg>
+            <h3><span>01</span>추천 조합</h3>
+            <p>고른 상위 목표에 맞춰, 지금 패에서 만들 가치가 큰 유닛을 순서대로 보여 줍니다. 각 추천에는 고수들이 같은 것을 만든 비율이 근거로 붙습니다.</p>
+            <p class="foot">추천마다 고수 채택 비율 표시</p>
+          </li>
+          <li class="fig-cell">
+            <p class="label">Fig.02</p>
+            <svg class="fig" viewBox="0 0 300 210" aria-hidden="true">
+  <g fill="none"><text x="16" y="59">STUN</text><path d="M70 56H262" stroke="currentColor" stroke-opacity=".35"/><path d="M70 63v4M86 63v4M102 63v4M118 63v4M134 63v4M150 63v4M166 63v4M182 63v4M198 63v4M214 63v4M230 63v4M246 63v4M262 63v4" stroke="currentColor" stroke-opacity=".4"/><g class="accent"><path d="M70 56H262" stroke="currentColor" stroke-width="3"/></g><text x="16" y="109">SLOW</text><path d="M70 106H262" stroke="currentColor" stroke-opacity=".35"/><path d="M70 113v4M86 113v4M102 113v4M118 113v4M134 113v4M150 113v4M166 113v4M182 113v4M198 113v4M214 113v4M230 113v4M246 113v4M262 113v4" stroke="currentColor" stroke-opacity=".4"/><g><path d="M70 106H204" stroke="currentColor" stroke-width="3"/></g><text x="16" y="159">ARMOR</text><path d="M70 156H262" stroke="currentColor" stroke-opacity=".35"/><path d="M70 163v4M86 163v4M102 163v4M118 163v4M134 163v4M150 163v4M166 163v4M182 163v4M198 163v4M214 163v4M230 163v4M246 163v4M262 163v4" stroke="currentColor" stroke-opacity=".4"/><g><path d="M70 156H137" stroke="currentColor" stroke-width="3"/></g></g>
+  <path d="M246 34V182" fill="none" stroke="#8a8a8a" stroke-dasharray="2 4"/>
+  <text x="232" y="28">GOAL</text>
+  <circle cx="246" cy="56" r="3.4" class="accent-fill pulse"/>
+</svg>
+            <h3><span>02</span>내 패 점수판</h3>
+            <p>스턴, 이동속도 감소, 방어력 감소가 목표치에 얼마나 찼는지 게이지로 보여 줍니다. 아이템과 그린블러드 효과도 함께 계산합니다.</p>
+            <p class="foot">아이템 · 그린블러드 효과 합산</p>
+          </li>
+          <li class="fig-cell">
+            <p class="label">Fig.03</p>
+            <svg class="fig" viewBox="0 0 300 210" aria-hidden="true">
+  <path d="M70.0 160.0L150.0 200.0M70.0 160.0L150.0 120.0M90.0 150.0L170.0 190.0M90.0 170.0L170.0 130.0M110.0 140.0L190.0 180.0M110.0 180.0L190.0 140.0M130.0 130.0L210.0 170.0M130.0 190.0L210.0 150.0M150.0 120.0L230.0 160.0M150.0 200.0L230.0 160.0" fill="none" stroke="currentColor" stroke-opacity=".5"/>
+  <path d="M110 160 150 72M170 170 150 72M190 150 150 72" fill="none" stroke="currentColor" stroke-dasharray="2 4"/>
+  <circle cx="110" cy="160" r="3" fill="#8a8a8a"/><circle cx="170" cy="170" r="3" fill="#8a8a8a"/><circle cx="190" cy="150" r="3" fill="#8a8a8a"/>
+  <g class="accent" fill="none" stroke="currentColor"><path d="M114 62 L150 44 L186 62 L150 80 Z"/><path d="M140 62l7 6 13-12" stroke-width="1.6"/></g>
+  <path d="M186 62h40" stroke="#8a8a8a" stroke-opacity=".6"/><text x="230" y="65">READY</text>
+  <text x="18" y="196">MATERIALS 3/3</text>
+</svg>
+            <h3><span>03</span>지금 조합 가능</h3>
+            <p>재료가 다 모인 유닛이 생기면 바로 알려 줍니다. 무엇을 고르고 어떤 키를 누를지는 언제나 직접 정합니다.</p>
+            <p class="foot">선택과 키 입력은 직접</p>
+          </li>
+          <li class="fig-cell">
+            <p class="label">Fig.04</p>
+            <svg class="fig" viewBox="0 0 300 210" aria-hidden="true">
+  <g><path d="M66 105C140 105 150 40 226 40" fill="none" stroke="currentColor" stroke-opacity=".55"/></g><circle cx="226" cy="40" r="2.6" fill="#8a8a8a"/><text x="236" y="43">SELL</text><g class="accent"><path d="M66 105C140 105 150 83 226 83" fill="none" stroke="currentColor"/></g><circle cx="226" cy="83" r="2.6" class="accent-fill pulse"/><text x="236" y="86">REROLL</text><g><path d="M66 105C140 105 150 127 226 127" fill="none" stroke="currentColor" stroke-opacity=".55"/></g><circle cx="226" cy="127" r="2.6" fill="#8a8a8a"/><text x="236" y="130">SPLIT</text><g><path d="M66 105C140 105 150 170 226 170" fill="none" stroke="currentColor" stroke-opacity=".55"/></g><circle cx="226" cy="170" r="2.6" fill="#8a8a8a"/><text x="236" y="173">WILD</text>
+  <rect x="44" y="94" width="22" height="22" fill="#0e0e0e" stroke="#8a8a8a"/>
+  <text x="18" y="140">SPARE</text>
+</svg>
+            <h3><span>04</span>판단 도우미</h3>
+            <p>남는 희귀 패를 팔지 리롤할지, 특수함 유닛을 분해할지, 그린블러드를 누구에게 줄지, 긴급소집 와일드카드를 어디에 쓸지 안내합니다.</p>
+            <p class="foot">판매 · 리롤 · 분해 · 와일드카드</p>
+          </li>
+          <li class="context">
+            <div>
+              <h3>게임 상황도 따라가요</h3>
+              <p>항법은 추천만 합니다. 실제 선택은 워크래프트 안에서 직접 해 주세요.</p>
+            </div>
+            <ul class="chips" aria-label="반영하는 게임 상황">
+              <li class="chip">항법 · 바운티헌터 · 긴급소집</li>
+              <li class="chip">오로성 효과</li>
+              <li class="chip">마법 딜 / 물리 딜</li>
+              <li class="chip">니카 빌드 갈림길</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="data" aria-labelledby="data-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="title-duo" id="data-title">근거. <span>감이 아니라 클리어 기록에서.</span></h2>
+          <p class="label">02 / Data</p>
+        </div>
+        <div class="grid-lines status">
+          <div class="status__left">
+            <p class="label">RandyPick · Data source</p>
+            <p class="status__state"><span class="status__dot" aria-hidden="true"></span>티모지지 공개 기록</p>
+            <p>신·악몽 난이도 클리어 기록을 상위 유닛별로 학습합니다. 사용자 프로그램은 티모지지 서버에 직접 접속하지 않아요.</p>
+            <p class="label stamp">출처 TMO.GG · 비공식 팬 도구</p>
+          </div>
+          <div class="status__right">
+            <dl class="metrics">
+              <div class="metric"><dt>학습한 클리어 기록<small>신+</small></dt><dd>30,000<span>판</span></dd></div>
+              <div class="metric"><dt>목표로 고를 수 있는 상위<small>현재</small></dt><dd>78<span>종</span></dd></div>
+              <div class="metric"><dt>추천 모드<small>Modes</small></dt><dd>4<span>개</span></dd></div>
+            </dl>
+            <div class="bars" aria-hidden="true"></div>
+            <div class="bars-legend" aria-hidden="true"><span class="label">고수 채택 비율</span><span class="label">상위 목표별 · 그림은 예시</span><span class="label">추천</span></div>
+          </div>
+        </div>
+        <dl class="grid-lines data-notes">
+          <div><dt>고수들의 실제 선택을 학습</dt><dd>신 난이도 이상을 깬 약 3만 판의 기록에서, 상위 목표별로 고수들이 무엇을 함께 만들었는지 배웁니다.</dd></div>
+          <div><dt>근거가 보이는 추천</dt><dd>추천마다 고수들 중 몇 퍼센트가 같은 것을 만들었는지 함께 보여 줍니다.</dd></div>
+          <div><dt>기록이 적을 때는 공략으로</dt><dd>기록이 충분하지 않은 경우에는 커뮤니티 공략을 대신 참고합니다.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <div class="grid-lines how">
+          <div class="how__left">
+            <p class="label">03 / How it works</p>
+            <h2 class="title-duo" id="how-title">설치 없이.<br><span>네 단계면 끝.</span></h2>
+            <p>Windows용 EXE 하나로 실행합니다. 게임을 켜면 내 패를 자동으로 인식하고, 게임 중에는 <kbd>F1</kbd>로 오버레이를 켜고 끕니다.</p>
+            <a class="btn btn--pending" href="/download"><span class="btn__dot" aria-hidden="true"></span>다운로드 · 준비 중</a>
+          </div>
+          <ol class="steps">
+            <li class="step"><p class="label">01 / 실행</p><h3>프로그램 실행</h3><p>EXE 파일 하나를 실행합니다. 설치 과정은 없어요. Windows에서만 동작합니다.</p></li>
+            <li class="step"><p class="label">02 / 모드</p><h3>모드 고르기</h3><p>초보자, 일반, 대깨, 매뉴얼 중 하나를 고릅니다. 초보자와 일반은 같은 자동 추천을 쓰고 설명의 양만 다르며, 매뉴얼에서는 상위 목표를 두 개까지 정할 수 있어요.</p></li>
+            <li class="step"><p class="label">03 / 시작</p><h3>워크래프트 III 시작</h3><p>게임을 켜면 내 패를 자동으로 인식합니다.</p></li>
+            <li class="step"><p class="label">04 / 토글</p><h3><kbd>F1</kbd>로 켜고 끄기</h3><p>게임 중 <kbd>F1</kbd>을 누르면 오버레이가 나타나거나 사라집니다. 기본값이고, 다른 키로 바꿀 수 있어요.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="safety" aria-labelledby="safety-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="title-duo" id="safety-title">안전. <span>읽기만 하고, 대신 누르지 않아요.</span></h2>
+          <p class="label">04 / Safety</p>
+        </div>
+        <ul class="grid-lines safety">
+          <li><p class="label">Safe.01</p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg><h3>읽기 전용</h3><p>게임 메모리에 아무것도 쓰지 않고, 코드를 주입하지도 않습니다.</p></li>
+          <li><p class="label">Safe.02</p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M7 11V6.5a1.5 1.5 0 0 1 3 0V11m0-1V5a1.5 1.5 0 0 1 3 0v6m0-1.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6H11a5 5 0 0 1-4-2l-2.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg><h3>대신 누르지 않아요</h3><p>키 입력이나 클릭을 대신하지 않습니다. 선택은 언제나 직접 합니다.</p></li>
+          <li><p class="label">Safe.03</p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.5 6.2A7 7 0 1 0 16.5 6.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg><h3>스스로 꺼지는 인식</h3><p>검증된 빌드 프로필과 맞지 않으면 자동 인식이 스스로 꺼집니다.</p></li>
+          <li><p class="label">Safe.04</p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.3-7 10-4-1.7-7-5.4-7-10V6l7-3zM8.8 12.2l2.2 2.2 4.4-4.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg><h3>동의할 때만 수집</h3><p>플레이 기록 수집은 동의 창에서 동의한 경우에만 이루어집니다.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-wrap">
+        <div>
+          <h2 class="title-duo" id="faq-title">질문. <span>자주 묻는 것들.</span></h2>
+        </div>
+        <div class="faq">
+          <details><summary><span class="label">01</span>지금 내려받을 수 있나요?</summary><p>아직은 아니에요. 안정 버전을 준비하고 있고, 다운로드는 준비 중입니다.</p></details>
+          <details><summary><span class="label">02</span>어떤 환경에서 쓸 수 있나요?</summary><p>Windows 전용입니다. 워크래프트 III 유즈맵 원랜디(원피스 랜덤 디펜스)를 위한 도구예요.</p></details>
+          <details><summary><span class="label">03</span>게임에 위험하지 않나요?</summary><p>랜디픽은 게임을 읽기만 합니다. 게임 메모리에 쓰거나 코드를 주입하지 않고, 키 입력이나 클릭을 대신하지도 않습니다. 검증된 빌드 프로필이 없으면 자동 인식이 스스로 꺼집니다.</p></details>
+          <details><summary><span class="label">04</span>항법도 대신 골라 주나요?</summary><p>아니요. 항법은 추천만 보여 줍니다. 실제 선택은 워크래프트 안에서 직접 해 주세요.</p></details>
+          <details><summary><span class="label">05</span>모드는 어떻게 다른가요?</summary><p>초보자, 일반, 대깨, 매뉴얼 네 가지가 있습니다. 초보자와 일반은 같은 자동 추천을 쓰고 설명의 양만 다르며, 매뉴얼에서는 상위 목표를 두 개까지 정할 수 있습니다.</p></details>
+          <details><summary><span class="label">06</span>제 플레이 기록이 수집되나요?</summary><p>동의 창에서 동의한 경우에만 플레이 기록을 수집합니다.</p></details>
+          <details><summary><span class="label">07</span>켜고 끄는 키를 바꿀 수 있나요?</summary><p>네. 기본값은 <kbd>F1</kbd>이고 다른 키로 바꿀 수 있습니다.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="notice" aria-labelledby="notice-title">
+      <div class="container">
+        <div class="grid-lines notice">
+          <div><p class="label">05 / Notice</p><h2 id="notice-title">고지</h2></div>
+          <div>
+            <p>랜디픽은 비공식 팬 도구입니다. 원피스 랜덤 디펜스 제작진, <span class="nowrap">티모지지(TMO.GG)와</span> 관련이 없습니다. 유닛 정보와 클리어 기록은 티모지지 공개 자료를 출처로 합니다.</p>
+            <p>MIT 라이선스로 배포됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p>랜디픽 RandyPick · 비공식 팬 도구 · MIT License</p>
+      <nav aria-label="하단 메뉴">
+        <a href="/">홈</a>
+        <a href="/download">다운로드 (준비 중)</a>
+        <a href="/#notice">고지</a>
+      </nav>
+    </div>
+    <p class="wordmark" aria-hidden="true">RANDYPICK</p>
+  </footer>
+</body>
+</html>

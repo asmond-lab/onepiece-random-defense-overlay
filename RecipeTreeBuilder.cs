@@ -5,7 +5,7 @@ namespace OrandOverlay;
 /// RecommendationEngine에서 동작 보존으로 추출된 클래스 — 로직 변경 금지,
 /// 조정은 RecommendationEngine 쪽 호출 지점에서만 한다.
 /// </summary>
-internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalog? combineHotkeys)
+internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalog? combineHotkeys, RecipeConditionContext? conditionContext = null, Func<DateTimeOffset>? conditionClock = null)
 {
     public IReadOnlyList<string> RecipeLegendaryUnitIds(string goalUnitId) =>
         RecipeLegendaryIds(catalog.Unit(goalUnitId));
@@ -79,6 +79,24 @@ internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalo
         IDictionary<string, int> availability, HashSet<string> visiting)
     {
         var unit = catalog.Unit(unitId);
+        if (RecipeWildcards.IsWildcard(unitId))
+        {
+            var remainingWildcard = requiredCount;
+            var selected = new List<RecipeTreeNode>();
+            var ledger = availability.ToDictionary(p => p.Key, p => (long)Math.Max(0, p.Value), StringComparer.OrdinalIgnoreCase);
+            foreach (var candidate in RecipeWildcards.Candidates(unitId, ledger, catalog.Unit))
+            {
+                var take = (int)Math.Min(remainingWildcard, candidate.Value);
+                if (take <= 0) break;
+                availability[candidate.Key] -= take;
+                var hero = catalog.Unit(candidate.Key);
+                selected.Add(new RecipeTreeNode { UnitId = hero.Id, Name = hero.Name, Tier = hero.Tier,
+                    RequiredCount = take, OwnedCount = take, Image = hero.Image });
+                remainingWildcard -= take;
+            }
+            return new RecipeTreeNode { UnitId = unit.Id, Name = unit.Name, Tier = unit.Tier,
+                RequiredCount = requiredCount, OwnedCount = requiredCount - remainingWildcard, Children = selected };
+        }
         var available = Math.Max(0, availability.TryGetValue(unit.Id, out var count) ? count : 0);
         var owned = Math.Min(requiredCount, available);
         availability[unit.Id] = available - owned;
@@ -88,7 +106,8 @@ internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalo
         {
             foreach (var (childId, childCount) in unit.Recipe
                          .Where(pair => pair.Value > 0)
-                         .Where(pair => !IsResourcePseudo(catalog.Unit(pair.Key))))
+                         .Where(pair => !IsResourcePseudo(catalog.Unit(pair.Key)))
+                         .OrderBy(pair => RecipeWildcards.IsWildcard(pair.Key) ? 1 : 0))
             {
                 var total = childCount > int.MaxValue / Math.Max(1, remaining)
                     ? int.MaxValue
@@ -124,6 +143,8 @@ internal sealed class RecipeTreeBuilder(DataCatalog catalog, CombineHotkeyCatalo
         return totals.Values
             .Select(value => new RecipeCraftStep
             {
+                Conditions = RecipeConditionEvaluator.Evaluate(catalog.Unit(value.Node.UnitId), conditionContext is null ? null
+                    : conditionContext with { Now = conditionClock?.Invoke() ?? DateTimeOffset.UtcNow }),
                 UnitId = value.Node.UnitId,
                 Name = value.Node.Name,
                 Tier = value.Node.Tier,

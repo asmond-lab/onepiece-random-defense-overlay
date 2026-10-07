@@ -52,15 +52,19 @@ public static class UiScale
     }
 
     /// <summary>창 내용에 배율을 적용하고 창의 기준 크기도 같은 비율로 맞춘다.</summary>
-    public static double Apply(Window window, double baseWidth, double baseHeight)
+    public static double Apply(Window window, double baseWidth, double baseHeight,
+        bool resizeWindow = true)
     {
         var scale = ForWindow(window);
         if (window.Content is FrameworkElement root)
             root.LayoutTransform = Math.Abs(scale - 1.0) < 0.01
                 ? Transform.Identity
                 : new ScaleTransform(scale, scale);
-        window.Width = baseWidth * scale;
-        window.Height = baseHeight * scale;
+        if (resizeWindow)
+        {
+            window.Width = baseWidth * scale;
+            window.Height = baseHeight * scale;
+        }
         return scale;
     }
 }

@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root=process.argv[2], audit=JSON.parse(fs.readFileSync(process.argv[3],'utf8'));
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const decode=h=>Buffer.from(h.padStart(8,'0'),'hex').toString('ascii');
+const newPath='docs/analysis-2320/modern-reader/members-ko-2.320/war3map.j', oldPath='docs/analysis-2320/indexed-members/2314/war3map.j';
+const nb=fs.readFileSync(path.join(root,newPath)), ob=fs.readFileSync(path.join(root,oldPath));
+if(hash(nb)!==audit.newSourceSha256.toLowerCase()) throw Error('source pin');
+const source=nb.toString('utf8'), lines=source.split(/\r?\n/), oldLines=ob.toString('utf8').split(/\r?\n/);
+function rows(input,ls){return input.map(r=>{if(r.unparsed!=='')throw Error('unparsed');const end=r.line+9+5*r.conditions.length-1;const rawSource=ls.slice(r.line-1,end).join('\n');const normalized=ls===oldLines?rawSource.replace(/\b(hG|FG|tG|pG|jG|WG|ZG|eG|DG)\b/g,s=>({hG:'Zb',FG:'fb',tG:'Bb',pG:'Rb',jG:'xb',WG:'Mb',ZG:'kb',eG:'Lb',DG:'jb'}[s])):rawSource;const tokens=[...normalized.matchAll(/call SaveInteger\((Zb|Rb),kb,(Lb|jb),\$([a-fA-F0-9]+)\)\ncall SaveInteger\((?:fb|xb),kb,(?:Lb|jb),\$([a-fA-F0-9]+)\)\ncall SaveInteger\((?:Bb|Mb),kb,(?:Lb|jb),(\$[a-fA-F0-9]+|[0-9]+)\)/g)].map(m=>({kind:decode(m[3]),id:decode(m[4]),count:m[5][0]==='$'?parseInt(m[5].slice(1),16):Number(m[5])}));if(JSON.stringify(tokens)!==JSON.stringify([...r.outputs,...r.conditions]))throw Error('row parse '+r.recipeId);return {recipeId:r.recipeId,lineStart:r.line,lineEnd:end,rawSource,outputs:r.outputs,conditions:r.conditions};});}
+const recipes=rows(audit.new,lines), oldRecipes=rows(audit.old,oldLines);
+const activeChoices=[...source.matchAll(/SaveInteger\(Lc,\$([a-fA-F0-9]+),Y6T,\$([a-fA-F0-9]+)\)/g)].map(m=>({outputId:decode(m[1]),recipeId:decode(m[2]),line:source.slice(0,m.index).split('\n').length}));
+const aliases=Object.fromEntries([...source.matchAll(/set (\w+)=function (\w+)/g)].map(m=>[m[1],m[2]]));
+const handlers=[...source.matchAll(/set nOT=(\w+)\r?\nif not HaveSavedHandle\(Ob,([123]),\$([a-fA-F0-9]+)\)/g)].map(m=>{const fn=aliases[m[1]], start=lines.findIndex(l=>l.startsWith('function '+fn+' '))+1,end=lines.indexOf('endfunction',start)+1;return {kind:decode(m[3]),phase:Number(m[2]),codeAlias:m[1],functionName:fn,registrationLine:source.slice(0,m.index).split('\n').length,functionStart:start,functionEnd:end,rawSource:lines.slice(start-1,end).join('\n')};});
+for(const kind of ['UPUN','SPEC','GREN','RDUN'])if(handlers.some(h=>h.kind===kind&&h.phase<=2))throw Error('metadata registered');
+const evidence=(name,start,end)=>({name,lineStart:start,lineEnd:end,rawSource:lines.slice(start-1,end).join('\n')});
+const data={schemaVersion:1,mapVersion:'2.320',sourcePath:newPath,sourceSha256:hash(nb),oldSourcePath:oldPath,oldSourceSha256:hash(ob),recipes,activeChoices,handlers,evidence:[evidence('consume-dispatch-IRT',7060,7083),evidence('consume-loop-URb',7084,7092),evidence('validate-dispatch-v6y',7093,7119),evidence('validate-loop-oEb',7120,7141),evidence('output-LPT',7142,7165),evidence('EDT',7175,7197),evidence('seraphim-alias-I3y',16934,17065),evidence('A12C-spell-nfb',57665,57692)],oldRecipes,changedIds:audit.changedIds,removedIds:audit.removedIds};
+if(recipes.length!==265||oldRecipes.length!==266||new Set(recipes.map(r=>r.recipeId)).size!==265||new Set(recipes.map(r=>r.outputs[0].id)).size!==264||activeChoices.some(c=>c.recipeId==='TEST'))throw Error('counts/TEST');
+const canonical=v=>Array.isArray(v)?'['+v.map(canonical).join(',')+']':v&&typeof v==='object'?'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}':JSON.stringify(v);
+const json=JSON.stringify(data,null,2)+'\n'; fs.writeFileSync(path.join(root,'Data/map-recipes-2320.json'),json);
+console.log(JSON.stringify({byteSha256:hash(json),semanticSha256:hash(canonical(data)),bytes:Buffer.byteLength(json),recipes:recipes.length,handlers:handlers.length,activeChoices:activeChoices.length}));

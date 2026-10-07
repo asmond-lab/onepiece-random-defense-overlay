@@ -24,6 +24,7 @@ public sealed class UnitDefinition
     public string Tier { get; init; } = "일반";
     public List<RoleValue> Roles { get; init; } = [];
     public Dictionary<string, int> Recipe { get; init; } = [];
+    public RecipeConditionRequirements? RecipeConditions { get; init; }
     public List<string> Tags { get; init; } = [];
     public List<string> Rawcodes { get; init; } = [];
     public string Image { get; init; } = "";
@@ -103,6 +104,8 @@ public sealed class Recommendation
     /// </summary>
     public string? ClusterParentUnitId { get; set; }
     public CombatReadiness? CombatReadiness { get; set; }
+    internal CurrentCraftAssessment? CurrentCraft { get; set; }
+    internal BulletGuidePlan? GuidePlan { get; set; }
     public GoalCarryMode CarryMode { get; set; } = GoalCarryMode.Unknown;
     public int DeferredSecondaryTopCount { get; set; }
     public string? DeferredSecondaryTopReason { get; set; }
@@ -110,6 +113,7 @@ public sealed class Recommendation
 
 public sealed class RecipeCraftStep
 {
+    public RecipeConditionResult? Conditions { get; init; }
     public required string UnitId { get; init; }
     public required string Name { get; init; }
     public string Tier { get; init; } = "";
@@ -204,12 +208,26 @@ public sealed class CompositionUnitDetail
 
 public sealed class RecognitionResult
 {
+    public DiagnosticInventoryObservation? DiagnosticObservation { get; init; }
+    [JsonIgnore] internal DiagnosticBasicInventorySample? CompletionBasicSample { get; init; }
+    [JsonIgnore] internal OverlayExecutionContext.SyntheticGoroseiInput? SyntheticGorosei { get; init; }
     public List<InventoryEntry> Entries { get; init; } = [];
     public DateTime CapturedAt { get; init; } = DateTime.Now;
     public string Status { get; init; } = "대기";
     public RecognitionState State { get; init; } = RecognitionState.Ready;
     public RecognitionDiagnostics Diagnostics { get; init; } = new();
     public MapSignals MapSignals { get; init; } = MapSignals.Empty;
+    public NavigationStateSnapshot? RecommendationInputs { get; init; }
+    public BulletGuideRuntimeState GuideRuntime { get; init; } = BulletGuideRuntimeState.Unknown;
+    public PlayerResourceState? PlayerResources { get; init; }
+    [JsonIgnore] public GambleCounterSnapshot? GambleCounters { get; init; }
+    public HelperUnitState? HelperState { get; init; }
+    // Validated observations, not an authoritative line count or a persistent target identity.
+    public ImmutableArray<CombatUnitState> CombatObservations { get; init; } = [];
+    public int? LoadedClearCount { get; init; }
+    [JsonIgnore] internal IReadOnlyDictionary<uint, List<ulong>> NativeUnitPointers { get; init; } =
+        new Dictionary<uint, List<ulong>>();
+    [JsonIgnore] internal byte? VerifiedLocalPlayerSlot { get; init; }
     // True only when the reader has positive evidence that the match context changed
     // (Warcraft exited, GameUI/WorldFrame disappeared, or a lower story objective repeated in
     // a new ready snapshot). A reconnect or wrapper-discovery delay is merely disconnected.
@@ -226,7 +244,9 @@ public sealed record MapSignals(
     int CompletedStoryStageOrdinal,
     ImmutableDictionary<string, int> RewardWisps)
 {
+    public NativeNavigationSnapshot NativeNavigation { get; init; } = NativeNavigationSnapshot.Unknown;
     public RouteQuestSnapshot RouteQuests { get; init; } = RouteQuestSnapshot.Unknown;
+    public bool? DestructionKingAvailable { get; init; }
     public static MapSignals Empty { get; } = new(
         null, null, 0, ImmutableDictionary<string, int>.Empty.WithComparers(StringComparer.Ordinal));
 
@@ -247,8 +267,18 @@ public enum RecognitionState
 
 public sealed class RecognitionDiagnostics
 {
+    // Local activity recording only; never part of remote telemetry or gameplay authority.
+    [JsonIgnore] internal ImmutableDictionary<string, int>? ActivityRawcodes { get; init; }
+    [JsonIgnore] internal ImmutableDictionary<string, int>? ActivityProjectedRawcodes { get; init; }
+    [JsonIgnore] internal ImmutableDictionary<string, int>? ActivityCounters { get; init; }
+    [JsonIgnore] internal ImmutableArray<string> ActivityUnavailableCounterNames { get; init; } = [];
+    [JsonIgnore] internal string ActivityCounterStatus { get; init; } = "not-requested";
+    [JsonIgnore] internal int ActivityCounterReadCalls { get; init; }
+    [JsonIgnore] internal int ActivityCounterReadBytes { get; init; }
+    [JsonIgnore] internal double ActivityCounterReadDurationMs { get; init; }
     public string Source { get; init; } = "Unknown";
     public string ProcessVersion { get; init; } = "";
+    public string ExecutableSha256 { get; init; } = "";
     public int? ProcessId { get; init; }
     public string ProfileId { get; init; } = "";
     public int? ProfileRevision { get; init; }
@@ -257,7 +287,14 @@ public sealed class RecognitionDiagnostics
     public int ObservedObjects { get; init; }
     public int MappedObjects { get; init; }
     public int UnknownObjects { get; init; }
+    /// <summary>Diagnostic-only weighted source-helper exclusions; raw counts above are unchanged.</summary>
+    public int ExcludedSourceHelperObjects { get; init; }
+    /// <summary>Diagnostic quality denominator after exact pinned source-helper exclusions.</summary>
+    public int EligibleObjects { get; init; }
+    public int EligibleMappedObjects { get; init; }
+    public int EligibleUnknownObjects { get; init; }
     public GoroseiMode Gorosei { get; init; } = GoroseiMode.None;
+    public GoroseiMarkerSnapshot GoroseiMarker { get; init; } = GoroseiMarkerSnapshot.Unknown;
     /// <summary>풀에 있는 다른 소유자(적·중립·도감존)의 유닛 수. 패배 판정에 쓴다.</summary>
     public int ForeignObjects { get; init; }
 
@@ -300,25 +337,32 @@ public sealed class RecognitionDiagnostics
     {
         get
         {
-            // 인식이 성공한 상태에서는 수치 요약을, 실패·대기 상태(수치가 없을 때)에는
-            // Detail의 원인·조치 안내를 그대로 보여준다. 예전에는 Detail을 아예 버려서
-            // 연동이 안 될 때 "확인하는 중입니다"만 반복돼 원격 진단이 불가능했다.
+            // 사용자에게는 확인한 수량만 요약한다. 세부 오류는 DisplayText에 보존하고
+            // 실패·대기 상태의 원인과 조치는 RecognitionResult.Status로 안내한다.
             var parts = new List<string>();
             if (!string.IsNullOrWhiteSpace(ProcessVersion)) parts.Add($"워크 버전 {ProcessVersion}");
             if (MappedObjects > 0 || ObservedObjects > 0)
                 parts.Add($"인식 패 {MappedObjects}개");
-            if (UnknownObjects > 0) parts.Add($"내부 유닛 {UnknownObjects}개 제외");
+            if (UnknownObjects > 0) parts.Add($"종류를 확인하지 못한 유닛 {UnknownObjects}개 제외");
             if (Gorosei != GoroseiMode.None)
                 parts.Add("오로성 " + GoroseiEffects.Options
                     .First(option => option.Mode == Gorosei).Name + " 자동 감지");
             if (parts.Count > 0) return string.Join(" · ", parts);
-            return string.IsNullOrWhiteSpace(Detail) ? "연동 상태를 확인하는 중입니다." : Detail;
+            return "게임 정보를 아직 읽지 못했습니다.";
         }
     }
 }
 
 public sealed class AppSettings
 {
+    public bool AutoUpdateEnabled { get; set; } = true;
+    public PlayMode? Mode { get; set; }
+    public int GuideNumber { get; set; } = 1;
+    public string? SecondaryGoalUnitId { get; set; }
+    public bool BeginnerCoachEnabled { get; set; } = true;
+    public string? ManualGoalUnitId { get; set; }
+    public bool? ExpertAutoStartGoal { get; set; }
+    public bool? ExpertAutoNavigation { get; set; }
     // 설정 마이그레이션 버전. 1=레거시(화면 인식 키 존재), 2=메모리 단일 경로 고정 이후.
     public int SettingsSchemaVersion { get; set; } = LegacySettingsMigration.CurrentSchemaVersion;
     public string GoalUnitId { get; set; } = "yamato_transcendent";
@@ -336,18 +380,28 @@ public sealed class AppSettings
     // 패 상태 창은 추천 창과 따로 놓을 수 있어야 하므로 위치를 따로 기억한다.
     public double? StatsOverlayLeft { get; set; }
     public double? StatsOverlayTop { get; set; }
+    // 메인 창은 사용자가 조절한 크기·위치를 그대로 복원한다(DIP, 최대화 전 크기).
+    public double? MainWindowLeft { get; set; }
+    public double? MainWindowTop { get; set; }
+    public double? MainWindowWidth { get; set; }
+    public double? MainWindowHeight { get; set; }
+    public bool MainWindowMaximized { get; set; }
     public bool AutoScanEnabled { get; set; } = true;
     public bool ClearDataAutoRefresh { get; set; } = true;
-    // 워크 기본 단축키(Alt·Ctrl+숫자·F9~F12 등)와 겹치지 않는 키. WPF Key 이름.
-    // Scroll Lock은 일부 키보드에서 Fn 조합이거나 아예 없어 Caps Lock이 기본이다.
-    public string OverlayToggleKey { get; set; } = "Capital";
+    // WPF Key 이름. 이전 기본 Caps Lock/Scroll Lock은 첫 실행에서 F1으로 이전한다.
+    public string OverlayToggleKey { get; set; } = OverlayHotkeyPolicy.DefaultKey.ToString();
+    public bool OverlayToggleKeyCustomized { get; set; }
     // 신+ 판별 전역 변수(오로성). 게임 시작 안내창을 보고 선택한다.
     public string GoroseiMode { get; set; } = "None";
+    // Explicit build preference only. Legacy GoroseiMode also contains automatic values.
+    public string BulletPlanningGoroseiMode { get; set; } = "None";
     // 자동 업데이트 무한 루프 방지: 같은 태그는 한 번만 시도한다.
     public string LastAttemptedUpdateTag { get; set; } = "";
-    // 식별자 없는 aggregate v2는 기본 활성이다. 첫 고지 전에는 업로드하지 않는다.
+    // Legacy UI fields are not authorization for automatic gameplay collection.
     public bool TelemetryEnabled { get; set; } = true;
     public int TelemetryDisclosureVersion { get; set; }
+    public int TelemetryConsentVersion { get; set; }
+    public bool TelemetryConsentAccepted { get; set; }
 }
 
 /// <summary>긴급소집 와일드카드(특별함 선택) 사용처 한 건.</summary>
@@ -365,7 +419,7 @@ public static class RawcodeAliases
         {
             ["G90H"] = "H90H", // 상디 초월 (발라티에 강화 폼)
             ["D90H"] = "E90H", // 도플라밍고 초월 (필드 변신 폼)
-            ["W50h"] = "O10h", // 비비 변화 폼 (메모리 보유는 희귀 비비로 통합)
+            // 비비 변화(W50h)는 희귀(O10h)를 소모하는 별도 조합이므로 통합하지 않는다.
             ["1B0H"] = "790H", // 아오키지 초월
             ["390H"] = "190H", // 쵸파 초월
             ["TB0H"] = "F90H", // 조로 초월
@@ -379,12 +433,8 @@ public static class RawcodeAliases
     public static string Canonical(string rawcode) =>
         AliasToCanonical.GetValueOrDefault(rawcode, rawcode);
 
-    // 비비 변화 폼은 메모리 보유 수량만 희귀 비비로 합치며, 클리어 표본에서는
-    // 변화 폼 자체의 지원 채용률과 레시피를 보존한다.
     public static string CanonicalForStats(string rawcode) =>
-        rawcode.Equals("W50h", StringComparison.Ordinal)
-            ? rawcode
-            : Canonical(rawcode);
+        Canonical(rawcode);
 
     // 니카 루초/뱀초처럼 카탈로그는 갈라놨지만(조합 트리가 다름) 인게임 rawcode가
     // 같아 클리어 기록이 한 코드로 잡히는 경우: 목표 학습 조회용 코드만 공유한다.
@@ -439,10 +489,10 @@ public static class GoroseiEffects
 {
     public static IReadOnlyList<GoroseiOption> Options { get; } =
     [
-        new(GoroseiMode.None, "자동 감지", "대전 시작 후 맵의 오로성 마커를 자동 확인합니다."),
-        new(GoroseiMode.Nasjuro, "나스쥬로", "적 이속 +10% · 아군 공속 -10% — 이감 목표를 112로 올립니다."),
-        new(GoroseiMode.Warcury, "워큐리", "적 방어력 +10 · 마방 +10% — 방깎 221, 마방깎 10을 목표로 합니다."),
-        new(GoroseiMode.Saturn, "새턴", "아군 공격력 -20% · 폭뎀 -7% — 단일·끝딜을 모두 확보합니다.")
+        new(GoroseiMode.None, "자동 확인", "게임이 시작되면 오로성을 자동으로 확인해요."),
+        new(GoroseiMode.Nasjuro, "나스쥬로", "적 이동 속도 +10%, 아군 공격 속도 -10%. 이동 속도 감소 목표는 112예요."),
+        new(GoroseiMode.Warcury, "워큐리", "적 방어력 +10, 마법 방어력 +10%. 방어력 감소 목표는 221, 마법 방어력 감소 목표는 10이에요."),
+        new(GoroseiMode.Saturn, "새턴", "아군 공격력 -20%, 폭발 피해 -7%. 한 대상에게 주는 피해와 마지막 공격을 모두 챙겨 주세요.")
     ];
 
     public static GoroseiMode Parse(string? value) =>
@@ -459,9 +509,9 @@ public static class GoroseiEffects
 
     public static string? StatsNote(GoroseiMode mode) => mode switch
     {
-        GoroseiMode.Nasjuro => "오로성 나스쥬로: 이감·공속 보강 필요",
-        GoroseiMode.Warcury => "오로성 워큐리: 깎기(방깎·마방깎) 보강 필요",
-        GoroseiMode.Saturn => "오로성 새턴: 폭뎀 의존 유닛 성능 저하 · 딜 보강 필요",
+        GoroseiMode.Nasjuro => "오로성 나스쥬로: 적 이동 속도를 낮추고 아군 공격 속도를 보완해 주세요.",
+        GoroseiMode.Warcury => "오로성 워큐리: 적 방어력과 마법 방어력을 낮추는 유닛을 보완해 주세요.",
+        GoroseiMode.Saturn => "오로성 새턴: 폭발 피해가 줄어들어요. 한 대상에게 주는 피해와 마지막 공격을 보완해 주세요.",
         _ => null
     };
 }
@@ -578,7 +628,9 @@ public static class RecognitionPolicy
     /// 한 판이 끝나 로비·대기(패 0장)로 돌아가면 자동시작과 완성 상위 잠금을 푼다.
     /// 일시 읽기 race는 이전 판 목표를 유지한다.
     /// </summary>
-    public static bool ShouldResetMatch(RecognitionResult result, int confirmedWaitingScans) =>
+    public static bool ShouldResetMatch(RecognitionResult result, int confirmedWaitingScans,
+        bool boundaryConsumed = false) =>
+        !boundaryConsumed &&
         result.ShouldClearAutomaticInventory &&
         result.ConfirmsSessionBoundary &&
         confirmedWaitingScans >= 2;

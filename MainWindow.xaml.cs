@@ -17,9 +17,12 @@ public partial class MainWindow : Window
     internal static readonly TimeSpan RecognitionInterval = TimeSpan.FromMilliseconds(250);
     internal AdaptivePlanningPerformanceSample? LastAdaptivePlanningPerformance =>
         _lastAdaptivePlanningPerformance;
-    private readonly DataCatalog _catalog = new();
+    private readonly DataCatalog _catalog;
+    private readonly OverlayExecutionContext _execution;
     private readonly AppSettings _settings;
     private readonly bool _persistSettings;
+    // Startup suppression alone is not isolation: also gate event-driven external effects.
+    private readonly bool _runtimeEffects;
     private readonly Dictionary<string, InventoryEntry> _automatic = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _growthUnitIds = new(StringComparer.OrdinalIgnoreCase);
     private readonly LatestRefreshVersion _refreshVersion = new();
@@ -28,9 +31,8 @@ public partial class MainWindow : Window
     private readonly AdaptiveDecisionTraceBuffer _adaptiveDecisionTrace = new();
     private readonly LatestBackgroundWorkCoordinator _recommendationWork = new();
     private readonly DispatcherTimer _timer = new();
-    // 릴리스 확인은 API가 아니라 리다이렉트 태그 조사라 호출 제한 부담이 없다 — 2분이면
-    // 새 릴리스가 몇 분 안에 전 유저에게 퍼진다.
-    private readonly DispatcherTimer _updateTimer = new() { Interval = TimeSpan.FromMinutes(2) };
+    // Same-channel signed Cloudflare manifest checks, every fifteen minutes after startup.
+    private readonly DispatcherTimer _updateTimer = new() { Interval = TimeSpan.FromMinutes(1) };
     // 자동 업데이트 정책·중복 억제는 AppUpdateCoordinator가 소유한다.
     private AppUpdateCoordinator? _updateCoordinator;
     private RecommendationEngine _engine = null!;
@@ -53,12 +55,23 @@ public partial class MainWindow : Window
     private readonly MatchTelemetrySession _telemetrySession;
     private string _matchDifficulty = "unknown";
     private IInventoryRecognizer _recognizer = null!;
+    private readonly bool _controlledRecognitionAllowed;
     private OverlayWindow _overlay = null!;
     private bool _initialized;
+    internal bool StartupAborted { get; private set; }
     private bool _scanInProgress;
+    private readonly DiagnosticScanContinuation _diagnosticScanContinuation = new();
     private bool _automaticStale;
     private bool _automaticDisconnected;
     private GoroseiMode _detectedGorosei = GoroseiMode.None;
+    // Only an explicit selection during this UI session can supply offline scenario effects.
+    // Persisted/auto-detected combo values are never current observation evidence.
+    private GoroseiMode? _explicitGoroseiScenario;
+    private GoroseiPlanningSelection _userGoroseiPlan = GoroseiPlanningSelection.Unknown;
+    private string? EffectiveNavigation => _mapSignals.NativeNavigation.Resolve(_navigationSession.ConfirmedOptionId);
+    private readonly GoroseiObservationSession _goroseiObservation = new();
+    private long _recognitionRevision;
+    private GoroseiMode CurrentGorosei => _goroseiObservation.Current.EffectMode;
     private bool _liveSessionActive;
     private bool _autoStartApplied;
     private MapSignals _mapSignals = MapSignals.Empty;
@@ -85,6 +98,7 @@ public partial class MainWindow : Window
     private string? _lastScanSignature;
     private int _lastRound;
     private int _confirmedWaitingScans;
+    private bool _waitingBoundaryConsumed;
     // 현재 패 인식과 사용자 숨김 선택을 함께 보존하는 오버레이 표시 상태.
     private OverlayVisibilityState _overlayVisibility;
     // 연속 비표시 판정 횟수 — 히스테리시스 임계(OverlayVisibilityPolicy.HiddenStreakThreshold)와 비교.
@@ -97,36 +111,56 @@ public partial class MainWindow : Window
         StoryRewardSequenceDecision? StorySequence,
         RecommendationSurface Surface);
 
-    public MainWindow() : this(null, startRuntime: true)
+    public MainWindow() : this((Application.Current as App)?.Execution ?? OverlayExecutionContext.Production())
     {
     }
 
     internal MainWindow(AppSettings? settingsOverride, bool startRuntime,
         string? telemetryQueueDirectory = null)
+        : this(startRuntime ? OverlayExecutionContext.Production()
+            : OverlayExecutionContext.Fixture(settingsOverride ?? throw new ArgumentNullException(nameof(settingsOverride))),
+            settingsOverride, telemetryQueueDirectory) { }
+
+    internal MainWindow(OverlayExecutionContext execution, AppSettings? settingsOverride = null,
+        string? telemetryQueueDirectory = null, string? fixtureMapVersion = null)
     {
+        ArgumentNullException.ThrowIfNull(execution);
+        execution.RequireConsent();
+        if (fixtureMapVersion is not null && (execution.RuntimeEnabled || fixtureMapVersion is not ("2.314" or "2.320" or "2.321" or "2.322" or "2.323")))
+            throw new ArgumentException("Map overrides are restricted to non-runtime fixtures.", nameof(fixtureMapVersion));
+        _execution = execution;
+        var startRuntime = execution.RuntimeEnabled;
+        _runtimeEffects = execution.RuntimeEnabled;
+        _controlledRecognitionAllowed = !execution.LiveMemoryEnabled;
+        _catalog = execution.CreateCatalog();
         InitializeComponent();
-        Loaded += (_, _) => ApplyResolutionScale();
+        Loaded += (_, _) => { ApplyResolutionScale(); RestoreMainWindowGeometry(); };
         DpiChanged += (_, _) => Dispatcher.BeginInvoke(new Action(ApplyResolutionScale));
-        _persistSettings = settingsOverride is null;
-        _settings = settingsOverride ?? SettingsStore.Load();
-        _telemetry = new TelemetryUploader(
-            queueDirectory: telemetryQueueDirectory,
-            enabled: _settings.TelemetryEnabled);
+        Closing += (_, _) => SaveMainWindowGeometry();
+        if (_runtimeEffects)
+        {
+            Loaded += (_, _) => ForegroundGameWatcher.Start();
+            Closed += (_, _) => ForegroundGameWatcher.Stop();
+        }
+        _persistSettings = execution.RuntimeEnabled && settingsOverride is null;
+        _settings = execution.RuntimeEnabled && settingsOverride is not null ? settingsOverride : execution.LoadSettings();
+        BetaPlayModes.Normalize(_settings);
+        _coachJournal = execution.CreateCoachJournal();
+        _telemetry = execution.CreateTelemetry(_settings.TelemetryEnabled, telemetryQueueDirectory);
         _telemetrySession = new MatchTelemetrySession(_telemetry);
         try
         {
-            _catalog.Load();
+            _catalog.Load(mapVersion: fixtureMapVersion ?? (execution.LiveMemoryEnabled ? Map2323SourceContract.MapVersion : "2.314"));
             _adaptivePlanning = new AdaptivePlanningCompositionRoot(
                 Path.Combine(AppContext.BaseDirectory, "Data"));
-            _storyProfile = MapStoryProfileLoader.LoadFromDirectory(
-                Path.Combine(AppContext.BaseDirectory, "Data"));
+            _storyProfile = LoadApplicationStoryProfile(_catalog);
             _clearStats = ClearBuildStats.Load(ClearSamplePaths());
             _liveStats = LiveStats.Load(Path.Combine(AppContext.BaseDirectory, "Data", "orand-live-stats.json"));
             _combineHotkeys = CombineHotkeyCatalog.Load(
                 Path.Combine(AppContext.BaseDirectory, "Data", "tmo-combine-hotkeys.json"));
-            _engine = new RecommendationEngine(_catalog, _clearStats.HasData ? _clearStats : null,
+            _engine = new RecommendationEngine(_catalog, RankingClearStats(_catalog, _clearStats),
                 _combineHotkeys);
-            _engine.SetLiveStats(_liveStats);
+            if (!UsesMap2320) _engine.SetLiveStats(_liveStats);
             _statsCalculator = new InventoryStatsCalculator(_catalog);
             _rareRerollAdvisor = new RareRerollAdvisor(_catalog);
             _greenBloodAdvisor = new GreenBloodAdvisor(_catalog);
@@ -135,11 +169,14 @@ public partial class MainWindow : Window
             _alchemyAdvisor = new AlchemyDismantleAdvisor(_catalog);
             _combinePlanner = new AutoCombinePlanner(_catalog, _combineHotkeys);
             _completedTopUnits = new CompletedTopUnitTracker(_catalog);
-            _recognizer = new WarcraftMemoryRecognitionService(_catalog);
+            _recognizer = execution.CreateRecognizer(_catalog);
         }
         catch (Exception exception)
         {
-            MessageBox.Show(exception.Message, "데이터 오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Diagnostics.Trace.TraceError("{0}", exception);
+            StartupAborted = true;
+            MessageBox.Show("앱에 필요한 게임 정보를 불러오지 못했습니다. 앱 파일이 모두 있는지 확인한 뒤 다시 실행해 주세요.",
+                "게임 정보 읽기 실패", MessageBoxButton.OK, MessageBoxImage.Error);
             Close();
             return;
         }
@@ -148,7 +185,9 @@ public partial class MainWindow : Window
         RepopulateNavigationChoices();
         RepopulateBuildVariants();
         GoroseiCombo.ItemsSource = GoroseiEffects.Options;
+        _userGoroseiPlan = new(GoroseiEffects.Parse(_settings.BulletPlanningGoroseiMode), "SavedUserPlan");
         var selectedGorosei = GoroseiEffects.Parse(_settings.GoroseiMode);
+        if (_userGoroseiPlan.IsKnown) selectedGorosei = _userGoroseiPlan.Mode;
         GoroseiCombo.SelectedItem = GoroseiEffects.Options.First(option => option.Mode == selectedGorosei);
         GoroseiSummaryText.Text = GoroseiEffects.Options.First(option => option.Mode == selectedGorosei).Summary;
         ClickThroughCheck.IsChecked = _settings.ClickThroughOverlay;
@@ -160,25 +199,30 @@ public partial class MainWindow : Window
         };
         AutoScanCheck.IsChecked = _settings.AutoScanEnabled;
         ClearDataRefreshCheck.IsChecked = _settings.ClearDataAutoRefresh;
-        TelemetryCheck.IsChecked = _settings.TelemetryEnabled;
-        TelemetryDisclosurePanel.Visibility = _settings.TelemetryDisclosureVersion >= 2
-            ? Visibility.Collapsed
-            : Visibility.Visible;
-        UpdateTelemetryQueueStatus();
-        if (startRuntime && _settings.TelemetryEnabled &&
-            _settings.TelemetryDisclosureVersion >= 2)
+        ApplicationUpdateCheck.IsChecked = _settings.AutoUpdateEnabled;
+        if (UsesMap2320) _telemetry.SetEnabled(false, deletePending: false);
+        if (startRuntime && !UsesMap2320 && execution.HasCurrentConsent)
             _ = _telemetry.FlushPendingAsync();
         AutoStartCheck.IsChecked = _settings.AutoStartGoal;
         AutoNavigationCheck.IsChecked = _settings.AutoRecommendNavigation;
+        ConfigureMap2320Navigation();
         UpdateNavigationSelectionVisibility();
-        if (!_settings.AutoRecommendNavigation)
-            _adaptivePlanning.LatchManualNavigationOverride();
-        DataVersionText.Text = $"데이터 {_catalog.Data.DataVersion} · {_catalog.Data.Disclaimer}" +
-                               ClearStatsSummary();
-        var appVersion = UpdateService.CurrentVersion;
-        VersionText.Text = $"v{appVersion.Major}.{appVersion.Minor}.{appVersion.Build}";
+        DataVersionText.Text = ApplicationDataVersionLabel();
+        VersionText.Text = RandyPickBrand.BetaLabel;
 
         _overlay = new OverlayWindow();
+        if (execution.ReplayDirectory is not null)
+        {
+            Title = "REPLAY VERIFICATION - " + Title;
+            _overlay.Title = "REPLAY VERIFICATION - " + _overlay.Title;
+            _overlay.Stats.Title = "REPLAY VERIFICATION - " + _overlay.Stats.Title;
+        }
+        InitializeCoach();
+        if (UsesMap2320)
+        {
+            DataVersionText.Visibility = Visibility.Visible;
+            RenderMap2320NavigationContext();
+        }
         _overlay.RestorePosition(_settings.OverlayLeft, _settings.OverlayTop);
         _overlay.Stats.RestorePosition(_settings.StatsOverlayLeft, _settings.StatsOverlayTop);
         _overlay.PositionCommitted += Overlay_OnPositionCommitted;
@@ -200,170 +244,44 @@ public partial class MainWindow : Window
         Closed += (_, _) =>
         {
             _timer.Stop();
+            _updateLifecycleClosed = true;
             _updateTimer.Stop();
+            _updateCoordinator?.Stop();
+            CloseDiagnosticInventoryObservation();
             _scanCancellation?.Cancel();
             _scanCancellation?.Dispose();
             SendMatchTelemetry();
             SaveOverlayPosition();
             _overlay.Stats.CloseForApplication();
             _overlay.CloseForApplication();
-            if (_persistSettings) SettingsStore.Save(_settings);
+            if (_persistSettings) _execution.SaveSettings(_settings);
         };
         _initialized = true;
-        if (!startRuntime) return;
-        RefreshAll("워크 메모리 인식을 준비하는 중입니다.");
+        InitializeActivityRecording();
+        InitializePendingUpdateNotices();
+        InitializeApplicationUpdates(startRuntime);
+        if (!execution.LiveMemoryEnabled) return;
+        if (startRuntime) InitializeGameplayServices();
+        RefreshAll("게임의 유닛을 읽을 준비를 하고 있어요.");
         if (_settings.AutoScanEnabled)
         {
             _timer.Start();
             _ = ScanAsync();
         }
+        if (!startRuntime) return;
         _ = RefreshClearDataAsync();
-        _updateCoordinator = new AppUpdateCoordinator(_settings,
-            () => _liveSessionActive,
-            message => Dispatcher.InvokeAsync(new Action(() => FooterStatus.Text = message)).Task,
-            InstallUpdateAsync);
-        _ = _updateCoordinator.RunStartupAsync();
-        // 초기 버전이라 실행 중에도 주기적으로 새 릴리스를 확인해 바로 반영한다.
-        _updateTimer.Tick += async (_, _) => await _updateCoordinator.CheckForUpdateAsync();
-        _updateTimer.Start();
+
     }
 
-        // 새 릴리스가 있으면 확인 없이 내려받아 교체하고 자동 재시작한다(유저 지시).
-    // 다만 교체는 재시작을 동반하므로 판 도중에는 미룬다(유저 지시) — 다음 확인
-    // 주기에 다시 시도한다. 개발 PC(ORAND_DEV)는 검증을 위해 즉시 교체한다.
-    // 같은 태그를 이미 시도했다면(버전 미상승 등) 반복하지 않는다.
-        // 수동 확인(footer 버튼): 자동 확인과 달리 결과를 항상 footer에 알려주고,
-    // 이전에 실패로 기록된 태그도 다시 시도한다.
-    private async void CheckUpdateNow_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (_updateCoordinator is { IsBusy: true }) return;
-        if (UpdateService.IsTestBuild)
-        {
-            FooterStatus.Text = "테스트 빌드라 GitHub 배포본으로 덮지 않습니다.";
-            return;
-        }
-        FooterStatus.Text = "업데이트 확인 중…";
-        var service = new UpdateService();
-        var (update, failed) = await service.CheckDetailedAsync();
-        if (failed)
-        {
-            FooterStatus.Text = "업데이트 확인에 실패했습니다 — 네트워크 상태를 확인해 주세요.";
-            return;
-        }
-        if (update is null)
-        {
-            var version = UpdateService.CurrentVersion;
-            FooterStatus.Text = $"최신 버전입니다 · v{version.Major}.{version.Minor}.{version.Build}";
-            return;
-        }
-        if (!UpdateService.CanSelfInstall)
-        {
-            FooterStatus.Text = $"새 버전 {update.Tag} 공개 — 단일 exe 배포가 아니어서 자동 교체를 건너뜁니다.";
-            return;
-        }
-        await InstallUpdateAsync(service, update);
-    }
+    private void LogUnknownRawcodes(RecognitionResult result) => _execution.LogUnknownRawcodes(result);
 
-    // 주기 확인이 같은 안내를 footer에 반복해서 쓰지 않게 태그당 1회만 알린다.
-        private async Task InstallUpdateAsync(UpdateService service, UpdateInfo update)
-    {
-        if (_updateCoordinator is null || !_updateCoordinator.BeginInstall()) return;
-        // 진행바 창 — 업데이트가 돌고 있음을 눈에 보이게(유저 요청).
-        Window? progressWindow = null;
-        ProgressBar? progressBar = null;
-        TextBlock? progressLabel = null;
-        await Dispatcher.InvokeAsync(() =>
-        {
-            FooterStatus.Text = $"{update.Tag} 업데이트를 내려받는 중입니다. 완료되면 자동으로 재시작합니다.";
-            progressLabel = new TextBlock
-            {
-                Text = $"{update.Tag} 업데이트 내려받는 중…",
-                Foreground = Brushes.White,
-                FontSize = 13,
-                Margin = new Thickness(0, 0, 0, 10)
-            };
-            progressBar = new ProgressBar { Minimum = 0, Maximum = 100, Height = 14, Width = 320 };
-            var body = new StackPanel { Margin = new Thickness(20, 16, 20, 16) };
-            body.Children.Add(progressLabel);
-            body.Children.Add(progressBar);
-            progressWindow = new Window
-            {
-                Title = "자동 업데이트",
-                Owner = this,
-                SizeToContent = SizeToContent.WidthAndHeight,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Background = new SolidColorBrush(Color.FromRgb(15, 17, 24)),
-                Topmost = true,
-                ResizeMode = ResizeMode.NoResize,
-                Content = body
-            };
-            progressWindow.Show();
-        });
-        var progress = new Progress<double>(value =>
-        {
-            if (progressBar is null || progressLabel is null) return;
-            progressBar.Value = value * 100;
-            progressLabel.Text = $"{update.Tag} 업데이트 내려받는 중… {value:P0}";
-        });
-        var previousAttemptTag = _settings.LastAttemptedUpdateTag;
-        try
-        {
-            _settings.LastAttemptedUpdateTag = update.Tag;
-            SettingsStore.Save(_settings);
-            await service.DownloadAndInstallAsync(update, progress);
-            await Dispatcher.InvokeAsync(() =>
-            {
-                if (progressLabel is not null) progressLabel.Text = $"{update.Tag} 설치 후 재시작합니다…";
-                Application.Current.Shutdown();
-            });
-        }
-        catch
-        {
-            // 내려받기·교체 시작 자체가 실패한 경우라 재시도해도 안전하다.
-            _settings.LastAttemptedUpdateTag = previousAttemptTag;
-            SettingsStore.Save(_settings);
-            _updateCoordinator?.EndInstall();
-            await Dispatcher.InvokeAsync(() =>
-            {
-                progressWindow?.Close();
-                FooterStatus.Text = $"{update.Tag} 자동 업데이트에 실패했습니다 — 잠시 후 다시 시도합니다.";
-            });
-        }
-    }
-
-    // 필드의 강화 폼처럼 카탈로그에 없는 rawcode를 파일로 남겨, 별칭 등록으로
-    // 인식을 확장할 수 있게 한다(예: 강화 상디 G90H 발견 경로의 자동화).
-    private readonly HashSet<string> _reportedUnknownRawcodes = new(StringComparer.Ordinal);
-
-    private void LogUnknownRawcodes(RecognitionResult result)
-    {
-        var codes = result.Diagnostics?.UnknownRawcodes;
-        if (codes is null || codes.Count == 0) return;
-        var fresh = codes.Where(code => _reportedUnknownRawcodes.Add(code)).ToList();
-        if (fresh.Count == 0) return;
-        try
-        {
-            File.AppendAllLines(
-                Path.Combine(AppPaths.UserDataDirectory, "unknown-rawcodes.log"),
-                fresh.Select(code => $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {code}"));
-        }
-        catch
-        {
-            // 진단 로그 실패는 인식 흐름에 영향을 주지 않는다.
-        }
-    }
-
-    private static string[] ClearSamplePaths() =>
-    [
-        Path.Combine(AppContext.BaseDirectory, "Data", "tmo-clear-samples.json"),
-        ClearSnapshotRefreshService.CacheFile
-    ];
+    private string[] ClearSamplePaths() => _execution.ClearSamplePaths();
 
     private string ClearStatsSummary() => _clearStats.HasData
         ? $" · 신+ 클리어 {_clearStats.TotalGodPlusSamples:#,0}판 학습" +
           $"({_clearStats.OldestSampleAt:MM.dd}~{_clearStats.NewestSampleAt:MM.dd})" +
           (_liveStats.TotalRecords > 0 ? $" · 실사용 {_liveStats.TotalRecords:#,0}판" : "")
-        : " · 클리어 데이터 없음(수작업 우선순위 사용)";
+        : " · 이전 클리어 기록이 없어 기본 추천 순서를 사용해요";
 
     /// <summary>
     /// 앱 시작 후 한 번, 저장소 스냅샷이 번들보다 새로우면 증분 수신한다.
@@ -371,20 +289,22 @@ public partial class MainWindow : Window
     /// </summary>
     private async Task RefreshClearDataAsync()
     {
+        if (!_runtimeEffects) return;
         if (!_settings.ClearDataAutoRefresh) return;
         var newerThan = _clearStats.NewestSampleAt ?? DateTimeOffset.UtcNow.AddDays(-14);
-        var fresh = await new ClearSnapshotRefreshService().FetchNewSamplesAsync(newerThan);
+        var service = _execution.CreateClearRefreshService();
+        if (service is null) return;
+        var fresh = await service.FetchNewSamplesAsync(newerThan);
         if (fresh.Count == 0) return;
-        ClearSnapshotRefreshService.MergeIntoCache(ClearSnapshotRefreshService.CacheFile, fresh,
+        ClearSnapshotRefreshService.MergeIntoCache(_execution.ClearCacheFile!, fresh,
             DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
         var reloaded = await Task.Run(() => ClearBuildStats.Load(ClearSamplePaths()));
         if (!reloaded.HasData) return;
         await Dispatcher.InvokeAsync(() =>
         {
             _clearStats = reloaded;
-            _engine = new RecommendationEngine(_catalog, _clearStats, _combineHotkeys);
-            DataVersionText.Text = $"데이터 {_catalog.Data.DataVersion} · {_catalog.Data.Disclaimer}" +
-                                   ClearStatsSummary();
+            _engine = new RecommendationEngine(_catalog, RankingClearStats(_catalog, _clearStats), _combineHotkeys);
+            DataVersionText.Text = ApplicationDataVersionLabel();
             RepopulateGoalChoices(SelectedGoal?.Id ?? _settings.GoalUnitId);
             RepopulateNavigationChoices();
             RefreshAll($"신+ 클리어 데이터 {fresh.Count}판을 새로 반영했습니다.");
@@ -467,14 +387,14 @@ public partial class MainWindow : Window
             Owner = this,
             SizeToContent = SizeToContent.WidthAndHeight,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Background = new SolidColorBrush(Color.FromRgb(15, 17, 24)),
+            Background = RandyPickTheme.Canvas,
             Topmost = true,
             MaxWidth = 560,
             ResizeMode = ResizeMode.NoResize,
             Content = new TextBlock
             {
                 Text = report,
-                Foreground = Brushes.White,
+                Foreground = RandyPickTheme.Text,
                 FontSize = 14,
                 LineHeight = 24,
                 Margin = new Thickness(20, 16, 20, 16),
@@ -487,27 +407,16 @@ public partial class MainWindow : Window
 
     private void AutoStart_OnChanged(object sender, RoutedEventArgs e)
     {
-        if (!_initialized) return;
-        _settings.AutoStartGoal = AutoStartCheck.IsChecked == true;
-        RefreshAll(_settings.AutoStartGoal
-            ? "유닛 자동 추천을 켰습니다. 첫 희귀함이 잡히면 상위를 자동으로 정합니다."
-            : "유닛 자동 추천을 껐습니다. 목표 상위를 직접 선택하세요.");
+        if (!_initialized || _updatingSelections) return;
+        _settings.AutoStartGoal = UsesAutomaticGoals;
+        RefreshAll();
     }
 
     private void AutoNavigation_OnChanged(object sender, RoutedEventArgs e)
     {
         if (!_initialized || _updatingSelections) return;
-        var enabled = AutoNavigationCheck.IsChecked == true;
-        _settings.AutoRecommendNavigation = enabled;
-        if (enabled)
-            _adaptivePlanning.ClearManualNavigationOverride();
-        else
-            _adaptivePlanning.LatchManualNavigationOverride();
-        UpdateNavigationSelectionVisibility();
-        SettingsStore.Save(_settings);
-        RefreshAll(enabled
-            ? "항법 자동 추천을 켰습니다. 추천은 설정에만 반영되며 게임에서는 직접 선택하세요."
-            : "항법 자동 추천을 껐습니다. 항법을 직접 설정하세요.");
+        EnsureAutomaticNavigation();
+        RefreshAll();
     }
 
     private string ApplyGoalAdvice(UnitDefinition goal, string prefix)
@@ -528,6 +437,8 @@ public partial class MainWindow : Window
     private void ShowReRecommendMenu(FrameworkElement anchor)
     {
         if (!_initialized) return;
+        var difficultyLabel = MatchOutcomeDetector.IsKnownDifficulty(_matchDifficulty)
+            ? _matchDifficulty : "난이도를 아직 확인하지 못했어요";
         var counts = CombinedInventory()
             .Where(entry => entry.Count > 0)
             .GroupBy(entry => entry.UnitId, StringComparer.OrdinalIgnoreCase)
@@ -537,7 +448,7 @@ public partial class MainWindow : Window
         var ranked = GoalUnits()
             .Select(unit => (Unit: unit,
                 Ratio: calculator.Calculate([unit.Id], counts).CompletionRatio,
-                Samples: LearnedSelection.GoalSampleCount(_clearStats, unit)))
+                Samples: LearnedSelection.GoalSampleCount(_beginnerGoals.Statistics, unit)))
             .OrderByDescending(pair => pair.Ratio)
             .ThenByDescending(pair => pair.Samples)
             .Take(6)
@@ -561,7 +472,7 @@ public partial class MainWindow : Window
             var isCurrent = unit.Id.Equals(SelectedGoal?.Id, StringComparison.OrdinalIgnoreCase);
             var item = new MenuItem
             {
-                Header = $"{rank++}. {unit.Name} · 완성률 {percent:0}% · 신+ {samples:#,0}판" +
+                Header = $"{rank++}. {unit.Name} · 완성률 {percent:0}% · {difficultyLabel} {samples:#,0}판" +
                          (isCurrent ? " (현재 목표)" : ""),
                 IsEnabled = !isCurrent
             };
@@ -570,7 +481,7 @@ public partial class MainWindow : Window
                 _autoStartApplied = true;
                 _adaptivePlanning.LatchManualGoalOverride();
                 RefreshAll(ApplyGoalAdvice(unit,
-                    $"다시 추천: {unit.Name} 선택 (완성률 {percent:0}퍼센트 · 신+ {samples:#,0}판)."));
+                    $"다시 추천: {unit.Name} 선택 (완성률 {percent:0}퍼센트 · {difficultyLabel} {samples:#,0}판)."));
             };
             menu.Items.Add(item);
         }
@@ -579,6 +490,7 @@ public partial class MainWindow : Window
 
     private bool SelectNavigation(NavigationOption option)
     {
+        if (UsesMap2320) option = ResolveApplicationNavigation(option.Id);
         var previousId = (NavigationCombo.SelectedItem as NavigationOption)?.Id ??
                          _settings.NavigationMode;
         _updatingSelections = true;
@@ -600,7 +512,7 @@ public partial class MainWindow : Window
                 category.Id.Equals(option.CategoryId, StringComparison.OrdinalIgnoreCase)) ?? categories[0];
             var options = VisibleNavigations(option.CategoryId);
             if (options.All(item => !item.Id.Equals(option.Id, StringComparison.OrdinalIgnoreCase)))
-                options = NavigationProfiles.ForCategory(option.CategoryId).ToList();
+                options = ApplicationNavigationsForCategory(option.CategoryId).ToList();
             NavigationCombo.ItemsSource = options;
             NavigationCombo.SelectedItem = options.FirstOrDefault(item => item.Id == option.Id)
                                            ?? options[0];
@@ -628,9 +540,8 @@ public partial class MainWindow : Window
             : units[0];
     }
 
-    private List<NavigationOption> VisibleNavigations(string categoryId) => NavigationProfiles
-        .ForCategory(categoryId)
-        .ToList();
+    private List<NavigationOption> VisibleNavigations(string categoryId) =>
+        ApplicationNavigationsForCategory(categoryId).ToList();
 
     // 채우는 동안의 SelectionChanged 연쇄는 _updatingSelections로 차단한다.
     private void RepopulateNavigationChoices()
@@ -639,7 +550,7 @@ public partial class MainWindow : Window
         try
         {
             var currentOption = NavigationCombo.SelectedItem as NavigationOption ??
-                                NavigationProfiles.Find(_settings.NavigationMode);
+                                ResolveApplicationNavigation(_settings.NavigationMode);
             var categories = NavigationProfiles.Categories
                 .Where(category => VisibleNavigations(category.Id).Count > 0)
                 .ToList();
@@ -650,7 +561,7 @@ public partial class MainWindow : Window
                            ?? categories[0];
             NavigationCategoryCombo.SelectedItem = category;
             var options = VisibleNavigations(category.Id);
-            if (options.Count == 0) options = NavigationProfiles.ForCategory(category.Id).ToList();
+            if (options.Count == 0) options = ApplicationNavigationsForCategory(category.Id).ToList();
             NavigationCombo.ItemsSource = options;
             NavigationCombo.SelectedItem =
                 options.FirstOrDefault(option => option.Id == currentOption.Id) ?? options[0];
@@ -714,8 +625,12 @@ public partial class MainWindow : Window
             Inventory = inventory,
             Units = allUnits,
             GoalUnitId = goal.Id,
-            RouteGoalUnitIds = GoalUnits().Select(unit => unit.Id).ToImmutableArray(),
-            NavigationOptionId = navigation.Id,
+            RouteGoalUnitIds = (UsesAutomaticGoals
+                ? _beginnerGoals.RouteGoalIds
+                : CurrentPlayMode == PlayMode.Manual ? new[] { goal.Id }
+                : GoalUnits().Select(unit => unit.Id)).ToImmutableArray(),
+            PlannedGoalUnitIds = _manualPlan?.GoalIds ?? [],
+            NavigationOptionId = EffectiveNavigation ?? "Unselected",
             RouteQuests = _mapSignals.RouteQuests,
             PursueBothRouteQuests = BothRouteQuestsCheck.IsChecked == true,
             GoroseiMode = gorosei,
@@ -768,6 +683,7 @@ public partial class MainWindow : Window
 
     private void ApplyAdaptivePlanning(AdaptivePlanningApplied applied)
     {
+        if (UsesMap2320) return;
         var previousPhase = _adaptivePlanningApplied?.State.Phase;
         var previousLegend = _adaptivePlanningApplied?.SuggestedLegendId;
         _adaptivePlanningApplied = applied;
@@ -779,7 +695,7 @@ public partial class MainWindow : Window
         _adaptiveDecisionTrace.TryAppend(applied.Trace, applied.InputFingerprint, false);
         RenderNavigationContext();
         if (!NavigationAutomaticRecommendationPolicy.ShouldApply(
-                _settings.AutoRecommendNavigation && _navigationSession.ConfirmedOptionId is null,
+                true,
                 _adaptivePlanning.ManualLatches,
                 applied.State.Phase, applied.Navigation.State,
                 applied.Navigation.RecommendedOptionId))
@@ -790,11 +706,13 @@ public partial class MainWindow : Window
                 RefreshAll();
             return;
         }
-        var option = NavigationProfiles.Find(applied.Navigation.RecommendedOptionId!);
+        var option = ResolveApplicationNavigation(applied.Navigation.RecommendedOptionId!);
         _adaptivePlanning.NoteProgrammaticSelection();
         if (SelectNavigation(option))
         {
-            RefreshAll($"항법 자동 추천: {option.Name}. 게임 안에서는 직접 선택하세요.");
+            RefreshAll(_lastRound <= 23
+                ? $"항법 자동 추천: {option.Name}. 게임 안에서는 직접 선택하세요."
+                : $"항법 자동 평가: {option.Name} · 선택 구간 종료, 참고용입니다.");
             return;
         }
         if (previousPhase != applied.State.Phase ||
@@ -814,18 +732,66 @@ public partial class MainWindow : Window
     private async void RefreshAll(string? message = null)
     {
         if (!_initialized) return;
+        InvalidateNormalCandidateObservation(); // Synchronous fence before recommendation work can await.
+        if (UsesMap2320)
+        {
+            ConfigureMap2320Navigation();
+            DataVersionText.Visibility = Visibility.Visible;
+            DataVersionText.Text = ApplicationDataVersionLabel();
+        }
         var refreshVersion = _refreshVersion.Next();
+        _beginnerGoals.UpdateContext(UsesMap2320 ? ClearBuildStats.Empty : _clearStats, _matchDifficulty);
+        var difficultyStats = _beginnerGoals.Statistics;
+        var recommendationDifficulty = _matchDifficulty;
+        var playMode = CurrentPlayMode;
         var inventory = CombinedInventory();
         var recommendationInventory = RecommendationInventory();
+        _guidePlan = playMode == PlayMode.Guide && GuideCatalog.Find(_settings.GuideNumber) is not null
+            ? new BulletGuidePolicy(_catalog).Plan(_lastRound, _mapSignals.CompletedStoryStageOrdinal,
+                inventory.ToDictionary(entry => entry.UnitId, entry => entry.Count), _matchDifficulty,
+                EffectiveNavigation, ResolveGuidePlanningSelection(_goroseiObservation.Current,
+                    _adaptivePlanning.MatchGeneration, _recognitionRevision, _userGoroseiPlan).Mode, _mapSignals.RouteQuests,
+                _guideObservedLegendIds, _coachCurrent ? _mapSignals.DestructionKingAvailable : null,
+                queenInput: _coachCurrent ? _queenInput : QueenConversionInput.Unknown,
+                observedLegendCounts: _guideObservedLegendCounts, fastUnique: _guideFastUnique,
+                selectionWisps: _coachCurrent ? _mapSignals.RewardWisps.GetValueOrDefault("e018") : 0,
+                learning: CurrentBulletGuideLearning) : null;
+        _guidePlan = PrepareFirstLegend(_guidePlan, inventory);
+        var guidePlan = _guidePlan;
+        SelectBeginnerGoal(inventory);
         var goal = GoalCombo.SelectedItem as UnitDefinition;
         if (goal is null) return;
-        var navigation = NavigationCombo.SelectedItem as NavigationOption ??
-                         NavigationProfiles.Find(_settings.NavigationMode);
         _settings.GoalUnitId = goal.Id;
+        _manualPlan = CurrentPlayMode == PlayMode.Manual
+            ? ManualGoalPlan.Create(_catalog, SelectedManualGoals(), recommendationInventory,
+                EffectiveNavigation, _matchDifficulty)
+            : null;
+        var manualPlan = _manualPlan;
+        if (manualPlan is not null) goal = _catalog.Unit(manualPlan.ActiveGoalId);
+        if (guidePlan is not null) goal = _catalog.Unit(BulletGuidePolicy.GoalId);
+        var committedCraftUnitId = _craftCommitment.TargetFor(goal.Id,
+            _adaptivePlanning.MatchGeneration, playMode, recommendationInventory);
+        var navigation = NavigationCombo.SelectedItem as NavigationOption ??
+                         ResolveApplicationNavigation(_settings.NavigationMode);
         _settings.NavigationMode = navigation.Id;
         var gorosei = (GoroseiCombo.SelectedItem as GoroseiOption)?.Mode
                       ?? GoroseiEffects.Parse(_settings.GoroseiMode);
         _settings.GoroseiMode = gorosei.ToString();
+        var liveGoroseiInput = AutoScanCheck.IsChecked == true || _liveSessionActive;
+        gorosei = ResolveObservationGorosei(playMode, gorosei, _goroseiObservation.Current,
+            _explicitGoroseiScenario, liveGoroseiInput);
+        GoroseiSummaryText.Text = !liveGoroseiInput && playMode != PlayMode.Guide && _explicitGoroseiScenario is not null
+            ? "직접 고른 계획 · 실제 효과 확인 아님 · " + GoroseiEffects.Options.First(x => x.Mode == gorosei).Summary
+            : "게임에서 확인한 현재 효과 · " + GoroseiEffects.Options.First(x => x.Mode == gorosei).Summary +
+              " · 저장한 설정이나 직접 고른 계획만으로는 실제 효과를 확인할 수 없어요.";
+        if (playMode == PlayMode.Guide)
+            GoroseiSummaryText.Text = ResolveGuidePlanningSelection(_goroseiObservation.Current,
+                _adaptivePlanning.MatchGeneration, _recognitionRevision, _userGoroseiPlan).Describe() +
+                " · 게임에서 확인한 효과: " + (CurrentGorosei == GoroseiMode.None ? "아직 확인하지 못했습니다" :
+                    GoroseiEffects.Options.First(option => option.Mode == CurrentGorosei).Name) +
+                " · " + _goroseiObservation.Current.EffectEvidence;
+        // Recommendation engine current-combat input remains fail-closed; GuidePlan uses selection separately.
+        if (playMode == PlayMode.Guide) gorosei = CurrentGorosei;
         // 니카 이감/노이감은 별도 토글 없이 현재 패의 스턴을 기준으로 자동 판정한다.
         // 지옥 이하는 그린블러드가 제공되지 않으므로 세라핌 조합 후보도 함께 뺀다.
         var firstRareQuestWindow = FirstRareRecommendationGate.IsQuestWindow(
@@ -834,10 +800,10 @@ public partial class MainWindow : Window
             goal.Id, recommendationInventory, _engine.RecipeRareUnitIds(goal.Id), _lastRound,
             _liveSessionActive);
         var suppressSeraphim = _greenBloodUsage.Used ||
-                               !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty);
+                               recommendationDifficulty is not ("신" or "악몽");
         var nextEngine = new RecommendationEngine(
-            _catalog, _clearStats.HasData ? _clearStats : null, _combineHotkeys);
-        nextEngine.SetLiveStats(_liveStats);
+            _catalog, RankingClearStats(_catalog, difficultyStats), _combineHotkeys);
+        if (!UsesMap2320) ConfigureGameplayEngine(nextEngine, recommendationDifficulty);
         var planningState = _adaptivePlanning.State;
         var latches = _adaptivePlanning.ManualLatches;
         var allUnits = _catalog.AllUnits.GroupBy(unit => unit.Id,
@@ -846,13 +812,18 @@ public partial class MainWindow : Window
                 StringComparer.OrdinalIgnoreCase);
         var surface = RecommendationSequencePolicy.Surface(
             _settings.AutoStartGoal, planningState.Phase, latches);
-        var storyInput = _settings.AutoStartGoal && !latches.GoalOverride
+        var storyInput = (_settings.AutoStartGoal && !latches.GoalOverride) || guidePlan is not null
             ? BuildStoryRewardSequenceInput(
                 recommendationInventory, allUnits, planningState)
             : null;
-        var adaptiveWork = _adaptivePlanning.TryBegin(BuildAdaptivePlanningInput(
-            recommendationInventory, goal, navigation, gorosei, allUnits));
+        var adaptiveWork = UsesMap2320 || playMode == PlayMode.Guide ? null :
+            _adaptivePlanning.TryBegin(BuildAdaptivePlanningInput(
+                recommendationInventory, goal, navigation, gorosei, allUnits));
         var recognitionObservation = _latestRecognitionObservation;
+        var recommendationRound = _lastRound;
+        var recommendationStoryStage = _mapSignals.CompletedStoryStageOrdinal;
+        var nativeNavigation = _mapSignals.NativeNavigation;
+        var effectiveNavigation = EffectiveNavigation;
         var computation = await _recommendationWork.RunAsync(() =>
         {
             var storySequence = storyInput is null
@@ -862,14 +833,21 @@ public partial class MainWindow : Window
                 new RecommendationPipelineRequest
                 {
                     Engine = nextEngine,
+                    Mode = playMode,
+                    GuidePlan = guidePlan,
                     Goal = goal,
+                    ManualPlan = manualPlan,
+                    CommittedCraftUnitId = committedCraftUnitId,
                     Inventory = recommendationInventory,
                     InitialSurface = surface,
                     StorySequence = storySequence,
-                    NavigationMode = _navigationSession.ConfirmedOptionId ?? "Unselected",
+                    NativeNavigation = nativeNavigation,
+                    NavigationMode = effectiveNavigation ?? "Unselected",
                     Gorosei = gorosei,
                     BuildVariant = BuildVariants.AutoId,
-                    Difficulty = _matchDifficulty,
+                    Difficulty = recommendationDifficulty,
+                    Round = recommendationRound,
+                    CompletedStoryStage = recommendationStoryStage,
                     SuppressSeraphim = suppressSeraphim,
                     PrioritizeTargetRare = prioritizeTargetRare,
                     SuppressFirstRareShip = !firstRareQuestWindow
@@ -906,36 +884,40 @@ public partial class MainWindow : Window
                 action => Dispatcher.BeginInvoke(new Action(action)),
                 ApplyAdaptivePlanning);
         }
-        GoalSelectLabel.Text = "목표 상위 유닛 · 현재 패 우선" +
-            (_liveStats.TryGetGoal(goal.Id, out var liveGoal)
-                ? $" · 실사용 {liveGoal.Plays}판{(liveGoal.ClearRateText.Length == 0 ? "" : " · " + liveGoal.ClearRateText)}"
-                : "");
+        GoalSelectLabel.Text = "목표 1";
         var displayGoal = _storySequence?.RecommendedLegendId is { } storyLegendId &&
                           allUnits.TryGetValue(storyLegendId, out var storyLegend)
             ? storyLegend
             : goal;
         _telemetrySession.ObserveRecommendation(
-            GoalStrategyCalculator.IsMagicDamageTier(displayGoal.Tier)
+            playMode == PlayMode.Guide ? DamageLane.Unknown : GoalStrategyCalculator.IsMagicDamageTier(displayGoal.Tier)
                 ? DamageLane.Magic
                 : DamageLane.Physical,
-            displayGoal.Tier,
+            playMode == PlayMode.Guide ? "unknown" : displayGoal.Tier,
             surface,
             recommendationUrgency.Urgency);
         CaptureMatchTelemetry();
         var inventoryStats = _statsCalculator.Calculate(recommendationInventory);
-        var rareRerolls = _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
-            displayGoal, _clearStats.HasData ? _clearStats : null, _lastRound);
+        var rareRerolls = playMode == PlayMode.Guide ? [] : _rareRerollAdvisor.Evaluate(recommendationInventory, recommendations,
+            displayGoal, difficultyStats.HasData ? difficultyStats : null, _lastRound);
         IReadOnlyList<GreenBloodAdvice> greenBloodAdvice = _greenBloodUsage.Used ||
-            !GreenBloodAdvisor.IsGreenBloodDifficulty(_matchDifficulty)
+            recommendationDifficulty is not ("신" or "악몽")
             ? Array.Empty<GreenBloodAdvice>()
+            : playMode == PlayMode.Guide
+                ? guidePlan is null ? [] : _greenBloodAdvisor.EvaluateBulletGuide(
+                    recommendationInventory, _mapSignals.CompletedStoryStageOrdinal,
+                    CurrentGorosei, guidePlan.Support?.StunPairReady == true, recommendationDifficulty)
             : _greenBloodAdvisor.Evaluate(displayGoal, recommendationInventory,
-                recommendations, _clearStats.HasData ? _clearStats : null, _matchDifficulty);
+                recommendations, difficultyStats.HasData ? difficultyStats : null, recommendationDifficulty);
 
-        InventoryList.Items.Clear();
-        foreach (var item in inventory)
-            InventoryList.Items.Add($"{_catalog.Unit(item.UnitId).Name}  ×{item.Count}" +
-                                    (_automaticStale ? "   이전 스냅샷" : ""));
-        if (inventory.Count == 0) InventoryList.Items.Add("보유 패 없음");
+        if (!UsesMap2320)
+        {
+            InventoryList.Items.Clear();
+            foreach (var item in inventory)
+                InventoryList.Items.Add($"{_catalog.Unit(item.UnitId).Name}  ×{item.Count}" +
+                                        (_automaticStale ? "   마지막으로 확인한 패" : ""));
+            if (inventory.Count == 0) InventoryList.Items.Add("아직 인식한 유닛이 없어요");
+        }
 
         GoalSelectLabel.Visibility = GoalSelectRow.Visibility =
             surface == RecommendationSurface.TopAndNavigation
@@ -971,7 +953,11 @@ public partial class MainWindow : Window
             _clusterHeadRouteId = head?.Route.Id;
         }
         var combinePlan = _combinePlanner.Plan(visibleRecommendations.Take(1).ToList(),
-            recommendationInventory, _completedTopUnits.CompletedUnitIds);
+            recommendationInventory, _completedTopUnits.CompletedUnitIds,
+            GrowthMaterialInventory.ProtectForCraft(
+                guidePlan is not null ? guidePlan.ProtectedUnitIds : manualPlan?.ProtectedGoalIds, _growthUnitIds),
+            EffectiveNavigation is { } confirmed
+                ? ResolveApplicationNavigation(confirmed).TopUnitLimit : null);
         _boardRecs = visibleRecommendations;
         _boardPlan = combinePlan;
         _boardShowsClusterChildren = showClusterChildren;
@@ -985,7 +971,7 @@ public partial class MainWindow : Window
         };
         FillMainBoard();
         var emergencySummons = surface == RecommendationSurface.TopAndNavigation &&
-                               _navigationSession.ConfirmedOptionId == "AlliedForces.EmergencyCall" &&
+                               EffectiveNavigation == "AlliedForces.EmergencyCall" &&
                                navigation.Id.Equals("AlliedForces.EmergencyCall",
             StringComparison.OrdinalIgnoreCase)
             ? _engine.RecommendEmergencySummons(recommendations, recommendationInventory)
@@ -996,28 +982,28 @@ public partial class MainWindow : Window
             RecommendationSurface.StoryLegend =>
                 $"{_storySequence?.CurrentStoryLabel} · " +
                 $"{_storySequence?.RecommendedLegendName ?? "첫 전설 계산"}",
-            _ => _navigationSession.Header(goal.Name)
+            _ => ObservationNavigationHeader(goal.Name, _mapSignals.NativeNavigation, _navigationSession)
         };
         Func<Recommendation, IReadOnlyList<Recommendation>>? storyChildren =
             showClusterChildren
                 ? rec => _engine.StoryClusterChildren(
                     rec.Route.GoalUnitId, recommendationInventory)
                 : null;
+        var specialAdvice = playMode == PlayMode.Guide ? [] : _specialAdvisor.Evaluate(recommendationInventory, recommendations, displayGoal,
+                difficultyStats.HasData ? difficultyStats : null)
+            .Concat(_alchemyAdvisor.Evaluate(recommendationInventory, recommendations, displayGoal,
+                EffectiveNavigation ?? "Unselected", _growthUnitIds)).ToList();
+        var greenBloodAvailable = recommendationDifficulty is "신" or "악몽" && !_greenBloodUsage.Used &&
+            GreenBloodAdvisor.HasUnusedGreenBlood(_catalog, recommendationInventory);
         _overlay.Render(
             header,
             visibleRecommendations, inventoryStats, rareRerolls,
             greenBloodAdvice,
-            !_greenBloodUsage.Used &&
-            GreenBloodAdvisor.HasUnusedGreenBlood(_catalog, recommendationInventory),
+            greenBloodAvailable,
             combinePlan, RecognitionStatus.Text, DamageTiers.IsMagic(displayGoal.Tier),
             emergencySummons,
             gorosei, _greenBloodUsage.Used,
-            _specialAdvisor.Evaluate(recommendationInventory, recommendations, displayGoal,
-                    _clearStats.HasData ? _clearStats : null)
-                .Concat(_alchemyAdvisor.Evaluate(
-                    recommendationInventory, recommendations, displayGoal,
-                    _navigationSession.ConfirmedOptionId ?? "Unselected", _growthUnitIds))
-                .ToList(),
+            specialAdvice,
             _engine.ActiveStunTarget, _engine.ActiveStunCap,
             phaseHint, storyChildren,
             (recs, selectedId) => _engine.Recascade(
@@ -1028,14 +1014,39 @@ public partial class MainWindow : Window
         var evidenceUnknown = _automaticStale || _automaticDisconnected;
         _overlay.RenderPlannerEvidence(_lastRound, _adaptivePlanningApplied,
             evidenceUnknown,
-            evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
+            evidenceUnknown ? "현재 게임 정보를 다시 확인하는 중입니다." : null,
             _storySequence, _mapSignals.CompletedStoryStageOrdinal, _adaptivePlanning.ManualLatches);
         RenderNavigationContext();
         if (message is not null) FooterStatus.Text = message;
+        RenderBeginnerCoach(visibleRecommendations, combinePlan, rareRerolls,
+            specialAdvice, greenBloodAdvice, greenBloodAvailable, emergencySummons);
+        if (UsesMap2320) RenderMap2320NavigationContext();
     }
 
     // 자동 스캔 틱에서만 쓰는 얕은 갱신: 패·상태가 직전 틱과 같으면 추천 재계산과
     // 전체 UI 재구성을 건너뛰어 게임과의 CPU 경쟁(끊김)을 줄인다. 상태줄만 갱신한다.
+    // The recognizer's Status and diagnostics remain untouched for logs and compatibility reports.
+    private static string RecognitionDisplayStatus(RecognitionResult result) => result.State switch
+    {
+        RecognitionState.Ready => $"유닛 {result.Entries.Sum(entry => entry.Count)}개 인식" +
+            (result.Diagnostics.UnknownObjects > 0 ? $" · 종류를 확인하지 못한 유닛 {result.Diagnostics.UnknownObjects}개 제외" : "") +
+            (result.Status.Contains("시험 중인 인식 기능", StringComparison.Ordinal) ? " · 인식 기능 시험 중, 게임에서 확인해 주세요" : ""),
+        RecognitionState.Waiting => "게임에서 유닛을 확인할 때까지 기다리고 있어요.",
+        RecognitionState.TransientReadError => "유닛을 읽지 못했어요. 다시 확인하고 있어요.",
+        RecognitionState.Unsupported => "지원하지 않는 워크래프트 버전이에요. 업데이트를 확인해 주세요.",
+        RecognitionState.UnverifiedProfile => "이 워크래프트 버전의 인식 기능은 아직 준비 중이에요.",
+        RecognitionState.ConfigurationError => "게임 정보를 불러오지 못했어요. 앱을 다시 실행해 주세요.",
+        _ => "게임 정보를 확인하고 있어요."
+    };
+
+    private static string RecognitionDisplayDetail(RecognitionResult result) =>
+        $"유닛 {result.Entries.Sum(entry => entry.Count)}개를 인식했어요." +
+        (result.Diagnostics.UnknownObjects > 0
+            ? $" 종류를 확인하지 못한 유닛 {result.Diagnostics.UnknownObjects}개는 제외했어요." : "") +
+        (result.Diagnostics.Gorosei != GoroseiMode.None
+            ? " 오로성 " + GoroseiEffects.Options.First(option => option.Mode == result.Diagnostics.Gorosei).Name + " 효과를 확인했어요." : "") +
+        " 실제 보유와 조합 가능 여부는 게임에서 확인해 주세요.";
+
     private void RefreshIfScanStateChanged(string? message)
     {
         var signature = BuildScanSignature();
@@ -1059,7 +1070,10 @@ public partial class MainWindow : Window
         builder.Append(_automaticStale).Append('|').Append(_automaticDisconnected).Append('|')
             .Append(_liveSessionActive).Append('|').Append(_autoStartApplied).Append('|')
             .Append(_greenBloodUsage.Used).Append('|').Append(_greenBloodUsage.UsedOnUnit)
-            .Append('|').Append(_lastRound).Append('|').Append(_detectedGorosei)
+            .Append('|').Append(_lastRound).Append('|').Append(_goroseiObservation.Current)
+            .Append('|').Append(_matchDifficulty)
+            .Append('|').Append(_loadedClearCount)
+            .Append('|').Append(_mapSignals.DestructionKingAvailable)
             .Append('|').Append(_mapSignals.ActiveObjectiveOrdinal)
             .Append('|').Append(_mapSignals.CompletedStoryStageOrdinal)
             .Append('|').Append(_adaptivePlanning.State.Phase)
@@ -1068,6 +1082,21 @@ public partial class MainWindow : Window
         foreach (var reward in _mapSignals.RewardWisps.OrderBy(pair => pair.Key, StringComparer.Ordinal))
             builder.Append('|').Append(reward.Key).Append(':').Append(reward.Value);
         builder.Append('|').Append(_mapSignals.RouteQuests.Describe());
+        builder.Append('|').Append(_mapSignals.NativeNavigation).Append('|').Append(_mapSignals.RouteQuests.HighGamble);
+        if (_goroseiObservation.Current.Marker is { } marker)
+            foreach (var candidate in marker.Candidates) builder.Append('|').Append(candidate);
+        builder.Append('|').Append(_outcome.Outcome).Append('|').Append(_coachCurrent);
+        if (CurrentPlayMode == PlayMode.Guide)
+        {
+            builder.Append('|').Append(_guideRuntime);
+            builder.Append('|').Append(_helperState?.Mana).Append(':').Append(_helperState?.MaximumMana);
+            if (_helperState is { } helper)
+                foreach (var ability in helper.Abilities)
+                    builder.Append('|').Append(ability);
+            AppendCombatObservationFingerprint(builder, _combatObservations);
+        }
+        foreach (var signal in _coachSignals.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            builder.Append('|').Append(signal.Key).Append(':').Append(signal.Value?.ToString() ?? "unknown");
         return builder.ToString();
     }
 
@@ -1081,12 +1110,17 @@ public partial class MainWindow : Window
         if (current != resolved)
         {
             _settings.GoroseiMode = resolved.ToString();
-            SettingsStore.Save(_settings);
+            if (_persistSettings) _execution.SaveSettings(_settings);
         }
 
         var option = GoroseiEffects.Options.First(item => item.Mode == resolved);
         if ((GoroseiCombo.SelectedItem as GoroseiOption)?.Mode != resolved)
-            GoroseiCombo.SelectedItem = option;
+        {
+            var wasUpdating = _updatingSelections;
+            _updatingSelections = true;
+            try { GoroseiCombo.SelectedItem = option; }
+            finally { _updatingSelections = wasUpdating; }
+        }
         if (firstDetection)
             GoroseiSummaryText.Text = "자동 감지 · " + option.Summary;
     }
@@ -1107,7 +1141,7 @@ public partial class MainWindow : Window
         var evidenceUnknown = _automaticStale || _automaticDisconnected;
         var plannerEvidence = RecommendationPresentation.PlannerEvidence(
             _lastRound, _adaptivePlanningApplied, evidenceUnknown,
-            evidenceUnknown ? "실시간 인식 신호를 다시 확인하는 중입니다." : null,
+            evidenceUnknown ? "현재 게임 정보를 다시 확인하는 중입니다." : null,
             _storySequence, _adaptivePlanning.ManualLatches);
         RecommendationBoard.Fill(NowPanel, FlowPanel, BoardPanel, _boardRecs, _boardPlan,
             _selectedRouteId, SelectMainRoute, _boardBanner, children, head?.Route.Id,
@@ -1148,35 +1182,91 @@ public partial class MainWindow : Window
 
     private async Task ScanAsync()
     {
+        if (!_execution.LiveMemoryEnabled) return;
+        await ScanCoreAsync(null, scheduled: true);
+    }
+
+    // Explicit result-only seam: never invokes an injected or runtime scanner.
+    internal Task ScanControlledAsync(RecognitionResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        if (_runtimeEffects || !_controlledRecognitionAllowed)
+            throw new InvalidOperationException("Controlled recognition requires a non-runtime window and an existing absolute sandbox directory.");
+        return ScanCoreAsync(result);
+    }
+
+    private async Task ScanCoreAsync(RecognitionResult? controlledResult,
+        IAsyncEnumerable<DiagnosticRecognitionFrame>? controlledFrames = null, bool scheduled = false)
+    {
+        if (!_execution.LiveMemoryEnabled && controlledResult is null && controlledFrames is null && !scheduled) return;
         if (_scanInProgress || AutoScanCheck.IsChecked != true) return;
+        var independentCadence = scheduled && UsesMap2320 && _recognizer is IModernBasicInventorySource;
+        var lane = independentCadence ? BeginDiagnosticCadence(_recognizer) : DiagnosticReadLane.Full;
+        if (lane is null)
+        {
+            _timer.Interval = _diagnosticCadence.NextDelay;
+            return;
+        }
+        if (scheduled && !independentCadence) _timer.Interval = RecognitionInterval;
         _scanInProgress = true;
+        _activityScanFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (_diagnosticInventory is null)
+            _observedCapture?.PresentationState("scanning", "none", DateTimeOffset.UtcNow);
         var generation = _scanGeneration;
+        var matchGeneration = _adaptivePlanning.MatchGeneration;
         var recognizer = _recognizer;
+        var startedTick = System.Diagnostics.Stopwatch.GetTimestamp();
+        RecordActivity("scan.started", new { ScanGeneration = generation, Controlled = controlledResult is not null || controlledFrames is not null });
+        RecognitionResult? diagnosticResult = null;
         var cancellation = new CancellationTokenSource();
         _scanCancellation = cancellation;
         try
         {
             // 첫 인식은 메모리 구조 탐색이 필요해 몇 초 걸린다. 그동안 초기 문구가 남아 있지 않게 한다.
-            if (RecognitionStatus.Text == "수동 모드") RecognitionStatus.Text = "메모리 구조 탐색 중…";
-            var result = await recognizer.RecognizeAsync(_settings, cancellation.Token);
-            if (generation != _scanGeneration || !ReferenceEquals(recognizer, _recognizer)) return;
+            if (RecognitionStatus.Text == "수동 모드") RecognitionStatus.Text = "게임 정보 찾는 중…";
+            if (lane == DiagnosticReadLane.Basic)
+            {
+                await ReadBasicInventoryAsync(recognizer, generation, matchGeneration, cancellation.Token);
+                return;
+            }
+            var result = controlledResult ?? await ReadRecognitionFramesAsync(recognizer, controlledFrames,
+                generation, matchGeneration, cancellation.Token);
+            cancellation.Token.ThrowIfCancellationRequested();
+            // Keep the explicit match fence before reset-before-Ready handling.
+            if (matchGeneration != _adaptivePlanning.MatchGeneration) return;
+            if (!IsCurrentRecognition(generation, _scanGeneration, matchGeneration,
+                _adaptivePlanning.MatchGeneration, ReferenceEquals(recognizer, _recognizer))) return;
+            ObserveApplicationUpdateSafety(result);
+            UpdateCompatibilityInfo(result);
+            if (TryHandleModernInventoryObservation(result))
+            {
+                diagnosticResult = result;
+                return;
+            }
             _latestRecognitionObservation = result.Diagnostics.AdaptivePlanningObservation;
             if (!result.ShouldReplaceInventory)
-                _mapSignals = _mapSignals with { RouteQuests = RouteQuestSnapshot.Unavailable(
-                    "항로개척 읽기 대기 · 현재 배정·완료 여부를 확인할 수 없어 보상 계산 제외") };
+                _mapSignals = NavigationAfterObservationLoss(_mapSignals) with {
+                    RouteQuests = _liveSessionActive ? RouteQuestSnapshot.Unavailable(
+                    "현재 항로개척 상태를 다시 확인하고 있습니다.") : RouteQuestSnapshot.Unknown };
             LogUnknownRawcodes(result);
-            ApplyDetectedGorosei(result.Diagnostics.Gorosei);
+
             if (RecognitionPolicy.ShouldResetBeforeReadyInventory(result))
             {
                 ResetMatchSession();
                 _lastRound = 0;
             }
+            if (_goroseiObservation.Current.MatchGeneration != _adaptivePlanning.MatchGeneration)
+                _goroseiObservation.Reset(_adaptivePlanning.MatchGeneration);
+            // The detailed consumer preserves native markers and checks execution-context authority.
+            _goroseiObservation.AcceptRecognition(_adaptivePlanning.MatchGeneration, ++_recognitionRevision, result, _execution);
+            ApplyDetectedGorosei(CurrentGorosei);
             _confirmedWaitingScans = result.State == RecognitionState.Waiting &&
                                      result.ConfirmsSessionBoundary
                 ? _confirmedWaitingScans + 1
                 : 0;
             if (result.ShouldReplaceInventory)
             {
+                _waitingBoundaryConsumed = false;
                 if (!_liveSessionActive)
                 {
                     _telemetrySession.MarkSessionStart();
@@ -1224,53 +1314,112 @@ public partial class MainWindow : Window
                         _matchDifficulty = difficulty;
                         _outcome.ObserveDifficulty(difficulty);
                     }
-                    _lastRound = Math.Max(_lastRound, mapState.MaxRound);
+                    _lastRound = mapState.MaxRound > 0 ? Math.Max(_lastRound, mapState.MaxRound) : 0;
                 }
             }
+            CaptureCoachObservation(result);
+            if (!_coachCurrent || _automaticStale || _automaticDisconnected) InvalidateNormalCandidateObservation();
+            RequestGameplayStatsForCurrentDifficulty();
             if (_outcome.Outcome is "fail" or "clear")
                 SendMatchTelemetry();
-            if (RecognitionPolicy.ShouldResetMatch(result, _confirmedWaitingScans))
+            if (RecognitionPolicy.ShouldResetMatch(result, _confirmedWaitingScans, _waitingBoundaryConsumed))
             {
                 ResetMatchSession();
                 _lastRound = 0;
+                _waitingBoundaryConsumed = true;
             }
             ApplyOverlayVisibility(result);
-            RecognitionStatus.Text = KoreanLabels.RemoveLatin(result.Status);
+            RecognitionStatus.Text = RecognitionDisplayStatus(result);
             RecognitionStatus.Foreground = result.State switch
             {
-                RecognitionState.Ready => Brushes.LightGreen,
-                RecognitionState.Waiting => Brushes.Khaki,
-                RecognitionState.TransientReadError => Brushes.Orange,
-                _ => Brushes.LightCoral
+                RecognitionState.Ready => RandyPickTheme.Success,
+                RecognitionState.Waiting => RandyPickTheme.Warning,
+                RecognitionState.TransientReadError => RandyPickTheme.Warning,
+                _ => RandyPickTheme.Danger
             };
-            var detail = result.Diagnostics.UserDisplayText;
+            var detail = result.ShouldReplaceInventory ? RecognitionDisplayDetail(result) : RecognitionStatus.Text;
             if (!result.ShouldReplaceInventory && _automatic.Count > 0)
-                detail = string.IsNullOrWhiteSpace(detail) ? "마지막 정상 패를 유지합니다." : detail + " | 마지막 정상 패 유지";
+                detail += " · 마지막으로 확인한 패를 표시합니다. 현재 패는 다시 확인해 주세요.";
             RefreshIfScanStateChanged(detail);
         }
-        catch (OperationCanceledException) { }
-        catch (Exception)
+        catch (OperationCanceledException)
         {
-            if (generation == _scanGeneration)
+            RecordActivity("scan.cancelled", new { ScanGeneration = generation });
+            if (IsCurrentRecognition(generation, _scanGeneration, matchGeneration,
+                    _adaptivePlanning.MatchGeneration, ReferenceEquals(recognizer, _recognizer)))
             {
+                _observedCapture?.Read(false, "scan", "cancelled", System.Diagnostics.Stopwatch.GetElapsedTime(startedTick), null, DateTimeOffset.UtcNow);
+                InvalidateDiagnosticInventoryObservation();
+            }
+        }
+        catch (Exception error)
+        {
+            RecordActivity("scan.failed", new
+            {
+                ScanGeneration = generation, ErrorType = error.GetType().FullName, error.Message, error.StackTrace
+            });
+            if (IsCurrentRecognition(generation, _scanGeneration, matchGeneration,
+                    _adaptivePlanning.MatchGeneration, ReferenceEquals(recognizer, _recognizer)))
+            {
+                _observedCapture?.Read(false, "scan", "read-error", System.Diagnostics.Stopwatch.GetElapsedTime(startedTick), null, DateTimeOffset.UtcNow);
+                InvalidateDiagnosticInventoryObservation();
+                _updateObservationPending = true;
+                if (UsesMap2320)
+                {
+                    RecognitionStatus.Text = "유닛을 읽지 못했어요. 다시 확인하고 있어요";
+                    RecognitionStatus.Foreground = RandyPickTheme.Warning;
+                    return;
+                }
+                _goroseiObservation.Accept(_adaptivePlanning.MatchGeneration, ++_recognitionRevision,
+                    GoroseiMode.None, false);
                 SetOverlayHandAvailability(false);
                 _automaticStale = _automatic.Count > 0;
                 _automaticDisconnected = false;
-                RecognitionStatus.Text = "인식 오류 · 기존 패 유지";
-                _mapSignals = _mapSignals with { RouteQuests = RouteQuestSnapshot.Unknown };
-                RecognitionStatus.Foreground = Brushes.Orange;
+                RecognitionStatus.Text = "유닛을 읽지 못했어요. 마지막으로 확인한 유닛을 표시해요";
+                RecordGameplayRecognitionGap(RecognitionState.TransientReadError);
+                _mapSignals = NavigationAfterObservationLoss(_mapSignals) with { RouteQuests = RouteQuestSnapshot.Unknown };
+                RecognitionStatus.Foreground = RandyPickTheme.Warning;
                 RefreshIfScanStateChanged("인식 중 오류가 발생했습니다. 다음 자동 인식을 기다립니다.");
             }
         }
         finally
         {
+            var wasCancelled = cancellation.IsCancellationRequested;
             if (ReferenceEquals(_scanCancellation, cancellation)) _scanCancellation = null;
             cancellation.Dispose();
             _scanInProgress = false;
+            RecordActivity("scan.completed", new
+            {
+                ScanGeneration = generation, Cancelled = wasCancelled,
+                DurationMs = System.Diagnostics.Stopwatch.GetElapsedTime(startedTick).TotalMilliseconds
+            });
+            if (independentCadence)
+            {
+                _diagnosticCadence.Complete();
+                _timer.Interval = _diagnosticCadence.NextDelay;
+            }
+            _activityScanFinished.TrySetResult();
+            if (!independentCadence && !wasCancelled && diagnosticResult is not null && controlledResult is null && controlledFrames is null)
+                QueueDiagnosticScan(diagnosticResult, System.Diagnostics.Stopwatch.GetElapsedTime(startedTick),
+                    generation, matchGeneration, recognizer);
         }
     }
 
 
+
+    private void QueueDiagnosticScan(RecognitionResult result, TimeSpan elapsed, int generation,
+        long matchGeneration, IInventoryRecognizer recognizer)
+    {
+        bool CanContinue() => _execution.LiveMemoryEnabled && !_diagnosticClosed && UsesMap2320 &&
+            !_coachPaused && _timer.IsEnabled && AutoScanCheck.IsChecked == true && !_scanInProgress &&
+            !Dispatcher.HasShutdownStarted && !Dispatcher.HasShutdownFinished &&
+            IsCurrentRecognition(generation, _scanGeneration, matchGeneration,
+                _adaptivePlanning.MatchGeneration, ReferenceEquals(recognizer, _recognizer));
+        _diagnosticScanContinuation.TryQueue(result, elapsed,
+            _execution.LiveMemoryEnabled && recognizer is WarcraftMemoryRecognitionService,
+            action => Dispatcher.BeginInvoke(action, DispatcherPriority.Background),
+            CanContinue, () => _ = ScanAsync());
+    }
 
     /// <summary>
     /// 확정된 세션 경계에서 이전 판의 패·추천 선택·추적 상태를 한 번에 비운다.
@@ -1278,7 +1427,12 @@ public partial class MainWindow : Window
     /// </summary>
     private void ResetMatchSession()
     {
+        InvalidateDiagnosticInventoryObservation(resetContext: true);
+        _updateObservationPending = true;
+        _normalFrame = null;
+        _normalCandidates?.Reset();
         SendMatchTelemetry();
+        ResetGameplayTelemetry();
         _automatic.Clear();
         _automaticStale = false;
         _automaticDisconnected = true;
@@ -1289,6 +1443,20 @@ public partial class MainWindow : Window
         _autoStartApplied = false;
         _mapSignals = MapSignals.Empty;
         _navigationSession.Reset();
+        _guideRuntime = BulletGuideRuntimeState.Unknown;
+        _loadedClearCount = null;
+        _guideFastUnique = FastUniqueState.Unknown;
+        _guideObservedLegendIds.Clear();
+        _guideObservedLegendCounts.Clear();
+        _queenInput = QueenConversionInput.Unknown;
+        _guidePlan = null;
+        _coachCurrent = false;
+        _coachSignals = CoachSignalAdapter.Read(null, 0, 0, false);
+        _lastCoachSignalRevision = -1;
+        _lastCoachFrame = null;
+        _lastCoachDecision = null;
+        _beginnerGoals = new BeginnerGoalPolicy(_catalog, UsesMap2320 ? ClearBuildStats.Empty : _clearStats, _matchDifficulty);
+        _coachPaused = false;
         _updatingSelections = true;
         BothRouteQuestsCheck.IsChecked = false;
         _updatingSelections = false;
@@ -1300,12 +1468,15 @@ public partial class MainWindow : Window
         _pendingAdaptiveFingerprint = null;
         _pendingAdaptiveLegendIds = [];
         _adaptivePlanning.ConfirmReset(_adaptivePlanning.MatchGeneration + 1);
-        if (!_settings.AutoRecommendNavigation)
-            _adaptivePlanning.LatchManualNavigationOverride();
+        _goroseiObservation.Reset(_adaptivePlanning.MatchGeneration);
+        _detectedGorosei = GoroseiMode.None;
+        _combatObservations = [];
+        if (CurrentPlayMode == PlayMode.Manual) _adaptivePlanning.LatchManualGoalOverride();
         _adaptiveDecisionTrace.ConfirmedMatchReset();
         _completedTopUnits.Reset();
         _firstRareRecommendationGate.Reset();
         _firstRareTargetPolicy.Reset();
+        _craftCommitment.Reset();
         _greenBloodUsage.Reset();
         _selectedRouteId = null;
         _clusterHeadRouteId = null;
@@ -1326,6 +1497,9 @@ public partial class MainWindow : Window
         // 유저가 직접 상위를 고르면 이번 판의 자동 시작(희귀함 우선) 단계를 끝낸다.
         if (_initialized)
         {
+            if (CurrentPlayMode != PlayMode.Manual) return;
+            _settings.ManualGoalUnitId = SelectedGoal?.Id;
+            ValidateSecondaryGoal();
             _autoStartApplied = true;
             _adaptivePlanning.LatchManualGoalOverride();
         }
@@ -1369,11 +1543,11 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         if (_updatingSelections) return;
         if (NavigationCategoryCombo.SelectedItem is not NavigationCategory category) return;
-        UseManualNavigationMode();
+        EnsureAutomaticNavigation();
 
         var current = NavigationCombo.SelectedItem as NavigationOption;
         var options = VisibleNavigations(category.Id);
-        if (options.Count == 0) options = NavigationProfiles.ForCategory(category.Id).ToList();
+        if (options.Count == 0) options = ApplicationNavigationsForCategory(category.Id).ToList();
         NavigationCombo.ItemsSource = options;
         NavigationCombo.SelectedItem = current is not null &&
                                        current.CategoryId.Equals(category.Id, StringComparison.OrdinalIgnoreCase)
@@ -1384,45 +1558,55 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     private void NavigationCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_updatingSelections) return;
-        UseManualNavigationMode();
+        EnsureAutomaticNavigation();
         RefreshAll();
     }
 
-    private void UseManualNavigationMode()
+    private void EnsureAutomaticNavigation()
     {
+        if (UsesMap2320) { ConfigureMap2320Navigation(); return; }
         if (!_initialized) return;
-        var wasAutomatic = _settings.AutoRecommendNavigation;
-        _settings.AutoRecommendNavigation = false;
-        _adaptivePlanning.LatchManualNavigationOverride();
+        _settings.AutoRecommendNavigation = true;
+        if (_adaptivePlanning.ManualLatches.NavigationOverride)
+            _adaptivePlanning.ClearManualNavigationOverride();
         _updatingSelections = true;
-        try { AutoNavigationCheck.IsChecked = false; }
+        try { AutoNavigationCheck.IsChecked = true; }
         finally { _updatingSelections = false; }
         UpdateNavigationSelectionVisibility();
-        if (wasAutomatic) SettingsStore.Save(_settings);
     }
 
     private void UpdateNavigationSelectionVisibility()
     {
+        if (UsesMap2320) { ConfigureMap2320Navigation(); return; }
         var visibility = NavigationSelectionVisibility(_settings.AutoRecommendNavigation);
-        NavigationLabel.Visibility = visibility;
+        NavigationLabel.Text = "항법 · 모든 모드 자동 추천";
+        NavigationLabel.Visibility = Visibility.Visible;
         NavigationSelectRow.Visibility = visibility;
     }
 
     internal static Visibility NavigationSelectionVisibility(bool automaticRecommendation) =>
-        automaticRecommendation
-            ? Visibility.Collapsed
-            : Visibility.Visible;
+        Visibility.Collapsed;
 
     private void GoroseiCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_updatingSelections) return;
         if (GoroseiCombo.SelectedItem is GoroseiOption option)
-            GoroseiSummaryText.Text = option.Summary;
+        {
+            if (_initialized)
+            {
+                _explicitGoroseiScenario = option.Mode;
+                _userGoroseiPlan = new(option.Mode, "UserPlan");
+                _settings.BulletPlanningGoroseiMode = option.Mode.ToString();
+                if (_persistSettings) _execution.SaveSettings(_settings);
+            }
+            GoroseiSummaryText.Text = "직접 고른 계획 · 실제 효과 확인 아님 · " + option.Summary;
+        }
         RefreshAll();
     }
 
     private void AutoScan_OnChanged(object sender, RoutedEventArgs e)
     {
+        if (!_execution.LiveMemoryEnabled) return;
         if (!_initialized) return;
         _settings.AutoScanEnabled = AutoScanCheck.IsChecked == true;
         if (AutoScanCheck.IsChecked == true)
@@ -1433,13 +1617,9 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         else
         {
             _timer.Stop();
-            _scanGeneration++;
             _scanCancellation?.Cancel();
-            SetOverlayHandAvailability(false);
-            _automaticStale = _automatic.Count > 0;
-            RecognitionStatus.Text = "수동 모드";
-            RecognitionStatus.Foreground = Brushes.Khaki;
-            RefreshAll(_automaticStale ? "실시간 인식을 중지했습니다. 마지막 정상 패를 표시 중입니다." : "실시간 인식을 중지했습니다.");
+            InvalidateNormalCandidateObservation();
+            ApplyScanStopObservation();
         }
     }
 
@@ -1452,44 +1632,12 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         if (changed && enabled) _ = RefreshClearDataAsync();
     }
 
-    private void Telemetry_OnChanged(object sender, RoutedEventArgs e)
-    {
-        if (!_initialized) return;
-        var enabled = TelemetryCheck.IsChecked == true;
-        _settings.TelemetryEnabled = enabled;
-        _telemetry.SetEnabled(enabled, deletePending: !enabled);
-        SettingsStore.Save(_settings);
-        UpdateTelemetryQueueStatus();
-        if (enabled && _settings.TelemetryDisclosureVersion >= 2)
-            _ = _telemetry.FlushPendingAsync();
-    }
-
-    private void AcknowledgeTelemetryDisclosure_OnClick(
-        object sender, RoutedEventArgs e)
-    {
-        _settings.TelemetryDisclosureVersion = 2;
-        TelemetryDisclosurePanel.Visibility = Visibility.Collapsed;
-        SettingsStore.Save(_settings);
-        if (_settings.TelemetryEnabled) _ = _telemetry.FlushPendingAsync();
-    }
-
-    private void DeleteTelemetryQueue_OnClick(object sender, RoutedEventArgs e)
-    {
-        _telemetry.DeletePending();
-        UpdateTelemetryQueueStatus();
-    }
-
-    private void UpdateTelemetryQueueStatus() =>
-        TelemetryQueueStatus.Text = _settings.TelemetryEnabled
-            ? $"대기 집계 {_telemetry.PendingCount}건"
-            : "전송 꺼짐 · 대기 자료 없음";
-
     private void ClickThrough_OnChanged(object sender, RoutedEventArgs e)
     {
         if (!_initialized) return;
         _settings.ClickThroughOverlay = ClickThroughCheck.IsChecked == true;
         _overlay.SetClickThrough(_settings.ClickThroughOverlay);
-        SettingsStore.Save(_settings);
+        if (_persistSettings) _execution.SaveSettings(_settings);
     }
 
     private void OverlayModeCombo_OnSelectionChanged(
@@ -1510,6 +1658,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         try
         {
             if (!_liveSessionActive) return;
+            RecordCoachOutcome(_outcome.Outcome);
             _telemetrySession.Send(
                 UpdateService.CurrentVersion.ToString(3),
                 "2.314",
@@ -1534,7 +1683,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void EnableOverlayMove_OnClick(object sender, RoutedEventArgs e)
     {
-        if (!_overlayVisibility.HandAvailable)
+        if (!CurrentOverlayDisplayState().Available)
         {
             FooterStatus.Text = "패가 인식되면 오버레이 위치를 옮길 수 있습니다.";
             return;
@@ -1543,6 +1692,15 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         ClickThroughCheck.IsChecked = false;
         _relockAfterMove = wasClickThrough;
         _settings.ClickThroughOverlay = false;
+        if (UsesMap2320)
+        {
+            ApplyDiagnosticOverlayVisibility();
+            _overlay.SetClickThrough(false);
+            if (_overlay.IsVisible) { _overlay.EnsureVisible(); _overlay.Activate(); }
+            if (_overlay.Stats.IsVisible) _overlay.Stats.EnsureVisible();
+            FooterStatus.Text = "화면에 보이는 안내창의 윗부분을 끌어 옮겨 주세요. 숨겨져 있다면 먼저 표시 설정을 바꿔 주세요.";
+            return;
+        }
         if (!_overlay.IsVisible)
         {
             _overlay.Show();
@@ -1552,14 +1710,14 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         _overlay.Stats.EnsureVisible();
         _overlay.SetClickThrough(false);
         _overlay.Activate();
-        FooterStatus.Text = "두 오버레이 창(내 패 상태 · 추천)의 상단을 각각 끌어 옮기세요.";
+        FooterStatus.Text = "유닛 수치 창과 추천 창의 윗부분을 각각 끌어 옮겨 주세요.";
     }
 
     private void Overlay_OnPositionCommitted(double left, double top)
     {
         _settings.OverlayLeft = left;
         _settings.OverlayTop = top;
-        SettingsStore.Save(_settings);
+        if (_persistSettings) _execution.SaveSettings(_settings);
         FooterStatus.Text = $"추천 창 위치를 저장했습니다: 가로 {left:0}, 세로 {top:0}";
         if (!_relockAfterMove) return;
         _relockAfterMove = false;
@@ -1599,7 +1757,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         _settings.StatsOverlayLeft = left;
         _settings.StatsOverlayTop = top;
-        SettingsStore.Save(_settings);
+        if (_persistSettings) _execution.SaveSettings(_settings);
         FooterStatus.Text = $"패 상태 창 위치를 저장했습니다: 가로 {left:0}, 세로 {top:0}";
         if (!_relockAfterMove) return;
         _relockAfterMove = false;
@@ -1624,18 +1782,18 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     // 설정 창도 모니터 해상도(FHD~8K)에 맞춰 창 전체를 비례 확대한다.
     private void ApplyResolutionScale()
     {
-        var scale = UiScale.Apply(this, 1080, 720);
-        MinWidth = 920 * scale;
-        MinHeight = 620 * scale;
+        var scale = UiScale.Apply(this, 1080, 720, resizeWindow: !_mainWindowSizedByUser);
+        MinWidth = MainWindowGeometry.MinimumWidth * scale;
+        MinHeight = MainWindowGeometry.MinimumHeight * scale;
     }
 
     private void ToggleOverlayVisibility()
     {
-        if (!_overlayVisibility.HandAvailable)
+        if (!CurrentOverlayDisplayState().Available)
         {
             HideOverlayWindows();
-            OverlayButton.Content = "패 인식 대기 중";
-            FooterStatus.Text = "게임 패가 인식되면 오버레이가 자동으로 표시됩니다.";
+            OverlayButton.Content = UsesMap2320 ? "관측 참고 대기 중" : "패 인식 대기 중";
+            FooterStatus.Text = UsesMap2320 ? "유닛 정보를 읽으면 표시해요. 실제 보유와 조합 가능 여부는 게임에서 확인해 주세요." : "게임 패가 인식되면 오버레이가 자동으로 표시됩니다.";
             return;
         }
 
@@ -1670,6 +1828,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void SetOverlayHandAvailability(bool available)
     {
+        if (!available) InvalidateNormalCandidateObservation();
         if (_overlayVisibility.HandAvailable == available)
         {
             if (!available) HideOverlayWindows();
@@ -1689,7 +1848,9 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void ShowOverlayWindows()
     {
+        if (UsesMap2320) { ApplyDiagnosticOverlayVisibility(); return; }
         _overlay.Stats.SetDisplayMode(_settings.OverlayDisplayMode);
+        _craftWindow?.SetDisplayAllowed(_overlayVisibility.HandAvailable && _settings.OverlayDisplayMode != OverlayDisplayMode.Hidden);
         var visibility = OverlayDisplayPolicy.Visibility(
             CurrentOverlayDisplayState());
         if (visibility.RecommendationVisible)
@@ -1721,6 +1882,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
 
     private void HideOverlayWindows()
     {
+        _craftWindow?.SetDisplayAllowed(false);
         if (_overlay.IsVisible) _overlay.Hide();
         if (_overlay.Stats.IsVisible) _overlay.Stats.Hide();
     }
@@ -1728,16 +1890,17 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     private OverlayDisplayState CurrentOverlayDisplayState() =>
         new(_settings.OverlayDisplayMode,
             _settings.LastVisibleOverlayDisplayMode,
-            _overlayVisibility.HandAvailable);
+            UsesMap2320 ? DiagnosticReferencePresentationPolicy.ToggleAvailable(_diagnosticOverlaySession,
+                DiagnosticPresentationFencesHold(), HasPendingApplicationUpdate) : _overlayVisibility.HandAvailable);
 
     private void ApplyOverlayDisplayState(OverlayDisplayState state,
         bool save)
     {
         _settings.OverlayDisplayMode = state.Mode;
         _settings.LastVisibleOverlayDisplayMode = state.LastVisibleMode;
-        _overlayVisibility =
-            _overlayVisibility.WithHandAvailability(state.Available);
-        if (save) SettingsStore.Save(_settings);
+        if (!UsesMap2320)
+            _overlayVisibility = _overlayVisibility.WithHandAvailability(state.Available);
+        if (save && _persistSettings) _execution.SaveSettings(_settings);
         ShowOverlayWindows();
     }
 
@@ -1747,7 +1910,7 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
             save: true);
 
     // 워크 창이 포커스를 가진 상태에서도 오버레이를 켜고 끌 수 있는 전역 단축키.
-    // 기본 Scroll Lock — 워크 기본 단축키(Alt·Ctrl+숫자·F9~F12·문자키)와 겹치지 않는다.
+    // 기본 F1. 사용자 지정 키는 유지하며 누르고 있는 동안의 반복은 등록 단계에서 차단한다.
     private const int OverlayHotkeyId = 0xB0BA;
     private const int WmHotkey = 0x0312;
 
@@ -1767,11 +1930,11 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         var enabled = 1;
         _ = DwmSetWindowAttribute(handle, 20, ref enabled, sizeof(int)); // 다크 캡션
-        var caption = 0x001F1612; // COLORREF(BGR) — 앱 배경 #12161F
+        var caption = RandyPickTheme.ToColorRef(RandyPickTheme.Canvas);
         _ = DwmSetWindowAttribute(handle, 35, ref caption, sizeof(int));
-        var text = 0x00FAF4F2; // 본문 밝은 텍스트 #F2F4FA
+        var text = RandyPickTheme.ToColorRef(RandyPickTheme.Text);
         _ = DwmSetWindowAttribute(handle, 36, ref text, sizeof(int));
-        var border = 0x0047C5E8; // 테스트 금색 #E8C547
+        var border = RandyPickTheme.ToColorRef(RandyPickTheme.Border);
         _ = DwmSetWindowAttribute(handle, 34, ref border, sizeof(int));
     }
 
@@ -1785,44 +1948,42 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
         if (!_initialized) return;
         var helper = new WindowInteropHelper(this);
         ApplyThemedTitleBar(helper.Handle);
+        if (!_runtimeEffects) return;
         _hotkeyWindowHandle = helper.Handle;
         HwndSource.FromHwnd(helper.Handle)?.AddHook(OnWindowMessage);
         Closed += (_, _) =>
         {
-            if (_hotkeyRegistered) UnregisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId);
+            if (_hotkeyRegistered) _execution.RunRuntime(() => UnregisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId));
         };
-        // 예전 기본값(Scroll Lock)은 키보드에 따라 입력이 안 들어와 Caps Lock으로 이전.
-        if (string.IsNullOrWhiteSpace(_settings.OverlayToggleKey) ||
-            _settings.OverlayToggleKey.Equals("Scroll", StringComparison.OrdinalIgnoreCase))
-            _settings.OverlayToggleKey = "Capital";
+        if (OverlayHotkeyPolicy.Normalize(_settings) && _persistSettings) _execution.SaveSettings(_settings);
         ApplyOverlayHotkey();
     }
 
     /// <summary>설정된 키로 전역 단축키를 다시 등록하고 화면 문구를 갱신한다.</summary>
     private void ApplyOverlayHotkey()
     {
+        if (!_runtimeEffects) return;
         if (_hotkeyWindowHandle == IntPtr.Zero) return;
         if (_hotkeyRegistered)
         {
-            UnregisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId);
+            _execution.RunRuntime(() => UnregisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId));
             _hotkeyRegistered = false;
         }
-        if (!Enum.TryParse<Key>(_settings.OverlayToggleKey, ignoreCase: true, out var key))
-            key = Key.Capital;
+        var key = OverlayHotkeyPolicy.ResolveKey(_settings.OverlayToggleKey);
         var label = HotkeyLabel(key);
         HotkeyBox.Text = label;
         var virtualKey = (uint)KeyInterop.VirtualKeyFromKey(key);
-        if (virtualKey == 0 || !RegisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId, 0, virtualKey))
+        if (virtualKey == 0 || !_execution.TryRuntime(() => RegisterHotKey(_hotkeyWindowHandle, OverlayHotkeyId, OverlayHotkeyPolicy.RegistrationModifiers, virtualKey)))
         {
             HotkeyHint.Text = $"{label} 키는 다른 프로그램이 쓰고 있어 등록하지 못했습니다. 다른 키로 바꿔 주세요.";
-            FooterStatus.Text = $"오버레이 단축키({label}) 등록 실패 — 버튼으로 토글하세요.";
-            OverlayButton.ToolTip = "전역 단축키 등록 실패";
+            FooterStatus.Text = $"오버레이 단축키({label}) 등록 실패 — 버튼으로 켜고 끄세요.";
+            OverlayButton.ToolTip = "단축키를 설정하지 못했습니다";
             return;
         }
         _hotkeyRegistered = true;
         HotkeyHint.Text = "게임 중에도 이 키로 오버레이를 켜고 끕니다.";
-        OverlayButton.ToolTip = $"전역 단축키: {label}";
-        FooterStatus.Text = $"오버레이 토글 단축키: {label} (게임 중에도 동작)";
+        OverlayButton.ToolTip = $"게임 중에도 쓰는 단축키: {label}";
+        FooterStatus.Text = $"게임 중에도 {label} 키로 안내창을 켜거나 끌 수 있어요";
     }
 
     private static string HotkeyLabel(Key key) => key switch
@@ -1861,7 +2022,8 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
             return;
         }
         _settings.OverlayToggleKey = key.ToString();
-        SettingsStore.Save(_settings);
+        _settings.OverlayToggleKeyCustomized = true;
+        if (_persistSettings) _execution.SaveSettings(_settings);
         ApplyOverlayHotkey();
     }
 
@@ -1878,7 +2040,8 @@ private void BuildVariantCombo_OnSelectionChanged(object sender, SelectionChange
     {
         if (message == WmHotkey && wParam.ToInt32() == OverlayHotkeyId)
         {
-            ToggleOverlayVisibility();
+            if (OverlayHotkeyPolicy.ShouldToggle(_hotkeyRegistered, _capturingHotkey))
+                ToggleOverlayVisibility();
             handled = true;
         }
         return IntPtr.Zero;

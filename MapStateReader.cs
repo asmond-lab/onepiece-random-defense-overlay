@@ -23,13 +23,20 @@ public readonly record struct MapStateSample(int MaxRound, int SettlementCopies,
 /// 3) 난이도 — 멀티보드 제목 `2.314[R]|r ` + 색코드 이름, 또는 정산 줄 `난이도 : ` + 색코드 이름.
 ///    색코드 이름 단독은 스크립트 원문에도 있어서 마커 뒤에 붙었을 때만 인정한다.
 ///
-/// 옛 판의 사본이 힙에 남는 문제는 판정기(MatchOutcomeDetector)가 기준선 비교로 맡는다.
+/// 힙의 라운드 최대값은 현재 판의 근거가 아니다. 게시할 때 활성 타이머의 소유 제목으로 대체하며,
+/// 그 출처를 확인하지 못하면 0(미확인)으로 보낸다. 정산 사본은 MatchOutcomeDetector가 기준선 비교로 맡는다.
 /// 전체 힙 훑기라 비싸다 — 호출 쪽에서 간격을 두고 부른다.
 /// </summary>
 public static class MapStateReader
 {
+    internal static MapStateSample SelectCurrentRound(MapStateSample heap, int? confirmedRound)
+        // Heap titles can outlive both the timer and the match. Their maximum
+        // is discovery evidence, never a current-session round (including on attach).
+        => heap with { MaxRound = confirmedRound ?? 0 };
+
     private static readonly byte[] RoundMarkerA = Encoding.UTF8.GetBytes("현재 라운드|r : ");
     private static readonly byte[] RoundMarkerB = Encoding.UTF8.GetBytes("현재 라운드 : |r");
+    private static readonly byte[] BossRoundMarker = Encoding.UTF8.GetBytes("보스 라운드|r : ");
     private static readonly byte[] SettlementMarker = Encoding.UTF8.GetBytes("마지막 라운드 유닛 점수 : |cffffd700");
     private static readonly byte[] SettlementSuffix = Encoding.UTF8.GetBytes("점");
     private static readonly byte[] DifficultyBoardMarker = Encoding.UTF8.GetBytes("[R]|r ");
@@ -89,6 +96,7 @@ public static class MapStateReader
     {
         var round = Math.Max(ScanRound(buffer, length, RoundMarkerA),
             ScanRound(buffer, length, RoundMarkerB));
+        round = Math.Max(round, ScanRound(buffer, length, BossRoundMarker));
         return new MapStateSample(round, CountSettlements(buffer, length),
             ScanDifficulty(buffer, length));
     }

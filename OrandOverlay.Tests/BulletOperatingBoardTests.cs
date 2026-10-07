@@ -11,6 +11,16 @@ public sealed class BulletOperatingBoardTests
     private const string BulletGoalId = "rawcode:180h";
 
     [Fact]
+    public void ArmorContributionIsExplicitlyLegacyPlanningNotObservedTrait()
+    {
+        var board = BulletOperatingBoardPolicy.Evaluate(TestProfile(), KnownInput(50, 2, 2, true))!;
+        var armor = board[BulletOperatingBoardFieldKind.ArmorReduction].DisplayValue;
+        Assert.Contains("기존 공략의 계획 기여 +40", armor);
+        Assert.Contains("실제 특성값 아님", armor);
+        Assert.Equal(82, TestProfile().ExternalSlowTarget);
+    }
+
+    [Fact]
     public void NonBulletSelectedGoalRetainsGenericPlannerPresentationAndFieldOrder()
     {
         Exception? failure = null;
@@ -148,7 +158,7 @@ public sealed class BulletOperatingBoardTests
         var input = KnownInput(30, flying: 1, boss: 2, controlsReady: false) with
         {
             CompletedStoryStage = null,
-            UnknownReason = "스토리 단계 인식 신호가 없습니다."
+            UnknownReason = "source:story-progress-missing"
         };
 
         var board = Assert.IsType<BulletOperatingBoard>(
@@ -156,8 +166,7 @@ public sealed class BulletOperatingBoardTests
 
         Assert.Equal(BulletOperatingBoardState.StoryDeadline, board.State);
         Assert.Contains("스토리 진행 단계 확인 불가", board.Blocker, StringComparison.Ordinal);
-        Assert.Contains("스토리 단계 인식 신호가 없습니다.", board.Blocker,
-            StringComparison.Ordinal);
+        Assert.DoesNotContain(input.UnknownReason, board.Blocker, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -165,19 +174,19 @@ public sealed class BulletOperatingBoardTests
     {
         var board = Assert.IsType<BulletOperatingBoard>(BulletOperatingBoardPolicy.Evaluate(
             TestProfile(), BulletOperatingBoardInput.Unknown(20, BulletGoalId, null,
-                "현재 인식 입력에 강화 단계 신호가 없습니다.")));
+                "source:upgrade-missing")));
 
         Assert.Equal(BulletOperatingBoardState.EarlyFoundation, board.State);
-        Assert.Contains("알 수 없음", board[BulletOperatingBoardFieldKind.Flying].DisplayValue);
+        Assert.True(board[BulletOperatingBoardFieldKind.Flying].IsWarning);
         Assert.Contains("목표 스토리 12 또는 라운드 50 전 2/2",
             board[BulletOperatingBoardFieldKind.Flying].DisplayValue);
         Assert.Contains("목표 방어력 감소 → 공격 속도 → 공격력",
             board[BulletOperatingBoardFieldKind.Enhancement].DisplayValue);
-        Assert.Contains("현재 인식 입력에 강화 단계 신호가 없습니다.",
+        Assert.DoesNotContain("source:upgrade-missing",
             board[BulletOperatingBoardFieldKind.Enhancement].DisplayValue);
         Assert.DoesNotContain("포함되지 않습니다.",
             board[BulletOperatingBoardFieldKind.Enhancement].DisplayValue);
-        Assert.Contains("강화 단계 신호가 없습니다.", board.Blocker, StringComparison.Ordinal);
+        Assert.DoesNotContain("source:upgrade-missing", board.Blocker, StringComparison.Ordinal);
         Assert.DoesNotContain("현재 0/2", board[BulletOperatingBoardFieldKind.Flying].DisplayValue,
             StringComparison.Ordinal);
     }
@@ -194,7 +203,7 @@ public sealed class BulletOperatingBoardTests
                     BulletOperatingBoardPolicy.Evaluate(TestProfile(), KnownInput(40, 2, 2, false)));
                 var root = Assert.IsType<Border>(RecommendationBoard.BulletOperatingBoardBlock(board));
                 Assert.Equal("bullet-operating-board", AutomationProperties.GetAutomationId(root));
-                Assert.Equal("Bullet 운영 보드", AutomationProperties.GetName(root));
+                Assert.Equal("불릿 운영 안내", AutomationProperties.GetName(root));
                 var rows = Descendants(root)
                     .Where(element => AutomationProperties.GetAutomationId(element)
                         .StartsWith("bullet-board-", StringComparison.Ordinal))

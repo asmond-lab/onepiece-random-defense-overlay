@@ -35,7 +35,12 @@ internal static class GoalStrategyCalculator
             static value => new StrongBox<StrategyMetrics>(
                 CalculateStrategyMetrics(value))).Value;
 
-    private static StrategyMetrics CalculateStrategyMetrics(UnitDefinition unit)
+    internal static StrategyMetrics StrategyMetricsFor(UnitDefinition unit, string mapVersion) =>
+        mapVersion is "2.322" or "2.323"
+            ? CalculateStrategyMetrics(unit, mapVersion)
+            : StrategyMetricsFor(unit);
+
+    private static StrategyMetrics CalculateStrategyMetrics(UnitDefinition unit, string mapVersion = "2.320")
     {
         var slow = AbilitySignedTotal(unit, "이동속도 감소", "발동이동속도 감소");
         var stun = AbilityTotal(unit, "스턴");
@@ -47,7 +52,9 @@ internal static class GoalStrategyCalculator
         if (unit.Rawcodes.Contains("W30h", StringComparer.Ordinal)) armor += 30;
         var magicArmor = AbilityTotal(unit, "마법방어력 감소");
         var armorBreak = AbilityPresenceOrTotal(unit, "아머브레이크", "단일아머브레이크");
-        var airMovement = AbilityPresenceOrTotal(unit, "공중이동");
+        var airMovement = Map2322KaidoAirRole.CountsAsAir(mapVersion, unit,
+            AbilityPresenceOrTotal(unit, "공중이동") > 0)
+            ? Math.Max(1, AbilityPresenceOrTotal(unit, "공중이동")) : 0;
         var boss = AbilityTotal(unit, "보스 잡기");
         var berserkBoss = AbilityTotal(unit, "광폭화 잡기");
         // 딜 유형은 수치보다 "몇 기 보유"가 중요하므로 존재를 1로 센다.
@@ -209,6 +216,15 @@ internal static class GoalStrategyCalculator
         !candidate.Rawcodes.Any(MagicDamageSupportRawcodes.Contains);
 
     /// <summary>신+ 오로성(판별 전역 변수)에 맞춰 역할 목표를 보정한다.</summary>
+    internal static double ArmorReductionTargetForDifficulty(double armorReductionTarget,
+        string? difficulty)
+    {
+        if (difficulty?.Equals("신", StringComparison.Ordinal) == true &&
+            armorReductionTarget >= FullArmorReductionTarget)
+            return armorReductionTarget - (FullArmorReductionTarget - 201d);
+        return armorReductionTarget;
+    }
+
     internal static GoalStrategyProfile? ApplyGorosei(GoalStrategyProfile? strategy,
         GoroseiMode gorosei)
     {

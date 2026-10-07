@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="8204d6df-5146-420a-8194-fa4dabfca60b" name="123@DESKTOP-SR3Q9NW 2026-09-07 18:47:33" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T18:47:33.2618951+09:00" queuing="2026-09-07T18:47:33.2618953+09:00" start="2026-09-07T18:47:32.6426855+09:00" finish="2026-09-07T18:47:33.2658908+09:00" />
+  <TestSettings name="default" id="7ed28259-8ac2-4648-baa9-79ddb8dc25b6">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_18_47_33" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="10b57383-7f7d-481d-82fc-e6329a36d70d" testId="faac4a4b-e1b0-2b53-d2e1-bcff6552a83f" testName="OrandOverlay.Tests.ExecutionContextBehaviorTests.ProductionAdapters_UseOnlyExplicitTemporaryRootAndRetainBehavior" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0144185" startTime="2026-09-07T18:47:33.2026156+09:00" endTime="2026-09-07T18:47:33.2026159+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="10b57383-7f7d-481d-82fc-e6329a36d70d" />
+    <UnitTestResult executionId="a4880aee-bb25-41bb-8a56-a43aa2516fed" testId="7ad6a2eb-a531-dec3-9d7d-c963ae16501b" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.WindowAndApp_RequireExplicitExecutionContext" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0056157" startTime="2026-09-07T18:47:33.1463225+09:00" endTime="2026-09-07T18:47:33.1463227+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a4880aee-bb25-41bb-8a56-a43aa2516fed" />
+    <UnitTestResult executionId="4c69eba2-20ce-4b32-b83a-925261485bf3" testId="b49e2277-8c0e-8b2e-c8e8-b920e8769d25" testName="OrandOverlay.Tests.ExecutionContextBehaviorTests.Diagnostics_NonemptyResultsAreDeduplicatedAndSinkFailureIsNonfatal" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0004169" startTime="2026-09-07T18:47:33.2030831+09:00" endTime="2026-09-07T18:47:33.2030832+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4c69eba2-20ce-4b32-b83a-925261485bf3" />
+    <UnitTestResult executionId="543dfd68-d924-4931-98d0-95afdaac64d0" testId="9dce6d8f-52d7-dbb7-6b3e-f6a9aebe1bcf" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.LiveReader_CacheAndProfilesMustBeInstanceOwned" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0013052" startTime="2026-09-07T18:47:33.1544825+09:00" endTime="2026-09-07T18:47:33.1544825+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="543dfd68-d924-4931-98d0-95afdaac64d0" />
+    <UnitTestResult executionId="def3e387-d5e4-49b4-82e1-046b55d800af" testId="be40df1e-a301-063a-646a-6a04a10e6dd3" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.Catalog_DefaultLoadingMustNotResolveSharedOverrides" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0005268" startTime="2026-09-07T18:47:33.1468985+09:00" endTime="2026-09-07T18:47:33.1468987+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="def3e387-d5e4-49b4-82e1-046b55d800af" />
+    <UnitTestResult executionId="e51dc5c2-979a-448d-b542-5b0d4b82a4cb" testId="12091d11-e89c-480e-2df9-848ffc995c5f" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.FixtureSettings_SaveAndReloadRemainInMemoryAndDetached" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0258247" startTime="2026-09-07T18:47:33.1365900+09:00" endTime="2026-09-07T18:47:33.1365970+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e51dc5c2-979a-448d-b542-5b0d4b82a4cb" />
+    <UnitTestResult executionId="812db8c7-59de-49db-9301-c36db5e0b907" testId="c273f980-0bf7-77a7-df90-fbd6fdf1275c" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.NativeAndNetworkEntryPointsMustUseContextAuthority" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0012424" startTime="2026-09-07T18:47:33.1544137+09:00" endTime="2026-09-07T18:47:33.1544138+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="812db8c7-59de-49db-9301-c36db5e0b907">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Contains() Failure: Sub-string not found&#xD;
+String:    "using System.Windows;\r\n\r\nnamespace OrandO"···&#xD;
+Not found: "Execution.RefreshProfilesAsync()"</Message>
+          <StackTrace>   at OrandOverlay.Tests.ExecutionContextIsolationTests.NativeAndNetworkEntryPointsMustUseContextAuthority() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\ExecutionContextIsolationTests.cs:line 18&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="54c44d55-b0eb-42ef-88c8-d188c293b8d6" testId="bf65c335-6b58-5c12-1c3c-cc790c22a95a" testName="OrandOverlay.Tests.ExecutionContextIsolationTests.AppPaths_GettersMustNotCreateDirectories" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0043637" startTime="2026-09-07T18:47:33.1406785+09:00" endTime="2026-09-07T18:47:33.1406787+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54c44d55-b0eb-42ef-88c8-d188c293b8d6" />
+    <UnitTestResult executionId="0fec0fbf-63d6-4ff4-a23d-208cfb872879" testId="1e0689ca-e13e-1fe3-c86c-841a932cc250" testName="OrandOverlay.Tests.ExecutionContextBehaviorTests.FixtureComposition_HasNoPersistentOrRuntimeCapabilities" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0788795" startTime="2026-09-07T18:47:33.1881224+09:00" endTime="2026-09-07T18:47:33.1881227+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fec0fbf-63d6-4ff4-a23d-208cfb872879" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.WindowAndApp_RequireExplicitExecutionContext" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="7ad6a2eb-a531-dec3-9d7d-c963ae16501b">
+      <Execution id="a4880aee-bb25-41bb-8a56-a43aa2516fed" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="WindowAndApp_RequireExplicitExecutionContext" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextBehaviorTests.Diagnostics_NonemptyResultsAreDeduplicatedAndSinkFailureIsNonfatal" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="b49e2277-8c0e-8b2e-c8e8-b920e8769d25">
+      <Execution id="4c69eba2-20ce-4b32-b83a-925261485bf3" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextBehaviorTests" name="Diagnostics_NonemptyResultsAreDeduplicatedAndSinkFailureIsNonfatal" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.NativeAndNetworkEntryPointsMustUseContextAuthority" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="c273f980-0bf7-77a7-df90-fbd6fdf1275c">
+      <Execution id="812db8c7-59de-49db-9301-c36db5e0b907" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="NativeAndNetworkEntryPointsMustUseContextAuthority" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.Catalog_DefaultLoadingMustNotResolveSharedOverrides" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="be40df1e-a301-063a-646a-6a04a10e6dd3">
+      <Execution id="def3e387-d5e4-49b4-82e1-046b55d800af" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="Catalog_DefaultLoadingMustNotResolveSharedOverrides" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextBehaviorTests.FixtureComposition_HasNoPersistentOrRuntimeCapabilities" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="1e0689ca-e13e-1fe3-c86c-841a932cc250">
+      <Execution id="0fec0fbf-63d6-4ff4-a23d-208cfb872879" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextBehaviorTests" name="FixtureComposition_HasNoPersistentOrRuntimeCapabilities" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.LiveReader_CacheAndProfilesMustBeInstanceOwned" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="9dce6d8f-52d7-dbb7-6b3e-f6a9aebe1bcf">
+      <Execution id="543dfd68-d924-4931-98d0-95afdaac64d0" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="LiveReader_CacheAndProfilesMustBeInstanceOwned" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextBehaviorTests.ProductionAdapters_UseOnlyExplicitTemporaryRootAndRetainBehavior" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="faac4a4b-e1b0-2b53-d2e1-bcff6552a83f">
+      <Execution id="10b57383-7f7d-481d-82fc-e6329a36d70d" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextBehaviorTests" name="ProductionAdapters_UseOnlyExplicitTemporaryRootAndRetainBehavior" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.AppPaths_GettersMustNotCreateDirectories" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="bf65c335-6b58-5c12-1c3c-cc790c22a95a">
+      <Execution id="54c44d55-b0eb-42ef-88c8-d188c293b8d6" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="AppPaths_GettersMustNotCreateDirectories" />
+    </UnitTest>
+    <UnitTest name="OrandOverlay.Tests.ExecutionContextIsolationTests.FixtureSettings_SaveAndReloadRemainInMemoryAndDetached" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\orandoverlay.tests\bin\debug\net8.0-windows\orandoverlay.tests.dll" id="12091d11-e89c-480e-2df9-848ffc995c5f">
+      <Execution id="e51dc5c2-979a-448d-b542-5b0d4b82a4cb" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\bin\Debug\net8.0-windows\OrandOverlay.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="OrandOverlay.Tests.ExecutionContextIsolationTests" name="FixtureSettings_SaveAndReloadRemainInMemoryAndDetached" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="faac4a4b-e1b0-2b53-d2e1-bcff6552a83f" executionId="10b57383-7f7d-481d-82fc-e6329a36d70d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ad6a2eb-a531-dec3-9d7d-c963ae16501b" executionId="a4880aee-bb25-41bb-8a56-a43aa2516fed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b49e2277-8c0e-8b2e-c8e8-b920e8769d25" executionId="4c69eba2-20ce-4b32-b83a-925261485bf3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9dce6d8f-52d7-dbb7-6b3e-f6a9aebe1bcf" executionId="543dfd68-d924-4931-98d0-95afdaac64d0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be40df1e-a301-063a-646a-6a04a10e6dd3" executionId="def3e387-d5e4-49b4-82e1-046b55d800af" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="12091d11-e89c-480e-2df9-848ffc995c5f" executionId="e51dc5c2-979a-448d-b542-5b0d4b82a4cb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c273f980-0bf7-77a7-df90-fbd6fdf1275c" executionId="812db8c7-59de-49db-9301-c36db5e0b907" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bf65c335-6b58-5c12-1c3c-cc790c22a95a" executionId="54c44d55-b0eb-42ef-88c8-d188c293b8d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e0689ca-e13e-1fe3-c86c-841a932cc250" executionId="0fec0fbf-63d6-4ff4-a23d-208cfb872879" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="9" executed="9" passed="8" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.15]   Discovered:  OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.16]   Starting:    OrandOverlay.Tests&#xD;
+[xUnit.net 00:00:00.22]       Assert.Contains() Failure: Sub-string not found&#xD;
+[xUnit.net 00:00:00.22]       String:    "using System.Windows;\r\n\r\nnamespace OrandO"···&#xD;
+[xUnit.net 00:00:00.22]       Not found: "Execution.RefreshProfilesAsync()"&#xD;
+[xUnit.net 00:00:00.22]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.22]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\OrandOverlay.Tests\ExecutionContextIsolationTests.cs(18,0): at OrandOverlay.Tests.ExecutionContextIsolationTests.NativeAndNetworkEntryPointsMustUseContextAuthority()&#xD;
+[xUnit.net 00:00:00.22]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.22]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.27]   Finished:    OrandOverlay.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T18:47:33.1537728+09:00">
+        <Text>[xUnit.net 00:00:00.22]     OrandOverlay.Tests.ExecutionContextIsolationTests.NativeAndNetworkEntryPointsMustUseContextAuthority [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

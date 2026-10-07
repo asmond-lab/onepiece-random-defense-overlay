@@ -595,7 +595,7 @@ public static class NavigationMechanicsProfileLoader
     private const string ExpectedJassHash =
         "0bccc47907a9505f38efaf6bbf20228a728eabdfaec3209cca7df2269bfc2028";
     private const string ExpectedProfileHash =
-        "b0b0825700c5c4d39aed9a91a42c2b2782490eca88b470a9c1aaf3340833a7f3";
+        "cbd13f3b7b675906f8b1966319c6e8d05880159beb18e63bf2e7828fa1904790";
 
     private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
 

@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><TargetFramework>net8.0-windows</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><IsTestProject>true</IsTestProject><EnableDefaultCompileItems>false</EnableDefaultCompileItems><Version>0.6.70</Version><InformationalVersion>0.6.70</InformationalVersion><AssemblyName>Map2320.Metadata.IsolatedTests</AssemblyName></PropertyGroup>
+<ItemGroup><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/><PackageReference Include="xunit" Version="2.9.2"/><PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/></ItemGroup>
+<ItemGroup><Reference Include="OrandOverlay"><HintPath>$(LegacyDtoAssembly)</HintPath></Reference><Compile Include="../../Map2320SourceMetadata.cs" Link="Map2320SourceMetadata.cs"/><Compile Include="../../OrandOverlay.Tests/Map2320SourceMetadataTests.cs" Link="Map2320SourceMetadataTests.cs"/><Content Include="../../Data/map-source-metadata-2320.json" Link="Data/map-source-metadata-2320.json" CopyToOutputDirectory="Always"/></ItemGroup>
+</Project>

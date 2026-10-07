@@ -4,6 +4,23 @@ namespace OrandOverlay.Tests;
 
 public sealed class RecommendationPipelineTests
 {
+    [Fact]
+    public void GuideWithoutUserPolicyProducesNoGoalRecommendations()
+    {
+        var catalog = new DataCatalog();
+        catalog.Load(loadCarryPolicy: false);
+        var candidates = RecommendationPipeline.ComputeCandidates(new RecommendationPipelineRequest
+        {
+            Mode = PlayMode.Guide, Engine = new RecommendationEngine(catalog),
+            Goal = catalog.Unit("rawcode:F40h"), Inventory = [],
+            InitialSurface = RecommendationSurface.TopAndNavigation,
+            NavigationMode = "Unselected", Gorosei = GoroseiMode.None,
+            BuildVariant = BuildVariants.AutoId, Difficulty = "악몽"
+        });
+        Assert.Empty(candidates.Recommendations);
+        Assert.Null(candidates.StorySequence);
+    }
+
     private readonly DataCatalog _catalog;
     private readonly RecommendationEngine _engine;
 

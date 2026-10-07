@@ -1,0 +1,49 @@
+{
+  "SchemaVersion": 1,
+  "MapVersion": "2.323",
+  "ArchiveSha256": "eac74a90a967473196c84446b880387857f50a828083c0e1b5fc02b325663535",
+  "Members": [
+    {
+      "Identifier": "map-source-metadata",
+      "File": "map-source-metadata-2323.json",
+      "NormalizedBytes": 1887,
+      "Sha256": "9be39d3b12f48482cf0f86be2216a5c5a5829592fe1e01baf9232c3801372bdf"
+    },
+    {
+      "Identifier": "map-recipes",
+      "File": "map-recipes-2323.json",
+      "NormalizedBytes": 254426,
+      "Sha256": "e37e4e038888790dfe0f01d055521465057dea097a37462982ca19a8b6e70d20"
+    },
+    {
+      "Identifier": "navigation-mechanics",
+      "File": "navigation-mechanics-2323.json",
+      "NormalizedBytes": 52218,
+      "Sha256": "d9e5204a41f3565267b8b83b35c358a4f592978893d5b4a242f641606859d013"
+    },
+    {
+      "Identifier": "story-progression",
+      "File": "story-progression-2323.json",
+      "NormalizedBytes": 58796,
+      "Sha256": "9d9ad5ca99bf87aa3c697c74e99e01f46418259ca1527fa512d6b2d3b825bd5e"
+    },
+    {
+      "Identifier": "commands",
+      "File": "commands-2323.txt",
+      "NormalizedBytes": 2839,
+      "Sha256": "9621fb7e3920693c6b14f07f36cf83a1bdd9b98b2825c2d4436c11c4450e42d0"
+    },
+    {
+      "Identifier": "map-combine-hotkeys",
+      "File": "map-combine-hotkeys-2323.json",
+      "NormalizedBytes": 61345,
+      "Sha256": "0bf7849015a1ce7b0710f76099161909aad115002ebf026ef3bc5b5315288308"
+    },
+    {
+      "Identifier": "map-mechanics",
+      "File": "map-mechanics-2323.json",
+      "NormalizedBytes": 1793,
+      "Sha256": "da4fe8f154c14bd81fced621d14cec91357b0aed30b8ad2c45f80b837dd7a61a"
+    }
+  ]
+}

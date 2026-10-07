@@ -1,0 +1,46 @@
+[
+  {
+    "file": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\modern-reader\\members-ko-2.320\\war3map.j",
+    "bytes": 3014709,
+    "sha256": "6FDFC64BF8AD9463F5B5C8A351FFA7E1875D6CF9B51210129539375FA77A6C7C",
+    "utf16Length": 2962829,
+    "strictUTF8": true,
+    "parser": "War3Net.CodeAnalysis.Jass 6.0.2",
+    "status": "PASS",
+    "declarations": 2651,
+    "topLevelTypes": [
+      {
+        "Name": "JassFunctionDeclarationSyntax",
+        "Count": 2650
+      },
+      {
+        "Name": "JassGlobalsDeclarationSyntax",
+        "Count": 1
+      }
+    ],
+    "eofToken": "",
+    "elapsedSeconds": 1.539966
+  },
+  {
+    "file": "C:\\Users\\123\\.aside\\u\\0\\sessions\\2026-09-13_X2j2h7HlhcnGq0XN\\tmp\\map-2.320\\indexed-members\\2314\\war3map.j",
+    "bytes": 3069240,
+    "sha256": "0BCCC47907A9505F38EFAF6BBF20228A728EABDFAEC3209CCA7DF2269BFC2028",
+    "utf16Length": 3020186,
+    "strictUTF8": true,
+    "parser": "War3Net.CodeAnalysis.Jass 6.0.2",
+    "status": "PASS",
+    "declarations": 2695,
+    "topLevelTypes": [
+      {
+        "Name": "JassFunctionDeclarationSyntax",
+        "Count": 2694
+      },
+      {
+        "Name": "JassGlobalsDeclarationSyntax",
+        "Count": 1
+      }
+    ],
+    "eofToken": "",
+    "elapsedSeconds": 1.0425509
+  }
+]

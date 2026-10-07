@@ -49,7 +49,7 @@ if (args.Any(x => x.Equals("--live", StringComparison.OrdinalIgnoreCase)))
     Console.WriteLine(live.Diagnostics.DisplayText);
     foreach (var entry in live.Entries.OrderBy(x => catalog.Unit(x.UnitId).Name))
         Console.WriteLine($"  {catalog.Unit(entry.UnitId).Name} ({entry.UnitId}) x{entry.Count}");
-    var liveStats = new InventoryStatsCalculator(catalog).Calculate(live.Entries);
+    var liveStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(live.Entries);
     Console.WriteLine($"  현재수치: 스턴 {liveStats.Stun:0.##}/1.4 · " +
                       $"이감 {liveStats.TotalSlow:0.##}/102 · " +
                       $"방깎 {liveStats.TotalArmorReduction:0.##}/211 " +
@@ -128,7 +128,8 @@ var overHolding = Inventory("dragon_legend", "bartolomeo_legend");
 var overHoldingResult = engine.Recommend("yamato_transcendent", overHolding);
 Assert(overHoldingResult.SelectMany(x => x.Warnings).Any(x => x.Contains("과투자")), "중복 홀딩 경고");
 
-var inventoryStats = new InventoryStatsCalculator(catalog).Calculate(Inventory(
+// These legacy assertions exercise catalog fallback. Bundled TMO source semantics have dedicated HandStats tests.
+var inventoryStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(Inventory(
     "dragon_legend", "rawcode:HA0h", "mobydick", "rawcode:IC0h", "rawcode:U30h"));
 Assert(Math.Abs(inventoryStats.Stun - 1.3) < 0.001 &&
        Math.Abs(inventoryStats.TotalSlow - 60) < 0.001 &&
@@ -144,7 +145,7 @@ Assert(inventoryStats.ArmorBreakProviders == 1 && inventoryStats.BossControlProv
        Math.Abs(inventoryStats.HealthRegen - 2.25) < 0.001 &&
        Math.Abs(inventoryStats.ManaRegen - 1) < 0.001,
     "암브는 방깎에 오합산하지 않고 공중이동 등 특수 역할·재생 수치를 집계");
-var kalgaraStats = new InventoryStatsCalculator(catalog).Calculate(Inventory("kalgara"));
+var kalgaraStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(Inventory("kalgara"));
 Assert(Math.Abs(kalgaraStats.ArmorReduction - 20) < 0.001 &&
        Math.Abs(kalgaraStats.SingleArmorReduction - 20) < 0.001 &&
        Math.Abs(kalgaraStats.TotalArmorReduction - 20) < 0.001,
@@ -229,7 +230,7 @@ var yamatoSignedSlow = engine.RecommendNearestCrafts("yamato_transcendent",
     yamatoSignedInventory, 8);
 var yamatoSignedBuild = yamatoSignedInventory.Concat(yamatoSignedSlow.Select(item =>
     new InventoryEntry { UnitId = item.Route.GoalUnitId, Count = 1 }));
-Assert(new InventoryStatsCalculator(catalog).Calculate(yamatoSignedBuild).TotalSlow >= 102,
+Assert(new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(yamatoSignedBuild).TotalSlow >= 102,
     "야마토의 적 이동속도 증가를 음수 이감으로 반영해 실제 풀이감 102까지 추가 보강");
 var communityRankedYamato = engine.RecommendNearestCrafts("yamato_transcendent",
     Inventory("rawcode:060h"), 8);
@@ -525,7 +526,7 @@ var garpBuild = garpOneTop.Select(item => new InventoryEntry
     Count = 1
 }).Where(entry => !engine.RecipeLegendaryUnitIds("rawcode:C40h")
     .Contains(entry.UnitId, StringComparer.OrdinalIgnoreCase)).ToList();
-var garpStats = new InventoryStatsCalculator(catalog).Calculate(garpBuild);
+var garpStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(garpBuild);
 bool GarpCoreMet(InventoryStatSummary stats) =>
     stats.Stun >= 1.4 && stats.TotalSlow >= 102 && stats.TotalArmorReduction >= 211 &&
     stats.BossControlProviders >= 1 && stats.BerserkControlProviders >= 1;
@@ -891,8 +892,15 @@ var bundledProfilePath = Path.Combine(AppContext.BaseDirectory, "Data", "memory-
 Assert(File.Exists(bundledProfilePath), "번들 메모리 프로필 파일이 배포본에 포함됨");
 var bundledProfiles = JsonSerializer.Deserialize<List<MemoryProfile>>(File.ReadAllText(bundledProfilePath),
     new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
-Assert(bundledProfiles.Count == 1, "번들 프로필은 실측된 빌드 1개만 핀");
-var pinnedProfile = bundledProfiles[0];
+Assert(bundledProfiles.Count == 2 && bundledProfiles.Count(p => p.Enabled && p.Verified) == 1,
+    "번들 프로필은 검증된 legacy 1개와 비활성 참고 1개를 포함");
+var referenceProfile = bundledProfiles.Single(p => p.FileVersion == "3.0.0.24268");
+Assert(!referenceProfile.Enabled && !referenceProfile.Verified && referenceProfile.KnownExperimental &&
+       referenceProfile.ExecutableSha256 == "BD2A0DC256289DE45287BB60F3725B88F1235216D5177984377FE1CA22840A12" &&
+       MemoryProfileValidator.Validate(referenceProfile).Count == 0 &&
+       !MemoryProfileValidator.CanActivate(referenceProfile, out _),
+    "정확히 핀된 3.0 참고 프로필은 번들에 존재하지만 일반 인식 활성화는 차단");
+var pinnedProfile = bundledProfiles.Single(p => p.FileVersion == "2.0.4.23745");
 Assert(pinnedProfile.FileVersion == "2.0.4.23745" && pinnedProfile.ModuleName == "Warcraft III.exe",
     "핀된 프로필이 실측 Warcraft III 빌드를 가리킴");
 Assert(string.Equals(pinnedProfile.ExecutableSha256, PinnedWarcraftSha256, StringComparison.OrdinalIgnoreCase),
@@ -937,10 +945,19 @@ Assert(pinnedProfile.HasLocalPlayerAnchor && pinnedProfile.LocalPlayerIdOffset =
 var installedWarcraftPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
     "Warcraft III", "_retail_", "x86_64", "Warcraft III.exe");
-Assert(!File.Exists(installedWarcraftPath) || string.Equals(
-        Convert.ToHexString(SHA256.HashData(File.OpenRead(installedWarcraftPath))),
-        pinnedProfile.ExecutableSha256, StringComparison.OrdinalIgnoreCase),
-    "설치된 Warcraft III.exe가 있으면 핀된 sha256과 실제 해시가 일치");
+if (!args.Contains("--offline", StringComparer.OrdinalIgnoreCase) && File.Exists(installedWarcraftPath))
+{
+    var installedVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(installedWarcraftPath).FileVersion;
+    using var installedFile = File.OpenRead(installedWarcraftPath);
+    var installedHash = Convert.ToHexString(SHA256.HashData(installedFile));
+    if (string.Equals(installedVersion, pinnedProfile.FileVersion, StringComparison.OrdinalIgnoreCase))
+        Assert(string.Equals(installedHash, pinnedProfile.ExecutableSha256, StringComparison.OrdinalIgnoreCase),
+            "지원 버전의 설치 EXE는 검증된 해시와 일치해야 함");
+    else
+        Assert(!string.Equals(installedHash, pinnedProfile.ExecutableSha256, StringComparison.OrdinalIgnoreCase) &&
+               !new RecognitionResult { State = RecognitionState.Unsupported }.ShouldReplaceInventory,
+            "업데이트된 미지원 빌드를 구버전 해시로 승인하지 않고 패 교체를 차단");
+}
 Assert(new RecognitionResult { State = RecognitionState.Ready }.ShouldReplaceInventory,
     "검증된 0장 Ready는 마지막 패를 지움");
 Assert(!new RecognitionResult { State = RecognitionState.TransientReadError }.ShouldReplaceInventory,
@@ -1379,7 +1396,7 @@ Assert(!(sanjiSupports.Any(unit => unit.Rawcodes.Contains("I30h", StringComparer
          sanjiSupports.Any(unit => unit.Rawcodes.Contains("Z30h", StringComparer.Ordinal))),
     "빈 상디 보드에서 제파와 아카히든을 같이 추천하지 않음");
 
-var damageMixStats = new InventoryStatsCalculator(catalog).Calculate(
+var damageMixStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(
     Inventory("rawcode:J30h", "rawcode:S50h", "rawcode:130h"));
 Assert(damageMixStats.FinisherDamageProviders == 1 && damageMixStats.SingleDamageProviders == 1 &&
        Math.Abs(damageMixStats.MagicArmorReduction - 1) < 0.001,
@@ -1672,7 +1689,7 @@ seraphimTracker.Observe(Inventory("rawcode:Y90h"));
 seraphimTracker.Observe(Inventory("rawcode:Y90h"));
 Assert(seraphimTracker is { Used: true, UsedOnUnit: false },
     "세라핌이 새로 생겼으면 부여 효과를 합산하지 않음");
-var greenBloodBuffStats = new InventoryStatsCalculator(catalog)
+var greenBloodBuffStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", []))
     .Calculate(Inventory("greenblood_buff"));
 Assert(Math.Abs(greenBloodBuffStats.Stun - 0.3) < 0.001 &&
        Math.Abs(greenBloodBuffStats.AttackSpeed - 30) < 0.001,
@@ -1686,9 +1703,9 @@ Assert(catalog.Unit("rawcode:MB0h").Id == "rawcode:MB0h" &&
        RawcodeCodec.DynamicUnitId(enhancedSengokuCode) == "rawcode:E40h",
     "센고쿠 특강 조합은 보존하고 메모리 인식은 불멸 폼으로 통합");
 Assert(RawcodeCodec.TryParse("W50h", out var viviChangedCode) &&
-       RawcodeCodec.DynamicUnitId(viviChangedCode) == "rawcode:O10h" &&
+       RawcodeCodec.DynamicUnitId(viviChangedCode) == "rawcode:W50h" &&
        catalog.Unit("rawcode:W50h").Tier == "변화된",
-    "비비 변화 폼은 메모리 인식만 희귀 비비로 통합하고 원래 레시피는 보존");
+    "비비 변화 폼은 메모리 인식과 카탈로그에서 변화된 유닛으로 보존");
 Assert(bundledStats.GoalProfile(["Q40h"], TopScope.MultiTop)
            is { SampleCount: >= 300, Scope: TopScope.MultiTop },
     "번들 스냅샷에 빅맘 불멸 다상위 표본 충분");
@@ -1834,7 +1851,7 @@ Assert(specialAdvisor.Evaluate(Inventory("rawcode:Z90h"), badgePicks, badgeGoal,
     "특수함을 보유하지 않으면 정리 안내 없음");
 
 // 아이템 스펙 합산(맵 w3t 추출): 유닛 인벤토리의 아이템도 패 수치에 반영된다.
-var itemStats = new InventoryStatsCalculator(catalog).Calculate(
+var itemStats = new InventoryStatsCalculator(catalog, HandStatsProfile.CreateForTests("catalog-only smoke fixture", [])).Calculate(
     Inventory("rawcode:300I", "rawcode:100I", "rawcode:000I", "rawcode:200I"));
 Assert(Math.Abs(itemStats.ArmorReduction - 6) < 0.001 &&
        Math.Abs(itemStats.AttackSpeed - 10) < 0.001 &&
@@ -2047,39 +2064,20 @@ Assert(combinePlanner.Plan(jinbeReadyCrafts, Inventory(jinbeReady))
                      step.Commands.Contains("바다의협객") && step.Commands.Contains("jinbe tr")),
     "징베 재료가 모이면 지금 조합 가능에 채팅 명령어가 잡힌다");
 
-// 자동 업데이트: 최신 릴리스 태그가 현재 버전보다 높을 때만 exe 자산을 고른다.
-const string releaseJson = """
-    {"tag_name":"v9.9.9","assets":[
-      {"name":"readme.txt","browser_download_url":"https://x/readme.txt"},
-      {"name":"OrandOverlay.exe","browser_download_url":"https://x/OrandOverlay.exe"}]}
-    """;
-Assert(UpdateService.ParseLatest(releaseJson, new Version(0, 2, 0))
-           is { Tag: "v9.9.9", DownloadUrl: "https://x/OrandOverlay.exe" },
-    "새 릴리스가 있으면 exe 자산과 태그를 해석");
-Assert(UpdateService.ParseLatest(releaseJson.Replace("v9.9.9", "v0.2.0"),
-        new Version(0, 2, 0)) is null,
-    "같은 버전이면 업데이트로 판정하지 않음");
-Assert(UpdateService.ParseLatest("""{"tag_name":"v9.9.9","assets":[]}""",
-        new Version(0, 2, 0)) is null,
-    "exe 자산이 없으면 업데이트를 시도하지 않음");
-
-// 릴리스 페이지 302 리다이렉트 기반 확인: API 호출 제한 없이 짧은 주기로 확인한다.
-Assert(UpdateService.ParseRedirectLocation(
-        "https://github.com/AsmondKR/onepiece-random-defense-overlay/releases/tag/v9.9.9",
-        new Version(0, 2, 0)) is { Tag: "v9.9.9" } redirectInfo &&
-    redirectInfo.DownloadUrl.EndsWith("/releases/download/v9.9.9/OrandOverlay.exe",
-        StringComparison.Ordinal),
-    "리다이렉트 태그에서 새 버전과 내려받기 URL을 해석");
-Assert(UpdateService.ParseRedirectLocation(
-        "https://github.com/AsmondKR/onepiece-random-defense-overlay/releases/tag/v0.2.0",
-        new Version(0, 2, 0)) is null,
-    "리다이렉트 태그가 같은 버전이면 업데이트 아님");
-Assert(UpdateService.ParseRedirectLocation(
-        "https://github.com/AsmondKR/onepiece-random-defense-overlay/releases",
-        new Version(0, 2, 0)) is null,
-    "태그 리다이렉트가 아니면 무시");
-Assert(UpdateService.ParseRedirectLocation(null, new Version(0, 2, 0)) is null,
-    "리다이렉트 응답이 없으면 무시");
+// 업데이트는 Cloudflare의 서명된 manifest만 사용한다. GitHub/unsigned 경로는 폐쇄한다.
+Assert(UpdateService.LatestApiUrl == SignedUpdateManifest.ApplicationManifestUrl &&
+       UpdateService.LatestApiUrl.StartsWith("https://orand-updates.epic42121.workers.dev/", StringComparison.Ordinal),
+    "앱 업데이트는 Cloudflare 공식 채널을 사용");
+Assert(MemoryProfileRefreshService.ProfilesUrl.StartsWith(SignedUpdateManifest.Origin, StringComparison.Ordinal),
+    "인식 프로필도 Cloudflare에서 별도로 갱신");
+Assert(UpdateService.ParseLatest("{}", new Version(0, 2, 0)) is null,
+    "서명 없는 레거시 릴리스 JSON은 설치 근거가 될 수 없음");
+Assert(UpdateService.ParseRedirectLocation("https://github.com/AsmondKR/onepiece-random-defense-overlay/releases/tag/v9.9.9", new Version(0, 2, 0)) is null,
+    "GitHub 리다이렉트만으로 업데이트하지 않음");
+var unsignedManifestRejected = false;
+try { SignedUpdateManifest.Verify("{}", "application"); }
+catch (InvalidDataException) { unsignedManifestRejected = true; }
+Assert(unsignedManifestRejected, "서명·스키마가 없는 manifest는 거부");
 
 // 해상도별 UI 자동 배율: 2K(논리 1440) 기준 1.0, 화면 점유율을 유지하도록 비례 조정.
 Assert(Math.Abs(UiScale.FromScreen(1440, 1.0) - 1.0) < 0.001,
@@ -2160,9 +2158,12 @@ Assert(screenSourceMigration.Changed &&
         "텔레메트리 v2: 설치 식별자 제거");
     var overlayRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
     var settingsXaml = File.ReadAllText(Path.Combine(overlayRoot, "MainWindow.xaml"));
-    Assert(settingsXaml.Contains("TelemetryCheck") &&
-           settingsXaml.Contains("유닛·rawcode·설치/세션 ID"),
-        "텔레메트리 v2: disclosure와 즉시 opt-out UI 제공");
+    var consentXaml = File.ReadAllText(Path.Combine(overlayRoot, "TelemetryConsentWindow.xaml"));
+    Assert(!TelemetryConsentPolicy.IsCurrent(freshSettings) &&
+           settingsXaml.Contains("동의한 정책에 따라") &&
+           consentXaml.Contains("consent-agree") && consentXaml.Contains("consent-decline") &&
+           consentXaml.Contains("확인되지 않은 행동은 추측해서 기록하지 않습니다"),
+        "현재 동의 정책: 새 설정은 미동의이고 수집 범위·동의·거절 UI를 제공");
 }
 
 Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
@@ -2175,8 +2176,9 @@ Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
     var statsPath = Path.Combine(Path.GetTempPath(), "orand-live-stats-" + Guid.NewGuid().ToString("N") + ".json");
     File.WriteAllText(statsPath,
         "{\"schemaVersion\":1,\"generatedAt\":\"2026-08-19T13:00:00Z\",\"totalRecords\":41,\"labeledRecords\":12," +
-        "\"goals\":{\"yamato_transcendent\":{\"plays\":30,\"labeled\":10,\"clears\":7,\"adherenceMean\":0.8,\"failHeavyUnits\":[]}}," +
-        "\"weights\":{}}");
+        "\"goals\":{\"yamato_transcendent\":{\"plays\":30,\"labeled\":10,\"clears\":7,\"adherenceMean\":0.8,\"failHeavyUnits\":[]}," +
+        "\"other_goal\":{\"plays\":11,\"labeled\":2,\"clears\":1,\"adherenceMean\":null,\"failHeavyUnits\":[]}}," +
+        "\"weights\":{},\"goalWeights\":{},\"difficulties\":{\"normal\":41}}");
     var live = LiveStats.Load(statsPath);
     Assert(live.TotalRecords == 41, "라이브 통계: 총 판수 파싱");
     Assert(live.TryGetGoal("yamato_transcendent", out var liveGoalStats) && liveGoalStats.Plays == 30,
@@ -2192,11 +2194,13 @@ Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
     var statsPath = Path.Combine(Path.GetTempPath(), "orand-live-weights-" + Guid.NewGuid().ToString("N") + ".json");
     File.WriteAllText(statsPath,
         "{\"schemaVersion\":1,\"generatedAt\":\"2026-08-19T13:00:00Z\",\"totalRecords\":50,\"labeledRecords\":40," +
-        "\"goals\":{},\"weights\":{\"bad_unit\":-0.1,\"good_unit\":0.07,\"overflow\":-0.5}}");
+        "\"goals\":{\"yamato_transcendent\":{\"plays\":50,\"labeled\":40,\"clears\":20,\"adherenceMean\":null,\"failHeavyUnits\":[]}}," +
+        "\"weights\":{\"bad_unit\":-0.1,\"good_unit\":0.07},\"goalWeights\":{},\"difficulties\":{\"normal\":50}}");
     var live = LiveStats.Load(statsPath);
     Assert(Math.Abs(live.WeightFor("bad_unit") + 0.1) < 1e-9, "가중치: 하향 값 파싱");
     Assert(Math.Abs(live.WeightFor("good_unit") - 0.07) < 1e-9, "가중치: 상향 값 파싱");
-    Assert(Math.Abs(live.WeightFor("overflow") + 0.1) < 1e-9, "가중치: 스냅샷이 상한을 넘겨도 ±10%로 캡");
+    File.WriteAllText(statsPath, File.ReadAllText(statsPath).Replace("\"good_unit\":0.07", "\"overflow\":-0.5", StringComparison.Ordinal));
+    Assert(LiveStats.Load(statsPath).TotalRecords == 0, "가중치: 범위를 벗어난 서버 수치는 스냅샷 전체 거부");
     Assert(live.WeightFor("없는유닛") == 0, "가중치: 미등재 유닛은 0");
     Assert(LiveStats.ApplyWeight(40, -0.1) == 36 && LiveStats.ApplyWeight(40, 0.1) == 44,
         "가중치: 점수 반영은 ±10% 곱");
@@ -2451,14 +2455,16 @@ Assert(TelemetryUploader.DefaultEndpoint.StartsWith("https://") &&
 }
 
 // 업데이트 시점 정책: 유저 클라이언트는 판이 끝난 뒤에 교체한다(재시작이 판을 끊으므로).
-// 개발 PC는 즉시 교체해야 검증이 빠르므로 예외.
+// 개발 PC도 예외 없이 게임 중 교체를 금지한다.
 {
     Assert(UpdatePolicy.ShouldInstallNow(liveSessionActive: false, developerMachine: false),
         "업데이트 정책: 게임 중이 아니면 바로 교체");
     Assert(!UpdatePolicy.ShouldInstallNow(liveSessionActive: true, developerMachine: false),
         "업데이트 정책: 유저 클라이언트는 게임 중 교체하지 않음");
-    Assert(UpdatePolicy.ShouldInstallNow(liveSessionActive: true, developerMachine: true),
-        "업데이트 정책: 개발 PC는 게임 중에도 즉시 교체");
+    Assert(!UpdatePolicy.ShouldInstallNow(liveSessionActive: true, developerMachine: true),
+        "업데이트 정책: 개발 PC도 게임 중 교체하지 않음");
+    Assert(UpdatePolicy.ShouldInstallNow(liveSessionActive: false, developerMachine: true),
+        "업데이트 정책: 개발 PC도 게임 중이 아니면 바로 교체");
 }
 
 // 드릴다운 재현 진단: 특정 패·목표로 조합 트리와 남은 단계를 그대로 출력한다.
@@ -2508,12 +2514,14 @@ Assert(!safeGatePicks.Any(item =>
     "55라 준비 전 두 번째 상위 추천 보류");
 Console.WriteLine("PASS: T4 두 번째 상위 readiness gate");
 
-Assert(RecommendationPresentation.ReadinessLine(
-        new CombatReadiness(ReadinessDamageType.Physical,
-            1.3, 1.4, 84, 102, 176, 211, 0, 0))
-    .Contains("55라 준비 미달", StringComparison.Ordinal),
-    "carry와 55라 준비 상태 표시");
-Console.WriteLine("PASS: T5 carry·55라 준비 표시");
+var unreadyPresentation = new CombatReadiness(ReadinessDamageType.Physical,
+    1.3, 1.4, 84, 102, 176, 211, 0, 0);
+var readyPresentation = unreadyPresentation with
+    { CurrentStun = 1.4, CurrentSlow = 102, CurrentArmorReduction = 211 };
+Assert(RecommendationPresentation.ReadinessLine(unreadyPresentation).Split('·')[0] !=
+       RecommendationPresentation.ReadinessLine(readyPresentation).Split('·')[0],
+    "carry와 지원 수치 충족 상태 표시");
+Console.WriteLine("PASS: T5 carry·지원 수치 표시");
 
 var compactVisibility = OverlayDisplayPolicy.Visibility(
     new OverlayDisplayState(OverlayDisplayMode.StatsOnly,
@@ -2525,9 +2533,12 @@ Console.WriteLine("PASS: T7 추천·Stats visibility 분리");
 
 var compactLayout = OverlayLayoutPolicy.StatsLayout(
     OverlayDisplayMode.StatsOnly);
-Assert(compactLayout is { Width: 228, Height: 700, NonCoreVisible: true },
-    "패수치만 모드는 기존 Stats 전체 레이아웃을 유지");
-Console.WriteLine("PASS: T8 기존 패수치 단독 표시");
+var fullStatsLayout = OverlayLayoutPolicy.StatsLayout(OverlayDisplayMode.Full);
+Assert(compactLayout is { Width: 326, Height: 520, NonCoreVisible: true } &&
+       fullStatsLayout.Width == compactLayout.Width && fullStatsLayout.Height == compactLayout.Height &&
+       fullStatsLayout.NonCoreVisible,
+    "패수치만 모드와 전체 모드는 확정 B 326×520 레이아웃을 공유");
+Console.WriteLine("PASS: T8 B 컴팩트 패수치 단독·전체 동일 표시");
 
 {
     var dataDirectory = Path.Combine(AppContext.BaseDirectory, "Data");

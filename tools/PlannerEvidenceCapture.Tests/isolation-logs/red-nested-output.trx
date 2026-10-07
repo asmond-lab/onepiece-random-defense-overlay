@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="d8650042-79da-4416-92a1-0770f7536325" name="123@DESKTOP-SR3Q9NW 2026-09-07 19:19:47" runUser="DESKTOP-SR3Q9NW\123" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-07T19:19:47.9703636+09:00" queuing="2026-09-07T19:19:47.9703637+09:00" start="2026-09-07T19:19:47.5863615+09:00" finish="2026-09-07T19:19:47.9737843+09:00" />
+  <TestSettings name="default" id="bece7e05-e146-4654-8221-3ae598da5c20">
+    <Deployment runDeploymentRoot="123_DESKTOP-SR3Q9NW_2026-09-07_19_19_47" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="76e7c058-c90f-49c7-a170-69afa565478d" testId="feea68fb-9cf7-a25e-3b65-736063739f10" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.InjectedExistingChildDirectoryIsNotAdopted" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0026890" startTime="2026-09-07T19:19:47.9170858+09:00" endTime="2026-09-07T19:19:47.9170858+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="76e7c058-c90f-49c7-a170-69afa565478d">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match&#xD;
+Expected: typeof(System.IO.IOException)&#xD;
+Actual:   typeof(System.ArgumentException)&#xD;
+---- System.ArgumentException : File must be inside the owned run.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.InjectedExistingChildDirectoryIsNotAdopted() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 91&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+----- Inner Stack Trace -----&#xD;
+   at PlannerEvidenceCapture.CaptureOutputScope.CreateNew(String path) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureOutputScope.cs:line 44&#xD;
+   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.&lt;&gt;c__DisplayClass10_0.&lt;InjectedExistingChildDirectoryIsNotAdopted&gt;b__0() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 91</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a82d8c56-8540-4359-b457-c391953494a9" testId="39d4295f-22df-487c-e998-caf3aaa8d445" testName="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters" computerName="DESKTOP-SR3Q9NW" duration="00:00:00.0056210" startTime="2026-09-07T19:19:47.9144208+09:00" endTime="2026-09-07T19:19:47.9144287+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a82d8c56-8540-4359-b457-c391953494a9">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : File must be inside the owned run.</Message>
+          <StackTrace>   at PlannerEvidenceCapture.CaptureOutputScope.CreateNew(String path) in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureOutputScope.cs:line 44&#xD;
+   at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters() in C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs:line 77&#xD;
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.InjectedExistingChildDirectoryIsNotAdopted" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="feea68fb-9cf7-a25e-3b65-736063739f10">
+      <Execution id="76e7c058-c90f-49c7-a170-69afa565478d" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="InjectedExistingChildDirectoryIsNotAdopted" />
+    </UnitTest>
+    <UnitTest name="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters" storage="c:\users\123\desktop\dev\orand-overnight-overlay-20260907-111725\tools\plannerevidencecapture.tests\bin\debug\net8.0-windows\plannerevidencecapture.tests.dll" id="39d4295f-22df-487c-e998-caf3aaa8d445">
+      <Execution id="a82d8c56-8540-4359-b457-c391953494a9" />
+      <TestMethod codeBase="C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\bin\Debug\net8.0-windows\PlannerEvidenceCapture.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="PlannerEvidenceCapture.Tests.CaptureOutputScopeTests" name="NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="feea68fb-9cf7-a25e-3b65-736063739f10" executionId="76e7c058-c90f-49c7-a170-69afa565478d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="39d4295f-22df-487c-e998-caf3aaa8d445" executionId="a82d8c56-8540-4359-b457-c391953494a9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="목록에 없는 결과" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="로드된 모든 결과" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="2" executed="2" passed="0" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.24)&#xD;
+[xUnit.net 00:00:00.03]   Discovering: PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.05]   Discovered:  PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.06]   Starting:    PlannerEvidenceCapture.Tests&#xD;
+[xUnit.net 00:00:00.08]       System.ArgumentException : File must be inside the owned run.&#xD;
+[xUnit.net 00:00:00.08]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.08]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureOutputScope.cs(44,0): at PlannerEvidenceCapture.CaptureOutputScope.CreateNew(String path)&#xD;
+[xUnit.net 00:00:00.08]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(77,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters()&#xD;
+[xUnit.net 00:00:00.08]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.08]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.09]       Assert.Throws() Failure: Exception type was not an exact match&#xD;
+[xUnit.net 00:00:00.09]       Expected: typeof(System.IO.IOException)&#xD;
+[xUnit.net 00:00:00.09]       Actual:   typeof(System.ArgumentException)&#xD;
+[xUnit.net 00:00:00.09]       ---- System.ArgumentException : File must be inside the owned run.&#xD;
+[xUnit.net 00:00:00.09]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(91,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.InjectedExistingChildDirectoryIsNotAdopted()&#xD;
+[xUnit.net 00:00:00.09]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)&#xD;
+[xUnit.net 00:00:00.09]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.09]         ----- Inner Stack Trace -----&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture\CaptureOutputScope.cs(44,0): at PlannerEvidenceCapture.CaptureOutputScope.CreateNew(String path)&#xD;
+[xUnit.net 00:00:00.09]         C:\Users\123\Desktop\dev\orand-overnight-overlay-20260907-111725\tools\PlannerEvidenceCapture.Tests\CaptureOutputScopeTests.cs(91,0): at PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.&lt;&gt;c__DisplayClass10_0.&lt;InjectedExistingChildDirectoryIsNotAdopted&gt;b__0()&#xD;
+[xUnit.net 00:00:00.09]   Finished:    PlannerEvidenceCapture.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:19:47.9135646+09:00">
+        <Text>[xUnit.net 00:00:00.08]     PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.NestedOutputsAreOwnedAndPinnedAndScopeDisposalClosesWriters [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-SR3Q9NW" outcome="Error" timestamp="2026-09-07T19:19:47.9170357+09:00">
+        <Text>[xUnit.net 00:00:00.09]     PlannerEvidenceCapture.Tests.CaptureOutputScopeTests.InjectedExistingChildDirectoryIsNotAdopted [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

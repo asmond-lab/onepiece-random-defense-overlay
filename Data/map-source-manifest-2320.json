@@ -1,0 +1,49 @@
+{
+  "SchemaVersion": 1,
+  "MapVersion": "2.320",
+  "ArchiveSha256": "68445631fdaca12a343e9465e5bc5dc9b4c8c6cc927d701f52e2cb822821e15f",
+  "Members": [
+    {
+      "Identifier": "source",
+      "File": "map-source-metadata-2320.json",
+      "NormalizedBytes": 51738,
+      "Sha256": "e6f53445f8bc0dd0f174bd5fab0eb095295c19c8f40b32e657990a3c0a8311e6"
+    },
+    {
+      "Identifier": "story",
+      "File": "story-progression-2320.json",
+      "NormalizedBytes": 494902,
+      "Sha256": "8715432b734c97c11c735d00337a3c8676f4b2e7060cb5de0870a2e025809b46"
+    },
+    {
+      "Identifier": "navigation",
+      "File": "navigation-mechanics-2320.json",
+      "NormalizedBytes": 84238,
+      "Sha256": "85cdf15050e01d6069aabb44cea542fef4d13ca83292fb4eeab0d05566969283"
+    },
+    {
+      "Identifier": "recipes",
+      "File": "map-recipes-2320.json",
+      "NormalizedBytes": 1053769,
+      "Sha256": "a4f12b6300b697e9fea24c0e41f8eb7200bf2b3ab7b9b4046d9169717b2bbab5"
+    },
+    {
+      "Identifier": "conditions",
+      "File": "map-mechanics-2320.json",
+      "NormalizedBytes": 392,
+      "Sha256": "32b8e35e7bd90bed6265ccb83b862ff47999495dfc78fe36ec2c7fe4b45186ef"
+    },
+    {
+      "Identifier": "commands",
+      "File": "map-combine-commands-2320.txt",
+      "NormalizedBytes": 2911,
+      "Sha256": "7680de32737bd404a7f88f282d69be444c959767e09b32cd44b11fe80ff3ffd0"
+    },
+    {
+      "Identifier": "board",
+      "File": "utility-board-2320.json",
+      "NormalizedBytes": 26607,
+      "Sha256": "18664391c8389e00be5e1f8e6d28dfdf3686cce8df6ad66c1b6bff720d8a5c0b"
+    }
+  ]
+}
