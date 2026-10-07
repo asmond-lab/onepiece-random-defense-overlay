@@ -2160,9 +2160,9 @@ Assert(screenSourceMigration.Changed &&
     var settingsXaml = File.ReadAllText(Path.Combine(overlayRoot, "MainWindow.xaml"));
     var consentXaml = File.ReadAllText(Path.Combine(overlayRoot, "TelemetryConsentWindow.xaml"));
     Assert(!TelemetryConsentPolicy.IsCurrent(freshSettings) &&
-           settingsXaml.Contains("동의한 정책에 따라") &&
+           settingsXaml.Contains("동의한 범위에서만") &&
            consentXaml.Contains("consent-agree") && consentXaml.Contains("consent-decline") &&
-           consentXaml.Contains("확인되지 않은 행동은 추측해서 기록하지 않습니다"),
+           consentXaml.Contains("행동은 확인된 내용만 기록합니다"),
         "현재 동의 정책: 새 설정은 미동의이고 수집 범위·동의·거절 UI를 제공");
 }
 
@@ -2534,10 +2534,10 @@ Console.WriteLine("PASS: T7 추천·Stats visibility 분리");
 var compactLayout = OverlayLayoutPolicy.StatsLayout(
     OverlayDisplayMode.StatsOnly);
 var fullStatsLayout = OverlayLayoutPolicy.StatsLayout(OverlayDisplayMode.Full);
-Assert(compactLayout is { Width: 326, Height: 520, NonCoreVisible: true } &&
+Assert(compactLayout is { Width: 326, Height: 440, NonCoreVisible: true } &&
        fullStatsLayout.Width == compactLayout.Width && fullStatsLayout.Height == compactLayout.Height &&
        fullStatsLayout.NonCoreVisible,
-    "패수치만 모드와 전체 모드는 확정 B 326×520 레이아웃을 공유");
+    "패수치만 모드와 전체 모드는 확정 B 326×440 레이아웃을 공유");
 Console.WriteLine("PASS: T8 B 컴팩트 패수치 단독·전체 동일 표시");
 
 {

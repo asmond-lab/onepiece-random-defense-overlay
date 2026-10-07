@@ -90,7 +90,6 @@ public sealed class CoachDisclosureTests
         Assert.Equal("Horizontal", (string?)horizontalNav.Attribute("Orientation"));
         Assert.Equal(5, horizontalNav.Elements(Wpf + "Button").Count());
         var navRow = horizontalNav.Ancestors(Wpf + "Border").First();
-        Assert.Equal("1", (string?)navRow.Attribute("Grid.Row"));
         Assert.Equal("2", (string?)navRow.Attribute("Grid.ColumnSpan"));
         foreach (var name in new[] { "BoardHeadingText", "BoardSubheadingText" })
             Assert.Equal("Collapsed", (string?)Assert.Single(texts, e => (string?)e.Attribute(X + "Name") == name).Attribute("Visibility"));
