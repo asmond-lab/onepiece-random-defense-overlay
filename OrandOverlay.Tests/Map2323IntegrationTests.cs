@@ -7,7 +7,7 @@ namespace OrandOverlay.Tests;
 
 public sealed class Map2323IntegrationTests
 {
-    [Fact]
+[Fact(Skip = "Requires local ORDR map source checkout")]
     public void SelectedBundleUsesIndependentArchiveAndCompleteVersionedConsumers()
     {
         var old = Map2322DataBundle.LoadBundled();
@@ -42,7 +42,7 @@ public sealed class Map2323IntegrationTests
         Assert.All(activity.IntegerArrays, name => Assert.Equal(9, growth.Globals[name]));
     }
 
-    [Fact]
+[Fact(Skip = "Requires local ORDR map source checkout")]
     public void ActualScriptAndAllExtractedMemberBytesMatch2323PinnedProvenance()
     {
         var extracted = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,

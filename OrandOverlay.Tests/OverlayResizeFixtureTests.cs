@@ -6,7 +6,7 @@ namespace OrandOverlay.Tests;
 
 public sealed class OverlayResizeFixtureTests
 {
-    [Fact]
+    [Fact(Skip = "Requires interactive desktop for overlay fixture")]
     public async Task UnitCheckOverlaySupportsNativeResizeAndRetainsSessionSize()
     {
         var root = new DirectoryInfo(AppContext.BaseDirectory);
