@@ -23,8 +23,14 @@
 
 ## 다운로드
 
-[Releases](https://github.com/AsmondKR/onepiece-random-defense-overlay/releases)에서
-`OrandOverlay.exe` 파일 하나만 받으면 됩니다. 설치 과정 없이 바로 실행됩니다.
+[Releases](https://github.com/asmond-lab/onepiece-random-defense-overlay/releases)에서
+`RandyPick.exe` 파일 하나만 받으면 됩니다. 설치 과정 없이 바로 실행됩니다.
+
+## 화면
+
+| 조합 경로 계획 | 게임 대기 | 항법 경로 확장 |
+|---|---|---|
+| ![조합 계획](docs/screenshots/client-craft-pending-1384.png) | ![대기 화면](docs/screenshots/client-idle-1384.png) | ![경로 확장](docs/screenshots/client-expanded-route-1384.png) |
 
 ## 사용법
 
